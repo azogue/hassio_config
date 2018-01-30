@@ -1,3 +1,169 @@
-hello_world:
-  module: hello
-  class: HelloWorld
+AutoFeedback:
+  class: EventListener
+  module: bot_event_listener
+  lights_notif: light.cuenco
+
+FamilyTracker:
+  class: FamilyTracker
+  module: family_tracker
+  home_group: group.family
+  people:  # Content of home_group: chat_id and optional extra_tracker
+    group.eugenio:
+      chat_id_idx: 0
+      extra_tracker: input_boolean.eu_presence
+    group.mary:
+      chat_id_idx: 1
+      extra_tracker: input_boolean.carmen_presence
+
+#EnerpiPeakNotifier:
+#  class: EnerpiPeakNotifier
+#  module: enerpi_alarm
+#  camera: camera.enerpi_tile_power
+#  constrain_input_boolean: input_boolean.switch_control_enerpi_max_power
+#  control: sensor.enerpi_power
+#  max_power_kw: input_number.enerpi_max_power
+#  max_power_kw_reset: input_number.enerpi_max_power_reset
+#  min_time_high: 15
+#  min_time_low: 60
+
+KodiMediaSelect:
+  class: DynamicKodiInputSelect
+  module: kodi_input_select
+
+KodiYoutube:
+  module: youtube_search
+  class: YoutubeSearch
+  input_select: input_select.youtube_videos
+  input_text: input_text.q_youtube
+  media_player: media_player.kodi
+  youtube_key: !secret youtube_key
+
+KodiNotifier:
+  class: KodiAssistant
+  module: kodi_ambient_lights
+  lights_dim_off: light.bola_grande,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv
+  lights_dim_on: light.pie_sofa
+  lights_off: light.central
+  switch_dim_lights_use: switch.toggle_kodi_ambilight
+
+MorningAlarmClock:
+  class: AlarmClock
+  module: morning_alarm_clock
+  alarm_time: sensor.alarm_clock_time
+  alarmdays: mon,tue,wed,thu,fri,sat
+  constrain_input_boolean: input_boolean.alarm_clock_status
+  sunrise_duration: 300
+  duration_volume_ramp_sec: 300
+  max_volume: 25
+  postponer_minutos: 7
+  room_select: input_select.room_altavoces
+  lights_alarm: group.luces_dormitorio
+  manual_trigger: input_boolean.manual_trigger_lacafetera
+
+#MotionLightsSalon:
+#  class: MotionLights
+#  module: motion_lights
+#  constrain_end_time: sunrise + 03:00:00
+#  constrain_input_boolean: input_boolean.switch_motion_lights
+#  constrain_input_boolean_2: input_boolean.switch_master_alarm
+#  constrain_start_time: sunset - 02:00:00
+#  lights_check_off: light.pie_sofa,light.lamparita,light.pie_tv,light.central
+#  lights_motion: light.bola_grande,light.cuenco
+#  motion_light_timeout: input_number.light_duration_after_motion
+#  pir: binary_sensor.pir_salon
+
+# ------------------------------------------------------
+# ------------------------------------------------------
+
+#ALARM:
+#  class: MotionAlarm
+#  module: motion_alarm_push_email
+#
+#  path_base_data: /mnt/usbdrive
+#  path_ha_conf: /home/homeassistant/.homeassistant
+#
+#  # ------------------------------------------------------
+#  # Configuración notifiers
+#  # ------------------------------------------------------
+#  # TODO multiple notifiers
+#  push_notifier: notify/ios_iphone
+#  # push_notifier: notify/pushbullet
+#  # push_notifier: notify/telegram_bot
+#  email_notifier: notify/gmail
+#  extra_push_params: '''{"cmd": "snapPicture2", "usr": "vigiferia_cam_1", "pwd": "cm136sdgq28r"}'''
+#  # extra_data_push_params: '{"url": {"badge": 1, "sound": "US-EN-Morgan-Freeman-Motion-Detected.wav", "category": "ALARMSOUNDED"}'
+#  # extra_data_push_params: '{"push": {"badge": 1, "sound": "US-EN-Morgan-Freeman-Motion-Detected.wav", "category": "ALARMSOUNDED"}'
+#  #                          "attachment": {"url": img_url}}}''''
+#
+#  # ------------------------------------------------------
+#  # Configuración raw binary sensors
+#  # ------------------------------------------------------
+#  #raw_binary_sensors: binary_sensor.vibration_sensor_raw_rpi2h,binary_sensor.sound_sensor_raw_rpi2h
+#  #raw_binary_sensors_sufijo:  _raw
+#  #raw_binary_sensors_time_off: 2
+#
+#  # ------------------------------------------------------
+#  # Configuración entidades de HA
+#  # ------------------------------------------------------
+#  # Sensores de activación y switchs de uso (use default: True)
+#  pirs: binary_sensor.pir_salon,binary_sensor.pir_estudio_rpi2h,binary_sensor.pir_dormitorio_rpi2mpd,binary_sensor.esp1_pir,binary_sensor.esp3_pir
+#  use_pirs: switch.use_pir_salon,switch.use_pir_estudio_rpi2h,switch.use_pir_dormitorio_rpi2mpd,switch.use_esp1_pir,switch.use_esp3_pir
+#  camera_movs: binary_sensor.motioncam_salon,binary_sensor.motioncam_estudio
+#  use_cam_movs: switch.motioncam_escam,switch.motioncam_estudio
+#  extra_sensors: binary_sensor.vibration_sensor_rpi2h
+#  use_extra_sensors: switch.use_vibration_sensor_rpi2h
+#
+#  # Usar pushbullet notificaciones (vs text email, default = True)
+#  usar_push_notifier: True
+#  # Si se define (off-> # comment), marca los segundos entre avisos de alarma conectada
+#  retry_push_alarm: 40
+#  # Si se define (off-> # comment), marca el tiempo máximo que estará la alarma conectada, si se dispara, en segundos
+#  max_time_alarm_on: 600
+#
+#  # Videostreams asociados a sensores
+#  videostreams:
+#    camera.escam_qf001:
+#      - binary_sensor.motioncam_salon
+##      - binary_sensor.pir_dormitorio_rpi2mpd
+##      - binary_sensor.esp1_pir
+#    camera.picamera_salon:
+#      - binary_sensor.pir_salon
+#    camera.picamera_estudio:
+#      - binary_sensor.motioncam_estudio
+#      - binary_sensor.pir_estudio_rpi2h
+#      - binary_sensor.vibration_sensor_rpi2h
+#      - binary_sensor.esp3_pir
+#
+#  # Cámaras, ip y params para jpg request
+#  # cameras_jpg_ip_secret: motioneye_jpg_cam_1,hasscam_jpg_cam_3,motioneye_jpg_cam_2
+#  # cameras_jpg_params_secret: foscam_url_cam_1_params,foscam_url_cam_2_params
+#  cameras_jpg_ip_secret: motioneye_jpg_cam_1,motioneye_jpg_cam_2
+#
+#  # Interruptor de alarma y de modo silencioso (sin turn on relés)
+#  main_switch: switch.switch_master_alarm
+#  # silent_mode: input_boolean.silent_mode
+#
+#  # Actuadores en caso de activación
+#  rele_sirena: light.flexo
+#  # rele_sirena: switch.rele_de_sirena
+#  # rele_sirena: switch.rele_1
+#  # rele_secundario: switch.rele_2
+#  # Avisador de actividad / prealarma / activación (opc)
+#  # led_act: switch.rele_de_sirena
+#
+#  # Luces RGB para simulación de alarma visual
+#  # alarm_rgb_lights: light.bola_grande,light.central,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv
+#
+#  # Configuración de sensibilidad
+#  # ------------------------------------------------------
+#  # Parámetro de tiempo de espera desde conexión a armado de alarma:
+#  espera_a_armado_sec: 15
+#  # Parámetro de tiempo de espera en pre-alarma para conectar la alarma si ocurre un nuevo evento:
+#  reset_prealarm_time_sec: 15
+#  # Segundos entre captura de eventos con la alarma conectada
+#  min_delta_sec_events: 2
+#  delta_secs_trigger: 30
+#  # Número de eventos máximo a incluir por informe en correo electrónico. Se limita eliminando eventos de baja prioridad
+#  num_max_eventos_por_informe: 10
+#  # Hora de envío del informe diario de eventos detectados (si los ha habido). Comentar con # para desactivar
+#  hora_informe: '9:30'

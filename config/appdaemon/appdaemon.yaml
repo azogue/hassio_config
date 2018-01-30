@@ -4,6 +4,26 @@ AppDaemon:
   errorfile: /config/appdaemon/appdaemon_err.log
   threads: 30
 
+  # EXTRA - common vars
+  base_url: !secret base_url
+  path_base_data: /mnt/usbdrive
+  path_ha_conf: /home/homeassistant/.homeassistant
+
+  notifier: notify.ios_iphone
+  chatid_sensor: sensor.telegram_default_chatid
+  bot_chatids: !secret bot_chatids
+  bot_group: notify.telegram_group
+  bot_group_target: !secret bot_group_target
+  bot_name: !secret bot_name
+  bot_nicknames: !secret bot_nicknames
+  bot_notifier: telegram_bot.send_message
+
+  media_player: media_player.kodi
+
+  media_player_mopidy: media_player.dormitorio_mopidy
+  mopidy_ip: !secret mopidy_ip
+  mopidy_port: !secret mopidy_port
+
 HASS:
   ha_url: http://homeassistant:8123
   ha_key: !secret ha_key
@@ -12,6 +32,6 @@ HADashboard:
   dash_dir: /config/appdaemon/dashboards
 
 # Apps
-hello_world:
-  module: hello
-  class: HelloWorld
+#hello_world:
+#  module: hello
+#  class: HelloWorld
