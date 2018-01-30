@@ -1,0 +1,320 @@
+homeassistant:
+  customize:
+
+    binary_sensor.local_pir:
+      friendly_name: Movimiento
+      device_class: motion
+      homebridge_hidden: true
+
+    sensor.local_htu21d_temperature:
+      friendly_name: Temperatura
+      icon: mdi:thermometer
+    sensor.local_htu21d_humidity:
+      friendly_name: Humedad
+      icon: mdi:water-percent
+      homebridge_sensor_type: humidity
+  
+    sensor.local_light_level:
+      friendly_name: Iluminación
+      icon: mdi:lightbulb
+      device_class: light
+      homebridge_sensor_type: light
+  
+    sensor.hass_cpu_temperature:
+      homebridge_hidden: True
+    sensor.ram_free:
+      homebridge_hidden: True
+    sensor.cpu_use:
+      homebridge_hidden: True
+    sensor.disk_use_:
+      homebridge_hidden: True
+    sensor.last_boot:
+      homebridge_hidden: True
+    sensor.pihole_ads_blocked_today:
+      friendly_name: Ads blocked today
+      homebridge_hidden: True
+    sensor.pihole_ads_percentage_blocked_today:
+      friendly_name: Ads (%) blocked today
+      homebridge_hidden: True
+    sensor.pihole_dns_unique_clients:
+      friendly_name: DNS unique clients
+      homebridge_hidden: True
+
+    # Openweather sensors
+    sensor.villena_temperature:
+      friendly_name: Temperatura exterior
+    sensor.villena_wind_speed:
+      friendly_name: Velocidad del viento
+      homebridge_hidden: True
+      icon: mdi:weather-windy
+    sensor.villena_humidity:
+      friendly_name: Humedad exterior
+      icon: mdi:water-percent
+    sensor.villena_pressure:
+      friendly_name: Presión
+      homebridge_hidden: True
+      icon: mdi:weather-windy-variant
+    sensor.villena_condition:
+      friendly_name: Condición general
+      homebridge_hidden: True
+    sensor.villena_cloud_coverage:
+      friendly_name: Nubes
+      homebridge_hidden: True
+      icon: mdi:weather-cloudy
+    sensor.villena_rain:
+      friendly_name: LLuvia
+      homebridge_hidden: True
+      icon: mdi:weather-rainy
+    sensor.villena_forecast:
+      friendly_name: Previsión
+      homebridge_hidden: True
+
+    sensor.yw_day1_condition:
+      friendly_name: Mañana
+    sensor.yw_day1_temperature_min:
+      friendly_name: Mínima mañana
+    sensor.yw_day1_temperature_max:
+      friendly_name: Máxima mañana
+    sensor.yw_day2_condition:
+      friendly_name: Pasado mañana
+    sensor.yw_day2_temperature_min:
+      friendly_name: Mínima pasado mañana
+    sensor.yw_day2_temperature_max:
+      friendly_name: Máxima pasado mañana
+
+    sensor.dark_sky_summary:
+      friendly_name: Resumen
+    sensor.dark_sky_hourly_summary:
+      friendly_name: Resumen horario
+    sensor.dark_sky_daily_summary:
+      friendly_name: Forecast
+    sensor.dark_sky_temperature:
+      friendly_name: Temperatura
+#    sensor.dark_sky_apparent_temperature:
+#      friendly_name: Temperatura aparente
+#    sensor.dark_sky_dew_point:
+#      friendly_name: Tª de rocío
+#    sensor.dark_sky_humidity:
+#      friendly_name: Humedad
+#    sensor.dark_sky_pressure:
+#      friendly_name: Presión
+#    sensor.dark_sky_daily_high_apparent_temperature:
+#      friendly_name: Máxima diaria aparente
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_high_temperature:
+#      friendly_name: Máxima diaria
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_low_temperature:
+#      friendly_name: Mínima diaria
+#      icon: mdi:arrow-collapse-down
+#    sensor.dark_sky_apparent_temperature_1:
+#      friendly_name: Temperatura aparente
+#    sensor.dark_sky_humidity_1:
+#      friendly_name: Humedad
+#    sensor.dark_sky_pressure_1:
+#      friendly_name: Presión
+#    sensor.dark_sky_daily_high_apparent_temperature_1:
+#      friendly_name: Máxima diaria aparente
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_high_temperature_1:
+#      friendly_name: Máxima diaria
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_low_temperature_1:
+#      friendly_name: Mínima diaria
+#      icon: mdi:arrow-collapse-down
+#    sensor.dark_sky_apparent_temperature_2:
+#      friendly_name: Temperatura aparente
+#    sensor.dark_sky_humidity_2:
+#      friendly_name: Humedad
+#    sensor.dark_sky_pressure_2:
+#      friendly_name: Presión
+#    sensor.dark_sky_daily_high_apparent_temperature_2:
+#      friendly_name: Máxima diaria aparente
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_high_temperature_2:
+#      friendly_name: Máxima diaria
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_low_temperature_2:
+#      friendly_name: Mínima diaria
+#      icon: mdi:arrow-collapse-down
+#    sensor.dark_sky_apparent_temperature_3:
+#      friendly_name: Temperatura aparente
+#    sensor.dark_sky_humidity_3:
+#      friendly_name: Humedad
+#    sensor.dark_sky_pressure_3:
+#      friendly_name: Presión
+#    sensor.dark_sky_daily_high_apparent_temperature_3:
+#      friendly_name: Máxima diaria aparente
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_high_temperature_3:
+#      friendly_name: Máxima diaria
+#      icon: mdi:arrow-collapse-up
+#    sensor.dark_sky_daily_low_temperature_3:
+#      friendly_name: Mínima diaria
+#      icon: mdi:arrow-collapse-down
+
+    camera.weather_svg:
+      friendly_name: !secret weather_svg_cam_name
+
+    input_number.max_humidity:
+      friendly_name: Humedad Máx.
+      icon: mdi:water
+
+  # Customize entities matching a pattern
+  customize_glob:
+    "sensor.yw_day*":
+      homebridge_hidden: True
+    "sensor.dark_sky_*":
+      homebridge_hidden: True
+    "sensor.dark_sky_hum*":
+      friendly_name: Humedad
+    "sensor.dark_sky_press*":
+      friendly_name: Presión
+    "sensor.dark_sky_dew_point*":
+      friendly_name: Tª de rocío
+    "sensor.dark_sky_apparent_temp*":
+      friendly_name: Temperatura aparente
+    "sensor.dark_sky_daily_high_apparent_temp*":
+      friendly_name: Máxima diaria aparente
+      icon: mdi:arrow-collapse-up
+    "sensor.dark_sky_daily_high_temp*":
+      friendly_name: Máxima diaria
+      icon: mdi:arrow-collapse-up
+    "sensor.dark_sky_daily_low_temp*":
+      friendly_name: Mínima diaria
+      icon: mdi:arrow-collapse-down
+
+
+# This will override the default home zone
+zone:
+- name: Home
+  latitude: !secret latitude
+  longitude: !secret longitude
+  radius: 125
+  icon: mdi:castle
+
+- name: !secret z1_name
+  latitude: !secret z1_latitude
+  longitude: !secret z1_longitude
+  radius: !secret z1_radius
+  icon: !secret z1_icon
+
+- name: !secret z2_name
+  latitude: !secret z2_latitude
+  longitude: !secret z2_longitude
+  radius: !secret z2_radius
+  icon: !secret z2_icon
+
+binary_sensor:
+  - platform: rpi_gpio
+    name: Movimiento
+    device_class: motion
+    ports:
+      18: local_pir
+    bouncetime: 50
+    pull_mode: "UP"
+  #  invert_logic: true
+
+sensor:
+# - platform: onewire
+#   names:
+#     28-800000014216: Ds18b20_S1
+#     28-800000014588: Ds18b20_S2
+#     28-80000001595e: Ds18b20_S3
+#     #28:88:45:01:00:00:80:6D: Ds18b20_S1
+#     #28:16:42:01:00:00:80:9E: Ds18b20_S2
+#     #28:5E:59:01:00:00:80:46: Ds18b20_S3
+#   scan_interval: 30
+
+- platform: htu21d
+  name: local_htu21d
+  scan_interval: 30
+
+- platform: bh1750
+  name: local_light_level
+  operation_mode: continuous_high_res_mode_2
+  measurement_delay_ms: 10
+  sensibility: 125
+  multiplier: 1.5
+  scan_interval: 20
+
+- platform: darksky
+  api_key: !secret darksky_api_key
+  forecast:
+    - 1
+    - 2
+    - 3
+  monitored_conditions:
+    - summary
+    - hourly_summary
+    - daily_summary
+    - temperature
+    - temperature_max
+    - temperature_min
+    - apparent_temperature
+    - apparent_temperature_max
+    - dew_point
+    - humidity
+    - pressure
+  update_interval: '00:05:00'
+
+- platform: command_line
+  name: HASS CPU Temperature
+  command: "cat /sys/class/thermal/thermal_zone0/temp"
+  unit_of_measurement: "°C"
+  value_template: '{{ value | multiply(0.001) | round(1) }}'
+
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /
+    - type: memory_free
+    - type: processor_use
+    - type: last_boot
+
+#- platform: pi_hole
+#  monitored_conditions:
+#    - ads_blocked_today
+#    - ads_percentage_today
+#    - unique_clients
+
+device_tracker:
+- platform: nmap_tracker
+  hosts: 192.168.1.1-60
+  #exclude:
+  #  - !secret local_ip
+  home_interval: 30
+# # If new discovered devices are tracked by default (default: yes)
+#   track_new_devices: no
+#   # Seconds between each scan for new devices (default: 12)
+  interval_seconds: 60
+#   # Seconds to wait till marking someone as not home after not being seen
+#   # (default: 180)
+  consider_home: 300
+
+- platform: bluetooth_tracker
+  home_interval: 30
+  track_new_devices: yes
+
+- platform: owntracks
+  max_gps_accuracy: 200
+  waypoints: True
+
+# group:
+#   Local:
+#     - binary_sensor.local_pir
+#     - sensor.local_htu21d_temperature
+#     - sensor.local_htu21d_humidity
+#     - sensor.local_light_level
+  
+#   LocalHost:
+#     - sensor.hass_cpu_temperature
+#     - sensor.ram_free
+#     - sensor.cpu_use
+#     - sensor.disk_use_
+#     - sensor.last_boot
+  
+#   Pi Hole:
+#     - sensor.pihole_ads_blocked_today
+#     - sensor.pihole_ads_percentage_blocked_today
+#     - sensor.pihole_dns_unique_clients

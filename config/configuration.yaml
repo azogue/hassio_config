@@ -1,0 +1,111 @@
+homeassistant:
+  name: Sweet Home
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: !secret elevation
+  unit_system: metric
+  time_zone: !secret time_zone
+  packages:  !include_dir_named packages
+  customize: !include customize.yaml
+  #whitelist_external_dirs:
+  #  - !secret ext_dir_1
+  #  - !secret ext_dir_2
+  #  - !secret ext_dir_3
+  #  - !secret ext_dir_4
+  #customize_glob: !include frontend/customize_glob.yaml
+frontend:
+config:
+http:
+  base_url: !secret base_url
+  api_password: !secret hass_pw
+  use_x_forwarded_for: True
+  ip_ban_enabled: True
+  login_attempts_threshold: 10
+  trusted_networks:
+    - 127.0.0.1
+    - 192.168.1.0/24
+  #  - 172.30.33.2
+
+logger:
+  default: warn
+  logs:
+    homeassistant.bootstrap: info
+    homeassistant.setup: info
+    homeassistant.components.recorder: info
+    homeassistant.components.history: info
+    homeassistant.components.script: info
+    homeassistant.components.automation: info
+
+    homeassistant.components.media_player: info
+    homeassistant.components.tts: debug
+
+mqtt:
+  discovery: true
+  discovery_prefix: homeassistant
+  broker: core-mosquitto
+  client_id: !secret mqtt_client_id
+  keepalive: 120
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+#  protocol: 3.1
+  birth_message:
+    topic: 'hass/status_master'
+    payload: 'on'
+    qos: !secret mqtt_default_qos
+  will_message:
+    topic: 'hass/status_master'
+    payload: 'off'
+    qos: !secret mqtt_default_qos
+
+updater:
+  include_used_components: true
+discovery:
+conversation:
+sun:
+map:
+python_script:
+# Text to speech
+tts:
+  platform: google
+  language: 'es'
+
+history:
+  include:
+    domains:
+      - sun
+      - binary_sensor
+      - sensor
+      - media_player
+      - device_tracker
+      - light
+      - switch
+      - vacuum
+logbook:
+influxdb:
+  host: !secret influxdb_host
+  port: !secret influxdb_port
+  database: !secret influxdb_db
+  username: !secret influxdb_user
+  password: !secret influxdb_pass
+  # ssl: true
+  # verify_ssl: true
+  default_measurement: state
+
+#history: !include database/history.yaml
+#logbook: !include database/logbook.yaml
+recorder:
+  purge_interval: 1
+  purge_keep_days: !secret recorder_purge_days
+  db_url: !secret recorder_db_url
+
+# SENSORS & SERVICES
+
+weather:
+  - platform: openweathermap
+    api_key: !secret openweathermap_api_key
+    name: Local Weather
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+weblink: !include weblinks.yaml

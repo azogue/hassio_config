@@ -1,0 +1,22 @@
+homeassistant:
+#  customize:
+
+camera:
+#  - platform: generic
+#    name: webcam_playa_1
+#    still_image_url: !secret webcam_playa_1
+#    scan_interval: 300
+
+#  - platform: generic
+#    name: webcam_playa_2
+#    still_image_url: !secret webcam_playa_2
+#    scan_interval: 300
+  # - platform: generic
+  #   name: webcam_playa_3
+  #   still_image_url: !secret webcam_playa_3
+
+  - platform: generic
+    name: weather_svg
+    still_image_url: !secret weather_svg_cam_url
+    content_type: 'image/svg+xml'
+    scan_interval: 300

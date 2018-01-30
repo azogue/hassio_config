@@ -1,0 +1,439 @@
+- alias: Buenas noches
+  id: buenas_noches
+  trigger:
+    platform: time
+    minutes: '/5'
+    seconds: 00
+  condition:
+    # At night
+    - condition: time
+      after: '23:50:00'
+      before: '05:00:00'
+
+    # Not playing anything for a time
+    - condition: state
+      entity_id: media_player.kodi_tv
+      state: 'off'
+      for:
+        minutes: 15
+
+    # Lights off
+    - condition: state
+      entity_id: light.dormitorio
+      state: 'off'
+      for:
+        minutes: 3
+    - condition: state
+      entity_id: light.salon
+      state: 'off'
+      for:
+        minutes: 5
+    - condition: state
+      entity_id: light.estudio
+      state: 'off'
+      for:
+        minutes: 5
+
+    # Family at home
+    - condition: state
+      entity_id: group.family
+      state: 'home'
+      for:
+        minutes: 10
+
+#    # Low Light level
+#    - condition: template
+#      value_template: >
+#        {% if states.sensor.enerpi_ldr and states.sensor.esp1_light %}
+#          {{ (states.sensor.enerpi_ldr.state|float < 5) and (states.sensor.esp1_light.state|float < 10)}}
+#        {% elif states.sensor.esp1_light %}
+#          {{ states.sensor.esp1_light.state|float < 10}}
+#        {% else %}
+#          1
+#        {% endif %}
+
+    # No multi-trigger!
+    - condition: template
+      value_template: '{% if states.automation.buenas_noches.attributes.last_triggered %}{{as_timestamp(now()) - as_timestamp(states.automation.buenas_noches.attributes.last_triggered) > 7 * 3600}}{% else %}{{ 1 > 0 }}{% endif %}'
+  action:
+    # Run good_night script
+  - service: script.turn_on
+    entity_id: script.good_night
+
+    # Notify script run
+  - service: persistent_notification.create
+    data:
+      title: '¡Buenas noches!'
+      message: "Script de buenas noches auto-activado en {{ as_timestamp(now())| timestamp_local}}."
+      notification_id: "good_night_notif"
+
+- alias: Encendido de TV si apagada y KODI play
+  trigger:
+    platform: state
+    entity_id: media_player.kodi_tv
+    from: 'off'
+    to: 'playing'
+  action:
+  - service: media_player.turn_on
+    entity_id: media_player.kodi
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*TV ON*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Encendido de TV automático en Kodi PLAY'
+      disable_notification: true
+      inline_keyboard:
+        - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+        - Luces salón:/service_call light.toggle group.luces_salon, +:/init
+#
+- alias: Apagado de TV si encendida y KODI en idle > 10 min
+  trigger:
+    platform: state
+    entity_id: media_player.kodi_tv
+    to: 'idle'
+    for:
+      minutes: 10
+  action:
+  - service: media_player.turn_off
+    entity_id: media_player.kodi_tv
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*TV OFF*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Apagado de TV automático (Kodi en `idle` > 10 min)'
+      disable_notification: true
+      inline_keyboard:
+        - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+        - Luces salón:/service_call light.toggle group.luces_salon, +:/init
+
+- alias: Apagado de CAM salón en Kodi PLAY nocturno
+  trigger:
+    platform: state
+    entity_id: media_player.kodi
+#    from: 'idle'
+    to: 'playing'
+  condition:
+    - condition: sun
+      after: sunset
+      after_offset: "-0:30:00"
+    - condition: state
+      entity_id: switch.camara
+      state: 'on'
+  action:
+  - service: switch.turn_off
+    entity_id: switch.camara
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*CAM Salón OFF*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Apagado de cámara de Salón en Kodi PLAY nocturno.'
+      disable_notification: true
+      inline_keyboard:
+        - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
+
+- alias: Encendido automático de CAM salón
+  trigger:
+    platform: state
+    entity_id: media_player.kodi_tv
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    - condition: state
+      entity_id: switch.camara
+      state: 'off'
+  action:
+  - service: switch.turn_on
+    entity_id: switch.camara
+
+# LAN/BT discover --> event device_tracker_new_device
+- alias: New BT device notifier
+  trigger:
+    platform: event
+    event_type: device_tracker_new_device
+  action:
+  - service: notify.ios_iphone
+    alias: Notify new BT device
+    data_template:
+      title: "Nuevo dispositivo detectado"
+      message: "entity_id:\n* {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }}"
+      data:
+        push:
+          badge: 1
+          sound: "US-EN-Alexa-Motion-Detected-Generic.wav"
+          category: "confirm" # Needs to match the top level identifier you used in the ios configuration
+          action_data: # Anything passed in action_data will get echoed back to Home Assistant.
+            entity_id: light.cuenco
+            event: event
+  - service: notify.gmail
+    data_template:
+      title: "HASS - Nuevo dispositivo detectado"
+      message: "entity_id: {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }} [EVENT: {{ trigger.event.as_dict()['event_type'] }}]\n\nRAW: {{ trigger.event.as_dict() }}"
+
+# Sun notifications
+#- alias: Notify sunrise
+#  trigger:
+#    platform: sun
+#    event: sunrise
+#    offset: '+00:00:00'
+#  action:
+#    service: notify.ios
+#    data:
+#      title: 'Buenos días!'
+#      message: 'Empieza un nuevo día!'
+#      data:
+#        push:
+#          badge: 0
+#          sound: "US-EN-Morgan-Freeman-Good-Morning.wav"
+#          category: "alarm" # Needs to match the top level identifier you used in the ios configuration
+
+- alias: Notify sunset
+  trigger:
+    platform: sun
+    event: sunset
+    offset: '+00:00:00'
+  action:
+  - service: telegram_bot.send_message
+    data:
+      title: 'Empieza la noche!'
+      message: 'Acaba de ponerse el sol... ¿Encendemos luces?'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      disable_notification: true
+      inline_keyboard:
+        - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle group.luces_dormitorio
+        - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call switch.toggle switch.estudio_light_relay, +:/init
+
+  - service: notify.ios_iphone
+    data:
+      title: 'Empieza la noche!'
+      message: 'Acaba de ponerse el sol..'
+      data:
+        push:
+          badge: 0
+          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
+          category: "confirm"
+
+# Set a light scene with a python_script
+- alias: Salón Select Scene
+  trigger:
+    platform: state
+    entity_id: input_select.salon_light_scene
+  action:
+    - service: python_script.select_light_profile
+      data_template:
+        scene: '{{ trigger.to_state.state }}'
+
+- alias: Tono Salón
+  trigger:
+    platform: state
+    entity_id: input_number.light_temp_slider_salon
+  action:
+    - service: light.turn_on
+      data:
+        entity_id:
+          - light.bola_grande
+          - light.bola_pequena
+          - light.cuenco
+          - light.central
+          - light.pie_sofa
+          - light.pie_tv
+      data_template:
+        color_temp: '{{ (states( "input_number.light_temp_slider_salon" )|round(0) * (500 - 155) / 100 + 155)|int }}'
+
+- alias: Brillo Salón
+  trigger:
+    platform: state
+    entity_id: input_number.light_main_slider_salon
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id:
+          - group.luces_salon
+      data_template:
+        brightness: '{{ states( "input_number.light_main_slider_salon" )|round( 0 ) }}'
+
+#- alias: Brillo Salón Sync
+#  trigger:
+#    - platform: state
+#      entity_id: light.bola_grande
+#      to: "on"
+#  action:
+#    - service: automation.turn_off
+#      entity_id: automation.brillo_salon
+#    - service: input_number.select_value
+#      data:
+#        entity_id: input_number.light_main_slider_salon
+#      data_template:
+#        value: '{{ trigger.to_state.attributes.brightness|int }}'
+#    - service: automation.turn_on
+#      entity_id: automation.brillo_salon
+
+# Startup notifications, default states, and more to run at HA start
+- alias: Start HomeAssistant
+  trigger:
+    - platform: homeassistant
+      event: start
+  action:
+    - service: python_script.set_telegram_chatid_sensor
+      data:
+        chat_id: !secret telegram_bot_chat_id_admin
+    - delay:
+        seconds: 5
+    - service: python_script.start_states
+      data:
+        expert_mode_state: on  # Start with expert mode
+    - delay:
+        seconds: 30
+#    - service: shell_command.restart_homebridge
+    #  - service: notify.ios
+    #    data:
+    #      title: "Homebridge re-started"
+    #      message: "Now you can reload the HomeKit info from HA."
+    #      target: !secret ios_target
+    #      data:
+    #        push:
+    #          category: "CONFIRM"
+
+# New version notify
+- alias: Update notifications
+  trigger:
+    - platform: state
+      entity_id: updater.updater
+  action:
+  - service: notify.ios_iphone
+    data:
+      title: 'New Home Assistant Release'
+      message: "Home Assistant  {{ states.updater.updater.state }}  is now available."
+      data:
+        push:
+          badge: 1
+          category: "confirm"
+
+## Flush MySQL database if not ok & notify:
+#- alias: Database flush
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.database_ok
+#    to: 'off'
+#    for:
+#      minutes: 2
+#  action:
+#    - service: telegram_bot.send_message
+#      data:
+#        title: '*MySQL flush*'
+#        target: !secret telegram_bot_chat_id_admin
+#        message: !secret msg_recorder_flush
+#        disable_notification: false
+#        disable_web_page_preview: true
+#    - delay:
+#        seconds: 5
+#    - service: shell_command.cmd_recorder_flush_hosts
+
+## Modo 'experto' (con visibilidad extra / normal)
+## switch groups visibility:
+#- alias: Visibilidad modo experto ON/OFF
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.show_expert_mode
+#  action:
+#    - service: python_script.change_expert_mode_view
+#      data_template:
+#        expert_mode_state: '{{ trigger.to_state.state }}'
+
+#- alias: Turn ON TV with lights (hue switch)
+#  trigger:
+#    platform: state
+#    entity_id: sensor.hue_dimmer_switch
+#    to: '1_hold'
+#  action:
+#    - service: script.play_kodi_pvr
+#    - event: flash_light
+#      event_data:
+#        color: orange
+#        persistence: 2
+#        flashes: 3
+#
+#- alias: Turn OFF all (hue switch)
+#  trigger:
+#    platform: state
+#    entity_id: sensor.hue_dimmer_switch
+#    to: '4_hold'
+#  action:
+#    - service: media_player.turn_off
+#      entity_id: media_player.kodi
+#    - event: flash_light
+#      event_data:
+#        color: red
+#        persistence: 1
+#        flashes: 2
+#    - delay:
+#        seconds: 5
+#    - service: homeassistant.turn_off
+#      entity_id: group.all_lights,switch.cocina,switch.estudio_light_relay
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '*All Off*'
+#        message: "Apagando TV y luces al mantener pulsado OFF en mando hue"
+#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+#        disable_notification: true
+#        inline_keyboard:
+#          - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi
+#          - Aura habitación:/service_call light.toggle light.aura_habitacion
+#
+#- alias: Turn Cinema mode ON (hue switch)
+#  trigger:
+#    platform: state
+#    entity_id: sensor.hue_dimmer_switch
+#    to: '3_hold'
+#  action:
+#    - service: media_player.turn_on
+#      entity_id: media_player.kodi
+#    - event: flash_light
+#      event_data:
+#        color: blue
+#        persistence: 2
+#        flashes: 3
+#    - delay:
+#        seconds: 5
+#    - service: script.update_library
+#    - service: switch.turn_on
+#      entity_id: switch.toggle_kodi_ambilight
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '*Cinema mode ON*'
+#        message: ""
+#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+#        disable_notification: true
+#        inline_keyboard:
+#          - Ambilight:/service_call switch.toggle switch.toggle_kodi_ambilight, Luces:/service_call light.toggle light.salon
+
+- alias: Encendido luces dormitorio
+  trigger:
+    platform: state
+    entity_id: binary_sensor.pir_dormitorio_rpi2mpd
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.family
+        state: 'home'
+      - condition: state
+        entity_id: group.luces_dormitorio
+        state: 'off'
+        for:
+          seconds: 30
+      - condition: state
+        entity_id: switch.switch_master_alarm
+        state: 'off'
+      - condition: template
+        value_template: '{{ states.sensor.dormitorio_light_level_rpi2mpd.state |int < 15 }}'
+      - condition: time
+        after: '8:30:00'
+        before: '23:00:00'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.aura_habitacion
+        brightness: 222
+        xy_color: [0.3945,0.406]

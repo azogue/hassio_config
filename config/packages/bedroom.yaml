@@ -1,0 +1,160 @@
+# Slave HASS in RPI2 - Bedroom
+homeassistant:
+  customize:
+    binary_sensor.pir_dormitorio_rpi2mpd:
+      friendly_name: Movimiento (dormitorio)
+      device_class: motion
+      homebridge_hidden: true
+
+    sensor.hass_cpu_temperature_rpi2mpd:
+      friendly_name: HASS CPU Temperature
+      homebridge_hidden: true
+    sensor.cpu_used_rpi2mpd:
+      icon: mdi:memory
+      friendly_name: CPU Use
+      homebridge_hidden: true
+    sensor.ram_available_rpi2mpd:
+      icon: mdi:memory
+      friendly_name: RAM available
+      homebridge_hidden: true
+    sensor.last_boot_rpi2mpd:
+      icon: mdi:clock
+      friendly_name: Last boot
+      homebridge_hidden: true
+    sensor.disk_used__rpi2mpd:
+      icon: mdi:harddisk
+      friendly_name: Disk used /
+      homebridge_hidden: true
+
+    sensor.dormitorio_light_level_rpi2mpd:
+      friendly_name: Iluminación Dormitorio
+      homebridge_sensor_type: light
+      icon: mdi:lightbulb
+      device_class: light
+
+    sensor.dormitorio_temperature_rpi2mpd:
+      friendly_name: Temperatura Dormitorio
+      icon: mdi:thermometer
+      homebridge_hidden: True
+    sensor.dormitorio_humidity_rpi2mpd:
+      homebridge_hidden: True
+      icon: mdi:water-percent
+      friendly_name: Humedad Dormitorio
+#      homebridge_sensor_type: humidity
+    sensor.dormitorio_pressure_rpi2mpd:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+
+    sensor.dormitorio_htu21d_temperature_rpi2mpd:
+      icon: mdi:thermometer
+      friendly_name: Temperatura HTU Dormitorio
+    sensor.dormitorio_htu21d_humidity_rpi2mpd:
+      friendly_name: Humedad HTU Dormitorio
+      icon: mdi:water-percent
+      homebridge_sensor_type: humidity
+
+    media_player.dormitorio_mopidy:
+      homebridge_hidden: True
+
+
+binary_sensor:
+  - platform: mqtt
+    state_topic: ha_bedroom/binary_sensor/pir_dormitorio/state
+    name: pir_dormitorio_rpi2mpd
+  #  qos (Optional): The maximum QoS level of the state topic. Default is 0.
+    payload_on: "on"
+    payload_off: "off"
+    device_class: motion
+    qos: 2
+    availability_topic: "hass/status_bedroom"
+    payload_available: "on"
+    payload_not_available: "off"
+
+
+sensor:
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_temperature/state
+    name: dormitorio_temperature_rpi2mpd
+    unit_of_measurement: '°C'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_humidity/state
+    name: dormitorio_humidity_rpi2mpd
+    unit_of_measurement: '%'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_pressure/state
+    name: dormitorio_pressure_rpi2mpd
+    unit_of_measurement: 'mb'
+    force_update: true
+    expire_after: 600
+    qos: 2
+
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_light_level/state
+    name: dormitorio_light_level_rpi2mpd
+    unit_of_measurement: 'lx'
+    force_update: true
+    expire_after: 600
+    qos: 2
+
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_htu21d_temperature/state
+    name: dormitorio_htu21d_temperature_rpi2mpd
+    unit_of_measurement: '°C'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/dormitorio_htu21d_humidity/state
+    name: dormitorio_htu21d_humidity_rpi2mpd
+    unit_of_measurement: '%'
+    force_update: true
+    expire_after: 600
+    qos: 2
+
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/hass_cpu_temperature/state
+    name: hass_cpu_temperature_rpi2mpd
+    unit_of_measurement: '°C'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/cpu_used/state
+    name: cpu_used_rpi2mpd
+    unit_of_measurement: '%'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/ram_available/state
+    name: ram_available_rpi2mpd
+    unit_of_measurement: 'MiB'
+    force_update: true
+    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/last_boot/state
+    name: last_boot_rpi2mpd
+    force_update: true
+#    expire_after: 600
+    qos: 2
+  - platform: mqtt
+    state_topic: ha_bedroom/sensor/disk_used_/state
+    name: disk_used__rpi2mpd
+    force_update: true
+    expire_after: 600
+    qos: 2
+
+
+media_player:
+  - platform: mpd
+    host: !secret mpd_host
+    port: !secret mpd_port
+    name: Dormitorio (Mopidy)
+  #  scan_interval: 60

@@ -1,0 +1,465 @@
+Local:
+  - sun.sun
+  - sensor.local_htu21d_temperature
+  - sensor.local_htu21d_humidity
+  - sensor.local_light_level
+  - binary_sensor.local_pir
+
+Salón:
+  - input_number.light_main_slider_salon
+  - input_number.light_temp_slider_salon
+  - input_select.salon_light_scene
+  - light.bola_grande
+  - light.bola_pequena
+  - light.central
+  - light.pie_tv
+  - light.pie_sofa
+  - light.cuenco
+  - light.lamparita
+  - light.go
+  - light.tira
+
+Estudio:
+#  entities:
+#    control: hidden
+    - light.flexo
+#    - switch.estudio_light_relay
+
+control_dormitorio:
+  name: Dormitorio
+  control: hidden
+  entities:
+    - light.aura_habitacion
+    - light.hue_habitacion
+    - switch.altavoz
+    - switch.calefactor
+
+#  Hue sensors:
+#    - sensor.hue_dimmer_switch
+#    - sensor.iphone
+
+sensors_dormitorio:
+  name: Dormitorio
+  control: hidden
+  entities:
+    - sensor.dormitorio_temperature_rpi2mpd
+    - sensor.dormitorio_humidity_rpi2mpd
+    - sensor.dormitorio_pressure_rpi2mpd
+    - sensor.dormitorio_htu21d_temperature_rpi2mpd
+    - sensor.dormitorio_htu21d_humidity_rpi2mpd
+    - sensor.dormitorio_light_level_rpi2mpd
+    - binary_sensor.pir_dormitorio_rpi2mpd
+
+Despertador:
+  control: hidden
+  entities:
+    - switch.alarm_clock_status
+  #  - input_boolean.alarm_clock_status
+    - input_number.alarm_clock_hour
+    - input_number.alarm_clock_minute
+    - sensor.alarm_clock_time
+    - input_select.room_altavoces
+    # From rf outlets:
+    - switch.altavoz
+    - input_boolean.manual_trigger_lacafetera
+
+Enchufes:
+  control: hidden
+  entities:
+    - switch.cocina
+    - switch.calefactor
+    - switch.camara
+    - switch.altavoz
+    - switch.caldera
+    - switch.esp_plancha
+    - switch.new_switch_2
+#      - switch.new_switch_2
+#      - switch.new_switch_3
+
+Terraza:
+  - light.terraza
+
+#Galería:
+#  - sensor.sensorgaleriat
+#  - sensor.sensorgaleriah
+#  - sensor.sensorgaleriai
+#  - binary_sensor.sensorgaleriamov1
+#  - binary_sensor.sensorgaleriamov2
+  #- light.sensorgaleria_rgblight
+
+#Caldera:
+#  control: hidden
+#  entities:
+#    #- sensor.calefaccion
+#    - sensor.sensorgaleriaimp
+#    - sensor.sensorgaleriaret
+#    - sensor.sensorgaleriaacs
+#      - switch.caldera
+
+player:
+  - media_player.kodi_tv
+
+Kodi:
+  control: hidden
+  entities:
+    - switch.toggle_kodi_ambilight
+    - switch.toggle_config_kodi_ambilight
+    - script.play_kodi_pvr
+    - script.stop_kodi
+    - script.update_library
+    - script.quit_kodi
+    - script.restart_kodi_osmc
+
+Media select:
+  control: hidden
+  entities:
+    - script.recent_episodes
+    - script.recent_movies
+    - script.pvr_channels
+    - input_select.kodi_results
+    - input_text.q_youtube
+    - input_select.youtube_videos
+
+
+LocalHost:
+  - sensor.hass_cpu_temperature
+  - sensor.ram_available
+  - sensor.cpu_used
+  - sensor.disk_used_
+  - sensor.last_boot
+
+Host Dormitorio:
+  - sensor.hass_cpu_temperature_rpi2mpd
+  - sensor.cpu_used_rpi2mpd
+  - sensor.ram_available_rpi2mpd
+  - sensor.last_boot_rpi2mpd
+  - sensor.disk_used__rpi2mpd
+
+Eugenio:
+  - device_tracker.iphone_bt
+  - device_tracker.iphone
+  - device_tracker.homeadmin_iphone
+
+Carmen:
+  - device_tracker.iphone_de_carmen_bt
+  - device_tracker.iphone_se
+
+Family:
+  - group.eugenio
+  - group.carmen
+
+Conectivity:
+  - binary_sensor.services_notok
+  - sensor.ip_externa
+  - binary_sensor.router_on
+  - binary_sensor.dormitorio_online
+  - binary_sensor.estudio_online
+  - binary_sensor.database_ok
+  - binary_sensor.internet_online
+  - binary_sensor.nas_online
+  - binary_sensor.cocina_online
+  - binary_sensor.pushbullet_online
+  - binary_sensor.email_online
+  - binary_sensor.telegram_online
+  - binary_sensor.ios_online
+  - binary_sensor.kodi_online
+  - sensor.uptime
+  - sensor.ssl_certificate_expiry
+  - sensor.error_counter_notifiers
+  - sensor.core_error_counter
+  - sensor.warning_counter_core
+  - sensor.telegram_default_chatid
+
+dt_imac:
+  hidden: true
+  entities:
+    - device_tracker.imac
+    - device_tracker.imac_wifi
+    - device_tracker.imac_bt
+
+dt_mbp:
+  hidden: true
+  entities:
+    - device_tracker.macbook_pro
+
+dt_ipad:
+  hidden: true
+  entities:
+    - device_tracker.ipad
+    - device_tracker.ipad_wifi
+
+Dispositivos:
+  - group.dt_imac
+  - group.dt_mbp
+  - group.dt_ipad
+  #  - device_tracker.imac
+  #  - device_tracker.imac_wifi
+  #  - device_tracker.imac_bt
+  #  - device_tracker.macbook_pro
+  #  - device_tracker.iphone_bt
+  #  - device_tracker.iphone
+  #  - device_tracker.homeadmin_iphone
+  #  - sensor.iphone_battery_state
+  #  - sensor.iphone_battery_level
+
+  #  - device_tracker.iphone_de_carmen_bt
+  #  - device_tracker.iphone_se
+  #  - device_tracker.homeadmin_iphone_se
+
+  #  - device_tracker.ipad
+  #  - device_tracker.ipad_wifi
+  #  - sensor.ipad_de_eugenio_battery_level
+  #  - sensor.ipad_de_eugenio_battery_state
+  - device_tracker.nas_qnap
+  - device_tracker.nas_syno
+  - device_tracker.hue_bridge
+  - device_tracker.rpi3_enerpi
+  - device_tracker.rpi3_osmc
+  - device_tracker.xiaomi_router
+  - device_tracker.xiaomi_vacuum
+  - device_tracker.jo01
+  - device_tracker.qnap_ubuntu
+  - device_tracker.deco_movistar
+
+Baterías:
+  - sensor.iphone_battery_state
+  - sensor.iphone_battery_level
+  - sensor.ipad_de_eugenio_battery_state
+  - sensor.ipad_de_eugenio_battery_level
+
+
+#ESP Galería:
+#  - binary_sensor.sensorgaleria_online
+#  - sensor.sensorgaleria_adc1
+#  - sensor.sensorgaleria_adc2
+#  - sensor.sensorgaleria_snum
+#  - light.sensorgaleria_switch_led
+#  - light.sensorgaleria_rgblight
+#
+#Plancha:
+#  - sensor.sensor_spk_1t
+#  - sensor.sensor_spk_1h
+#  - sensor.sensor_spk_1p
+#  - sensor.sensor_spk_1i
+#  - binary_sensor.sensor_spk_1_mov1
+#
+#ESP Plancha:
+#  - binary_sensor.sensor_spk_1_online
+#  - sensor.sensor_spk_1_snum
+#  - light.sensor_spk_1_switch_led
+  
+# ESP WROOM32:
+#   - binary_sensor.sensorwroom32_1_online
+#   - sensor.sensorwroom32_1t
+#   - sensor.sensorwroom32_1h
+#   - sensor.sensorwroom32_1p
+#   - sensor.sensorwroom32_1i
+#   - sensor.sensorwroom32_1_snum
+#   - light.sensorwroom32_1_switch_led
+  
+Pi Hole:
+  - sensor.pihole_ads_blocked_today
+  - sensor.pihole_ads_percentage_blocked_today
+  - sensor.pihole_dns_unique_clients
+
+
+#weather:
+#  name: !secret weather_location
+#  entities:
+#    - sun.sun
+#    - sensor.villena_temperature
+#    - sensor.villena_humidity
+#    - sensor.villena_wind_speed
+#    - sensor.villena_pressure
+#    - sensor.villena_condition
+#    - sensor.villena_cloud_coverage
+#    - sensor.villena_rain
+#    - sensor.villena_forecast
+##      - sensor.yr_symbol
+
+weather_dark_sky_now:
+  name: Ahora
+  entities:
+    - sensor.dark_sky_summary
+    - sensor.dark_sky_temperature
+    - sensor.dark_sky_apparent_temperature
+    - sensor.dark_sky_dew_point
+
+    - sensor.dark_sky_humidity
+    - sensor.dark_sky_pressure
+
+weather_dark_sky_today:
+  name: Hoy
+  entities:
+    - sensor.dark_sky_hourly_summary
+    - sensor.dark_sky_daily_high_apparent_temperature
+    - sensor.dark_sky_daily_high_temperature
+    - sensor.dark_sky_daily_low_temperature
+
+weather_dark_sky_tomorrow:
+  name: Mañana
+  entities:
+    - camera.weather_svg
+    - sensor.dark_sky_daily_summary
+
+    - sensor.dark_sky_temperature_1
+    - sensor.dark_sky_apparent_temperature_1
+    - sensor.dark_sky_dew_point_1
+    - sensor.dark_sky_humidity_1
+    - sensor.dark_sky_pressure_1
+
+    - sensor.dark_sky_daily_high_apparent_temperature_1
+    - sensor.dark_sky_daily_high_temperature_1
+    - sensor.dark_sky_daily_low_temperature_1
+
+weather_dark_sky_aftertomorrow:
+  name: Pasado mañana
+  entities:
+    - sensor.dark_sky_temperature_2
+    - sensor.dark_sky_apparent_temperature_2
+    - sensor.dark_sky_dew_point_2
+    - sensor.dark_sky_humidity_2
+    - sensor.dark_sky_pressure_2
+
+    - sensor.dark_sky_daily_high_apparent_temperature_2
+    - sensor.dark_sky_daily_high_temperature_2
+    - sensor.dark_sky_daily_low_temperature_2
+
+weather_dark_sky_afterthree:
+  name: En tres dias
+  entities:
+    - sensor.dark_sky_temperature_3
+    - sensor.dark_sky_apparent_temperature_3
+    - sensor.dark_sky_dew_point_3
+    - sensor.dark_sky_humidity_3
+    - sensor.dark_sky_pressure_3
+
+    - sensor.dark_sky_daily_high_apparent_temperature_3
+    - sensor.dark_sky_daily_high_temperature_3
+    - sensor.dark_sky_daily_low_temperature_3
+
+#  weather_simple:
+#    name: !secret weather_location
+#    entities:
+#      - sensor.villena_temperature
+#      - sensor.villena_humidity
+#      - sensor.villena_cloud_coverage
+#      - sensor.villena_forecast
+#
+# ----------------------------------------------------------------------------------------------------------------------
+# VIEWS
+# ----------------------------------------------------------------------------------------------------------------------
+
+Status:
+  name: Home Status
+  icon: mdi:castle
+  view: yes
+  entities:
+    - group.local
+    - group.salon
+    - group.control_dormitorio
+    - group.sensors_dormitorio
+    - group.terraza
+    - group.estudio
+    - group.galeria
+    - group.caldera
+    - group.plancha
+    # - group.salon
+    # - group.salon_simple
+    # - group.estudio_rpi2h
+    # - group.estudio_rpi2h_simple
+    # - group.esp8266_2
+    # - group.esp8266_3
+    # - group.esp8266_3_simple
+    # - group.cocina
+    # - group.cocina_simple
+    # - group.galeria
+    # - group.caldera
+    # - group.caldera_simple
+#    - group.camaras
+
+Control:
+  name: Home Control
+  icon: mdi:auto-fix
+  view: yes
+  entities:
+    - group.salon
+    - group.control_dormitorio
+    - group.terraza
+    - group.estudio
+    - group.all_lights
+    - group.enchufes
+    # - group.master_luces_del_salon
+    # - group.luces_salon
+    # - group.luces_dormitorio
+    # - group.luces_estudio
+    # - group.enchufes
+    # - media_player.kodi_tv
+    # - group.kodi
+    # - media_player.dormitorio_mopidy
+    # - group.xiaomi_vacuum_robot
+#    - group.despertador
+
+Home Network:
+  name: Red local
+  view: yes
+  icon: mdi:sitemap
+  entities:
+    - group.family
+    - group.dispositivos
+    - group.localhost
+    - group.host_dormitorio
+    - group.conectivity
+    - group.weblinks
+    - group.pi_hole
+    - group.esp_galeria
+    - group.esp_plancha
+    - group.esp_wroom32
+    - group.baterias
+
+    #- group.red_e_internet
+
+# Alarm Panel:
+#   name: Alarm configuration
+#   icon: mdi:shield-outline
+#   view: yes
+#   entities:
+#     - group.alarma
+#     - group.inputs_alarm
+#     - group.camaras
+#     - group.alarm_control
+kodi_control:
+  name: Kodi
+  icon: mdi:kodi
+  view: yes
+  entities:
+    - media_player.kodi_tv
+    - group.kodi
+    - group.media_select
+
+alarm_clock:
+  name: Despertador
+  view: yes
+  icon: mdi:alarm
+  entities:
+    - group.despertador
+    - media_player.dormitorio_mopidy
+    - media_player.kodi_tv
+
+Weather:
+  name: El tiempo
+  icon: mdi:weather-partlycloudy
+  view: yes
+  entities:
+    - camera.weather_svg
+    - camera.webcam_playa_1
+    - camera.webcam_playa_2
+    - camera.webcam_playa_3
+    - group.aislamiento
+    - group.weather_dark_sky_now
+    - group.weather_dark_sky_today
+    - group.weather_dark_sky_tomorrow
+    - group.weather_dark_sky_aftertomorrow
+    - group.weather_dark_sky_afterthree
+    - group.weather_forecast
+    - group.weather

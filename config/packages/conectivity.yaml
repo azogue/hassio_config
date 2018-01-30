@@ -1,0 +1,193 @@
+# Conectivity sensors:
+homeassistant:
+  customize:
+    sensor.ip_externa:
+      homebridge_hidden: true
+      friendly_name: IP externa
+      icon: mdi:sim
+
+    binary_sensor.estudio_online:
+      homebridge_hidden: true
+    binary_sensor.dormitorio_online:
+      homebridge_hidden: true
+    binary_sensor.router_on:
+      homebridge_hidden: true
+    binary_sensor.heating:
+      homebridge_hidden: true
+
+    sensor.error_counter_notifiers:
+      homebridge_hidden: true
+      friendly_name: Errores de notificación
+      icon: mdi:alert
+    sensor.warning_counter_core:
+      homebridge_hidden: true
+      friendly_name: "# Warnings"
+      icon: mdi:alert-outline
+    sensor.core_error_counter:
+      homebridge_hidden: true
+      icon: mdi:alert-outline
+    binary_sensor.internet_online:
+      friendly_name: ¿Hay conexión a internet?
+      homebridge_hidden: true
+    binary_sensor.database_ok:
+      friendly_name: ¿Base de datos OK?
+      homebridge_hidden: true
+    binary_sensor.nas_online:
+      homebridge_hidden: true
+    binary_sensor.pushbullet_online:
+      friendly_name: ¿Hay notificaciones PushBullet?
+      homebridge_hidden: true
+    binary_sensor.email_online:
+      friendly_name: ¿Hay notificaciones por email?
+      homebridge_hidden: true
+    binary_sensor.telegram_online:
+      homebridge_hidden: true
+    binary_sensor.ios_online:
+      homebridge_hidden: true
+    binary_sensor.kodi_online:
+      homebridge_hidden: true
+    binary_sensor.services_notok:
+      homebridge_hidden: true
+    sensor.ssl_certificate_expiry:
+      homebridge_hidden: true
+
+
+binary_sensor:
+  - platform: mqtt
+    state_topic: "hass/status_bedroom"
+    name: Dormitorio Online
+    device_class: connectivity
+    payload_on: "on"
+    payload_off: "off"
+    qos: 2
+
+  - platform: mqtt
+    state_topic: "hass/status_office"
+    name: Estudio Online
+    device_class: connectivity
+    payload_on: "on"
+    payload_off: "off"
+    qos: 2
+
+  - platform: command_line
+    name: Internet Online
+    command: ping -W 1 -c 1 8.8.8.8 > /dev/null 2>&1 && echo success || echo fail
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 120
+
+  - platform: command_line
+    name: Router ON
+    command: ping -W 1 -c 1 192.168.1.1 > /dev/null 2>&1 && echo success || echo fail
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: Pushbullet Online
+    command: "bash /config/shell/check_notifiers.sh pushbullet"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: Email Online
+    command: "bash /config/shell/check_notifiers.sh richsmtp"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: Telegram Online
+    command: "bash /config/shell/check_notifiers.sh telegram"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: iOS Online
+    command: "bash /config/shell/check_notifiers.sh ios"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: Kodi Online
+    command: "bash /config/shell/check_notifiers.sh kodi"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 240
+
+  - platform: command_line
+    name: Database OK
+    command: "bash /config/shell/check_notifiers.sh recorder"
+    device_class: connectivity
+    payload_on: "success"
+    payload_off: "fail"
+    scan_interval: 180
+
+  - platform: template
+    sensors:
+      services_notok:
+        friendly_name: Problemas
+        device_class: safety
+        value_template: >
+          {{
+           (states.binary_sensor.kodi_online.state == 'off') or
+           (states.binary_sensor.pushbullet_online.state == 'off') or
+           (states.binary_sensor.email_online.state == 'off') or
+           (states.binary_sensor.ios_online.state == 'off') or
+           (states.binary_sensor.telegram_online.state == 'off') or
+           (states.binary_sensor.router_on.state == 'off') or
+           (states.binary_sensor.internet_online.state == 'off') or
+           (states.switch.systemd_appdaemon.state == 'off') or
+           (states.switch.systemd_homebridge.state == 'off')
+           }}
+#        entity_id:
+#          - binary_sensor.kodi_online
+#          - binary_sensor.pushbullet_online
+#          - binary_sensor.email_online
+#          - binary_sensor.ios_online
+#          - binary_sensor.telegram_online
+#          - binary_sensor.router_on
+#          - binary_sensor.internet_online
+#          - switch.systemd_appdaemon
+#          - switch.systemd_homebridge
+
+sensor:
+- platform: command_line
+  name: CORE Error counter
+  command: "bash /config/shell/check_notifiers.sh"
+
+- platform: command_line
+  name: Error counter (notifiers)
+  command: "bash /config/shell/check_notifiers.sh"
+
+- platform: command_line
+  name: Warning counter (core)
+  command: "bash /config/shell/check_notifiers.sh core_warning"
+
+#- platform: command_line
+#  name: IP externa
+#  command: "cat /config/external_ip.txt"
+
+- platform: cert_expiry
+  host: !secret base_host
+#    port: 443
+
+- platform: uptime
+  unit_of_measurement: hours
+
+no_ip:
+  domain: !secret base_host
+  username: !secret no_ip_user
+  password: !secret no_ip_password
+
+# TODO AUTOMATION FOR CERT RENEW?
