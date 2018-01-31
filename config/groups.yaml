@@ -120,11 +120,10 @@ Media select:
     - input_text.q_youtube
     - input_select.youtube_videos
 
-
 LocalHost:
   - sensor.hass_cpu_temperature
-  - sensor.ram_available
   - sensor.cpu_used
+  - sensor.ram_available
   - sensor.disk_used_
   - sensor.last_boot
 
@@ -132,8 +131,8 @@ Host Dormitorio:
   - sensor.hass_cpu_temperature_rpi2mpd
   - sensor.cpu_used_rpi2mpd
   - sensor.ram_available_rpi2mpd
-  - sensor.last_boot_rpi2mpd
   - sensor.disk_used__rpi2mpd
+  - sensor.last_boot_rpi2mpd
 
 Eugenio:
   - device_tracker.iphone_bt
@@ -142,7 +141,8 @@ Eugenio:
 
 Carmen:
   - device_tracker.iphone_de_carmen_bt
-  - device_tracker.iphone_se
+  - device_tracker.iphonese
+  - device_tracker.homeadmin_iphonese
 
 Family:
   - group.eugenio
@@ -171,19 +171,23 @@ Conectivity:
   - sensor.telegram_default_chatid
 
 dt_imac:
-  hidden: true
+#  hidden: true
+  name: iMac
   entities:
     - device_tracker.imac
     - device_tracker.imac_wifi
     - device_tracker.imac_bt
 
 dt_mbp:
-  hidden: true
+  name: MacBook Pro
+#  hidden: true
   entities:
     - device_tracker.macbook_pro
+    - device_tracker.macbook_pro_bt
 
 dt_ipad:
-  hidden: true
+  name: iPad
+#  hidden: true
   entities:
     - device_tracker.ipad
     - device_tracker.ipad_wifi
@@ -192,6 +196,8 @@ Dispositivos:
   - group.dt_imac
   - group.dt_mbp
   - group.dt_ipad
+  - device_tracker.applewatch
+  - device_tracker.applewatch_carmen
   #  - device_tracker.imac
   #  - device_tracker.imac_wifi
   #  - device_tracker.imac_bt
@@ -215,15 +221,19 @@ Dispositivos:
   - device_tracker.hue_bridge
   - device_tracker.rpi3_enerpi
   - device_tracker.rpi3_osmc
+  - device_tracker.rpi2_bedroom
   - device_tracker.xiaomi_router
   - device_tracker.xiaomi_vacuum
   - device_tracker.jo01
   - device_tracker.qnap_ubuntu
+  - device_tracker.router_movistar
   - device_tracker.deco_movistar
 
 Baterías:
   - sensor.iphone_battery_state
   - sensor.iphone_battery_level
+  - sensor.iphonese_battery_state
+  - sensor.iphonese_battery_level
   - sensor.ipad_de_eugenio_battery_state
   - sensor.ipad_de_eugenio_battery_level
 
@@ -345,7 +355,21 @@ weather_dark_sky_afterthree:
 #      - sensor.villena_humidity
 #      - sensor.villena_cloud_coverage
 #      - sensor.villena_forecast
-#
+Links:
+  - weblink.nas_qnap
+  - weblink.nas_synology
+  - weblink.hassio_lan
+  - weblink.hassio_pi_hole
+  - weblink.grafana
+  - weblink.contabilidad
+  - weblink.slave_hass
+  - weblink.slave_hass_mpd
+  - weblink.enerpi
+  - weblink.motioneye
+  - weblink.kodi_web_interface
+  - weblink.tv_headend
+  - weblink.mopidy
+  - weblink.router_movistar
 # ----------------------------------------------------------------------------------------------------------------------
 # VIEWS
 # ----------------------------------------------------------------------------------------------------------------------
@@ -410,7 +434,7 @@ Home Network:
     - group.localhost
     - group.host_dormitorio
     - group.conectivity
-    - group.weblinks
+    - group.links
     - group.pi_hole
     - group.esp_galeria
     - group.esp_plancha

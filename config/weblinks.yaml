@@ -10,32 +10,25 @@ entities:
 #     url: !secret motioneye_url
 #   - name: enerPI
 #     url: !secret enerpi_url
+  - name: Router Movistar
+    url: http://192.168.1.1
 
-# LAN-Only access
   - name: HASSIO LAN
     url: !secret weblink_hassio_lan
   - name: HASSIO PI-Hole
     url: !secret weblink_hassio_pihole
-  - name: HASSIO IDE
-    url: !secret weblink_hassio_ide
-#   - name: Mopidy
-#     url: !secret mopidy_url
-#   - name: Slave HASS
-#     url: http://192.168.1.46:8123/
-#   - name: Slave HASS MPD
-#     url: http://192.168.1.52:8123/
-#  - name: enerPI 2x
-#    url: http://192.168.1.52/enerpi/
-#  - name: PyOutlets
-#    url: http://192.168.1.13/outlets
-#   - name: Router Interfibra
-#     url: http://192.168.1.1
-#   - name: Wifi Extender AP
-#     url: http://192.168.1.11
-
+#  - name: HASSIO IDE
+#    url: !secret weblink_hassio_ide
+  - name: Mopidy
+    url: !secret mopidy_url
   - name: TV Headend
     url: !secret weblink_tv_headend
   - name: Kodi web interface
     url: !secret weblink_kodi_web
-#   - name: Contabilidad
-#     url: !secret weblink_contab_url
+
+  - name: Slave HASS
+    url: http://192.168.1.46:8123/
+  - name: Slave HASS MPD
+    url: http://192.168.1.52:8123/
+  - name: enerPI
+    url: !secret enerpi_url

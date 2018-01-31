@@ -22,3 +22,31 @@ camera.webcam_playa_2:
   friendly_name: !secret webcam_playa_2_name
 camera.webcam_playa_3:
   friendly_name: !secret webcam_playa_3_name
+
+weblink.router_movistar:
+  icon: mdi:router-wireless
+weblink.enerpi:
+  icon: mdi:flash
+weblink.mopidy:
+  icon: mdi:music-box-outline
+#  entity_picture: /static/images/enerpi.png
+#weblink.nas:
+#  icon: mdi:library-music
+#  entity_picture: /static/images/nas_ds213j.png
+weblink.tv_headend:
+  icon: mdi:television-guide
+weblink.motioneye:
+  icon: mdi:video
+weblink.kodi_web_interface:
+  icon: mdi:kodi
+#  entity_picture: /static/images/kodi_logo.png
+weblink.slave_hass:
+  friendly_name: HA Estudio
+  icon: mdi:home-assistant
+weblink.slave_hass_mpd:
+  friendly_name: HA Dormitorio
+  icon: mdi:home-assistant
+weblink.grafana:
+  icon: mdi:chart-areaspline
+weblink.contabilidad:
+  icon: mdi:bank

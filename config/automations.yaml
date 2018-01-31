@@ -277,6 +277,10 @@
     - service: python_script.set_telegram_chatid_sensor
       data:
         chat_id: !secret telegram_bot_chat_id_admin
+#    - service: group.set_visibility
+#      entity_id: group.dt_imac,group.dt_mbp,group.dt_ipad
+#      data:
+#        visible: False
     - delay:
         seconds: 5
     - service: python_script.start_states
