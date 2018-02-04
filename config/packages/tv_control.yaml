@@ -8,8 +8,9 @@ homeassistant:
       homebridge_hidden: true
     input_boolean.kodi_tv_state:
       hidden: true
+      homebridge_hidden: true
     media_player.kodi_tv:
-      friendly_name: Kodi OSMC
+      friendly_name: Kodi LibreElec
       homebridge_name: Tele
       homebridge_media_player_switch: on_off
     switch.toggle_kodi_ambilight:
@@ -47,22 +48,22 @@ homeassistant:
 input_boolean:
   kodi_tv_state:
 
-switch:
-  - platform: command_line
-    scan_interval: 120
-    switches:
-      toggle_kodi_ambilight:
-        command_on: '/config/shell/switch_kodi_hyperion.sh 1'
-        command_off: '/config/shell/switch_kodi_hyperion.sh 0'
-        command_state: '/config/shell/switch_kodi_hyperion.sh'
-        friendly_name: KODI Ambilight
-        value_template: '{{ value_json == 1 }}'
-      toggle_config_kodi_ambilight:
-        command_on: '/config/shell/switch_kodi_hyperion.sh set_hue6'
-        command_off: '/config/shell/switch_kodi_hyperion.sh set_hue4'
-        command_state: '/config/shell/switch_kodi_hyperion.sh num_lights'
-        friendly_name: KODI Ambilight INMERSION
-        value_template: '{{ value_json == 6 }}'
+#switch:
+#  - platform: command_line
+#    scan_interval: 120
+#    switches:
+#      toggle_kodi_ambilight:
+#        command_on: '/config/shell/switch_kodi_hyperion.sh 1'
+#        command_off: '/config/shell/switch_kodi_hyperion.sh 0'
+#        command_state: '/config/shell/switch_kodi_hyperion.sh'
+#        friendly_name: KODI Ambilight
+#        value_template: '{{ value_json == 1 }}'
+#      toggle_config_kodi_ambilight:
+#        command_on: '/config/shell/switch_kodi_hyperion.sh set_hue6'
+#        command_off: '/config/shell/switch_kodi_hyperion.sh set_hue4'
+#        command_state: '/config/shell/switch_kodi_hyperion.sh num_lights'
+#        friendly_name: KODI Ambilight INMERSION
+#        value_template: '{{ value_json == 6 }}'
 
 media_player:
 - platform: kodi
@@ -151,127 +152,6 @@ shell_command:
   # Kill OSMC Kodi (when frozen)
   cmd_kill_kodi: !secret kill_kodi_cmd
 
-#script:
-#  play_kodi_pvr:
-#    alias: Enciende la caja tonta
-#    sequence:
-#      - alias: TV on
-#        service: media_player.turn_on
-#        data:
-#          entity_id: media_player.kodi
-#
-#      - alias: Play TV channel
-#        service: media_player.play_media
-#        data_template:
-#          entity_id: media_player.kodi
-#    #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
-#          media_content_type: "CHANNEL"
-#          media_content_id: >
-#            {% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}
-#              10
-#            {% elif (now().hour < 16) %}
-#              15
-#            {% elif (now().hour < 20) %}
-#              2
-#            {% elif (now().hour == 20) and (now().minute < 50) %}
-#              10
-#            {% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}
-#              15
-#            {% else %}
-#              10
-#            {% endif %}
-#
-##      - alias: Notificación de selección de canal
-##        service: telegram_bot.send_message
-##        data_template:
-##          title: '*TV PVR ON*'
-##          target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-##          disable_notification: true
-##          message: >
-##            Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}laSexta HD{% endif %}'.
-##          inline_keyboard:
-##            - OFF:/service_call media_player.turn_off media_player.kodi, ON:/service_call media_player.turn_on media_player.kodi, ‖:/service_call media_player.media_play_pause media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
-#
-#  restart_kodi_osmc:
-#    alias: Restart KODI OSMC
-#    sequence:
-##      - service: notify.ios_iphone
-##        data:
-##          title: 'Reiniciando KODI OSMC'
-##          message: "KODI debería 'morir' y 'resucitar' en unos segundos"
-##          data:
-##            push:
-##              category: "CONFIRM"
-##      - service: telegram_bot.send_message
-##        data_template:
-##          title: 'Reiniciando KODI OSMC'
-##          target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-##          message: "KODI debería 'morir' y 'resucitar' en unos segundos"
-##          disable_notification: true
-#      - service: shell_command.cmd_kill_kodi
-#
-#  stop_kodi:
-#    alias: Stop playback in Kodi
-#    sequence:
-#        service: media_player.media_stop
-#        data:
-#          entity_id: media_player.kodi
-#
-#  quit_kodi:
-#    alias: Quit Kodi
-#    sequence:
-#      service: media_player.kodi_call_method
-#      data:
-#        method: Application.Quit
-#
-#  update_library:
-#    alias: Update Kodi Library
-#    sequence:
-#      - alias: Call Kodi update
-#        service: media_player.kodi_call_method
-#        data:
-#          entity_id: media_player.kodi
-#          method: VideoLibrary.Scan
-#
-#  recent_movies:
-#    alias: Últimas películas
-#    sequence:
-#      - alias: Call Kodi serv
-#        service: media_player.kodi_call_method
-#        data:
-#          entity_id: media_player.kodi
-#          method: VideoLibrary.GetRecentlyAddedMovies
-#          properties:
-#            - title
-#            - year
-#            - file
-#            - lastplayed
-#
-#  recent_episodes:
-#    alias: Últimos episodios
-#    sequence:
-#      - alias: Call Kodi serv
-#        service: media_player.kodi_call_method
-#        data:
-#          entity_id: media_player.kodi
-#          method: VideoLibrary.GetRecentlyAddedEpisodes
-#          properties:
-#            - showtitle
-#            - file
-#            - lastplayed
-#            - dateadded
-#            - firstaired
-#
-#  pvr_channels:
-#    alias: Canales de TV
-#    sequence:
-#      - alias: Call Kodi serv
-#        service: media_player.kodi_call_method
-#        data:
-#          entity_id: media_player.kodi
-#          method: PVR.GetChannels
-#          channelgroupid: 1
-
 input_text:
   q_youtube:
     name: Buscador
@@ -286,28 +166,3 @@ input_select:
     name: Youtube results
     options:
      - Nada que hacer
-
-#group:
-#  player:
-#    - media_player.kodi_tv
-#
-#  Kodi:
-#    control: hidden
-#    entities:
-#      - switch.toggle_kodi_ambilight
-#      - switch.toggle_config_kodi_ambilight
-#      - script.play_kodi_pvr
-#      - script.stop_kodi
-#      - script.update_library
-#      - script.quit_kodi
-#      - script.restart_kodi_osmc
-#
-#  Media select:
-#    control: hidden
-#    entities:
-#      - script.recent_episodes
-#      - script.recent_movies
-#      - script.pvr_channels
-#      - input_select.kodi_results
-#      - input_text.q_youtube
-#      - input_select.youtube_videos

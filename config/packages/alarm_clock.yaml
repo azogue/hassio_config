@@ -78,16 +78,3 @@ switch:
           service: input_boolean.turn_off
           entity_id: input_boolean.alarm_clock_status
 
-#group:
-#  Despertador:
-#    control: hidden
-#    entities:
-#      - switch.alarm_clock_status
-#    #  - input_boolean.alarm_clock_status
-#      - input_number.alarm_clock_hour
-#      - input_number.alarm_clock_minute
-#      - sensor.alarm_clock_time
-#      - input_select.room_altavoces
-#      # From rf outlets:
-#      - switch.altavoz
-#      - input_boolean.manual_trigger_lacafetera

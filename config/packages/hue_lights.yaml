@@ -15,7 +15,7 @@ homeassistant:
     light.bola_grande:
       icon: mdi:ceiling-light
     light.terraza:
-      icon: mdi:ceiling-light
+      icon: mdi:lightbulb-outline
     light.hue_habitacion:
       icon: mdi:ceiling-light
     light.aura_habitacion:

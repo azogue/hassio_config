@@ -69,6 +69,8 @@ tts:
   platform: google
   language: 'es'
 
+#history: !include database/history.yaml
+#logbook: !include database/logbook.yaml
 history:
   include:
     domains:
@@ -91,8 +93,6 @@ influxdb:
   # verify_ssl: true
   default_measurement: state
 
-#history: !include database/history.yaml
-#logbook: !include database/logbook.yaml
 recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days

@@ -1,15 +1,13 @@
 entities:
 # WAN access
+  - name: Grafana
+    url: !secret grafana_url
   - name: NAS QNAP
     url: !secret weblink_nas_qnap_url
   - name: NAS Synology
     url: !secret weblink_nas_url
-#   - name: Grafana
-#     url: !secret grafana_url
 #   - name: MotionEye
 #     url: !secret motioneye_url
-#   - name: enerPI
-#     url: !secret enerpi_url
   - name: Router Movistar
     url: http://192.168.1.1
 

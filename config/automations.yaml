@@ -232,8 +232,8 @@
       data:
         entity_id:
           - light.bola_grande
-          - light.bola_pequena
           - light.cuenco
+          - light.tira
           - light.central
           - light.pie_sofa
           - light.pie_tv
@@ -245,10 +245,10 @@
     platform: state
     entity_id: input_number.light_main_slider_salon
   action:
-    - service: homeassistant.turn_on
+    - service: light.turn_on
       data:
         entity_id:
-          - group.luces_salon
+          - light.salon
       data_template:
         brightness: '{{ states( "input_number.light_main_slider_salon" )|round( 0 ) }}'
 
@@ -441,3 +441,23 @@
         entity_id: light.aura_habitacion
         brightness: 222
         xy_color: [0.3945,0.406]
+
+#- alias: Botvac error notification
+#  trigger:
+#    platform: state
+#    entity_id: vacuum.robot_aspirador
+#  condition:
+#    condition: template
+#    value_template: '{{ "error" in states.vacuum.robot_aspirador.attributes }}'
+#  action:
+#    service: telegram_bot.send_message
+#    data_template:
+#      title: '*Botvac Error*'
+#      message: >
+#        El robot aspirador ha fallado: _{{ states.vacuum.robot_aspirador.attributes.error }}_
+#        (Status: {{ states.vacuum.robot_aspirador.attributes.status }}, batt: {{ states.vacuum.robot_aspirador.attributes.battery_level }} %)
+#      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+#      disable_notification: false
+#      inline_keyboard:
+#        - Locate botvac:/service_call vacuum.locate vacuum.robot_aspirador, To dock:/service_call vacuum.return_to_home vacuum.robot_aspirador
+#        - Start:/service_call vacuum.start_pause vacuum.robot_aspirador, Stop:/service_call vacuum.stop vacuum.robot_aspirador, +:/init

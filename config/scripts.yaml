@@ -5,7 +5,7 @@ good_night:
     - alias: Apagado de TV, Ambilight, Caldera, Altavoz, Cocina, Estudio, Calefactor e impresora
       service: switch.turn_off
 #      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.caldera,switch.altavoz,switch.cocina,switch.calefactor,switch.estudio_light_relay,switch.impresora
-      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.caldera,switch.altavoz,switch.cocina,switch.calefactor,switch.estudio_light_relay,switch.impresora
+      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.caldera,switch.altavoz,switch.cocina
 
     - alias: Encendido de CAM Salón
       service: switch.turn_on
@@ -24,7 +24,7 @@ good_night:
 
     - alias: Apagado de luces
       service: light.turn_off
-      entity_id: light.salon,light.dormitorio,light.estudio
+#      entity_id: light.salon,light.dormitorio,light.estudio,light.exterior
 
 play_kodi_pvr:
 #  id: play_kodi_pvr:

@@ -6,18 +6,21 @@ Local:
   - binary_sensor.local_pir
 
 Salón:
-  - input_number.light_main_slider_salon
-  - input_number.light_temp_slider_salon
-  - input_select.salon_light_scene
-  - light.bola_grande
-  - light.bola_pequena
-  - light.central
-  - light.pie_tv
-  - light.pie_sofa
-  - light.cuenco
-  - light.lamparita
-  - light.go
-  - light.tira
+  name: Luces salón
+#  control: hidden
+  entities:
+    - input_number.light_main_slider_salon
+    - input_number.light_temp_slider_salon
+    - input_select.salon_light_scene
+    - light.bola_grande
+    - light.bola_pequena
+    - light.central
+    - light.pie_tv
+    - light.pie_sofa
+    - light.cuenco
+    - light.lamparita
+    - light.go
+    - light.tira
 
 Estudio:
 #  entities:
@@ -26,13 +29,11 @@ Estudio:
 #    - switch.estudio_light_relay
 
 control_dormitorio:
-  name: Dormitorio
-  control: hidden
+  name: Luces dormitorio
+#  control: hidden
   entities:
     - light.aura_habitacion
     - light.hue_habitacion
-    - switch.altavoz
-    - switch.calefactor
 
 #  Hue sensors:
 #    - sensor.hue_dimmer_switch
@@ -73,8 +74,7 @@ Enchufes:
     - switch.caldera
     - switch.esp_plancha
     - switch.new_switch_2
-#      - switch.new_switch_2
-#      - switch.new_switch_3
+    - switch.new_switch_3
 
 Terraza:
   - light.terraza
@@ -134,6 +134,10 @@ Host Dormitorio:
   - sensor.disk_used__rpi2mpd
   - sensor.last_boot_rpi2mpd
 
+Resto de hosts:
+  - sensor.enerpi_cpu_temperature
+  - sensor.kodi_cpu_temperature
+
 Eugenio:
   - device_tracker.iphone_bt
   - device_tracker.iphone
@@ -141,6 +145,7 @@ Eugenio:
 
 Carmen:
   - device_tracker.iphone_de_carmen_bt
+  - device_tracker.iphone_se
   - device_tracker.iphonese
   - device_tracker.homeadmin_iphonese
 
@@ -169,6 +174,7 @@ Conectivity:
   - sensor.core_error_counter
   - sensor.warning_counter_core
   - sensor.telegram_default_chatid
+  - binary_sensor.workday_sensor
 
 dt_imac:
 #  hidden: true
@@ -193,50 +199,63 @@ dt_ipad:
     - device_tracker.ipad_wifi
 
 Dispositivos:
-  - group.dt_imac
-  - group.dt_mbp
-  - group.dt_ipad
-  - device_tracker.applewatch
-  - device_tracker.applewatch_carmen
-  #  - device_tracker.imac
-  #  - device_tracker.imac_wifi
-  #  - device_tracker.imac_bt
-  #  - device_tracker.macbook_pro
-  #  - device_tracker.iphone_bt
-  #  - device_tracker.iphone
-  #  - device_tracker.homeadmin_iphone
-  #  - sensor.iphone_battery_state
-  #  - sensor.iphone_battery_level
+  control: hidden
+  entities:
+    - group.dt_imac
+    - group.dt_mbp
+    - group.dt_ipad
+    - device_tracker.applewatch
+    - device_tracker.applewatch_carmen
+    - input_boolean.eu_presence
+    - input_boolean.carmen_presence
+    #  - device_tracker.imac
+    #  - device_tracker.imac_wifi
+    #  - device_tracker.imac_bt
+    #  - device_tracker.macbook_pro
+    #  - device_tracker.iphone_bt
+    #  - device_tracker.iphone
+    #  - device_tracker.homeadmin_iphone
+    #  - sensor.iphone_battery_state
+    #  - sensor.iphone_battery_level
 
-  #  - device_tracker.iphone_de_carmen_bt
-  #  - device_tracker.iphone_se
-  #  - device_tracker.homeadmin_iphone_se
+    #  - device_tracker.iphone_de_carmen_bt
+    #  - device_tracker.iphone_se
+    #  - device_tracker.homeadmin_iphone_se
 
-  #  - device_tracker.ipad
-  #  - device_tracker.ipad_wifi
-  #  - sensor.ipad_de_eugenio_battery_level
-  #  - sensor.ipad_de_eugenio_battery_state
-  - device_tracker.nas_qnap
-  - device_tracker.nas_syno
-  - device_tracker.hue_bridge
-  - device_tracker.rpi3_enerpi
-  - device_tracker.rpi3_osmc
-  - device_tracker.rpi2_bedroom
-  - device_tracker.xiaomi_router
-  - device_tracker.xiaomi_vacuum
-  - device_tracker.jo01
-  - device_tracker.qnap_ubuntu
-  - device_tracker.router_movistar
-  - device_tracker.deco_movistar
+    #  - device_tracker.ipad
+    #  - device_tracker.ipad_wifi
+    #  - sensor.ipad_de_eugenio_battery_level
+    #  - sensor.ipad_de_eugenio_battery_state
+    - device_tracker.nas_qnap
+    - device_tracker.nas_syno
+    - device_tracker.hue_bridge
+    - device_tracker.rpi3_enerpi
+    - device_tracker.rpi3_osmc
+    - device_tracker.rpi2_bedroom
+    - device_tracker.b827ebcaec07
+    - device_tracker.xiaomi_router
+    - device_tracker.xiaomi_vacuum
+    - device_tracker.jo01
+    - device_tracker.qnap_ubuntu
+    - device_tracker.router_movistar
+    - device_tracker.deco_movistar
+
+Dev boards:
+  control: hidden
+  entities:
+    - device_tracker.30aea4060680
+    - device_tracker.240ac48163f8
+    - device_tracker.240ac48124a4
 
 Baterías:
   - sensor.iphone_battery_state
   - sensor.iphone_battery_level
-  - sensor.iphonese_battery_state
-  - sensor.iphonese_battery_level
+  - sensor.bateria_iphone_x
+  - sensor.iphone_de_maria_del_carmen_battery_state
+  - sensor.iphone_de_maria_del_carmen_battery_level
+  - sensor.bateria_iphone_se
   - sensor.ipad_de_eugenio_battery_state
   - sensor.ipad_de_eugenio_battery_level
-
 
 #ESP Galería:
 #  - binary_sensor.sensorgaleria_online
@@ -270,22 +289,11 @@ Baterías:
 Pi Hole:
   - sensor.pihole_ads_blocked_today
   - sensor.pihole_ads_percentage_blocked_today
+  - sensor.pihole_dns_queries_today
   - sensor.pihole_dns_unique_clients
+  - sensor.pihole_dns_unique_domains
+#  - sensor.pihole_domains_blocked
 
-
-#weather:
-#  name: !secret weather_location
-#  entities:
-#    - sun.sun
-#    - sensor.villena_temperature
-#    - sensor.villena_humidity
-#    - sensor.villena_wind_speed
-#    - sensor.villena_pressure
-#    - sensor.villena_condition
-#    - sensor.villena_cloud_coverage
-#    - sensor.villena_rain
-#    - sensor.villena_forecast
-##      - sensor.yr_symbol
 
 weather_dark_sky_now:
   name: Ahora
@@ -348,13 +356,6 @@ weather_dark_sky_afterthree:
     - sensor.dark_sky_daily_high_temperature_3
     - sensor.dark_sky_daily_low_temperature_3
 
-#  weather_simple:
-#    name: !secret weather_location
-#    entities:
-#      - sensor.villena_temperature
-#      - sensor.villena_humidity
-#      - sensor.villena_cloud_coverage
-#      - sensor.villena_forecast
 Links:
   - weblink.nas_qnap
   - weblink.nas_synology
@@ -370,6 +371,12 @@ Links:
   - weblink.tv_headend
   - weblink.mopidy
   - weblink.router_movistar
+
+Red e Internet:
+  - sensor.speedtest_ping
+  - sensor.speedtest_download
+  - sensor.speedtest_upload
+
 # ----------------------------------------------------------------------------------------------------------------------
 # VIEWS
 # ----------------------------------------------------------------------------------------------------------------------
@@ -411,6 +418,7 @@ Control:
     - group.control_dormitorio
     - group.terraza
     - group.estudio
+    - vacuum.robot_aspirador
     - group.all_lights
     - group.enchufes
     # - group.master_luces_del_salon
@@ -433,12 +441,12 @@ Home Network:
     - group.dispositivos
     - group.localhost
     - group.host_dormitorio
-    - group.conectivity
+    - group.resto_de_hosts
     - group.links
-    - group.pi_hole
     - group.esp_galeria
     - group.esp_plancha
     - group.esp_wroom32
+    - group.dev_boards
     - group.baterias
 
     #- group.red_e_internet
@@ -487,3 +495,30 @@ Weather:
     - group.weather_dark_sky_afterthree
     - group.weather_forecast
     - group.weather
+
+Master conf:
+  name: Master configuration
+  icon: mdi:settings
+  view: yes
+  entities:
+    - group.hass_control
+    - group.conectivity
+    - group.pi_hole
+    - binary_sensor.services_notok
+    - binary_sensor.workday_sensor
+    - input_boolean.switch_motion_lights
+    - input_number.light_duration_after_motion
+#      - binary_sensor.estudio_manual_light_switch_rpi2h
+#      - sensor.hue_dimmer_switch
+#      - automation.encendido_luces_estudio
+#      - automation.apagado_luces_estudio
+#      - input_number.max_humidity
+#      - automation.apagado_de_climatizador_evaporativo
+    - group.red_e_internet
+#    - group.all_automations
+    - group.menu_automations_1
+    - group.menu_automations_2
+    - group.menu_automations_3
+    - group.all_scripts
+    - group.test_notifications
+#    - group.all_devices

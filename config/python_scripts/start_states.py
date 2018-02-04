@@ -6,25 +6,25 @@ This unifies various automations and HA scripts in a simpler one.
 
 """
 
-SWITCH_EXPERT_MODE = 'input_boolean.show_expert_mode'
+# SWITCH_EXPERT_MODE = 'input_boolean.show_expert_mode'
 
-# 'expert mode' for filtering groups and visibility control for ESP modules
-expert_mode = data.get(
-    'expert_mode_state',
-    hass.states.get('input_boolean.show_expert_mode').state) == 'on'
-last_state = hass.states.get(SWITCH_EXPERT_MODE)
-# expert_mode_on = data.get('expert_mode_state', last_state.state)
-hass.states.set(SWITCH_EXPERT_MODE, expert_mode,
-                attributes=last_state.attributes)
+# # 'expert mode' for filtering groups and visibility control for ESP modules
+# expert_mode = data.get(
+#     'expert_mode_state',
+#     hass.states.get('input_boolean.show_expert_mode').state) == 'on'
+# last_state = hass.states.get(SWITCH_EXPERT_MODE)
+# # expert_mode_on = data.get('expert_mode_state', last_state.state)
+# hass.states.set(SWITCH_EXPERT_MODE, expert_mode,
+#                 attributes=last_state.attributes)
 
 # Anyone at home?
 family_home = hass.states.get('group.family').state == 'home'
 
-# Turn on default outlets
-if family_home:
-    hass.services.call(
-        'switch', 'turn_on',
-        {"entity_id": "switch.camara,switch.caldera,switch.esp_plancha"})
+# # Turn on default outlets
+# if family_home:
+#     hass.services.call(
+#         'switch', 'turn_on',
+#         {"entity_id": "switch.camara,switch.caldera,switch.esp_plancha"})
 
 # Sync HA dev trackers with manual HomeKit input_booleans
 dev_tracking = {'group.eugenio': 'input_boolean.eu_presence',

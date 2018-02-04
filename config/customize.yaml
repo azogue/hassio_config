@@ -29,17 +29,18 @@ weblink.enerpi:
   icon: mdi:flash
 weblink.mopidy:
   icon: mdi:music-box-outline
-#  entity_picture: /static/images/enerpi.png
-#weblink.nas:
-#  icon: mdi:library-music
-#  entity_picture: /static/images/nas_ds213j.png
+weblink.nas_qnap:
+  icon: mdi:server-network
+weblink.nas_synology:
+  icon: mdi:server-network
+weblink.hassio_lan:
+  icon: mdi:home-assistant
 weblink.tv_headend:
   icon: mdi:television-guide
 weblink.motioneye:
   icon: mdi:video
 weblink.kodi_web_interface:
   icon: mdi:kodi
-#  entity_picture: /static/images/kodi_logo.png
 weblink.slave_hass:
   friendly_name: HA Estudio
   icon: mdi:home-assistant
@@ -50,3 +51,13 @@ weblink.grafana:
   icon: mdi:chart-areaspline
 weblink.contabilidad:
   icon: mdi:bank
+group.dt_ipad:
+  icon: mdi:tablet-ipad
+group.dt_imac:
+  icon: mdi:desktop-mac
+group.dt_mbp:
+  icon: mdi:laptop-mac
+group.eugenio:
+  icon: mdi:human-male
+group.carmen:
+  icon: mdi:human-female

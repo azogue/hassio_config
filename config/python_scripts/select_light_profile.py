@@ -11,8 +11,8 @@ Hue profiles (x, y, bright):
 """
 
 INPUT_SELECT = 'input_select.salon_light_scene'
-LIGHTS_TO_CONTROL = 'light.bola_grande,light.bola_pequena,light.cuenco,' \
-                    'light.pie_sofa,light.pie_tv'
+LIGHTS_TO_CONTROL = 'light.bola_grande,light.central,light.cuenco,' \
+                    'light.pie_sofa,light.pie_tv,light.tira'
 
 scene_selection = data.get("scene")
 
