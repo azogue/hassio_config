@@ -53,8 +53,8 @@ MorningAlarmClock:
   alarmdays: mon,tue,wed,thu,fri,sat
   constrain_input_boolean: input_boolean.alarm_clock_status
   sunrise_duration: 300
-  duration_volume_ramp_sec: 300
-  max_volume: 25
+  duration_volume_ramp_sec: 240
+  max_volume: 100
   postponer_minutos: 7
   room_select: input_select.room_altavoces
   lights_alarm: group.luces_dormitorio
