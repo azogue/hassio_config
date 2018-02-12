@@ -24,7 +24,7 @@ family_home = hass.states.get('group.family').state == 'home'
 # if family_home:
 #     hass.services.call(
 #         'switch', 'turn_on',
-#         {"entity_id": "switch.camara,switch.caldera,switch.esp_plancha"})
+#         {"entity_id": "switch.camara,switch.calentador,switch.bomba_circ_acs"})
 
 # Sync HA dev trackers with manual HomeKit input_booleans
 dev_tracking = {'group.eugenio': 'input_boolean.eu_presence',

@@ -243,7 +243,7 @@ class AlarmClock(appapi.AppDaemon):
 
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
-        self.call_service('switch/turn_on', entity_id="switch.caldera")
+        self.call_service('switch/turn_on', entity_id="switch.calentador,switch.bomba_circ_acs")
         if 'delta_to_repeat' in kwargs:
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])
@@ -280,8 +280,8 @@ class AlarmClock(appapi.AppDaemon):
                         entity_id=self._media_player_mopidy) == 'playing':
                     self.call_service('media_player/turn_off',
                                       entity_id=self._media_player_mopidy)
-                self.call_service('switch/turn_off',
-                                  entity_id="switch.altavoz")
+                # self.call_service('switch/turn_off',
+                #                   entity_id="switch.altavoz")
                 if self._manual_trigger is not None:
                     self._last_trigger = None
                     self.set_state(entity_id=self._manual_trigger, state='off')
@@ -431,7 +431,7 @@ class AlarmClock(appapi.AppDaemon):
     def run_mopidy_stream_lacafetera(self, ep_info):
         """Play stream in mopidy."""
         self.log('DEBUG MPD: {}'.format(ep_info))
-        self.call_service('switch/turn_on', entity_id="switch.altavoz")
+        # self.call_service('switch/turn_on', entity_id="switch.altavoz")
         self.run_command_mopidy('core.tracklist.clear', check_result=False)
         params = {"tracks": [{"__model__": "Track",
                               "uri": MASK_URL_STREAM_MOPIDY.format(
@@ -468,9 +468,9 @@ class AlarmClock(appapi.AppDaemon):
         self.turn_on_morning_services(dict(delta_to_repeat=10))
         if self.play_in_kodi:
             return self.run_kodi_addon_lacafetera(mode='wakeup')
-        else:
-            return self.call_service(
-                'switch/turn_on', entity_id="switch.altavoz")
+        # else:
+        #     return self.call_service(
+        #         'switch/turn_on', entity_id="switch.altavoz")
 
     # noinspection PyUnusedLocal
     def trigger_service_in_alarm(self, *args):

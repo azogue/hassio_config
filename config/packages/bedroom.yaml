@@ -44,7 +44,7 @@ homeassistant:
     sensor.dormitorio_pressure_rpi2mpd:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-
+      homebridge_hidden: true
     sensor.dormitorio_htu21d_temperature_rpi2mpd:
       icon: mdi:thermometer
       friendly_name: Temperatura HTU Dormitorio
@@ -77,7 +77,7 @@ sensor:
     name: dormitorio_temperature_rpi2mpd
     unit_of_measurement: '°C'
     force_update: true
-    expire_after: 600
+    expire_after: 3600
     qos: 2
   - platform: mqtt
     state_topic: ha_bedroom/sensor/dormitorio_humidity/state
@@ -107,7 +107,7 @@ sensor:
     name: dormitorio_htu21d_temperature_rpi2mpd
     unit_of_measurement: '°C'
     force_update: true
-    expire_after: 600
+    expire_after: 3600
     qos: 2
   - platform: mqtt
     state_topic: ha_bedroom/sensor/dormitorio_htu21d_humidity/state
@@ -148,7 +148,7 @@ sensor:
     state_topic: ha_bedroom/sensor/disk_used_/state
     name: disk_used__rpi2mpd
     force_update: true
-    expire_after: 600
+#    expire_after: 36000
     qos: 2
 
 

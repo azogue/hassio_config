@@ -43,6 +43,14 @@ notify:
 telegram_bot:
   platform: webhooks
   api_key: !secret telegram_bot_api_key
+  trusted_networks:
+    - ::ffff:959a:a7d5
+    - 149.154.167.197/32
+    - 149.154.167.198/31
+    - 149.154.167.200/29
+    - 149.154.167.208/28
+    - 149.154.167.224/29
+    - 149.154.167.232/31
   allowed_chat_ids:
     - !secret telegram_bot_chat_id_admin
     - !secret telegram_bot_chat_id_2

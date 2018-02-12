@@ -44,7 +44,7 @@ KodiNotifier:
   lights_dim_off: light.bola_grande,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv
   lights_dim_on: light.pie_sofa
   lights_off: light.central
-  switch_dim_lights_use: switch.toggle_kodi_ambilight
+#  switch_dim_lights_use: switch.toggle_kodi_ambilight
 
 MorningAlarmClock:
   class: AlarmClock

@@ -78,11 +78,17 @@ class KodiAssistant(appapi.AppDaemon):
         _lights_dim_off = self.args.get('lights_dim_off', '').split(',')
         _lights_off = self.args.get('lights_off', '').split(',')
         _switch_dim_group = self.args.get('switch_dim_lights_use')
-        self._lights = {"dim": {"on": _lights_dim_on, "off": _lights_dim_off},
-                        "off": _lights_off,
-                        "state": self.get_state(_switch_dim_group)}
-        # Listen for ambilight changes to change light dim group:
-        self.listen_state(self.ch_dim_lights_group, _switch_dim_group)
+        if _switch_dim_group is not None:
+            self._lights = {"dim": {"on": _lights_dim_on, "off": _lights_dim_off},
+                            "off": _lights_off,
+                            "state": self.get_state(_switch_dim_group)}
+            # Listen for ambilight changes to change light dim group:
+            self.listen_state(self.ch_dim_lights_group, _switch_dim_group)
+        else:
+            self._lights = {
+                "dim": {"on": _lights_dim_on, "off": _lights_dim_off},
+                "off": _lights_off,
+                "state": 'off'}
 
         self._media_player = conf_data.get('media_player')
         self._ios_notifier = conf_data.get('notifier').replace('.', '/')

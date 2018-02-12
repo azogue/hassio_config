@@ -189,13 +189,13 @@ sensor:
   name: local_htu21d
   scan_interval: 30
 
-- platform: bh1750
-  name: local_light_level
-  operation_mode: continuous_high_res_mode_2
-  measurement_delay_ms: 10
-  sensibility: 125
-  multiplier: 1.5
-  scan_interval: 20
+#- platform: bh1750
+#  name: local_light_level
+#  operation_mode: continuous_high_res_mode_2
+#  measurement_delay_ms: 10
+#  sensibility: 125
+#  multiplier: 1.5
+#  scan_interval: 20
 
 - platform: darksky
   api_key: !secret darksky_api_key
@@ -215,7 +215,14 @@ sensor:
     - dew_point
     - humidity
     - pressure
-  update_interval: '00:05:00'
+#  update_interval: '00:05:00'
+  update_interval:
+    # At least one of these must be specified:
+#    days: 0
+#    hours: 0
+    minutes: 15
+#    seconds: 00
+#    milliseconds: 0
 
 - platform: command_line
   name: HASS CPU Temperature
@@ -263,6 +270,29 @@ sensor:
     - ping
     - download
     - upload
+
+camera:
+  - platform: generic
+    still_image_url: !secret sricam_motioneye_local_snapshot
+    name: SriCAM 360
+
+#  - platform: ffmpeg
+#    input: !secret sricam_full_rstp
+#    name: SriCAM 360
+#    port: 5000
+#    extra_arguments:
+
+#  - platform: onvif
+#    host: !secret sricam_lan_ip
+#    name: SriCAM 360
+#    username: !secret sricam_user
+#    password: !secret sricam_pwd
+##    port: 5000
+##    extra_arguments:
+
+shell_command:
+  # Init SSH keys
+  cmd_init_ssh_identity: '/config/shell/start_ssh_keys.sh'
 
 device_tracker:
 - platform: nmap_tracker

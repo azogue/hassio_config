@@ -1,0 +1,171 @@
+homeassistant:
+  customize:
+    sensor.sensor_galeria_temperature:
+      friendly_name: Temperatura
+      icon: mdi:thermometer
+#      homebridge_name: T. Galería
+      homebridge_hidden: true
+    sensor.sensor_galeria_humidity:
+      friendly_name: Humedad
+      icon: mdi:water-percent
+      homebridge_hidden: true
+#      homebridge_name: HR. galeria
+#      homebridge_sensor_type: humidity
+#    sensor.sensor_galeria_pressure:
+#      friendly_name: Presión
+#      icon: mdi:weather-cloudy
+#      homebridge_hidden: true
+#    sensor.sensor_galeria_illumination:
+#      friendly_name: Iluminación
+#      icon: mdi:lightbulb-on
+##      homebridge_name: Ilum. Galería
+##      homebridge_sensor_type: light
+#      homebridge_hidden: true
+
+    sensor.sensor_acs_probe_1:
+      friendly_name: Entrada agua fría
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+    sensor.sensor_acs_probe_2:
+      friendly_name: Salida agua caliente
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+    sensor.sensor_acs_probe_3:
+      friendly_name: Retorno agua caliente
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+    sensor.sensor_acs_probe_4:
+      friendly_name: Superficie calentador
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+    sensor.sensor_acs_probe_5:
+      friendly_name: Retorno Intercambiador solar
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+    sensor.sensor_acs_probe_6:
+      friendly_name: Impulsión Intercambiador solar
+      icon: mdi:temperature-celsius
+      homebridge_hidden: true
+
+    sensor.sensor_galeria__snum:
+      friendly_name: 'Sample #'
+      homebridge_hidden: true
+    
+#    binary_sensor.sensor_galeria_mov1:
+#      friendly_name: 'Movimiento'
+#      homebridge_hidden: true
+#    binary_sensor.sensor_galeria_mov2:
+#      friendly_name: 'Movimiento 2'
+#      homebridge_hidden: true
+    binary_sensor.sensor_galeria_online:
+      friendly_name: Galería Online
+      homebridge_hidden: true
+
+
+binary_sensor:
+  - platform: mqtt
+    device_class: connectivity
+    state_topic: !secret mqtt_topic_esp_acs_lwt
+    name: sensor_galeria_online
+    qos: !secret mqtt_default_qos
+    payload_on: "online"
+    payload_off: "offline"
+
+#  - platform: mqtt
+#    device_class: motion
+#    state_topic: !secret mqtt_topic_esp_acs_status
+#    value_template: "{{ value_json.sample.bin[0]}}"
+#    name: sensor_galeria_mov1
+#    qos: !secret mqtt_default_qos
+#    payload_on: 1
+#    payload_off: 0
+#    availability_topic: !secret mqtt_topic_esp_acs_lwt
+#    payload_available: "online"
+#    payload_not_available: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.temp | round(1) }}"
+    name: sensor_galeria_temperature
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.hum | round(1) }}"
+    name: sensor_galeria_humidity
+    unit_of_measurement: "%"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_acs_status
+#    value_template: "{{ value_json.sample.lux}}"
+#    name: sensor_galeria_illumination
+#    unit_of_measurement: "lx"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[0] | round(1) }}"
+    name: sensor_acs_probe_1
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[1] | round(1) }}"
+    name: sensor_acs_probe_2
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[2] | round(1) }}"
+    name: sensor_acs_probe_3
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[3] | round(1) }}"
+    name: sensor_acs_probe_4
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[4] | round(1) }}"
+    name: sensor_acs_probe_5
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.ds_temps[5] | round(1) }}"
+    name: sensor_acs_probe_6
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_acs_status
+    value_template: "{{ value_json.sample.snum}}"
+    unit_of_measurement: "sample"
+    name: sensor_galeria__snum
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+

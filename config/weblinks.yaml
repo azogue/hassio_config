@@ -6,6 +6,8 @@ entities:
     url: !secret weblink_nas_qnap_url
   - name: NAS Synology
     url: !secret weblink_nas_url
+  - name: Contabilidad
+    url: !secret weblink_contab_url
 #   - name: MotionEye
 #     url: !secret motioneye_url
   - name: Router Movistar

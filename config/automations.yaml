@@ -274,6 +274,7 @@
     - platform: homeassistant
       event: start
   action:
+    - service: shell_command.cmd_init_ssh_identity
     - service: python_script.set_telegram_chatid_sensor
       data:
         chat_id: !secret telegram_bot_chat_id_admin

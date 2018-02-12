@@ -1265,13 +1265,12 @@ class EventListener(appapi.AppDaemon):
     def _turn_off_lights_and_appliances(self, turn_off_heater=False):
         self.turn_off('group.all_lights', transition=2)
         self.turn_off("switch.calefactor")
-        self.turn_off("switch.cocina")
-        self.turn_off("switch.altavoz")
         self.turn_off("media_player.kodi")
         self.turn_off("switch.estudio_light_relay")
         self.turn_off("switch.new_switch_2")
         if turn_off_heater:
-            self.turn_off("switch.caldera")
+            self.turn_off("switch.bomba_circ_acs")
+            self.turn_off("switch.calentador")
 
     def response_to_action(self, action, origin, telegram_target=None):
         """Respond to defined action events."""

@@ -1,0 +1,198 @@
+homeassistant:
+  customize:
+    sensor.sensor_terraza_temperature:
+      friendly_name: Temperatura
+      icon: mdi:thermometer
+#      homebridge_name: T. Terraza
+      homebridge_hidden: true
+    sensor.sensor_terraza_humidity:
+      friendly_name: Humedad
+      icon: mdi:water-percent
+      homebridge_hidden: true
+#      homebridge_name: HR. Terraza
+#      homebridge_sensor_type: humidity
+    sensor.sensor_terraza_pressure:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+      homebridge_hidden: true
+    sensor.sensor_terraza_illumination:
+      friendly_name: Iluminación
+      icon: mdi:lightbulb-on
+#      homebridge_name: Ilum. Galería
+#      homebridge_sensor_type: light
+      homebridge_hidden: true
+#    sensor.sensor_terraza_imp:
+#      friendly_name: Impulsión Calefacción
+#      icon: mdi:temperature-celsius
+#      homebridge_hidden: true
+#    sensor.sensor_terraza_ret:
+#      friendly_name: Retorno Calefacción
+#      icon: mdi:temperature-celsius
+#      homebridge_hidden: true
+#    sensor.sensor_terraza_acs:
+#      friendly_name: ACS
+#      icon: mdi:water-pump
+#      homebridge_hidden: true
+
+    sensor.sensor_terraza__snum:
+      friendly_name: 'Sample #'
+      homebridge_hidden: true
+      
+#    sensor.sensor_terraza__adc1:
+#      friendly_name: 'ADC 1'
+#      icon: mdi:biohazard
+#      homebridge_hidden: true
+#    sensor.sensor_terraza__adc2:
+#      friendly_name: 'ADC 2'
+#      icon: mdi:biohazard
+#      homebridge_hidden: true
+    
+#    light.sensor_terraza__rgblight:
+#      friendly_name: 'LED RGB Light'
+#      icon: mdi:led-on
+#      homebridge_hidden: true
+#    #switch.sensor_terraza__switch_led:
+#    light.sensor_terraza__switch_led:
+#      friendly_name: 'LED en uso'
+#      icon: mdi:led-outline
+#      homebridge_hidden: true
+    
+    binary_sensor.sensor_terraza_mov1:
+      friendly_name: 'Movimiento'
+      homebridge_hidden: true
+#    binary_sensor.sensor_terraza_mov2:
+#      friendly_name: 'Movimiento 2'
+#      homebridge_hidden: true
+    binary_sensor.sensor_terraza_online:
+      friendly_name: Terraza Online
+      homebridge_hidden: true
+
+
+binary_sensor:
+  - platform: mqtt
+    device_class: connectivity
+    state_topic: !secret mqtt_topic_esp_terraza_lwt
+    name: sensor_terraza_online
+    qos: !secret mqtt_default_qos
+    payload_on: "online"
+    payload_off: "offline"
+
+  - platform: mqtt
+    device_class: motion
+    state_topic: !secret mqtt_topic_esp_terraza_status
+    value_template: "{{ value_json.sample.bin[0]}}"
+    name: sensor_terraza_mov1
+    qos: !secret mqtt_default_qos
+    payload_on: 1
+    payload_off: 0
+    availability_topic: !secret mqtt_topic_esp_terraza_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_terraza_status
+    value_template: "{{ value_json.sample.temp | round(1) }}"
+    name: sensor_terraza_temperature
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_terraza_status
+    value_template: "{{ value_json.sample.hum | round(1) }}"
+    name: sensor_terraza_humidity
+    unit_of_measurement: "%"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_terraza_status
+    value_template: "{{ value_json.sample.pres | round(1) }}"
+    name: sensor_terraza_pressure
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ value_json.sample.lux}}"
+#    name: sensor_terraza_illumination
+#    unit_of_measurement: "lx"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+    
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ value_json.sample.ds_temps[0] | round(1) }}"
+#    name: sensor_terraza_imp
+#    unit_of_measurement: "°C"
+#    qos: !secret mqtt_default_qos
+#    device_class: motion
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+#
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ value_json.sample.ds_temps[1] | round(1) }}"
+#    name: sensor_terraza_ret
+#    unit_of_measurement: "°C"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+#
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ value_json.sample.ds_temps[2] | round(1) }}"
+#    name: sensor_terraza_acs
+#    unit_of_measurement: "°C"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_terraza_status
+    value_template: "{{ value_json.sample.snum}}"
+    unit_of_measurement: "sample"
+    name: sensor_terraza__snum
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ (value_json.sample.adc[0] / 40.95) | round(1) }}"
+#    name: sensor_terraza__adc1
+#    unit_of_measurement: "%h"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+#
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_terraza_status
+#    value_template: "{{ (value_json.sample.adc[1] / 40.95) | round(1) }}"
+#    name: sensor_terraza__adc2
+#    unit_of_measurement: "%h"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+
+# switch:
+#   - platform: mqtt
+#     name: sensor_terraza__switch_led
+#     state_topic: !secret mqtt_topic_esp_terraza_status
+#     command_topic: !secret mqtt_topic_esp_galeria_command
+#     value_template: "{{ value_json.status.led }}"
+#     payload_on: "online"
+#     payload_off: "offline"
+#     availability_topic: !secret mqtt_topic_esp_terraza_lwt
+#     payload_available: "online"
+#     payload_not_available: "offline"
+#     #optimistic: false
+#     qos: !secret mqtt_default_qos
+#     retain: true
+
