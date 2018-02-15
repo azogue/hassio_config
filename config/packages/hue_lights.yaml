@@ -44,13 +44,18 @@ light:
     homebridge_hidden: true
     scan_interval: 12
 
-#hue:
+hue:
+  bridges:
+    - host: 192.168.1.45
+      allow_unreachable: true
 
-#sensor:
-#- platform: huesensors
-#  devices:
-#   - RWL
-##   - GEO
+# sensor.hue_dimmer_switch
+sensor:
+- platform: hue
+  devices:
+   - RWL
+#   - GEO
+
 
 input_number:
   # Master Sliders Salón (brillo y Tª color)
