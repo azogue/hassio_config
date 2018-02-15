@@ -35,7 +35,7 @@ DEFAULT_EMISION_TIME = "08:30:00"
 DEFAULT_MIN_POSPONER = 9
 MAX_WAIT_TIME = dt.timedelta(minutes=10)
 STEP_RETRYING_SEC = 20
-WARM_UP_TIME_DELTA = dt.timedelta(seconds=25)
+DEFAULT_WARM_UP_TIME_DELTA = 25  # s
 MIN_INTERVAL_BETWEEN_EPS = dt.timedelta(hours=8)
 MASK_URL_STREAM_MOPIDY = "http://api.spreaker.com/listen/episode/{}/http"
 # TELEGRAM_KEYBOARD_ALARMCLOCK = ['/ducha', '/posponer',
@@ -162,6 +162,7 @@ class AlarmClock(appapi.AppDaemon):
 
     _alarm_time_sensor = None
     _delta_time_postponer_sec = None
+    _warm_up_time_delta = None
     _max_volume = None
     _volume_ramp_sec = None
     _weekdays_alarm = None
@@ -201,6 +202,9 @@ class AlarmClock(appapi.AppDaemon):
                           DEFAULT_DURATION_VOLUME_RAMP))
         self._weekdays_alarm = [_weekday(d) for d in self.args.get(
             'alarmdays', 'mon,tue,wed,thu,fri').split(',') if _weekday(d) >= 0]
+        self._warm_up_time_delta = dt.timedelta(
+            seconds=int(self.args.get('warm_up_time_delta_s',
+                                      DEFAULT_WARM_UP_TIME_DELTA)))
         self.listen_state(self.alarm_time_change, self._alarm_time_sensor)
 
         # Room selection:
@@ -280,8 +284,8 @@ class AlarmClock(appapi.AppDaemon):
                         entity_id=self._media_player_mopidy) == 'playing':
                     self.call_service('media_player/turn_off',
                                       entity_id=self._media_player_mopidy)
-                # self.call_service('switch/turn_off',
-                #                   entity_id="switch.altavoz")
+                self.call_service('switch/turn_off',
+                                  entity_id="switch.altavoz")
                 if self._manual_trigger is not None:
                     self._last_trigger = None
                     self.set_state(entity_id=self._manual_trigger, state='off')
@@ -341,7 +345,7 @@ class AlarmClock(appapi.AppDaemon):
                             zip(str_time_alarm.split(':'),
                                 ['hour', 'minute', 'second']),
                             self.datetime().replace(second=0, microsecond=0))
-        self._next_alarm = time_alarm - WARM_UP_TIME_DELTA
+        self._next_alarm = time_alarm - self._warm_up_time_delta
         self._handle_alarm = self.run_daily(
             self.run_alarm, self._next_alarm.time())
 
@@ -431,7 +435,7 @@ class AlarmClock(appapi.AppDaemon):
     def run_mopidy_stream_lacafetera(self, ep_info):
         """Play stream in mopidy."""
         self.log('DEBUG MPD: {}'.format(ep_info))
-        # self.call_service('switch/turn_on', entity_id="switch.altavoz")
+        self.call_service('switch/turn_on', entity_id="switch.altavoz")
         self.run_command_mopidy('core.tracklist.clear', check_result=False)
         params = {"tracks": [{"__model__": "Track",
                               "uri": MASK_URL_STREAM_MOPIDY.format(
@@ -466,8 +470,8 @@ class AlarmClock(appapi.AppDaemon):
         (turn on devices, get ready the context, etc)"""
         # self.log('PREPARE_CONTEXT_ALARM', LOG_LEVEL)
         self.turn_on_morning_services(dict(delta_to_repeat=10))
-        if self.play_in_kodi:
-            return self.run_kodi_addon_lacafetera(mode='wakeup')
+        # if self.play_in_kodi:
+        #     return self.run_kodi_addon_lacafetera(mode='wakeup')
         # else:
         #     return self.call_service(
         #         'switch/turn_on', entity_id="switch.altavoz")
@@ -513,7 +517,7 @@ class AlarmClock(appapi.AppDaemon):
             if self.datetime().weekday() in self._weekdays_alarm:
                 ok = self.prepare_context_alarm()
                 self.run_in(self.trigger_service_in_alarm,
-                            WARM_UP_TIME_DELTA.total_seconds())
+                            self._warm_up_time_delta.total_seconds())
             else:
                 self.log('ALARM CLOCK NOT TRIGGERED TODAY '
                          '(weekday={}, alarm weekdays={})'

@@ -15,16 +15,16 @@ FamilyTracker:
       chat_id_idx: 1
       extra_tracker: input_boolean.carmen_presence
 
-#EnerpiPeakNotifier:
-#  class: EnerpiPeakNotifier
-#  module: enerpi_alarm
-#  camera: camera.enerpi_tile_power
+EnerpiPeakNotifier:
+  class: EnerpiPeakNotifier
+  module: enerpi_alarm
+  camera: camera.electricidad_24h
 #  constrain_input_boolean: input_boolean.switch_control_enerpi_max_power
-#  control: sensor.enerpi_power
-#  max_power_kw: input_number.enerpi_max_power
-#  max_power_kw_reset: input_number.enerpi_max_power_reset
-#  min_time_high: 15
-#  min_time_low: 60
+  control: sensor.enerpi_power
+  max_power_kw: input_number.enerpi_max_power
+  max_power_kw_reset: input_number.enerpi_max_power_reset
+  min_time_high: 15
+  min_time_low: 60
 
 KodiMediaSelect:
   class: DynamicKodiInputSelect
@@ -54,10 +54,11 @@ MorningAlarmClock:
   constrain_input_boolean: input_boolean.alarm_clock_status
   sunrise_duration: 300
   duration_volume_ramp_sec: 240
-  max_volume: 100
+  max_volume: 25
+  warm_up_time_delta_s: 9000
   postponer_minutos: 7
   room_select: input_select.room_altavoces
-  lights_alarm: group.luces_dormitorio
+  lights_alarm: group.control_dormitorio
   manual_trigger: input_boolean.manual_trigger_lacafetera
 
 #MotionLightsSalon:
