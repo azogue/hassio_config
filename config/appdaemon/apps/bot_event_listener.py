@@ -435,7 +435,8 @@ class EventListener(appapi.AppDaemon):
         self._hass_entities = {
             ent_type: {k.split('.')[1]: v['attributes']['friendly_name']
                        for k, v in self.get_state(ent_type).items()
-                       if 'friendly_name' in v['attributes']}
+                       if v is not None and 'attributes' in v
+                       and 'friendly_name' in v['attributes']}
             for ent_type in HASSWIZ_TYPES}
         self._hass_entities_plain = {'{}.{}'.format(domain, ent): fn
                                      for domain, entities in
@@ -1264,12 +1265,14 @@ class EventListener(appapi.AppDaemon):
 
     def _turn_off_lights_and_appliances(self, turn_off_heater=False):
         self.turn_off('group.all_lights', transition=2)
-        self.turn_off("switch.calefactor")
-        self.turn_off("media_player.kodi")
-        self.turn_off("switch.estudio_light_relay")
-        self.turn_off("switch.new_switch_2")
+        # self.turn_off("switch.calefactor")
+        # self.turn_off("switch.cocina")
+        self.turn_off("switch.altavoz")
+        self.turn_off("media_player.kodi_tv")
+        # self.turn_off("switch.estudio_light_relay")
+        # self.turn_off("switch.new_switch_2")
+        self.turn_off("switch.bomba_circ_acs")
         if turn_off_heater:
-            self.turn_off("switch.bomba_circ_acs")
             self.turn_off("switch.calentador")
 
     def response_to_action(self, action, origin, telegram_target=None):

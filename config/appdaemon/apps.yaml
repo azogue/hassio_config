@@ -20,7 +20,7 @@ EnerpiPeakNotifier:
   module: enerpi_alarm
   camera: camera.electricidad_24h
 #  constrain_input_boolean: input_boolean.switch_control_enerpi_max_power
-  control: sensor.enerpi_power
+  control: sensor.esp32ener_power
   max_power_kw: input_number.enerpi_max_power
   max_power_kw_reset: input_number.enerpi_max_power_reset
   min_time_high: 15
@@ -41,7 +41,7 @@ KodiYoutube:
 KodiNotifier:
   class: KodiAssistant
   module: kodi_ambient_lights
-  lights_dim_off: light.bola_grande,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv
+  lights_dim_off: light.bola_grande,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv,light.tira_tv
   lights_dim_on: light.pie_sofa
   lights_off: light.central
 #  switch_dim_lights_use: switch.toggle_kodi_ambilight
@@ -49,9 +49,12 @@ KodiNotifier:
 MorningAlarmClock:
   class: AlarmClock
   module: morning_alarm_clock
-  alarm_time: sensor.alarm_clock_time
-  alarmdays: mon,tue,wed,thu,fri,sat
-  constrain_input_boolean: input_boolean.alarm_clock_status
+  alarm_time: input_datetime.alarm_clock_time
+  warm_up_time: input_datetime.water_boiler_start_time
+  special_alarm_datetime: input_datetime.next_special_wake_up
+#  alarmdays: mon,tue,wed,thu,fri,sat
+  alarmdays: mon,tue,wed,thu,fri
+  input_boolean_alarm_on: input_boolean.alarm_clock_status
   sunrise_duration: 300
   duration_volume_ramp_sec: 240
   max_volume: 25

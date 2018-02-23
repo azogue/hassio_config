@@ -227,20 +227,21 @@ class KodiAssistant(appapi.AppDaemon):
             if play:
                 light_state = self.get_state(light_id)
                 attrs_light = self.get_state(light_id, attribute='attributes')
-                attrs_light.update({"state": light_state})
-                self._light_states[light_id] = attrs_light
-                max_brightness = _get_max_brightness_ambient_lights()
-                if light_id in self._lights['off']:
-                    self.log('Apagando light {} para KODI PLAY'
-                             .format(light_id), LOG_LEVEL)
-                    self.call_service(
-                        "light/turn_off", entity_id=light_id, transition=2)
-                elif ("brightness" in attrs_light.keys()
-                      ) and (attrs_light["brightness"] > max_brightness):
-                    self.log('Atenuando light {} para KODI PLAY'
-                             .format(light_id), LOG_LEVEL)
-                    self.call_service("light/turn_on", entity_id=light_id,
-                                      transition=2, brightness=max_brightness)
+                if attrs_light:
+                    attrs_light.update({"state": light_state})
+                    self._light_states[light_id] = attrs_light
+                    max_brightness = _get_max_brightness_ambient_lights()
+                    if light_id in self._lights['off']:
+                        self.log('Apagando light {} para KODI PLAY'
+                                 .format(light_id), LOG_LEVEL)
+                        self.call_service(
+                            "light/turn_off", entity_id=light_id, transition=2)
+                    elif ("brightness" in attrs_light.keys()
+                          ) and (attrs_light["brightness"] > max_brightness):
+                        self.log('Atenuando light {} para KODI PLAY'
+                                 .format(light_id), LOG_LEVEL)
+                        self.call_service("light/turn_on", entity_id=light_id,
+                                          transition=2, brightness=max_brightness)
             else:
                 try:
                     state_before = self._light_states[light_id]

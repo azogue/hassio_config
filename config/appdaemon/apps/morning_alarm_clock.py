@@ -160,7 +160,10 @@ class AlarmClock(appapi.AppDaemon):
     after waking up the home-cinema system,
     or a Modipy instance with a streaming audio."""
 
-    _alarm_time_sensor = None
+    _alarm_on = False
+    _alarm_time_input = None
+    _warm_up_time_input = None
+    _special_alarm_time_input = None
     _delta_time_postponer_sec = None
     _warm_up_time_delta = None
     _max_volume = None
@@ -183,7 +186,12 @@ class AlarmClock(appapi.AppDaemon):
     _mopidy_port = None
 
     _next_alarm = None
+    _next_warm_up = None
+    _next_special_alarm = None
     _handle_alarm = None
+    _handle_warm_up = None
+    _handle_special_alarm = None
+
     _last_trigger = None
     _in_alarm_mode = False
     _handler_turnoff = None
@@ -192,7 +200,14 @@ class AlarmClock(appapi.AppDaemon):
         """AppDaemon required method for app init."""
         conf_data = dict(self.config['AppDaemon'])
         self._tz = conf.tz
-        self._alarm_time_sensor = self.args.get('alarm_time')
+
+        self._alarm_on = (self.get_state(self.args.get('input_boolean_alarm_on')) == 'on')
+        self.listen_state(self.master_switch, self.args.get('input_boolean_alarm_on'))
+
+        self._alarm_time_input = self.args.get('alarm_time')
+        self._warm_up_time_input = self.args.get('warm_up_time')
+        self._special_alarm_time_input = self.args.get('special_alarm_datetime')
+
         self._delta_time_postponer_sec = int(
             self.args.get('postponer_minutos', DEFAULT_MIN_POSPONER)) * 60
         self._max_volume = int(
@@ -205,7 +220,10 @@ class AlarmClock(appapi.AppDaemon):
         self._warm_up_time_delta = dt.timedelta(
             seconds=int(self.args.get('warm_up_time_delta_s',
                                       DEFAULT_WARM_UP_TIME_DELTA)))
-        self.listen_state(self.alarm_time_change, self._alarm_time_sensor)
+
+        self.listen_state(self.alarm_time_change, self._alarm_time_input)
+        self.listen_state(self.warm_up_time_change, self._warm_up_time_input)
+        self.listen_state(self.special_alarm_time_change, self._special_alarm_time_input)
 
         # Room selection:
         self._selected_player = 'KODI'
@@ -237,8 +255,14 @@ class AlarmClock(appapi.AppDaemon):
         self._transit_time = total_duration // len(self._phases_sunrise) + 1
 
         self._set_new_alarm_time()
-        self.log('INIT WITH NEXT ALARM IN: {:%d-%m-%Y %H:%M:%S} ({})'
-                 .format(self._next_alarm, self._selected_player), LOG_LEVEL)
+        self._set_new_warm_up_time()
+        self._set_new_special_alarm_datetime()
+        if self._next_alarm is not None and self._next_warm_up is not None:
+            self.log('INIT WITH ALARM AT: {:%H:%M:%S}, WARM UP AT {:%H:%M:%S}, '
+                     'NEXT SPECIAL: {} ({})'
+                     .format(self._next_alarm, self._next_warm_up,
+                             self._next_special_alarm, self._selected_player),
+                     LOG_LEVEL)
 
     @property
     def play_in_kodi(self):
@@ -299,6 +323,13 @@ class AlarmClock(appapi.AppDaemon):
         self._handler_turnoff = None
 
     # noinspection PyUnusedLocal
+    def master_switch(self, entity, attribute, old, new, kwargs):
+        """Start reproduction manually."""
+        self._alarm_on = (new == 'on')
+        self.log('MASTER SWITCH BOOLEAN CHANGED from {} to {}'
+                 .format(old, new))
+
+    # noinspection PyUnusedLocal
     def manual_triggering(self, entity, attribute, old, new, kwargs):
         """Start reproduction manually."""
         self.log('MANUAL_TRIGGERING BOOLEAN CHANGED from {} to {}'
@@ -335,19 +366,74 @@ class AlarmClock(appapi.AppDaemon):
                  .format(self._next_alarm), LOG_LEVEL)
 
     # noinspection PyUnusedLocal
-    def _set_new_alarm_time(self, *args):
+    def warm_up_time_change(self, entity, attribute, old, new, kwargs):
+        """Re-schedule next alarm when alarm time sliders change."""
+        self._set_new_warm_up_time()
+        self.log('CHANGING WARM UP TIME TO: {:%H:%M:%S}'
+                 .format(self._next_warm_up), LOG_LEVEL)
+
+    # noinspection PyUnusedLocal
+    def special_alarm_time_change(self, entity, attribute, old, new, kwargs):
+        """Re-schedule next alarm when alarm time sliders change."""
+        self._set_new_special_alarm_datetime()
+        self.log('CHANGING SPECIAL ALARM TIME TO: {:%d/%m/%y %H:%M:%S}'
+                 .format(self._next_special_alarm), LOG_LEVEL)
+
+    def _set_new_alarm_time(self):
         if self._handle_alarm is not None:
             self.cancel_timer(self._handle_alarm)
-        str_time_alarm = self.get_state(entity_id=self._alarm_time_sensor)
-        if ':' not in str_time_alarm:
-            str_time_alarm = DEFAULT_EMISION_TIME
-        time_alarm = reduce(lambda x, y: x.replace(**{y[1]: int(y[0])}),
-                            zip(str_time_alarm.split(':'),
-                                ['hour', 'minute', 'second']),
-                            self.datetime().replace(second=0, microsecond=0))
-        self._next_alarm = time_alarm - self._warm_up_time_delta
+        alarm_time = self.get_state(self._alarm_time_input, "all")
+        if alarm_time is None:
+            self._next_alarm = None
+            return
+
+        time_alarm = dt.datetime.now().replace(
+            hour=alarm_time['attributes']['hour'], minute=alarm_time['attributes']['minute'],
+            second=0, microsecond=0)
+
+        self._next_alarm = time_alarm # - self._warm_up_time_delta
         self._handle_alarm = self.run_daily(
             self.run_alarm, self._next_alarm.time())
+
+    # noinspection PyUnusedLocal
+    def _set_new_warm_up_time(self, *args):
+        # _handle_special_alarm
+        if self._handle_warm_up is not None:
+            self.cancel_timer(self._handle_warm_up)
+        alarm_time = self.get_state(self._warm_up_time_input, "all")
+        if alarm_time is None:
+            self._next_warm_up = None
+            return
+
+        time_alarm = dt.datetime.now().replace(
+            hour=alarm_time['attributes']['hour'],
+            minute=alarm_time['attributes']['minute'],
+            second=0, microsecond=0)
+
+        self._next_warm_up = time_alarm #- self._warm_up_time_delta
+        self._handle_warm_up = self.run_daily(
+            self.run_warm_up, self._next_warm_up.time())
+
+    # noinspection PyUnusedLocal
+    def _set_new_special_alarm_datetime(self, *args):
+        if self._handle_special_alarm is not None:
+            self.cancel_timer(self._handle_special_alarm)
+        alarm_time = self.get_state(self._special_alarm_time_input, "all")
+        if alarm_time is None:
+            self._next_special_alarm = None
+            return
+
+        time_alarm = dt.datetime.now().replace(
+            year=alarm_time['attributes']['year'],
+            month=alarm_time['attributes']['month'],
+            day=alarm_time['attributes']['day'],
+            hour=alarm_time['attributes']['hour'],
+            minute=alarm_time['attributes']['minute'],
+            second=0, microsecond=0)
+
+        self._next_special_alarm = time_alarm #- self._warm_up_time_delta
+        self._handle_special_alarm = self.run_at(
+            self.run_alarm, self._next_special_alarm)
 
     def _set_sunrise_phase(self, *args_runin):
         self.log('SET_SUNRISE_PHASE: XY={xy_color}, '
@@ -445,6 +531,10 @@ class AlarmClock(appapi.AppDaemon):
                               # "album": "La Cafetera",
                               "date": "{:%Y-%m-%d}".format(
                                   ep_info['published'])}]}
+
+        # Retry:
+        self.call_service('switch/turn_on', entity_id="switch.altavoz")
+
         json_res = self.run_command_mopidy('core.tracklist.add', params=params)
         if json_res is not None:
             # self.log('Added track OK --> {}'.format(json_res))
@@ -464,29 +554,17 @@ class AlarmClock(appapi.AppDaemon):
                    .format(json_res), 'ERROR')
         return False
 
-    def prepare_context_alarm(self):
-        """Initialize the alarm context.
-
-        (turn on devices, get ready the context, etc)"""
-        # self.log('PREPARE_CONTEXT_ALARM', LOG_LEVEL)
-        self.turn_on_morning_services(dict(delta_to_repeat=10))
-        # if self.play_in_kodi:
-        #     return self.run_kodi_addon_lacafetera(mode='wakeup')
-        # else:
-        #     return self.call_service(
-        #         'switch/turn_on', entity_id="switch.altavoz")
-
     # noinspection PyUnusedLocal
     def trigger_service_in_alarm(self, *args):
         """Launch alarm secuence.
 
         Launch if ready, or set itself to retry in the short future."""
         # Check if alarm is ready to launch
-        if not self._in_alarm_mode:
+        if self._alarm_on and not self._in_alarm_mode:
             alarm_ready, alarm_info = is_last_episode_ready_for_play(
                 self.datetime(), self._tz)
             if alarm_ready:
-                self.turn_on_morning_services(dict(delta_to_repeat=30))
+                # self.turn_on_morning_services(dict(delta_to_repeat=30))
                 if self.play_in_kodi:
                     ok = self.run_kodi_addon_lacafetera()
                 else:
@@ -513,18 +591,25 @@ class AlarmClock(appapi.AppDaemon):
     def run_alarm(self, *args):
         """Run the alarm main secuence: prepare, trigger & schedule next"""
         if not self.get_state(self._manual_trigger) == 'on':
-            self.set_state(self._manual_trigger, state='off')
-            if self.datetime().weekday() in self._weekdays_alarm:
-                ok = self.prepare_context_alarm()
-                self.run_in(self.trigger_service_in_alarm,
-                            self._warm_up_time_delta.total_seconds())
+            # self.set_state(self._manual_trigger, state='off')
+            if self._alarm_on and self.datetime().weekday() in self._weekdays_alarm:
+                self.trigger_service_in_alarm()
             else:
                 self.log('ALARM CLOCK NOT TRIGGERED TODAY '
                          '(weekday={}, alarm weekdays={})'
                          .format(self.datetime().weekday(), self._weekdays_alarm))
-                self.run_in(self.turn_on_morning_services, 1800, delta_to_repeat=10)
         else:
             self.log('Alarm clock is running manually, no auto-triggering now')
+
+    # noinspection PyUnusedLocal
+    def run_warm_up(self, *args):
+        """Run the warm up sequence"""
+        if self.datetime().weekday() in self._weekdays_alarm:
+            self.turn_on_morning_services(dict(delta_to_repeat=10))
+            self.log('Warm up trigger')
+        else:
+            self.run_in(self.turn_on_morning_services, 1800, delta_to_repeat=10)
+            self.log('Warm up trigger in 1800 s')
 
     # noinspection PyUnusedLocal
     def postpone_secuencia_despertador(self, *args):
