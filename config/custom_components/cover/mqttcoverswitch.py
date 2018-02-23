@@ -13,16 +13,20 @@ import voluptuous as vol
 from homeassistant.core import callback
 import homeassistant.components.mqtt as mqtt
 from homeassistant.components.cover import (
-    CoverDevice, SUPPORT_OPEN, SUPPORT_CLOSE, SUPPORT_STOP,
-    SUPPORT_SET_POSITION, ATTR_CURRENT_POSITION, ATTR_POSITION)
-from homeassistant.const import CONF_NAME, CONF_OPTIMISTIC
+    ATTR_CURRENT_POSITION, ATTR_ENTITY_ID, ATTR_POSITION,
+    CoverDevice, DOMAIN, ENTITY_ID_FORMAT,
+    SUPPORT_OPEN, SUPPORT_CLOSE, SUPPORT_STOP, SUPPORT_SET_POSITION)
+from homeassistant.const import (
+    CONF_COVERS, CONF_FRIENDLY_NAME, CONF_OPTIMISTIC)
 from homeassistant.components.mqtt import (
     CONF_AVAILABILITY_TOPIC, CONF_PAYLOAD_AVAILABLE,
     CONF_PAYLOAD_NOT_AVAILABLE, CONF_QOS, CONF_RETAIN,
     valid_publish_topic, valid_subscribe_topic, MqttAvailability)
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity import async_generate_entity_id
 from homeassistant.helpers.event import async_track_point_in_time
 from homeassistant.helpers.restore_state import async_get_last_state
+from homeassistant.helpers.service import extract_entity_ids
 from homeassistant.util.dt import utcnow
 
 _LOGGER = logging.getLogger(__name__)
@@ -42,7 +46,6 @@ CONF_PAYLOAD_CLOSE = 'payload_close'
 CONF_PAYLOAD_STOP_OPEN = 'payload_stop_open'
 CONF_PAYLOAD_STOP_CLOSE = 'payload_stop_close'
 
-DEFAULT_NAME = 'MQTT Cover Switch'
 DEFAULT_PAYLOAD_OPEN = 'on'
 DEFAULT_PAYLOAD_CLOSE = 'on'
 DEFAULT_PAYLOAD_STOP = 'off'
@@ -52,8 +55,8 @@ DEFAULT_QOS = 0
 
 OPEN_CLOSE_FEATURES = (SUPPORT_OPEN | SUPPORT_CLOSE | SUPPORT_STOP)
 
-PLATFORM_SCHEMA = mqtt.MQTT_BASE_PLATFORM_SCHEMA.extend({
-    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+COVER_SCHEMA = vol.Schema({
+    vol.Optional(CONF_FRIENDLY_NAME): cv.string,
     vol.Required(CONF_STATE_SWITCH_OPEN_TOPIC): valid_subscribe_topic,
     vol.Required(CONF_STATE_SWITCH_CLOSE_TOPIC): valid_subscribe_topic,
     vol.Required(CONF_COMMAND_SWITCH_OPEN_TOPIC): valid_publish_topic,
@@ -73,6 +76,16 @@ PLATFORM_SCHEMA = mqtt.MQTT_BASE_PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_RETAIN, default=DEFAULT_RETAIN): cv.boolean,
 }).extend(mqtt.MQTT_AVAILABILITY_SCHEMA.schema)
 
+PLATFORM_SCHEMA = mqtt.MQTT_BASE_PLATFORM_SCHEMA.extend({
+    vol.Required(CONF_COVERS): vol.Schema({cv.slug: COVER_SCHEMA}),
+})
+
+SET_ACTUAL_POSITION_SERVICE_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_ENTITY_ID): cv.entity_ids,
+    vol.Required(ATTR_POSITION):
+        vol.Range(min=0, max=100, min_included=True, max_included=True),
+})
+
 
 @asyncio.coroutine
 def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
@@ -80,40 +93,68 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     if discovery_info is not None:
         config = PLATFORM_SCHEMA(discovery_info)
 
-    async_add_devices([MqttCoverSwitch(
-        config.get(CONF_NAME),
-        config.get(CONF_STATE_SWITCH_OPEN_TOPIC),
-        config.get(CONF_STATE_SWITCH_CLOSE_TOPIC),
-        config.get(CONF_COMMAND_SWITCH_OPEN_TOPIC),
-        config.get(CONF_COMMAND_SWITCH_CLOSE_TOPIC),
-        config.get(CONF_PAYLOAD_OPEN),
-        config.get(CONF_PAYLOAD_STOP_OPEN),
-        config.get(CONF_PAYLOAD_CLOSE),
-        config.get(CONF_PAYLOAD_STOP_CLOSE),
-        config.get(CONF_DELAY_FULL_OPEN),
-        config.get(CONF_OPTIMISTIC),
-        config.get(CONF_AVAILABILITY_TOPIC),
-        config.get(CONF_PAYLOAD_AVAILABLE),
-        config.get(CONF_PAYLOAD_NOT_AVAILABLE),
-        config.get(CONF_QOS),
-        config.get(CONF_RETAIN)
-    )])
+    covers = []
+    for device, device_config in config[CONF_COVERS].items():
+        covers.append(MqttCoverSwitch(
+            hass, device,
+            device_config.get(CONF_FRIENDLY_NAME),
+            device_config.get(CONF_STATE_SWITCH_OPEN_TOPIC),
+            device_config.get(CONF_STATE_SWITCH_CLOSE_TOPIC),
+            device_config.get(CONF_COMMAND_SWITCH_OPEN_TOPIC),
+            device_config.get(CONF_COMMAND_SWITCH_CLOSE_TOPIC),
+            device_config.get(CONF_PAYLOAD_OPEN),
+            device_config.get(CONF_PAYLOAD_STOP_OPEN),
+            device_config.get(CONF_PAYLOAD_CLOSE),
+            device_config.get(CONF_PAYLOAD_STOP_CLOSE),
+            device_config.get(CONF_DELAY_FULL_OPEN),
+            device_config.get(CONF_OPTIMISTIC),
+            device_config.get(CONF_AVAILABILITY_TOPIC),
+            device_config.get(CONF_PAYLOAD_AVAILABLE),
+            device_config.get(CONF_PAYLOAD_NOT_AVAILABLE),
+            device_config.get(CONF_QOS),
+            device_config.get(CONF_RETAIN)))
+
+    async_add_devices(covers)
+
+    @asyncio.coroutine
+    def set_actual_position(service_call):
+        """Set actual position service for manual calibration."""
+        params = service_call.data.copy()
+        target = extract_entity_ids(hass, service_call, expand_group=True)
+
+        target_covers = list(filter(lambda x: x.entity_id in target, covers))
+        if not target_covers:
+            target_covers = covers
+
+        update_tasks = []
+        for cover in target_covers:
+            yield from cover.async_set_current_cover_position(**params)
+            update_tasks.append(cover.async_update_ha_state(True))
+
+        if update_tasks:
+            yield from asyncio.wait(update_tasks, loop=hass.loop)
+
+    hass.services.async_register(
+        DOMAIN, 'set_actual_position', set_actual_position,
+        schema=SET_ACTUAL_POSITION_SERVICE_SCHEMA)
 
 
 class MqttCoverSwitch(MqttAvailability, CoverDevice):
     """Representation of a cover that can be controlled using MQTT."""
 
-    def __init__(self, name, state_switch_open_topic, state_switch_close_topic,
+    def __init__(self, hass, device_id, friendly_name, state_switch_open_topic, state_switch_close_topic,
                  command_switch_open_topic, command_switch_close_topic,
                  payload_open, payload_stop_open,
                  payload_close, payload_stop_close,
                  delay_full_open, optimistic, availability_topic,
                  payload_available, payload_not_available, qos, retain):
         """Initialize the cover."""
+        self.hass = hass
+        self.entity_id = async_generate_entity_id(
+            ENTITY_ID_FORMAT, device_id, hass=hass)
         super().__init__(availability_topic, qos, payload_available,
                          payload_not_available)
-        self._name = name
-        self._state = None
+        self._name = friendly_name
         self._position = None
         self._tic_last_action = None
         self._last_action_is_opening = False
@@ -189,6 +230,18 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
         return self._position
 
     @asyncio.coroutine
+    def async_set_current_cover_position(self, **kwargs):
+        """Manually set the current position of cover.
+
+        None is unknown, 0 is closed, 100 is fully open.
+        """
+        new_position = kwargs[ATTR_POSITION]
+        _LOGGER.warning("%s: Manual set of cover position: %d (was: %d)",
+                        self.name or self.entity_id,
+                        new_position, self._position)
+        self._position = new_position
+
+    @asyncio.coroutine
     def async_added_to_hass(self):
         """Subscribe MQTT events."""
         yield from super().async_added_to_hass()
@@ -199,7 +252,7 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
             if ATTR_CURRENT_POSITION in data['attributes']:
                 self._position = data['attributes'][ATTR_CURRENT_POSITION]
                 _LOGGER.info("Got last position for cover %s: %d",
-                             self.name, self._position)
+                             self.name or self.entity_id, self._position)
 
         @callback
         def state_message_received(topic, payload, qos):
@@ -315,7 +368,7 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
 
         This method is a coroutine.
         """
-        _LOGGER.info("Opening cover %s", self.name)
+        _LOGGER.info("Opening cover %s", self.name or self.entity_id)
         yield from self.async_stop_cover(is_safe_stop=True)
         when = self.calculate_stop_time(True, **kwargs)
         self._stop_checker = async_track_point_in_time(
@@ -335,7 +388,7 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
 
         This method is a coroutine.
         """
-        _LOGGER.info("Closing cover %s", self.name)
+        _LOGGER.info("Closing cover %s", self.name or self.entity_id)
         yield from self.async_stop_cover(is_safe_stop=True)
         when = self.calculate_stop_time(False, **kwargs)
         self._stop_checker = async_track_point_in_time(
@@ -356,7 +409,7 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
         This method is a coroutine.
         """
         if 'is_safe_stop' not in kwargs:
-            _LOGGER.info("Stop cover %s", self.name)
+            _LOGGER.info("Stop cover %s", self.name or self.entity_id)
         if (self._stop_checker is not None and
                 ('is_timeout' not in kwargs or not kwargs['is_timeout'])):
             self._stop_checker()
@@ -380,8 +433,8 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
     @asyncio.coroutine
     def async_set_cover_position(self, **kwargs):
         """Move the cover to a specific position."""
-        is_opening = self._position is None or \
-                        kwargs[ATTR_POSITION] > self._position
+        is_opening = self._position is None \
+                     or kwargs[ATTR_POSITION] > self._position
         if is_opening:
             yield from self.async_open_cover(**kwargs)
         else:
