@@ -39,21 +39,26 @@ play_kodi_pvr:
       service: media_player.play_media
       data_template:
         entity_id: media_player.kodi
-  #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
+        #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
+        # [('La 1 HD', 32), ('La 2', 10), ('Antena 3 HD', 33), ('Cuatro HD', 42), ('Telecinco HD', 44), ('La Sexta HD', 18),
+        #  ('#0 HD', 55), ('TV Mediterráneo ', 29), ('TV3 HD ', 52), ('FDF', 17), ('Neox', 6), ('Atreseries HD', 8), ('Energy', 41),
+        #  ('Ten', 4), ('Paramount Channel', 7), ('DEPORTES HD', 34), ('Teledeporte', 31), ('Teledeporte HD', 57), ('Discovery Max', 58),
+        #  ('DKISS ', 49), ('Divinity', 19), ('Nova', 43), ('MEGA', 39), ('Disney Channel HD', 16), ('Boing', 9), ('Clan TVE', 2),
+        #  ('24 Horas', 20), ('Xarxa Televisions ', 5), ('Movistar+ HD', 1)]
         media_content_type: "CHANNEL"
         media_content_id: >
           {% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}
-            10
+            18
           {% elif (now().hour < 16) %}
-            15
+            33
           {% elif (now().hour < 20) %}
-            2
+            20
           {% elif (now().hour == 20) and (now().minute < 50) %}
-            10
+            18
           {% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}
-            15
+            33
           {% else %}
-            10
+            55
           {% endif %}
 
     - alias: Notificación de selección de canal
@@ -63,12 +68,12 @@ play_kodi_pvr:
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
         disable_notification: true
         message: >
-          Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}laSexta HD{% endif %}'.
+          Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}#0 HD{% endif %}'.
         inline_keyboard:
           - OFF:/service_call media_player.turn_off media_player.kodi, ON:/service_call media_player.turn_on media_player.kodi, ‖:/service_call media_player.media_play_pause media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
 
 restart_kodi_osmc:
-  alias: Restart KODI OSMC
+  alias: Restart KODI
   sequence:
     - service: notify.ios_iphone
       data:
@@ -146,3 +151,44 @@ pvr_channels:
         entity_id: media_player.kodi
         method: PVR.GetChannels
         channelgroupid: 1
+
+set_mid_position_cover_1:
+  alias: Ventanal está en 50
+  sequence:
+    - service: cover.set_actual_position
+      data:
+        entity_id: "cover.sonoff_cover_1"
+        position: 50
+
+set_mid_position_cover_2:
+  alias: Puerta está en 50
+  sequence:
+    - service: cover.set_actual_position
+      data:
+        entity_id: "cover.sonoff_cover_2"
+        position: 50
+
+# Sonoff script to request initial state in HA start
+start_status_sonoff_outlets:
+  alias: Requerir estado de Sonoff
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: "sonoff/4cover"
+        payload: "stat"
+        qos: 1
+#      - service: mqtt.publish
+#        data:
+#          topic: "sonoff/dual1"
+#          payload: "stat"
+#          qos: 1
+    - service: mqtt.publish
+      data:
+        topic: "sonoff/pow/1"
+        payload: "stat"
+        qos: 1
+    - service: mqtt.publish
+      data:
+        topic: "sonoff/simple1"
+        payload: "stat"
+        qos: 1

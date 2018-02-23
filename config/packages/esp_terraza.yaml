@@ -58,7 +58,7 @@ homeassistant:
 #      homebridge_hidden: true
     
     binary_sensor.sensor_terraza_mov1:
-      friendly_name: 'Movimiento'
+      friendly_name: 'Movimiento (terraza)'
       homebridge_hidden: true
 #    binary_sensor.sensor_terraza_mov2:
 #      friendly_name: 'Movimiento 2'

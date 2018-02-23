@@ -2,9 +2,9 @@ Salón:
   name: Luces salón
 #  control: hidden
   entities:
-    - input_number.light_main_slider_salon
-    - input_number.light_temp_slider_salon
-    - input_select.salon_light_scene
+#    - input_number.light_main_slider_salon
+#    - input_number.light_temp_slider_salon
+#    - input_select.salon_light_scene
     - light.bola_grande
     - light.bola_pequena
     - light.central
@@ -14,6 +14,24 @@ Salón:
     - light.lamparita
     - light.go
     - light.tira
+#    - light.tira_tv
+    - light.yeelight_strip_7811dca21ecf
+#    - switch.tv_power
+#    - cover.sonoff_cover_1
+#    - cover.sonoff_cover_2
+
+control_salon:
+  name: Control Salón
+  control: hidden
+  entities:
+    - input_number.light_main_slider_salon
+    - input_number.light_temp_slider_salon
+    - input_select.salon_light_scene
+    - switch.tv_power
+    - cover.sonoff_cover_1
+    - cover.sonoff_cover_2
+    - script.set_mid_position_cover_1
+    - script.set_mid_position_cover_2
 
 #Estudio:
 ##  entities:
@@ -42,55 +60,65 @@ sensors_dormitorio:
     - sensor.dormitorio_htu21d_temperature_rpi2mpd
     - sensor.dormitorio_htu21d_humidity_rpi2mpd
     - sensor.dormitorio_light_level_rpi2mpd
-    - binary_sensor.pir_dormitorio_rpi2mpd
+
 
 Despertador:
   control: hidden
   entities:
     - switch.alarm_clock_status
   #  - input_boolean.alarm_clock_status
-    - input_number.alarm_clock_hour
-    - input_number.alarm_clock_minute
-    - sensor.alarm_clock_time
+    - input_datetime.alarm_clock_time
+    - input_datetime.water_boiler_start_time
+    - input_datetime.next_special_wake_up
     - input_select.room_altavoces
     # From rf outlets:
-#    - switch.altavoz
+    - switch.altavoz
     - input_boolean.manual_trigger_lacafetera
 
 Enchufes:
   control: hidden
   entities:
+    - vacuum.robot_aspirador
     - switch.bomba_circ_acs
     - switch.calentador
     - switch.camara
+    - switch.tv_power
     - switch.altavoz
     - switch.office_floor
 
     - switch.cocina
-    - switch.calefactor
     - switch.new_switch_2
     - switch.new_switch_3
+    - switch.sonoff_simple_1
+    - switch.test_switch
 
 #Terraza:
 #  - light.terraza
 
-Consumo eléctrico:
-  - sensor.enerpi_power
-  - sensor.enerpi_ch1
-  - sensor.enerpi_ch2
-  - binary_sensor.electricity_high_cost_interval
-#  - sensor.enerpi_ldr
-
-Kodi:
-  control: hidden
+elec_power_complete:
+  name: Consumo eléctrico
   entities:
-    - switch.toggle_kodi_ambilight
-    - switch.toggle_config_kodi_ambilight
-    - script.play_kodi_pvr
-    - script.stop_kodi
-    - script.update_library
-    - script.quit_kodi
-    - script.restart_kodi_osmc
+    - sensor.enerpi_power
+    - sensor.enerpi_ch1
+    - sensor.enerpi_ch2
+    - sensor.esp32ener_power
+    - sensor.esp32ener_ch1
+    - sensor.esp32ener_ch2
+    - sensor.sonoff_pow_1
+    - binary_sensor.electricity_high_cost_interval
+    - sensor.pvpc
+    - sensor.esp32ener_consumption_day
+
+elec_power_simple:
+  name: Consumo eléctrico
+  entities:
+    - sensor.esp32ener_power
+    - binary_sensor.electricity_high_cost_interval
+    - sensor.esp32ener_consumption_day
+    - weblink.grafana
+
+kodi_mp:
+  - media_player.kodi_tv
 
 Media select:
   control: hidden
@@ -102,17 +130,22 @@ Media select:
     - input_text.q_youtube
     - input_select.youtube_videos
 
-Local:
-  - sensor.local_htu21d_temperature
-  - sensor.local_htu21d_humidity
-  - sensor.local_light_level
-  - binary_sensor.local_pir
+Kodi:
+  control: hidden
+  entities:
+#    - switch.toggle_kodi_ambilight
+#    - switch.toggle_config_kodi_ambilight
+    - script.play_kodi_pvr
+    - script.stop_kodi
+    - script.update_library
+    - script.quit_kodi
+    - script.restart_kodi_osmc
 
 LocalHost:
   - sensor.hass_cpu_temperature
-  - sensor.cpu_used
-  - sensor.ram_available
-  - sensor.disk_used_
+  - sensor.processor_use
+  - sensor.memory_free
+  - sensor.disk_use_percent_
   - sensor.last_boot
 
 Host Dormitorio:
@@ -150,7 +183,6 @@ esp_livingroom:
     - sensor.sensor_livingroom_pressure
     - sensor.sensor_livingroom_illumination
 #    light.sensor_livingroom__rgblight
-    - binary_sensor.sensor_livingroom_mov1
 #    - binary_sensor.sensor_livingroom_online
     - sensor.sensor_livingroom__snum
 
@@ -167,7 +199,6 @@ esp_office:
 #    light.sensor_office__rgblight
 #    #switch.sensor_office__switch_led
 #    light.sensor_office__switch_led
-    - binary_sensor.sensor_office_mov1
 #    - binary_sensor.sensor_office_online
     - sensor.sensor_office__snum
 
@@ -180,7 +211,6 @@ esp_terraza:
     - sensor.sensor_terraza_humidity
     - sensor.sensor_terraza_pressure
     - sensor.sensor_terraza_illumination
-    - binary_sensor.sensor_terraza_mov1
 #    - binary_sensor.sensor_terraza_online
     - sensor.sensor_terraza__snum
 
@@ -204,6 +234,24 @@ esp_galeria:
 #      - binary_sensor.sensor_galeria_mov1
 #    - binary_sensor.sensor_galeria_online
     - sensor.sensor_galeria__snum
+
+Local:
+  name: Cuadro
+  entities:
+    - sensor.local_htu21d_temperature
+    - sensor.local_htu21d_humidity
+    - sensor.local_light_level
+
+Cámaras:
+  - camera.sricam_360
+
+Movimiento:
+  - binary_sensor.local_pir
+  - binary_sensor.motioncam_salon
+  - binary_sensor.sensor_livingroom_mov1
+  - binary_sensor.pir_dormitorio_rpi2mpd
+  - binary_sensor.sensor_office_mov1
+  - binary_sensor.sensor_terraza_mov1
 
 Conectivity:
   - binary_sensor.services_notok
@@ -241,13 +289,16 @@ general_config:
   control: hidden
   entities:
     - binary_sensor.workday_sensor
+    - sensor.season
     - sun.sun
+    - sensor.hue_dimmer_switch
     - input_boolean.switch_motion_lights
     - input_number.light_duration_after_motion
     - input_boolean.switch_control_enerpi_max_power
     - input_number.enerpi_max_power
     - input_number.enerpi_max_power_reset
     - script.good_night
+    - script.start_status_sonoff_outlets
 
 dt_imac:
 #  hidden: true
@@ -302,6 +353,8 @@ Dispositivos:
     - device_tracker.nas_qnap
     - device_tracker.nas_syno
     - device_tracker.hue_bridge
+    - device_tracker.yeelight_strip
+    - device_tracker.home_cinema
     - device_tracker.rpi3_enerpi
     - device_tracker.rpi3_osmc
     - device_tracker.rpi2_bedroom
@@ -327,6 +380,16 @@ Dev boards:
     - device_tracker.00e04c534458
     - device_tracker.240ac4817974
 
+    # new wroom32 - ener:
+    - device_tracker.30aea41607a8
+
+    - device_tracker.240ac4057954
+
+    # Sonoff
+    - device_tracker.6001948433c2
+    - device_tracker.5ccf7faf2f3f
+    - device_tracker.5ccf7f9237c1
+    - device_tracker.5ccf7f2aa1fe
 
 Baterías:
   - sensor.iphone_battery_state
@@ -337,36 +400,10 @@ Baterías:
   - sensor.bateria_iphone_se
   - sensor.ipad_de_eugenio_battery_state
   - sensor.ipad_de_eugenio_battery_level
+  
+Smarty:
+  - device_tracker.30aea443c180
 
-#ESP Galería:
-#  - binary_sensor.sensorgaleria_online
-#  - sensor.sensorgaleria_adc1
-#  - sensor.sensorgaleria_adc2
-#  - sensor.sensorgaleria_snum
-#  - light.sensorgaleria_switch_led
-#  - light.sensorgaleria_rgblight
-#
-#Plancha:
-#  - sensor.sensor_spk_1t
-#  - sensor.sensor_spk_1h
-#  - sensor.sensor_spk_1p
-#  - sensor.sensor_spk_1i
-#  - binary_sensor.sensor_spk_1_mov1
-#
-#ESP Plancha:
-#  - binary_sensor.sensor_spk_1_online
-#  - sensor.sensor_spk_1_snum
-#  - light.sensor_spk_1_switch_led
-  
-# ESP WROOM32:
-#   - binary_sensor.sensorwroom32_1_online
-#   - sensor.sensorwroom32_1t
-#   - sensor.sensorwroom32_1h
-#   - sensor.sensorwroom32_1p
-#   - sensor.sensorwroom32_1i
-#   - sensor.sensorwroom32_1_snum
-#   - light.sensorwroom32_1_switch_led
-  
 Pi Hole:
   - sensor.pihole_ads_blocked_today
   - sensor.pihole_ads_percentage_blocked_today
@@ -374,7 +411,6 @@ Pi Hole:
   - sensor.pihole_dns_unique_clients
   - sensor.pihole_dns_unique_domains
 #  - sensor.pihole_domains_blocked
-
 
 weather_dark_sky_now:
   name: Ahora
@@ -467,13 +503,18 @@ Automatizaciones:
     - automation.encendido_automatico_de_cam_salon
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
     - automation.encendido_luces_dormitorio
+    - automation.sync_tira_tv_con_tira_sofa
+    - automation.botvac_error_notification
     - automation.salon_select_scene
     - automation.brillo_salon
     - automation.tono_salon
     - automation.notify_sunset
     - automation.new_bt_device_notifier
+    - automation.carmen_sale_del_hospital
+    - automation.carmen_llega_al_hospital
     - automation.update_notifications
     - automation.start_homeassistant
+    - automation.aviso_de_sensor_mqtt_offline
 
 # ----------------------------------------------------------------------------------------------------------------------
 # VIEWS
@@ -484,10 +525,11 @@ Status:
   icon: mdi:castle
   view: yes
   entities:
-    - group.consumo_electrico
-    - group.salon
+    - group.elec_power_simple
+#    - group.salon
     - group.esp_livingroom
-    - group.control_dormitorio
+    - camera.sricam_360
+#    - group.control_dormitorio
     - group.sensors_dormitorio
 #    - group.estudio
     - group.esp_office
@@ -506,6 +548,7 @@ Control:
   icon: mdi:auto-fix
   view: yes
   entities:
+    - group.control_salon
     - group.salon
     - group.control_dormitorio
     - group.terraza
@@ -524,34 +567,26 @@ Control:
     # - group.xiaomi_vacuum_robot
 #    - group.despertador
 
-# Alarm Panel:
-#   name: Alarm configuration
-#   icon: mdi:shield-outline
-#   view: yes
-#   entities:
-#     - group.alarma
-#     - group.inputs_alarm
-#     - group.camaras
-#     - group.alarm_control
 kodi_control:
   name: Kodi
   icon: mdi:kodi
   view: yes
   entities:
-    - media_player.kodi_tv
-    - group.kodi
+    - group.kodi_mp
     - group.media_select
+    - group.kodi
 
 current_meter_control:
   name: Consumos
   view: yes
   icon: mdi:flash
   entities:
-    - group.consumo_electrico
+    - group.elec_power_complete
     - camera.consumo_7d
     - camera.electricidad_24h
     - switch.bomba_circ_acs
     - switch.calentador
+    - switch.tv_power
 
 alarm_clock:
   name: Despertador
@@ -581,23 +616,31 @@ Weather:
     - group.weather_forecast
     - group.weather
 
+Alarm Panel:
+  name: Alarm configuration
+  icon: mdi:shield-outline
+  view: yes
+  entities:
+    - group.alarma
+    - group.camaras
+    - group.movimiento
+    - group.alarm_control
+
 Home Network:
   name: Red local
   view: yes
   icon: mdi:sitemap
   entities:
-    - camera.sricam_360
+    - group.links
     - group.family
     - group.dispositivos
     - group.localhost
     - group.host_dormitorio
     - group.resto_de_hosts
-    - group.links
-#    - group.esp_galeria
-#    - group.esp_plancha
-#    - group.esp_wroom32
     - group.dev_boards
     - group.baterias
+    - group.smarty
+    - group.pi_hole
 
     #- group.red_e_internet
 
@@ -607,9 +650,10 @@ Master conf:
   view: yes
   entities:
     - group.hass_control
+#    - group.movimiento
     - group.conectivity
     - group.general_config
-    - group.pi_hole
+#    - group.pi_hole
 #      - binary_sensor.estudio_manual_light_switch_rpi2h
 #      - sensor.hue_dimmer_switch
 #      - input_number.max_humidity

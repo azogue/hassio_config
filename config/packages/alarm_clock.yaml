@@ -7,25 +7,21 @@ homeassistant:
     switch.alarm_clock_status:
       homebridge_name: Despertador LaCafetera
       icon: mdi:toggle-switch
-    input_number.alarm_clock_hour:
-      friendly_name: Hora
-      icon: mdi:timetable
-    sensor.alarm_clock_hour:
-      hidden: true
-      homebridge_hidden: true
-    sensor.alarm_clock_minute:
-      hidden: true
-      homebridge_hidden: true
-    input_number.alarm_clock_minute:
-      friendly_name: Minuto
-      icon: mdi:timetable
-    sensor.alarm_clock_time:
-      homebridge_hidden: true
-      friendly_name: Hora de despertarse
+    input_datetime.alarm_clock_time:
+      icon: mdi:alarm
+    input_datetime.water_boiler_start_time:
+      icon: mdi:radiator
+    input_datetime.next_special_wake_up:
+#      friendly_name: Hora de despertarse
       icon: mdi:alarm
     input_boolean.manual_trigger_lacafetera:
       icon: mdi:play-circle
       homebridge_hidden: true
+
+#Programación despertador:
+#    - input_datetime.alarm_clock_time
+#    - input_datetime.water_boiler_start_time
+#    - input_datetime.next_special_wake_up
 
 input_boolean:
   alarm_clock_status:
@@ -43,28 +39,21 @@ input_select:
     initial: Dormitorio (Mopidy)
     icon: mdi:speaker
 
-input_number:
-  # Sliders para setting de alarma despertador
-  alarm_clock_hour:
-  #  initial: 8
-    min: 0
-    max: 23
-    step: 1
-  alarm_clock_minute:
-  #  initial: 30
-    min: 0
-    max: 55
-    step: 5
+input_datetime:
+  alarm_clock_time:
+    name: Hora de alarma
+    has_date: false
+    has_time: true
 
-sensor:
-  - platform: template
-    sensors:
-      alarm_clock_hour:
-        value_template: '{{ states("input_number.alarm_clock_hour") | round(0) }}'
-      alarm_clock_minute:
-        value_template: '{{ states("input_number.alarm_clock_minute") | round(0) }}'
-      alarm_clock_time:
-        value_template: '{{ states("sensor.alarm_clock_hour") }}:{% if states("sensor.alarm_clock_minute")|length == 1 %}0{% endif %}{{ states("sensor.alarm_clock_minute") }}'
+  water_boiler_start_time:
+    name: Encendido de calentador
+    has_date: false
+    has_time: true
+
+  next_special_wake_up:
+    name: Siguiente pase de planta
+    has_date: true
+    has_time: true
 
 switch:
   - platform: template
@@ -78,4 +67,3 @@ switch:
         turn_off:
           service: input_boolean.turn_off
           entity_id: input_boolean.alarm_clock_status
-

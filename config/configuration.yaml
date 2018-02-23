@@ -7,11 +7,10 @@ homeassistant:
   time_zone: !secret time_zone
   packages:  !include_dir_named packages
   customize: !include customize.yaml
-  #whitelist_external_dirs:
-  #  - !secret ext_dir_1
-  #  - !secret ext_dir_2
-  #  - !secret ext_dir_3
-  #  - !secret ext_dir_4
+  whitelist_external_dirs:
+    - !secret ext_dir_1
+    - !secret ext_dir_2
+#    - !secret ext_dir_3
   #customize_glob: !include frontend/customize_glob.yaml
 frontend:
 config:
@@ -35,6 +34,8 @@ logger:
     homeassistant.components.history: info
     homeassistant.components.script: info
     homeassistant.components.automation: info
+    homeassistant.components.vacuum.xiaomi_miio: critical
+    miio: critical
 
     homeassistant.components.media_player: info
     homeassistant.components.tts: debug
@@ -107,10 +108,6 @@ panel_iframe:
     title: Grafana
     url: !secret grafana_url
     icon: mdi:chart-areaspline
-  enerpiweb_access:
-    title: enerPI
-    url: !secret enerpi_url
-    icon: mdi:power-plug
 
 weather:
   - platform: openweathermap

@@ -20,11 +20,20 @@ This unifies various automations and HA scripts in a simpler one.
 # Anyone at home?
 family_home = hass.states.get('group.family').state == 'home'
 
-# # Turn on default outlets
-# if family_home:
-#     hass.services.call(
-#         'switch', 'turn_on',
-#         {"entity_id": "switch.camara,switch.calentador,switch.bomba_circ_acs"})
+# Turn on default outlets
+if family_home:
+    hass.services.call(
+        'switch', 'turn_on',
+        {"entity_id": "switch.bomba_circ_acs,switch.tv_power,switch.camara"})
+        # {"entity_id": "switch.calentador,switch.bomba_circ_acs,switch.tv_power,switch.camara"})
+
+# Create motioneye binary_sensors
+BIN_SENSOR_VIDEO_MOV_1 = 'binary_sensor.motioncam_salon'
+hass.states.set(BIN_SENSOR_VIDEO_MOV_1, 'off',
+                attributes={
+                    "friendly_name": "Vídeo-Mov. en Salón",
+                    "homebridge_hidden": "true",
+                    "device_class": "motion"})
 
 # Sync HA dev trackers with manual HomeKit input_booleans
 dev_tracking = {'group.eugenio': 'input_boolean.eu_presence',

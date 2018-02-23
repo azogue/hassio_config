@@ -28,7 +28,8 @@ homeassistant:
 
     sensor.dormitorio_light_level_rpi2mpd:
       friendly_name: Iluminación Dormitorio
-      homebridge_sensor_type: light
+#      homebridge_sensor_type: light
+      homebridge_hidden: true
       icon: mdi:lightbulb
       device_class: light
 

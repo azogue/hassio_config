@@ -2,7 +2,7 @@ homeassistant:
   customize:
 
     binary_sensor.local_pir:
-      friendly_name: Movimiento
+      friendly_name: Movimiento (cuadro)
       device_class: motion
       homebridge_hidden: true
 
@@ -175,27 +175,11 @@ binary_sensor:
   #  excludes: List of workday excludes (defaults to sat, sun, holiday).
 
 sensor:
-# - platform: onewire
-#   names:
-#     28-800000014216: Ds18b20_S1
-#     28-800000014588: Ds18b20_S2
-#     28-80000001595e: Ds18b20_S3
-#     #28:88:45:01:00:00:80:6D: Ds18b20_S1
-#     #28:16:42:01:00:00:80:9E: Ds18b20_S2
-#     #28:5E:59:01:00:00:80:46: Ds18b20_S3
-#   scan_interval: 30
+- platform: season
 
 - platform: htu21d
   name: local_htu21d
   scan_interval: 30
-
-#- platform: bh1750
-#  name: local_light_level
-#  operation_mode: continuous_high_res_mode_2
-#  measurement_delay_ms: 10
-#  sensibility: 125
-#  multiplier: 1.5
-#  scan_interval: 20
 
 - platform: darksky
   api_key: !secret darksky_api_key
@@ -215,14 +199,9 @@ sensor:
     - dew_point
     - humidity
     - pressure
-#  update_interval: '00:05:00'
-  update_interval:
-    # At least one of these must be specified:
-#    days: 0
-#    hours: 0
-    minutes: 15
-#    seconds: 00
-#    milliseconds: 0
+  update_interval: "0:20:00"
+  scan_interval: 1200
+#    minutes: 20
 
 - platform: command_line
   name: HASS CPU Temperature
@@ -252,6 +231,7 @@ sensor:
     - type: memory_free
     - type: processor_use
     - type: last_boot
+  scan_interval: 30
 
 - platform: pi_hole
   host: 192.168.1.10:81
@@ -262,6 +242,7 @@ sensor:
     - unique_clients
     - unique_domains
 #    - domains_being_blocked
+  scan_interval: 180
 
 - platform: speedtest
   minute:
@@ -308,29 +289,10 @@ device_tracker:
 #   # (default: 180)
   consider_home: 300
 
-- platform: bluetooth_tracker
-  home_interval: 30
-  track_new_devices: yes
+#- platform: bluetooth_tracker
+#  home_interval: 30
+#  track_new_devices: yes
 
 - platform: owntracks
   max_gps_accuracy: 200
   waypoints: True
-
-# group:
-#   Local:
-#     - binary_sensor.local_pir
-#     - sensor.local_htu21d_temperature
-#     - sensor.local_htu21d_humidity
-#     - sensor.local_light_level
-  
-#   LocalHost:
-#     - sensor.hass_cpu_temperature
-#     - sensor.ram_free
-#     - sensor.cpu_use
-#     - sensor.disk_use_
-#     - sensor.last_boot
-  
-#   Pi Hole:
-#     - sensor.pihole_ads_blocked_today
-#     - sensor.pihole_ads_percentage_blocked_today
-#     - sensor.pihole_dns_unique_clients

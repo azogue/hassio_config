@@ -58,7 +58,7 @@ homeassistant:
 #      homebridge_hidden: true
     
     binary_sensor.sensor_office_mov1:
-      friendly_name: 'Movimiento'
+      friendly_name: 'Movimiento (estudio)'
       homebridge_hidden: true
 #    binary_sensor.sensor_office_mov2:
 #      friendly_name: 'Movimiento 2'
@@ -163,23 +163,23 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ (value_json.sample.adc[0] / 40.95) | round(1) }}"
-    name: sensor_office_adc1
-    unit_of_measurement: "%h"
-    qos: !secret mqtt_default_qos
-    force_update: true
-    expire_after: !secret mqtt_default_expiration
-
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ (value_json.sample.adc[1] / 40.95) | round(1) }}"
-    name: sensor_office_adc2
-    unit_of_measurement: "%h"
-    qos: !secret mqtt_default_qos
-    force_update: true
-    expire_after: !secret mqtt_default_expiration
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_office_status
+#    value_template: "{{ (value_json.sample.adc[0] / 40.95) | round(1) }}"
+#    name: sensor_office_adc1
+#    unit_of_measurement: "%h"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+#
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_office_status
+#    value_template: "{{ (value_json.sample.adc[1] / 40.95) | round(1) }}"
+#    name: sensor_office_adc2
+#    unit_of_measurement: "%h"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
 
 # switch:
 #   - platform: mqtt

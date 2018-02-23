@@ -1,0 +1,122 @@
+###############################################################################
+# SONOFF DEVICES
+###############################################################################
+
+homeassistant:
+  customize:
+#    switch.bomba_circ_acs:
+#      icon: mdi:radiator
+#      friendly_name: Bomba circulación ACS
+#      homebridge_switch_type: outlet
+    switch.calentador:
+      icon: mdi:radiator
+      friendly_name: Calentador eléctrico
+      homebridge_name: Calentador
+      homebridge_switch_type: outlet
+    switch.sonoff_simple_1:
+      icon: mdi:power-plug
+      friendly_name: Sonoff
+      homebridge_hidden: true
+#    switch.circuito_termo:
+#      icon: mdi:radiator
+#      friendly_name: Circuito de Termo
+#      homebridge_name: Circuito de Termo
+#      homebridge_switch_type: outlet
+    cover.sonoff_cover_1:
+      friendly_name: Puerta terraza
+      homebridge_cover_type: rollershutter
+    cover.sonoff_cover_2:
+      friendly_name: Ventanal
+      homebridge_cover_type: rollershutter
+    sensor.sonoff_pow_1:
+      icon: mdi:flash
+      friendly_name: Consumo en termo
+      homebridge_hidden: true
+
+switch:
+# Sonoff POW 16A
+  - platform: mqtt
+#    name: circuito_termo
+    name: calentador
+    state_topic: "sonoff/pow/1/stat"
+    command_topic: "sonoff/pow/1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
+
+## Sonoff dual
+#  - platform: mqtt
+#    name: calentador
+#    state_topic: "sonoff/dual1/stat1"
+#    command_topic: "sonoff/dual1"
+#    qos: 1
+#    payload_on: "1on"
+#    payload_off: "1off"
+#    retain: true
+#
+#  - platform: mqtt
+#    name: bomba_circ_acs
+#    state_topic: "sonoff/dual1/stat2"
+#    command_topic: "sonoff/dual1"
+#    qos: 1
+#    payload_on: "2on"
+#    payload_off: "2off"
+#    retain: true
+
+# Sonoff Simple outlet
+  - platform: mqtt
+    name: sonoff_simple_1
+#    name: bomba_circ_acs
+    state_topic: "sonoff/simple1/stat"
+    command_topic: "sonoff/simple1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
+
+# Sonoff 4ch as 2 custom covers
+cover:
+  - platform: mqttcoverswitch
+    covers:
+      sonoff_cover_1:
+        friendly_name: Ventanal
+        state_switch_open_topic: "sonoff/4cover/stat1"
+        state_switch_close_topic: "sonoff/4cover/stat2"
+        command_switch_open_topic: "sonoff/4cover"
+        command_switch_close_topic: "sonoff/4cover"
+        payload_open: "1on"
+        payload_stop_open: "1off"
+        payload_close: "2on"
+        payload_stop_close: "2off"
+    #    delay_full_open: 28.5
+        delay_full_open: 10
+        qos: 1
+        retain: true
+
+      sonoff_cover_2:
+        friendly_name: Puerta terraza
+        state_switch_open_topic: "sonoff/4cover/stat3"
+        state_switch_close_topic: "sonoff/4cover/stat4"
+        command_switch_open_topic: "sonoff/4cover"
+        command_switch_close_topic: "sonoff/4cover"
+        payload_open: "3on"
+        payload_stop_open: "3off"
+        payload_close: "4on"
+        payload_stop_close: "4off"
+    #    delay_full_open: 28.5
+        delay_full_open: 10
+        qos: 1
+        retain: true
+
+# Sonoff POW voltage and power sensors
+sensor:
+  - platform: mqtt
+    state_topic: "sonoff/pow/1/power"
+    value_template: "{{ value_json.Power }}"
+    name: sonoff_pow_1
+    unit_of_measurement: "W"
+    json_attributes: 'Voltage'
+    qos: 1
+    expire_after: 60
+

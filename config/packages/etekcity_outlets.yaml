@@ -5,10 +5,12 @@ homeassistant:
       icon: mdi:lightbulb
       friendly_name: LED Cocina
       homebridge_name: Cocina
-    switch.calefactor:
-      icon: mdi:fan
-      friendly_name: Calefactor Baño
-      homebridge_name: Calefactor
+    switch.tv_power:
+      icon: mdi:power-plug
+      friendly_name: TV y HomeCinema
+      homebridge_name: Master TV
+      homebridge_switch_type: outlet
+      assumed_state: true
     switch.camara:
       icon: mdi:video
       friendly_name: Enchufe de videocámara
@@ -20,16 +22,18 @@ homeassistant:
       friendly_name: Enchufe Altavoz
       homebridge_name: Altavoz
       homebridge_switch_type: outlet
+      assumed_state: true
     switch.bomba_circ_acs:
       icon: mdi:radiator
       friendly_name: Bomba circulación ACS
 #      homebridge_name: Altavoz
       homebridge_switch_type: outlet
-    switch.calentador:
-      icon: mdi:radiator
-      friendly_name: Calentador eléctrico
-      homebridge_name: Calentador
-      homebridge_switch_type: outlet
+      assumed_state: true
+    switch.test_switch:
+      icon: mdi:home-automation
+      friendly_name: Enchufe test
+      homebridge_hidden: true
+      assumed_state: true
     switch.office_floor:
       icon: mdi:home-automation
       friendly_name: Enchufe en estudio
@@ -38,6 +42,8 @@ homeassistant:
     switch.new_switch_2:
       icon: mdi:fan
       friendly_name: Ventilador
+      homebridge_hidden: true
+      assumed_state: true
     switch.new_switch_3:
       icon: mdi:power-plug
       friendly_name: Enchufe 3
@@ -49,12 +55,12 @@ switch:
     gpio: 17
     name: Etekcity outlets
     switches:
-      cocina:
-        pulselength: 185
-        code_on: 4527411
-        code_off: 4527420
-        signal_repetitions: 20
-      calentador:
+#      cocina:
+#        pulselength: 185
+#        code_on: 4527411
+#        code_off: 4527420
+#        signal_repetitions: 20
+      test_switch:
         pulselength: 185
         code_on: 4527555
         code_off: 4527564
@@ -68,17 +74,17 @@ switch:
         pulselength: 185
         code_on: 4529411
         code_off: 4529420
-        signal_repetitions: 80
+        signal_repetitions: 100
 #      altavoz:
 #        pulselength: 185
 #        code_on: 4529411
 #        code_off: 4529420
 #        signal_repetitions: 30
-      calefactor:
+      tv_power:
         pulselength: 185
         code_on: 4535555
         code_off: 4535564
-        signal_repetitions: 20
+        signal_repetitions: 40
 
       # new pack of Etekcity (3x)
       office_floor:
@@ -90,12 +96,12 @@ switch:
         pulselength: 186
         code_on: 4478403
         code_off: 4478412
-        signal_repetitions: 60
-      new_switch_3:
-        pulselength: 186
-        code_on: 4478723
-        code_off: 4478732
-        signal_repetitions: 60
+        signal_repetitions: 80
+#      new_switch_3:
+#        pulselength: 186
+#        code_on: 4478723
+#        code_off: 4478732
+#        signal_repetitions: 60
   #    new_switch_4:  # no switch, only remote button
   #      pulselength: 186
   #      code_on: 4480259
@@ -112,7 +118,7 @@ switch:
 #    control: hidden
 #    entities:
 #      - switch.cocina
-#      - switch.calefactor
+#      - switch.tv_power
 #      - switch.camara
 #      - switch.altavoz
 #      - switch.bomba_circ_acs

@@ -43,7 +43,7 @@ homeassistant:
 #      homebridge_hidden: true
     
     binary_sensor.sensor_livingroom_mov1:
-      friendly_name: 'Movimiento'
+      friendly_name: 'Movimiento (salón)'
       homebridge_hidden: true
 #    binary_sensor.sensor_livingroom_mov2:
 #      friendly_name: 'Movimiento 2'
