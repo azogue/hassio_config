@@ -20,7 +20,7 @@ homeassistant:
       icon: mdi:lightbulb-on
       homebridge_hidden: true
     sensor.sensor_livingroom__snum:
-      friendly_name: 'Sample #'
+      friendly_name: 'Sample # (salón)'
       homebridge_hidden: true
       
 #    sensor.sensor_livingroom_adc1:
@@ -32,16 +32,6 @@ homeassistant:
 #      icon: mdi:biohazard
 #      homebridge_hidden: true
     
-#    light.sensor_livingroom__rgblight:
-#      friendly_name: 'LED RGB Light'
-#      icon: mdi:led-on
-#      homebridge_hidden: true
-#    #switch.sensor_livingroom__switch_led:
-#    light.sensor_livingroom__switch_led:
-#      friendly_name: 'LED en uso'
-#      icon: mdi:led-outline
-#      homebridge_hidden: true
-    
     binary_sensor.sensor_livingroom_mov1:
       friendly_name: 'Movimiento (salón)'
       homebridge_hidden: true
@@ -51,7 +41,6 @@ homeassistant:
     binary_sensor.sensor_livingroom_online:
       friendly_name: Salón Online
       homebridge_hidden: true
-
 
 binary_sensor:
   - platform: mqtt
@@ -77,7 +66,7 @@ binary_sensor:
 sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
-    value_template: "{{ value_json.sample.temp | round(1) }}"
+    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
     name: sensor_livingroom_temperature
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -86,7 +75,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
-    value_template: "{{ value_json.sample.hum | round(1) }}"
+    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
     name: sensor_livingroom_humidity
     unit_of_measurement: "%"
     qos: !secret mqtt_default_qos
@@ -95,7 +84,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
-    value_template: "{{ value_json.sample.pres | round(1) }}"
+    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
     name: sensor_livingroom_pressure
     unit_of_measurement: "mb"
     qos: !secret mqtt_default_qos
@@ -104,7 +93,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
-    value_template: "{{ value_json.sample.lux}}"
+    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
     name: sensor_livingroom_illumination
     unit_of_measurement: "lx"
     qos: !secret mqtt_default_qos
@@ -115,6 +104,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_livingroom_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
+    json_attributes: 'status'
     name: sensor_livingroom__snum
     qos: !secret mqtt_default_qos
     force_update: true

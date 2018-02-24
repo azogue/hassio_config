@@ -521,7 +521,7 @@
   id: mqtt_sensor_go_offline_notify
   trigger:
     - platform: state
-      entity_id: binary_sensor.enerpi_online
+      entity_id: binary_sensor.esp32_ener_online
       to: 'off'
       for:
         minutes: 2
@@ -541,6 +541,11 @@
       for:
         minutes: 2
     - platform: state
+      entity_id: binary_sensor.sensor_kitchen_online
+      to: 'off'
+      for:
+        minutes: 2
+    - platform: state
       entity_id: binary_sensor.sensor_terraza_online
       to: 'off'
       for:
@@ -555,8 +560,9 @@
       data_template:
         title: '*Sensor offline*'
         target: !secret telegram_bot_chat_id_admin
+        message: "El sensor `{{ trigger.event.as_dict() }}` parece que *ha fallado*. Revísalo!"
 #        message: "El sensor `{{ trigger.event.as_dict().from_state.friendly_name }}` parece que *ha fallado*. Revísalo!"
-        message: "El sensor `{{ trigger.to_state.friendly_name }}` parece que *ha fallado*. Revísalo!"
+#        message: "El sensor `{{ trigger.to_state.friendly_name }}` parece que *ha fallado*. Revísalo!"
 
         #{'platform': 'state', 'entity_id': 'binary_sensor.sensor_livingroom_online',
         #'from_state': <state binary_sensor.sensor_livingroom_online=on; friendly_name=Salón Online, device_class=connectivity, homebridge_hidden=True @ 2018-02-16T07:33:36.384901+01:00>,

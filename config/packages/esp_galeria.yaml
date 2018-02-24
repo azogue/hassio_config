@@ -48,7 +48,7 @@ homeassistant:
       homebridge_hidden: true
 
     sensor.sensor_galeria__snum:
-      friendly_name: 'Sample #'
+      friendly_name: 'Sample # (galería)'
       homebridge_hidden: true
     
 #    binary_sensor.sensor_galeria_mov1:
@@ -86,7 +86,7 @@ binary_sensor:
 sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.temp | round(1) }}"
+    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
     name: sensor_galeria_temperature
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -95,7 +95,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.hum | round(1) }}"
+    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
     name: sensor_galeria_humidity
     unit_of_measurement: "%"
     qos: !secret mqtt_default_qos
@@ -164,6 +164,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_acs_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
+    json_attributes: 'status'
     name: sensor_galeria__snum
     qos: !secret mqtt_default_qos
     force_update: true

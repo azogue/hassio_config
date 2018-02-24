@@ -18,24 +18,10 @@ homeassistant:
     sensor.sensor_office_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-#      homebridge_name: Ilum. Galería
-#      homebridge_sensor_type: light
       homebridge_hidden: true
-#    sensor.sensor_office_imp:
-#      friendly_name: Impulsión Calefacción
-#      icon: mdi:temperature-celsius
-#      homebridge_hidden: true
-#    sensor.sensor_office_ret:
-#      friendly_name: Retorno Calefacción
-#      icon: mdi:temperature-celsius
-#      homebridge_hidden: true
-#    sensor.sensor_office_acs:
-#      friendly_name: ACS
-#      icon: mdi:water-pump
-#      homebridge_hidden: true
 
     sensor.sensor_office__snum:
-      friendly_name: 'Sample #'
+      friendly_name: 'Sample # (estudio)'
       homebridge_hidden: true
       
     sensor.sensor_office_adc1:
@@ -92,7 +78,7 @@ binary_sensor:
 sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ value_json.sample.temp | round(1) }}"
+    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
     name: sensor_office_temperature
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -101,7 +87,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ value_json.sample.hum | round(1) }}"
+    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
     name: sensor_office_humidity
     unit_of_measurement: "%"
     qos: !secret mqtt_default_qos
@@ -119,7 +105,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ value_json.sample.lux}}"
+    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
     name: sensor_office_illumination
     unit_of_measurement: "lx"
     qos: !secret mqtt_default_qos
@@ -158,6 +144,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_office_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
+    json_attributes: 'status'
     name: sensor_office__snum
     qos: !secret mqtt_default_qos
     force_update: true
@@ -181,18 +168,4 @@ sensor:
 #    force_update: true
 #    expire_after: !secret mqtt_default_expiration
 
-# switch:
-#   - platform: mqtt
-#     name: sensor_office__switch_led
-#     state_topic: !secret mqtt_topic_esp_office_status
-#     command_topic: !secret mqtt_topic_esp_galeria_command
-#     value_template: "{{ value_json.status.led }}"
-#     payload_on: "online"
-#     payload_off: "offline"
-#     availability_topic: !secret mqtt_topic_esp_office_lwt
-#     payload_available: "online"
-#     payload_not_available: "offline"
-#     #optimistic: false
-#     qos: !secret mqtt_default_qos
-#     retain: true
 

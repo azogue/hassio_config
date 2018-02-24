@@ -98,12 +98,13 @@ Enchufes:
 elec_power_complete:
   name: Consumo eléctrico
   entities:
-    - sensor.enerpi_power
-    - sensor.enerpi_ch1
-    - sensor.enerpi_ch2
+#    - sensor.enerpi_power
+#    - sensor.enerpi_ch1
+#    - sensor.enerpi_ch2
     - sensor.esp32ener_power
     - sensor.esp32ener_ch1
     - sensor.esp32ener_ch2
+    - sensor.esp32ener_ch3
     - sensor.sonoff_pow_1
     - binary_sensor.electricity_high_cost_interval
     - sensor.pvpc
@@ -156,7 +157,7 @@ Host Dormitorio:
   - sensor.last_boot_rpi2mpd
 
 Resto de hosts:
-  - sensor.enerpi_cpu_temperature
+#  - sensor.enerpi_cpu_temperature
   - sensor.kodi_cpu_temperature
 
 Eugenio:
@@ -184,7 +185,7 @@ esp_livingroom:
     - sensor.sensor_livingroom_illumination
 #    light.sensor_livingroom__rgblight
 #    - binary_sensor.sensor_livingroom_online
-    - sensor.sensor_livingroom__snum
+#    - sensor.sensor_livingroom__snum
 
 esp_office:
   name: Estudio
@@ -200,7 +201,18 @@ esp_office:
 #    #switch.sensor_office__switch_led
 #    light.sensor_office__switch_led
 #    - binary_sensor.sensor_office_online
-    - sensor.sensor_office__snum
+#    - sensor.sensor_office__snum
+
+esp_kitchen:
+  name: Cocina
+  control: hidden
+  entities:
+    - sensor.sensor_kitchen_temperature
+    - sensor.sensor_kitchen_humidity
+#      - sensor.sensor_kitchen_pressure
+    - sensor.sensor_kitchen_illumination
+#    - binary_sensor.sensor_kitchen_online
+#    - sensor.sensor_kitchen__snum
 
 esp_terraza:
   name: Terraza
@@ -212,11 +224,11 @@ esp_terraza:
     - sensor.sensor_terraza_pressure
     - sensor.sensor_terraza_illumination
 #    - binary_sensor.sensor_terraza_online
-    - sensor.sensor_terraza__snum
+#    - sensor.sensor_terraza__snum
 
 esp_galeria:
   name: Galería
-#    control: hidden
+  control: hidden
   entities:
 #      - light.galeria
     - sensor.sensor_galeria_temperature
@@ -233,7 +245,7 @@ esp_galeria:
     - sensor.sensor_acs_probe_6
 #      - binary_sensor.sensor_galeria_mov1
 #    - binary_sensor.sensor_galeria_online
-    - sensor.sensor_galeria__snum
+#    - sensor.sensor_galeria__snum
 
 Local:
   name: Cuadro
@@ -249,6 +261,7 @@ Movimiento:
   - binary_sensor.local_pir
   - binary_sensor.motioncam_salon
   - binary_sensor.sensor_livingroom_mov1
+  - binary_sensor.sensor_kitchen_mov1
   - binary_sensor.pir_dormitorio_rpi2mpd
   - binary_sensor.sensor_office_mov1
   - binary_sensor.sensor_terraza_mov1
@@ -260,10 +273,17 @@ Conectivity:
   - binary_sensor.dormitorio_online
 #  - binary_sensor.estudio_online
   - binary_sensor.sensor_livingroom_online
+  - sensor.sensor_livingroom__snum
   - binary_sensor.sensor_office_online
+  - sensor.sensor_office__snum
+  - binary_sensor.sensor_kitchen_online
+  - sensor.sensor_kitchen__snum
   - binary_sensor.sensor_terraza_online
+  - sensor.sensor_terraza__snum
   - binary_sensor.sensor_galeria_online
-  - binary_sensor.enerpi_online
+  - sensor.sensor_galeria__snum
+
+  - binary_sensor.esp32_ener_online
 #  - binary_sensor.cocina_online
   - binary_sensor.database_ok
   - binary_sensor.internet_online
@@ -279,10 +299,6 @@ Conectivity:
   - sensor.core_error_counter
   - sensor.warning_counter_core
   - sensor.telegram_default_chatid
-#  - sensor.sensor_livingroom__snum
-#  - sensor.sensor_office__snum
-#  - sensor.sensor_terraza__snum
-#  - sensor.sensor_galeria__snum
 
 general_config:
   name: General
@@ -372,24 +388,33 @@ Dispositivos:
 Dev boards:
   control: hidden
   entities:
-    - device_tracker.30aea4060680
-    - device_tracker.240ac48163f8
-    - device_tracker.240ac48124a4
-    - device_tracker.30aea4001d1c
-    - device_tracker.240ac4817724
-    - device_tracker.00e04c534458
-    - device_tracker.240ac4817974
-
-    # new wroom32 - ener:
+    # new wroom32-1 - ener: (WROOM32 (Energy meter))
     - device_tracker.30aea41607a8
-
+    # Wroom32batt Salón
+    - device_tracker.30aea4060680
+    # new wroom32-2 - Cocina:
+    - device_tracker.30aea4208170
+    # WROOM32 (estudio)
     - device_tracker.240ac4057954
+    # Sparkfun Terraza
+    - device_tracker.240ac48124a4
+    # Sparkfun (galería)
+    - device_tracker.240ac4817724
 
     # Sonoff
     - device_tracker.6001948433c2
     - device_tracker.5ccf7faf2f3f
     - device_tracker.5ccf7f9237c1
     - device_tracker.5ccf7f2aa1fe
+
+    # WROOM32 miniOLED
+    - device_tracker.30aea4001d1c
+    # Sparkfun (old - salón)
+    - device_tracker.240ac4817974
+    # Sparkfun Old
+    - device_tracker.240ac48163f8
+    # RPI Zero Ethernet
+    - device_tracker.00e04c534458
 
 Baterías:
   - sensor.iphone_battery_state
@@ -532,6 +557,7 @@ Status:
 #    - group.control_dormitorio
     - group.sensors_dormitorio
 #    - group.estudio
+    - group.esp_kitchen
     - group.esp_office
 #    - group.terraza
     - group.esp_terraza

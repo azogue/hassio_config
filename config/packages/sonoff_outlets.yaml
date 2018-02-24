@@ -23,10 +23,10 @@ homeassistant:
 #      homebridge_name: Circuito de Termo
 #      homebridge_switch_type: outlet
     cover.sonoff_cover_1:
-      friendly_name: Puerta terraza
+      friendly_name: Ventanal
       homebridge_cover_type: rollershutter
     cover.sonoff_cover_2:
-      friendly_name: Ventanal
+      friendly_name: Puerta terraza
       homebridge_cover_type: rollershutter
     sensor.sonoff_pow_1:
       icon: mdi:flash
@@ -81,31 +81,29 @@ cover:
     covers:
       sonoff_cover_1:
         friendly_name: Ventanal
-        state_switch_open_topic: "sonoff/4cover/stat1"
-        state_switch_close_topic: "sonoff/4cover/stat2"
+        state_switch_open_topic: "sonoff/4cover/stat4"
+        state_switch_close_topic: "sonoff/4cover/stat3"
         command_switch_open_topic: "sonoff/4cover"
         command_switch_close_topic: "sonoff/4cover"
-        payload_open: "1on"
-        payload_stop_open: "1off"
-        payload_close: "2on"
-        payload_stop_close: "2off"
-    #    delay_full_open: 28.5
-        delay_full_open: 10
+        payload_open: "4on"
+        payload_stop_open: "4off"
+        payload_close: "3on"
+        payload_stop_close: "3off"
+        delay_full_open: 28.2
         qos: 1
         retain: true
 
       sonoff_cover_2:
         friendly_name: Puerta terraza
-        state_switch_open_topic: "sonoff/4cover/stat3"
-        state_switch_close_topic: "sonoff/4cover/stat4"
+        state_switch_open_topic: "sonoff/4cover/stat2"
+        state_switch_close_topic: "sonoff/4cover/stat1"
         command_switch_open_topic: "sonoff/4cover"
         command_switch_close_topic: "sonoff/4cover"
-        payload_open: "3on"
-        payload_stop_open: "3off"
-        payload_close: "4on"
-        payload_stop_close: "4off"
-    #    delay_full_open: 28.5
-        delay_full_open: 10
+        payload_open: "2on"
+        payload_stop_open: "2off"
+        payload_close: "1on"
+        payload_stop_close: "1off"
+        delay_full_open: 28.2
         qos: 1
         retain: true
 
