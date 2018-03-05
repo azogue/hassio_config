@@ -107,7 +107,7 @@ class EnerpiPeakNotifier(appapi.AppDaemon):
 
     def _make_telegram_message(self, reset_alarm=False):
         data_msg = self._get_notif_data(reset_alarm)
-        data_msg["target"] = self.get_state(self._target_sensor)
+        data_msg["target"] = int(self.get_state(self._target_sensor))
         data_msg["inline_keyboard"] = [[('Luces ON', '/luceson'),
                                  ('Luces OFF', '/lucesoff')],
                                 [('Potencia eléctrica', '/enerpi'),

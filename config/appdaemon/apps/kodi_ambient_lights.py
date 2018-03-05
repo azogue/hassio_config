@@ -206,7 +206,7 @@ class KodiAssistant(appapi.AppDaemon):
 
     def _notify_telegram_message(self, item):
         title, message, img_url = self._get_kodi_info_params(item)
-        target = self.get_state(self._target_sensor)
+        target = int(self.get_state(self._target_sensor))
         if self._valid_image_url(img_url):
             data_photo = {
                 "url": img_url,

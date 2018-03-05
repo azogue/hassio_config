@@ -279,7 +279,7 @@ class AlarmClock(appapi.AppDaemon):
     def notify_alarmclock(self, ep_info):
         """Send notification with episode info."""
         self.call_service('telegram_bot/send_message',
-                          target=self.get_state(self._target_sensor),
+                          target=int(self.get_state(self._target_sensor)),
                           **_make_telegram_notification_episode(ep_info))
         self.call_service(self._notifier.replace('.', '/'),
                           **_make_ios_notification_episode(ep_info))
@@ -383,12 +383,13 @@ class AlarmClock(appapi.AppDaemon):
         if self._handle_alarm is not None:
             self.cancel_timer(self._handle_alarm)
         alarm_time = self.get_state(self._alarm_time_input, "all")
-        if alarm_time is None:
+        if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_alarm = None
             return
 
         time_alarm = dt.datetime.now().replace(
-            hour=alarm_time['attributes']['hour'], minute=alarm_time['attributes']['minute'],
+            hour=alarm_time['attributes']['hour'],
+            minute=alarm_time['attributes']['minute'],
             second=0, microsecond=0)
 
         self._next_alarm = time_alarm # - self._warm_up_time_delta
@@ -401,7 +402,7 @@ class AlarmClock(appapi.AppDaemon):
         if self._handle_warm_up is not None:
             self.cancel_timer(self._handle_warm_up)
         alarm_time = self.get_state(self._warm_up_time_input, "all")
-        if alarm_time is None:
+        if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_warm_up = None
             return
 
@@ -419,12 +420,12 @@ class AlarmClock(appapi.AppDaemon):
         if self._handle_special_alarm is not None:
             self.cancel_timer(self._handle_special_alarm)
         alarm_time = self.get_state(self._special_alarm_time_input, "all")
-        if alarm_time is None:
+        if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_special_alarm = None
             return
 
         time_alarm = dt.datetime.now().replace(
-            year=alarm_time['attributes']['year'],
+            # year=alarm_time['attributes']['year'],
             month=alarm_time['attributes']['month'],
             day=alarm_time['attributes']['day'],
             hour=alarm_time['attributes']['hour'],
