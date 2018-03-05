@@ -3,14 +3,14 @@ homeassistant:
     sensor.sensor_livingroom_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-#      homebridge_name: T. Estudio
-      homebridge_hidden: true
+      homebridge_name: Temperatura salón
+#      homebridge_hidden: true
     sensor.sensor_livingroom_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: HR. Estudio
-#      homebridge_sensor_type: humidity
+#      homebridge_hidden: true
+      homebridge_name: Humedad salón
+      homebridge_sensor_type: humidity
     sensor.sensor_livingroom_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy

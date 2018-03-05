@@ -185,9 +185,9 @@ sensor:
 - platform: uptime
   unit_of_measurement: hours
 
-#no_ip:
-#  domain: !secret base_host
-#  username: !secret no_ip_user
-#  password: !secret no_ip_password
+no_ip:
+  domain: !secret base_host
+  username: !secret no_ip_user
+  password: !secret no_ip_password
 
 # TODO AUTOMATION FOR CERT RENEW?

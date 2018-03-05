@@ -1,0 +1,79 @@
+homeassistant:
+  customize:
+    sensor.temperatura_interior:
+      icon: mdi:thermometer
+      homebridge_hidden: true
+      hidden: true
+    sensor.temperatura_stats_mean:
+      friendly_name: Temperatura interior (rm)
+      icon: mdi:thermometer
+      homebridge_hidden: true
+    sensor.temperatura_exterior:
+      icon: mdi:thermometer
+      homebridge_hidden: true
+
+    sensor.humedad_interior:
+      icon: mdi:water-percent
+      homebridge_hidden: true
+      hidden: true
+#      homebridge_name: Humedad galería
+#      homebridge_sensor_type: humidity
+    sensor.humedad_stats_mean:
+      friendly_name: Humedad interior (rm)
+      icon: mdi:water-percent
+      homebridge_hidden: true
+#      homebridge_name: Humedad galería
+#      homebridge_sensor_type: humidity
+    sensor.humedad_exterior:
+      icon: mdi:water-percent
+      homebridge_hidden: true
+#      homebridge_name: Humedad galería
+#      homebridge_sensor_type: humidity
+
+
+sensor:
+  - platform: min_max
+    type: mean
+    name: Temperatura interior
+    entity_ids:
+      -  sensor.sensor_kitchen_temperature
+      -  sensor.sensor_livingroom_temperature
+      -  sensor.sensor_office_temperature
+      -  sensor.dormitorio_temperature_rpi2mpd
+
+  - platform: min_max
+    type: mean
+    name: Temperatura exterior
+    entity_ids:
+      -  sensor.sensor_terraza_temperature
+      -  sensor.sensor_galeria_temperature
+
+  - platform: min_max
+    type: mean
+    name: Humedad interior
+    entity_ids:
+      -  sensor.sensor_kitchen_humidity
+      -  sensor.sensor_livingroom_humidity
+      -  sensor.sensor_office_humidity
+      -  sensor.dormitorio_humidity_rpi2mpd
+
+  - platform: min_max
+    type: mean
+    name: Humedad exterior
+    entity_ids:
+      -  sensor.sensor_terraza_humidity
+      -  sensor.sensor_galeria_humidity
+
+  - platform: statistics
+    entity_id: sensor.temperatura_interior
+    name: Temperatura (stats)
+    sampling_size: 30
+    max_age:
+      minutes: 15
+
+  - platform: statistics
+    name: Humedad (stats)
+    sampling_size: 30
+    entity_id: sensor.humedad_interior
+    max_age:
+      minutes: 15

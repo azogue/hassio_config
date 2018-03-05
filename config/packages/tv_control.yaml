@@ -9,6 +9,12 @@ homeassistant:
     input_boolean.kodi_tv_state:
       hidden: true
       homebridge_hidden: true
+    media_player.htse5500_hte5500:
+      hidden: true
+      homebridge_hidden: true
+    media_player.home_cinema:
+      hidden: true
+      homebridge_hidden: true
     media_player.kodi_tv:
       friendly_name: Kodi LibreElec
       homebridge_name: Tele
@@ -101,6 +107,12 @@ media_player:
       params:
         command: standby
 
+#  media_player.htse5500_hte5500
+- platform: samsungtv
+  name: Home cinema
+  host: 192.168.1.31
+  mac: A8:54:B2:3F:39:05
+
 - platform: universal
   name: Kodi TV
   state_template: >
@@ -111,6 +123,7 @@ media_player:
     {% endif %}
   children:
     - media_player.kodi
+    - media_player.home_cinema
   commands:
     turn_on:
       service: media_player.turn_on
@@ -125,26 +138,26 @@ media_player:
 #      data_template:
 #        entity_id: media_player.kodi
 #        volume_level: '{{ volume_level }}'
-#    volume_up:
-#      service: media_player.volume_up
-#      data:
-#        entity_id: media_player.kodi
-#    volume_down:
-#      service: media_player.volume_down
-#      data:
-#        entity_id: media_player.kodi
-#    volume_mute:
-#      service: media_player.volume_mute
-#      data:
-#        entity_id: media_player.kodi
+    volume_up:
+      service: media_player.volume_up
+      data:
+        entity_id: media_player.home_cinema
+    volume_down:
+      service: media_player.volume_down
+      data:
+        entity_id: media_player.home_cinema
+    volume_mute:
+      service: media_player.volume_mute
+      data:
+        entity_id: media_player.home_cinema
 #    select_source:
 #      service: media_player.select_source
 #      data_template:
 #        entity_id: media_player.kodi
 #        source: '{{ source }}'
   attributes:
-    is_volume_muted: media_player.kodi|is_volume_muted
-    volume_level: media_player.kodi|volume_level
+    is_volume_muted: media_player.home_cinema|is_volume_muted
+    volume_level: media_player.home_cinema|volume_level
 #    source: media_player.kodi|source
 #    source_list: media_player.kodi|source_list
 

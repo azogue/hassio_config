@@ -236,9 +236,10 @@ class MqttCoverSwitch(MqttAvailability, CoverDevice):
         None is unknown, 0 is closed, 100 is fully open.
         """
         new_position = kwargs[ATTR_POSITION]
-        _LOGGER.warning("%s: Manual set of cover position: %d (was: %d)",
-                        self.name or self.entity_id,
-                        new_position, self._position)
+        if self._position is not None:
+            _LOGGER.warning("%s: Manual set of cover position: %d (was: %d)",
+                            self.name or self.entity_id,
+                            new_position, self._position)
         self._position = new_position
 
     @asyncio.coroutine

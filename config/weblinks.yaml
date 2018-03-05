@@ -26,9 +26,9 @@ entities:
   - name: Kodi web interface
     url: !secret weblink_kodi_web
 
-  - name: Slave HASS
-    url: http://192.168.1.46:8123/
+#  - name: Slave HASS
+#    url: http://192.168.1.46:8123/
   - name: Slave HASS MPD
     url: http://192.168.1.52:8123/
-  - name: enerPI
-    url: !secret enerpi_url
+  - name: MotionEye
+    url: !secret motioneye_url

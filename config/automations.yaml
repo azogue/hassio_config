@@ -478,12 +478,12 @@
       event: leave #enter  # or "leave"
 #      for:
 #        minutes: 5
-    - platform: zone
-      entity_id: device_tracker.iphonese
-      zone: zone.hospital
-      event: leave #enter  # or "leave"
-#      for:
-#        minutes: 5
+#    - platform: zone
+#      entity_id: device_tracker.iphonese
+#      zone: zone.hospital
+#      event: leave #enter  # or "leave"
+##      for:
+##        minutes: 5
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -501,12 +501,12 @@
       event: enter  # or "leave"
 #      for:
 #        minutes: 5
-    - platform: zone
-      entity_id: device_tracker.iphonese
-      zone: zone.hospital
-      event: enter  # or "leave"
-#      for:
-#        minutes: 5
+#    - platform: zone
+#      entity_id: device_tracker.iphonese
+#      zone: zone.hospital
+#      event: enter  # or "leave"
+##      for:
+##        minutes: 5
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -560,17 +560,7 @@
       data_template:
         title: '*Sensor offline*'
         target: !secret telegram_bot_chat_id_admin
-        message: "El sensor `{{ trigger.event.as_dict() }}` parece que *ha fallado*. Revísalo!"
-#        message: "El sensor `{{ trigger.event.as_dict().from_state.friendly_name }}` parece que *ha fallado*. Revísalo!"
-#        message: "El sensor `{{ trigger.to_state.friendly_name }}` parece que *ha fallado*. Revísalo!"
-
-        #{'platform': 'state', 'entity_id': 'binary_sensor.sensor_livingroom_online',
-        #'from_state': <state binary_sensor.sensor_livingroom_online=on; friendly_name=Salón Online, device_class=connectivity, homebridge_hidden=True @ 2018-02-16T07:33:36.384901+01:00>,
-        #'to_state': <state binary_sensor.sensor_livingroom_online=off; friendly_name=Salón Online, device_class=connectivity, homebridge_hidden=True @ 2018-02-16T07:33:36.546602+01:00>,
-        # 'for': datetime.timedelta(0, 60)}
-#        disable_notification: true
-#        inline_keyboard:
-#          - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
+        message: "El sensor `{{ trigger.to_state.attributes.friendly_name }}` parece que *ha fallado*. Revísalo!"
 
 - alias: Sync Tira TV con Tira sofá
   id: sync_light_strips
@@ -581,5 +571,33 @@
     - service: python_script.sync_yeelight
       data_template:
         new_state: '{{ trigger.to_state.state }}'
-#        old_state: '{{ trigger.from_state.state }}'
-#        data_new: '{{ trigger.to_state.as_dict() }}'
+
+- alias: Apagado automático de termo ACS
+  id: termo_auto_off
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.esp32ener_ch2
+    # At least one of the following required
+#    above: 17
+    below: 200
+    # If given, will trigger when condition has been for X time.
+    for:
+      minutes: 2
+  condition:
+    - condition: state
+      entity_id: switch.calentador
+      state: 'on'
+      for:
+        minutes: 30
+  action:
+    - service: switch.turn_off
+      entity_id: switch.calentador
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*Calentador apagado*'
+        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado'
+        disable_notification: true
+        inline_keyboard:
+          - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
+          - Encender bomba ACS:/service_call switch.turn_on switch.bomba_circ_acs, Apagar bomba ACS:/service_call switch.turn_off switch.bomba_circ_acs

@@ -23,15 +23,14 @@ homeassistant:
       homebridge_name: Altavoz
       homebridge_switch_type: outlet
       assumed_state: true
-    switch.bomba_circ_acs:
-      icon: mdi:radiator
-      friendly_name: Bomba circulación ACS
-#      homebridge_name: Altavoz
-      homebridge_switch_type: outlet
-      assumed_state: true
     switch.test_switch:
       icon: mdi:home-automation
       friendly_name: Enchufe test
+      homebridge_hidden: true
+      assumed_state: true
+    switch.test_switch_2:
+      icon: mdi:home-automation
+      friendly_name: Enchufe test 2 (old b.acs)
       homebridge_hidden: true
       assumed_state: true
     switch.office_floor:
@@ -65,16 +64,16 @@ switch:
         code_on: 4527555
         code_off: 4527564
         signal_repetitions: 80
-      camara:
-        pulselength: 185
-        code_on: 4527875
-        code_off: 4527884
-        signal_repetitions: 40
-      bomba_circ_acs:
+#      camara:
+#        pulselength: 185
+#        code_on: 4527875
+#        code_off: 4527884
+#        signal_repetitions: 40
+      office_floor:
         pulselength: 185
         code_on: 4529411
         code_off: 4529420
-        signal_repetitions: 100
+        signal_repetitions: 80
 #      altavoz:
 #        pulselength: 185
 #        code_on: 4529411
@@ -84,10 +83,11 @@ switch:
         pulselength: 185
         code_on: 4535555
         code_off: 4535564
-        signal_repetitions: 40
+        signal_repetitions: 80
 
       # new pack of Etekcity (3x)
-      office_floor:
+#      bomba_circ_acs:
+      test_switch_2:
         pulselength: 186
         code_on: 4478259
         code_off: 4478268

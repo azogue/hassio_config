@@ -3,14 +3,14 @@ homeassistant:
     sensor.sensor_office_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-#      homebridge_name: T. Estudio
-      homebridge_hidden: true
+      homebridge_name: Temperatura estudio
+#      homebridge_hidden: true
     sensor.sensor_office_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: HR. Estudio
-#      homebridge_sensor_type: humidity
+#      homebridge_hidden: true
+      homebridge_name: Humedad estudio
+      homebridge_sensor_type: humidity
 #    sensor.sensor_office_pressure:
 #      friendly_name: Presión
 #      icon: mdi:weather-cloudy
@@ -84,7 +84,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
     value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
@@ -93,7 +93,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
 #  - platform: mqtt
 #    state_topic: !secret mqtt_topic_esp_office_status
 #    value_template: "{{ value_json.sample.pres | round(1) }}"
@@ -111,7 +111,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
 #  - platform: mqtt
 #    state_topic: !secret mqtt_topic_esp_office_status
 #    value_template: "{{ value_json.sample.ds_temps[0] | round(1) }}"
@@ -144,7 +144,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_office_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'status'
+    json_attributes: 'status,ts'
     name: sensor_office__snum
     qos: !secret mqtt_default_qos
     force_update: true

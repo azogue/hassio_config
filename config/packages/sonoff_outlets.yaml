@@ -22,10 +22,12 @@ homeassistant:
 #      friendly_name: Circuito de Termo
 #      homebridge_name: Circuito de Termo
 #      homebridge_switch_type: outlet
-    cover.sonoff_cover_1:
+    cover.sonoff_cover_ventanal:
       friendly_name: Ventanal
+      homebridge_name: Ventanal
       homebridge_cover_type: rollershutter
-    cover.sonoff_cover_2:
+    cover.sonoff_cover_puerta_terraza:
+      homebridge_name: Puerta terraza
       friendly_name: Puerta terraza
       homebridge_cover_type: rollershutter
     sensor.sonoff_pow_1:
@@ -79,7 +81,7 @@ switch:
 cover:
   - platform: mqttcoverswitch
     covers:
-      sonoff_cover_1:
+      sonoff_cover_ventanal:
         friendly_name: Ventanal
         state_switch_open_topic: "sonoff/4cover/stat4"
         state_switch_close_topic: "sonoff/4cover/stat3"
@@ -93,7 +95,7 @@ cover:
         qos: 1
         retain: true
 
-      sonoff_cover_2:
+      sonoff_cover_puerta_terraza:
         friendly_name: Puerta terraza
         state_switch_open_topic: "sonoff/4cover/stat2"
         state_switch_close_topic: "sonoff/4cover/stat1"

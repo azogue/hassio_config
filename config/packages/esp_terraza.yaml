@@ -3,14 +3,14 @@ homeassistant:
     sensor.sensor_terraza_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-#      homebridge_name: T. Terraza
-      homebridge_hidden: true
+      homebridge_name: Temperatura terraza
+#      homebridge_hidden: true
     sensor.sensor_terraza_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: HR. Terraza
-#      homebridge_sensor_type: humidity
+#      homebridge_hidden: true
+      homebridge_name: Humedad terraza
+      homebridge_sensor_type: humidity
     sensor.sensor_terraza_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy

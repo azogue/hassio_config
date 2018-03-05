@@ -5,26 +5,45 @@ good_night:
     - alias: Apagado de TV, Ambilight, Cocina, Estudio, Calefactor e impresora
       service: switch.turn_off
 #      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.caldera,switch.altavoz,switch.cocina,switch.calefactor,switch.estudio_light_relay,switch.impresora
-      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.cocina
+#      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.cocina
+      entity_id: switch.kodi_tv_salon,switch.tv_power,switch.bomba_circ_acs,switch.calentador
 
-    - alias: Encendido de CAM Salón
-      service: switch.turn_on
-      entity_id: switch.camara
-
+    - alias: Bajada de persianas
+      service: cover.close_cover
+      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
+#    - alias: Encendido de CAM Salón
+#      service: switch.turn_on
+#      entity_id: switch.camara
     - alias: Notificación de buenas noches
       service: telegram_bot.send_message
       data_template:
         title: '*¡Buenas noches!*'
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'Script de buenas noches *auto-activado*. Apagado de interruptores y encendido de cámaras de seguridad.'
+        message: 'Script de buenas noches *auto-activado*. Apagado de luces, interruptores y bajada de persianas.'
         disable_notification: true
-
-    - delay:
-        seconds: 10
-
     - alias: Apagado de luces
       service: light.turn_off
-#      entity_id: light.salon,light.dormitorio,light.estudio,light.exterior
+    - delay:
+        seconds: 10
+    - alias: Apagado total de TV y Home cinema
+      service: switch.turn_off
+      entity_id: switch.tv_power
+
+good_morning:
+  alias: Buenos días
+#  id: good_morning
+  sequence:
+    - alias: Subida de persianas
+      service: cover.open_cover
+      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
+
+    - alias: Notificación de buenos días
+      service: telegram_bot.send_message
+      data_template:
+        title: '*¡Buenos días!*'
+        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        message: 'Script de buenos días *auto-activado*: Subida de persianas'
+        disable_notification: true
 
 play_kodi_pvr:
 #  id: play_kodi_pvr:
@@ -157,7 +176,7 @@ set_mid_position_cover_1:
   sequence:
     - service: cover.set_actual_position
       data:
-        entity_id: "cover.sonoff_cover_1"
+        entity_id: "cover.sonoff_cover_ventanal"
         position: 50
 
 set_mid_position_cover_2:
@@ -165,7 +184,7 @@ set_mid_position_cover_2:
   sequence:
     - service: cover.set_actual_position
       data:
-        entity_id: "cover.sonoff_cover_2"
+        entity_id: "cover.sonoff_cover_puerta_terraza"
         position: 50
 
 # Sonoff script to request initial state in HA start

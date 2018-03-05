@@ -1,3 +1,13 @@
+Interior:
+#  - sensor.temperatura_interior
+  - sensor.temperatura_stats_mean
+#  - sensor.humedad_interior
+  - sensor.humedad_stats_mean
+
+Exterior:
+  - sensor.temperatura_exterior
+  - sensor.humedad_exterior
+
 Salón:
   name: Luces salón
 #  control: hidden
@@ -17,8 +27,6 @@ Salón:
 #    - light.tira_tv
     - light.yeelight_strip_7811dca21ecf
 #    - switch.tv_power
-#    - cover.sonoff_cover_1
-#    - cover.sonoff_cover_2
 
 control_salon:
   name: Control Salón
@@ -28,10 +36,11 @@ control_salon:
     - input_number.light_temp_slider_salon
     - input_select.salon_light_scene
     - switch.tv_power
-    - cover.sonoff_cover_1
-    - cover.sonoff_cover_2
+    - cover.sonoff_cover_ventanal
+    - cover.sonoff_cover_puerta_terraza
     - script.set_mid_position_cover_1
     - script.set_mid_position_cover_2
+    - light.terraza
 
 #Estudio:
 ##  entities:
@@ -91,6 +100,7 @@ Enchufes:
     - switch.new_switch_3
     - switch.sonoff_simple_1
     - switch.test_switch
+    - switch.test_switch_2
 
 #Terraza:
 #  - light.terraza
@@ -120,6 +130,8 @@ elec_power_simple:
 
 kodi_mp:
   - media_player.kodi_tv
+  - media_player.home_cinema
+  - media_player.htse5500_hte5500
 
 Media select:
   control: hidden
@@ -136,6 +148,7 @@ Kodi:
   entities:
 #    - switch.toggle_kodi_ambilight
 #    - switch.toggle_config_kodi_ambilight
+    - switch.tv_power
     - script.play_kodi_pvr
     - script.stop_kodi
     - script.update_library
@@ -228,13 +241,17 @@ esp_terraza:
 
 esp_galeria:
   name: Galería
-  control: hidden
   entities:
 #      - light.galeria
     - sensor.sensor_galeria_temperature
     - sensor.sensor_galeria_humidity
 #      - sensor.sensor_galeria_pressure
 #      - sensor.sensor_galeria_illumination
+
+Termo:
+  name: Termo ACS
+#  control: hidden
+  entities:
     - switch.calentador
     - switch.bomba_circ_acs
     - sensor.sensor_acs_probe_1
@@ -243,9 +260,6 @@ esp_galeria:
     - sensor.sensor_acs_probe_4
     - sensor.sensor_acs_probe_5
     - sensor.sensor_acs_probe_6
-#      - binary_sensor.sensor_galeria_mov1
-#    - binary_sensor.sensor_galeria_online
-#    - sensor.sensor_galeria__snum
 
 Local:
   name: Cuadro
@@ -273,18 +287,18 @@ Conectivity:
   - binary_sensor.dormitorio_online
 #  - binary_sensor.estudio_online
   - binary_sensor.sensor_livingroom_online
-  - sensor.sensor_livingroom__snum
   - binary_sensor.sensor_office_online
-  - sensor.sensor_office__snum
   - binary_sensor.sensor_kitchen_online
-  - sensor.sensor_kitchen__snum
   - binary_sensor.sensor_terraza_online
-  - sensor.sensor_terraza__snum
   - binary_sensor.sensor_galeria_online
+  - binary_sensor.esp32_ener_online
+
+  - sensor.sensor_livingroom__snum
+  - sensor.sensor_office__snum
+  - sensor.sensor_kitchen__snum
+  - sensor.sensor_terraza__snum
   - sensor.sensor_galeria__snum
 
-  - binary_sensor.esp32_ener_online
-#  - binary_sensor.cocina_online
   - binary_sensor.database_ok
   - binary_sensor.internet_online
   - binary_sensor.nas_online
@@ -314,6 +328,7 @@ general_config:
     - input_number.enerpi_max_power
     - input_number.enerpi_max_power_reset
     - script.good_night
+    - script.good_morning
     - script.start_status_sonoff_outlets
 
 dt_imac:
@@ -394,27 +409,38 @@ Dev boards:
     - device_tracker.30aea4060680
     # new wroom32-2 - Cocina:
     - device_tracker.30aea4208170
-    # WROOM32 (estudio)
+    # WROOM32 miniOLED (estudio)
+    - device_tracker.30aea4001d1c
+    # WROOM32 (galería)
     - device_tracker.240ac4057954
     # Sparkfun Terraza
     - device_tracker.240ac48124a4
-    # Sparkfun (galería)
+
+    # Wemos OLED (estudio - dev)
+    - device_tracker.30aea4132c40
+    # Sparkfun (old - galería)
     - device_tracker.240ac4817724
-
-    # Sonoff
-    - device_tracker.6001948433c2
-    - device_tracker.5ccf7faf2f3f
-    - device_tracker.5ccf7f9237c1
-    - device_tracker.5ccf7f2aa1fe
-
-    # WROOM32 miniOLED
-    - device_tracker.30aea4001d1c
     # Sparkfun (old - salón)
     - device_tracker.240ac4817974
     # Sparkfun Old
     - device_tracker.240ac48163f8
     # RPI Zero Ethernet
     - device_tracker.00e04c534458
+
+Wifi appliances:
+  control: hidden
+  entities:
+    # Sonoff
+    - device_tracker.6001948433c2
+    - device_tracker.5ccf7faf2f3f
+    - device_tracker.5ccf7f9237c1
+    - device_tracker.5ccf7f2aa1fe
+
+    # Wifi plug (bomba acs) (192.168.1.37)
+    - device_tracker.dc4f22293a7f
+
+    # Regleta wifi (192.168.1.38)
+    - device_tracker.60019487e707
 
 Baterías:
   - sensor.iphone_battery_state
@@ -425,7 +451,7 @@ Baterías:
   - sensor.bateria_iphone_se
   - sensor.ipad_de_eugenio_battery_state
   - sensor.ipad_de_eugenio_battery_level
-  
+
 Smarty:
   - device_tracker.30aea443c180
 
@@ -436,6 +462,25 @@ Pi Hole:
   - sensor.pihole_dns_unique_clients
   - sensor.pihole_dns_unique_domains
 #  - sensor.pihole_domains_blocked
+
+QNAP NAS:
+  control: hidden
+  entities:
+    - sensor.nashome_status
+    - sensor.nashome_cpu_usage
+    - sensor.nashome_memory_usage
+    - sensor.nashome_system_temperature
+#    - sensor.nashome_temperature_drive_02
+#    - sensor.nashome_temperature_drive_03
+#    - sensor.nashome_temperature_drive_04
+#    - sensor.nashome_smart_status_drive_02
+#    - sensor.nashome_smart_status_drive_03
+#    - sensor.nashome_smart_status_drive_04
+    - sensor.nashome_network_down_eth0
+    - sensor.nashome_network_up_eth0
+#    - sensor.nashome_network_down_eth1
+#    - sensor.nashome_network_up_eth1
+    - sensor.nashome_volume_used_datavol1
 
 weather_dark_sky_now:
   name: Ahora
@@ -525,6 +570,7 @@ Automatizaciones:
     - automation.buenas_noches
     - automation.encendido_de_tv_si_apagada_y_kodi_play
     - automation.apagado_de_tv_si_encendida_y_kodi_en_idle__10_min
+    - automation.apagado_automatico_de_termo_acs
     - automation.encendido_automatico_de_cam_salon
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
     - automation.encendido_luces_dormitorio
@@ -551,6 +597,8 @@ Status:
   view: yes
   entities:
     - group.elec_power_simple
+    - group.interior
+    - group.exterior
 #    - group.salon
     - group.esp_livingroom
     - camera.sricam_360
@@ -562,6 +610,7 @@ Status:
 #    - group.terraza
     - group.esp_terraza
     - group.esp_galeria
+    - group.termo
     - group.local
     # - group.salon
     # - group.salon_simple
@@ -612,7 +661,6 @@ current_meter_control:
     - camera.electricidad_24h
     - switch.bomba_circ_acs
     - switch.calentador
-    - switch.tv_power
 
 alarm_clock:
   name: Despertador
@@ -664,9 +712,11 @@ Home Network:
     - group.host_dormitorio
     - group.resto_de_hosts
     - group.dev_boards
+    - group.wifi_appliances
     - group.baterias
     - group.smarty
     - group.pi_hole
+    - group.qnap_nas
 
     #- group.red_e_internet
 

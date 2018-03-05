@@ -3,14 +3,14 @@ homeassistant:
     sensor.sensor_galeria_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-#      homebridge_name: T. Galería
-      homebridge_hidden: true
+      homebridge_name: Temperatura galería
+#      homebridge_hidden: true
     sensor.sensor_galeria_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: HR. galeria
-#      homebridge_sensor_type: humidity
+#      homebridge_hidden: true
+      homebridge_name: Humedad galería
+      homebridge_sensor_type: humidity
 #    sensor.sensor_galeria_pressure:
 #      friendly_name: Presión
 #      icon: mdi:weather-cloudy
@@ -164,7 +164,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_acs_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'status'
+    json_attributes: 'status,ts'
     name: sensor_galeria__snum
     qos: !secret mqtt_default_qos
     force_update: true

@@ -1,0 +1,19 @@
+###############################################################################
+# Maxcio wifi smart plugs (tuya API)
+###############################################################################
+homeassistant:
+  customize:
+    switch.bomba_circ_acs:
+      icon: mdi:water-pump
+      homebridge_name: Bomba ACS
+      homebridge_switch_type: outlet
+
+switch:
+  - platform: tuyawifiplug
+    scan_interval: 120
+    switches:
+      bomba_circ_acs:
+        host: !secret maxcio_wifi_plug_1_host
+        device_id: !secret maxcio_wifi_plug_1_device_id
+        local_key: !secret maxcio_wifi_plug_1_local_key
+        name: Bomba circulación ACS
