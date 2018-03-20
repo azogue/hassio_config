@@ -1,12 +1,20 @@
-AutoFeedback:
-  class: EventListener
-  module: bot_event_listener
-  lights_notif: light.cuenco
+#AutoFeedback:
+#  class: EventListener
+#  module: bot_event_listener
+#  ha_key: !secret ha_key
+#  lights_notif: light.cuenco
+#  bot_chatids: !secret bot_chatids
+#  bot_name: !secret bot_name
+#  bot_nicknames: !secret bot_nicknames
+#  base_url: !secret base_url
 
 FamilyTracker:
   class: FamilyTracker
   module: family_tracker
   home_group: group.family
+  bot_chatids: !secret bot_chatids
+  bot_group_target: !secret bot_group_target
+  base_url: !secret base_url
   people:  # Content of home_group: chat_id and optional extra_tracker
     group.eugenio:
       chat_id_idx: 0
@@ -54,6 +62,7 @@ MorningAlarmClock:
   special_alarm_datetime: input_datetime.next_special_wake_up
 #  alarmdays: mon,tue,wed,thu,fri,sat
   alarmdays: mon,tue,wed,thu,fri
+  alarmdays_condition: binary_sensor.workday_sensor
   input_boolean_alarm_on: input_boolean.alarm_clock_status
   sunrise_duration: 300
   duration_volume_ramp_sec: 240
@@ -63,6 +72,8 @@ MorningAlarmClock:
   room_select: input_select.room_altavoces
   lights_alarm: group.control_dormitorio
   manual_trigger: input_boolean.manual_trigger_lacafetera
+  mopidy_ip: !secret mopidy_ip
+  mopidy_port: !secret mopidy_port
 
 #MotionLightsSalon:
 #  class: MotionLights

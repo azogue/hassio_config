@@ -15,8 +15,7 @@ from random import randrange
 import re
 from time import time
 
-import appdaemon.appapi as appapi
-import appdaemon.conf as conf
+import appdaemon.plugins.hass.hassapi as hass
 from fuzzywuzzy.process import extractOne
 # import paramiko
 
@@ -368,11 +367,12 @@ def _clean(telegram_text):
 
 
 # noinspection PyClassHasNoInit
-class EventListener(appapi.AppDaemon):
+class EventListener(hass.Hass):
     """Event listener for ios actions and Telegram bot events."""
 
-    _config = None
+    # _config = None
     _ha_key = None
+    _base_url = None
 
     _lights_notif = None
     _lights_notif_state = None
@@ -397,12 +397,12 @@ class EventListener(appapi.AppDaemon):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        self._config = dict(self.config['AppDaemon'])
-        self._ha_key = dict(self.config['HASS'])['ha_key']
-        self._bot_name = '@' + self._config.get('bot_name')
-        self._notifier = self._config.get('notifier').replace('.', '/')
-        _chatids = [int(x) for x in self._config.get('bot_chatids').split(',')]
-        _nicknames = self._config.get('bot_nicknames').split(',')
+        self._ha_key = self.args.get('ha_key')
+        self._bot_name = '@' + self.args.get('bot_name')
+        self._base_url = self.args.get('base_url')
+        self._notifier = self.config.get('notifier').replace('.', '/')
+        _chatids = [int(x) for x in self.args.get('bot_chatids').split(',')]
+        _nicknames = self.args.get('bot_nicknames').split(',')
         self._bot_chatids = _chatids
         self._bot_users = {c: u for c, u in zip(self._bot_chatids, _nicknames)}
         self._lights_notif = self.args.get('lights_notif', 'light.cuenco')
@@ -534,14 +534,14 @@ class EventListener(appapi.AppDaemon):
         # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity PiCamera Estudio: idle>.jpg"}
         file = cam_entity_id.replace('_', '') + '.jpg'
         img_url = '{}/api/camera_proxy/camera.{}'.format(
-            self._config['base_url'], cam_entity_id)
+            self._base_url, cam_entity_id)
         cmd = CMD_MAKE_HASS_PIC.format(
             hass_pw=self._ha_key,
             img_url=img_url, cam_filename=file)
         ok, _, _ = self._shell_command_output(cmd, timeout=5)
         if not ok:
             self.log('HASS CAM BAD PIC {} -> {}'.format(cam_entity_id, file))
-        return PIC_STATIC_URL.format(self._config['base_url'], file)
+        return PIC_STATIC_URL.format(self._base_url, file)
 
     def _exec_bot_shell_command(self, command, args, timeout=20, **kwargs):
         self.log('in shell_command_output with "{}", "{}"'
@@ -1259,7 +1259,7 @@ class EventListener(appapi.AppDaemon):
     def frontend_notif(self, action_name, msg_origin,
                        mask=DEFAULT_NOTIF_MASK, title=None):
         """Set a persistent_notification in frontend."""
-        message = mask.format(dt.datetime.now(tz=conf.tz), msg_origin)
+        message = mask.format(self.datetime(), msg_origin)
         title = action_name if title is None else title
         self.persistent_notification(message, title=title, id=action_name)
 

@@ -13,8 +13,7 @@ For that, it talks with Kodi through its JSONRPC API by HA service calls.
 """
 import datetime as dt
 from urllib import parse
-import appdaemon.appapi as appapi
-import appdaemon.utils as utils
+import appdaemon.plugins.hass.hassapi as hass
 
 
 LOG_LEVEL = 'DEBUG'
@@ -44,18 +43,8 @@ TELEGRAM_INLINEKEYBOARD_KODI = [
     [('Tª', '/pitemps'), ('Next TvShows', '/tvshowsnext')]]
 
 
-def _get_max_brightness_ambient_lights():
-    if utils.now_is_between('09:00:00', '19:00:00'):
-        return 200
-    elif utils.now_is_between('19:00:00', '22:00:00'):
-        return 150
-    elif utils.now_is_between('22:00:00', '04:00:00'):
-        return 75
-    return 25
-
-
 # noinspection PyClassHasNoInit
-class KodiAssistant(appapi.AppDaemon):
+class KodiAssistant(hass.Hass):
     """App for Ambient light control when playing video with KODI."""
 
     _lights = None
@@ -72,14 +61,13 @@ class KodiAssistant(appapi.AppDaemon):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        conf_data = dict(self.config['AppDaemon'])
-
         _lights_dim_on = self.args.get('lights_dim_on', '').split(',')
         _lights_dim_off = self.args.get('lights_dim_off', '').split(',')
         _lights_off = self.args.get('lights_off', '').split(',')
         _switch_dim_group = self.args.get('switch_dim_lights_use')
         if _switch_dim_group is not None:
-            self._lights = {"dim": {"on": _lights_dim_on, "off": _lights_dim_off},
+            self._lights = {"dim": {"on": _lights_dim_on,
+                                    "off": _lights_dim_off},
                             "off": _lights_off,
                             "state": self.get_state(_switch_dim_group)}
             # Listen for ambilight changes to change light dim group:
@@ -90,19 +78,28 @@ class KodiAssistant(appapi.AppDaemon):
                 "off": _lights_off,
                 "state": 'off'}
 
-        self._media_player = conf_data.get('media_player')
-        self._ios_notifier = conf_data.get('notifier').replace('.', '/')
-        self._target_sensor = conf_data.get('chatid_sensor')
+        self._media_player = self.config['media_player']
+        self._ios_notifier = self.config['notifier'].replace('.', '/')
+        self._target_sensor = self.config['chatid_sensor']
 
         # Listen for Kodi changes:
-        self._last_play = utils.get_now()
+        self._last_play = self.datetime()
         self.listen_state(self.kodi_state, self._media_player)
         self.listen_event(self._receive_kodi_result,
                           EVENT_KODI_CALL_METHOD_RESULT)
         # self.log('KodiAssist Initialized with dim_lights_on={}, '
         #          'dim_lights_off={}, off_lights={}.'
-        #          .format(self._lights['dim']['on'], self._lights['dim']['off'],
+        #        .format(self._lights['dim']['on'], self._lights['dim']['off'],
         #                  self._lights['off']))
+
+    def _get_max_brightness_ambient_lights(self):
+        if self.now_is_between('09:00:00', '19:00:00'):
+            return 200
+        elif self.now_is_between('19:00:00', '22:00:00'):
+            return 150
+        elif self.now_is_between('22:00:00', '04:00:00'):
+            return 75
+        return 25
 
     def _ask_for_playing_item(self):
         self.call_service('media_player/kodi_call_method',
@@ -121,10 +118,10 @@ class KodiAssistant(appapi.AppDaemon):
                              or self._item_playing != item)
                 self._is_playing_video = item['type'] in TYPE_ITEMS_NOTIFY
                 self._item_playing = item
-                delta = utils.get_now() - self._last_play
+                delta = self.datetime() - self._last_play
                 if (self._is_playing_video and
                         (new_video or delta > dt.timedelta(minutes=20))):
-                    self._last_play = utils.get_now()
+                    self._last_play = self.datetime()
                     self._adjust_kodi_lights(play=True)
                     # Notifications
                     self._notify_ios_message(self._item_playing)
@@ -230,7 +227,7 @@ class KodiAssistant(appapi.AppDaemon):
                 if attrs_light:
                     attrs_light.update({"state": light_state})
                     self._light_states[light_id] = attrs_light
-                    max_brightness = _get_max_brightness_ambient_lights()
+                    max_brightness = self._get_max_brightness_ambient_lights()
                     if light_id in self._lights['off']:
                         self.log('Apagando light {} para KODI PLAY'
                                  .format(light_id), LOG_LEVEL)
@@ -240,8 +237,9 @@ class KodiAssistant(appapi.AppDaemon):
                           ) and (attrs_light["brightness"] > max_brightness):
                         self.log('Atenuando light {} para KODI PLAY'
                                  .format(light_id), LOG_LEVEL)
-                        self.call_service("light/turn_on", entity_id=light_id,
-                                          transition=2, brightness=max_brightness)
+                        self.call_service(
+                            "light/turn_on", entity_id=light_id,
+                            transition=2, brightness=max_brightness)
             else:
                 try:
                     state_before = self._light_states[light_id]
@@ -280,7 +278,7 @@ class KodiAssistant(appapi.AppDaemon):
                 self._ask_for_playing_item()
         elif ((new == 'idle') and self._is_playing_video) or (new == 'off'):
             self._is_playing_video = False
-            self._last_play = utils.get_now()
+            self._last_play = self.datetime()
             self.log('KODI STOP. old:{}, new:{}, type_lp={}'
                      .format(old, new, type(self._last_play)), LOG_LEVEL)
             # self._item_playing = None

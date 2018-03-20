@@ -17,7 +17,7 @@ ytb_search:
 ```
 """
 
-import appdaemon.appapi as appapi
+import appdaemon.plugins.hass.hassapi as hass
 import requests
 
 
@@ -45,7 +45,7 @@ def query_youtube_videos(str_query, max_results=20, is_normal_query=True,
 
 
 # noinspection PyClassHasNoInit
-class YoutubeSearch(appapi.AppDaemon):
+class YoutubeSearch(hass.Hass):
     """App that listens to the input text and select."""
 
     _ids_options = None
@@ -61,6 +61,7 @@ class YoutubeSearch(appapi.AppDaemon):
         self._input_text = self.args.get('input_text')
         self._media_player = self.args.get('media_player', 'media_player.kodi')
         self._youtube_key = self.args.get('youtube_key')
+        self.log(f"Youtube API Key: {self._youtube_key}")
         self.listen_state(self.new_youtube_query, self._input_text)
         self.listen_state(self.video_selection, self._input_select)
         self._ids_options = {DEFAULT_ACTION: None}

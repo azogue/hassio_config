@@ -8,11 +8,9 @@ or from iOS notification actions.
 Harcoded custom logic for controlling HA with feedback from these actions.
 
 """
-from datetime import datetime as dt
 from dateutil.parser import parse
 
-import appdaemon.appapi as appapi
-import appdaemon.conf as conf
+import appdaemon.plugins.hass.hassapi as hass
 
 
 # DELAY_TO_SET_DEFAULT_TARGET = 1800  # sec
@@ -20,7 +18,7 @@ DELAY_TO_SET_DEFAULT_TARGET = 120  # sec
 
 
 # noinspection PyClassHasNoInit
-class FamilyTracker(appapi.AppDaemon):
+class FamilyTracker(hass.Hass):
     """Family Tracker."""
 
     _tracking_state = None
@@ -32,17 +30,18 @@ class FamilyTracker(appapi.AppDaemon):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        config = dict(self.config['AppDaemon'])
-        _chatids = [int(x) for x in config.get('bot_chatids').split(',')]
-        self._notifier = config.get('notifier').replace('.', '/')
-        self._base_url = config.get('base_url').replace('.', '/')
+        self.log(f"bot_chatids: {self.args.get('bot_chatids')}, "
+                 f"notifier: {self.config.get('notifier')}")
+        _chatids = [int(x) for x in self.args.get('bot_chatids').split(',')]
+        self._notifier = self.config.get('notifier').replace('.', '/')
+        self._base_url = self.args.get('base_url').replace('.', '/')
         self._anybody_home = False
 
         # Get home group
         home_group = self.args.get('home_group', 'group.family')
 
         # Get default chat_id for home
-        default_chat_id = config.get('bot_group_target')
+        default_chat_id = self.args.get('bot_group_target')
         self._telegram_targets = {"default": ('Casa', default_chat_id)}
 
         people_track = self.args.get('people', {})
@@ -58,8 +57,7 @@ class FamilyTracker(appapi.AppDaemon):
             target = None
             name = self.friendly_name(dev)
             tracking_st = [self.get_state(dev),
-                           parse(self.get_state(dev, attribute='last_changed')
-                                 ).astimezone(conf.tz)]
+                           parse(self.get_state(dev, attribute='last_changed'))]
             self._tracking_state[dev] = tracking_st
 
             # Listen for state changes:
@@ -76,8 +74,7 @@ class FamilyTracker(appapi.AppDaemon):
                     dev_extra = people_track[dev]['extra_tracker']
                     extra_tracking_st = [
                         self.get_state(dev_extra),
-                        parse(self.get_state(dev, attribute='last_changed')
-                              ).astimezone(conf.tz)]
+                        parse(self.get_state(dev, attribute='last_changed'))]
                     self._telegram_targets[dev_extra] = (name, target)
                     self._tracking_state[dev_extra] = extra_tracking_st
                     self.listen_state(self.track_zone_ch, dev_extra)
@@ -173,7 +170,7 @@ class FamilyTracker(appapi.AppDaemon):
     def track_zone_ch(self, entity, attribute, old, new, kwargs):
         """State change listener."""
         last_st, last_ch = self._tracking_state[entity]
-        self._tracking_state[entity] = [new, dt.now(tz=conf.tz)]
+        self._tracking_state[entity] = [new, self.datetime()]
 
         # Process changes
         self._who_is_at_home(True)

@@ -7,14 +7,14 @@ only under some custom circunstances, like the media player is not running,
 or there aren't any more lights in 'on' state in the room.
 
 """
-import appdaemon.appapi as appapi
+import appdaemon.plugins.hass.hassapi as hass
 
 
 LOG_LEVEL = 'INFO'
 
 
 # noinspection PyClassHasNoInit
-class MotionLights(appapi.AppDaemon):
+class MotionLights(hass.Hass):
     """App for control lights with a motion sensor."""
 
     _pir = None
@@ -34,7 +34,7 @@ class MotionLights(appapi.AppDaemon):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        conf_data = dict(self.config['AppDaemon'])
+        conf_data = dict(self.config['appdaemon'])
         pir = self.args.get('pir', None)
         self._extra_constrain_input_boolean = self.args.get(
             'constrain_input_boolean_2', None)

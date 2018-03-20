@@ -3,7 +3,7 @@
 Automation task as a AppDaemon App for Home Assistant - current meter PEAK POWER notifications
 """
 import datetime as dt
-import appdaemon.appapi as appapi
+import appdaemon.plugins.hass.hassapi as hass
 
 
 LOG_LEVEL = 'INFO'
@@ -18,7 +18,7 @@ MASK_MSG_MAX_POWER_RESET = {"title": "Consumo eléctrico: Normal",
 
 
 # noinspection PyClassHasNoInit
-class EnerpiPeakNotifier(appapi.AppDaemon):
+class EnerpiPeakNotifier(hass.Hass):
     """App for Notifying the power peaks when they are greater than a certain limit, and after that,
     notify when back to normal (lower than another user defined limit)."""
 
@@ -44,9 +44,8 @@ class EnerpiPeakNotifier(appapi.AppDaemon):
     def initialize(self):
         """AppDaemon required method for app init."""
         self._main_power = self.args.get('control')
-        conf_data = dict(self.config['AppDaemon'])
-        self._notifier = conf_data.get('notifier').replace('.', '/')
-        self._target_sensor = conf_data.get('chatid_sensor')
+        self._notifier = self.config.get('notifier').replace('.', '/')
+        self._target_sensor = self.config.get('chatid_sensor')
         self._camera = self.args.get('camera')
         self._min_time_upper = int(self.args.get('min_time_high', DEFAULT_MIN_TIME_UPPER_SEC))
         self._min_time_lower = int(self.args.get('min_time_low', DEFAULT_MIN_TIME_LOWER_SEC))

@@ -11,7 +11,7 @@ It reacts to `kodi_call_method_result` events, when the used API method is:
     - PVR.GetChannels
 """
 
-import appdaemon.appapi as appapi
+import appdaemon.plugins.hass.hassapi as hass
 
 
 EVENT_KODI_CALL_METHOD_RESULT = 'kodi_call_method_result'
@@ -23,7 +23,7 @@ MAX_RESULTS = 20
 
 
 # noinspection PyClassHasNoInit
-class DynamicKodiInputSelect(appapi.AppDaemon):
+class DynamicKodiInputSelect(hass.Hass):
     """App to populate an input select with Kodi API calls results."""
 
     _ids_options = None

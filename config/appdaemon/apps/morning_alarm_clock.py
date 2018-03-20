@@ -14,11 +14,9 @@ through its JSONRPC API, which has to run a specific Kodi Add-On:
     `plugin.audio.lacafetera`
 
 """
-import appdaemon.appapi as appapi
-import appdaemon.conf as conf
+import appdaemon.plugins.hass.hassapi as hass
 import datetime as dt
 from dateutil.parser import parse
-from functools import reduce
 import json
 import pytz
 import requests
@@ -32,6 +30,7 @@ DEFAULT_MAX_VOLUME_MOPIDY = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
 DEFAULT_DURATION = 1.2  # h
 DEFAULT_EMISION_TIME = "08:30:00"
+TZ = 'CET'
 DEFAULT_MIN_POSPONER = 9
 MAX_WAIT_TIME = dt.timedelta(minutes=10)
 STEP_RETRYING_SEC = 20
@@ -57,7 +56,7 @@ SUNRISE_PHASES = [
     {'brightness': 254, 'xy_color': [0.449, 0.4078], 'rgb_color': (255, 203, 124)}]
 
 
-def get_info_last_ep(tz, limit=1):
+def get_info_last_ep(limit=1):
     """Extrae la información del último (o 'n-último')
     episodio disponible de La Cafetera de Radiocable.com"""
     base_url_v2 = 'https://api.spreaker.com/v2/'
@@ -71,7 +70,8 @@ def get_info_last_ep(tz, limit=1):
         if ('response' in data) and ('items' in data['response']):
             episode = data['response']['items'][-1]
             published = parse(episode['published_at']).replace(
-                tzinfo=pytz.UTC).astimezone(tz).replace(tzinfo=None)
+                tzinfo=pytz.UTC).astimezone(
+                pytz.timezone(TZ)).replace(tzinfo=None)
             is_live = episode['type'] == 'LIVE'
             if not is_live:
                 duration = dt.timedelta(seconds=episode['duration'] / 1000)
@@ -83,17 +83,16 @@ def get_info_last_ep(tz, limit=1):
     return False, None
 
 
-def is_last_episode_ready_for_play(now, tz):
+def is_last_episode_ready_for_play(now):
     """Comprueba si hay un nuevo episodio disponible de La Cafetera.
 
     :param now: appdaemon datetime.now()
-    :param tz: timezone, para corregir las fechas en UTC a local
     :return: (play_now, info_last_episode)
     :rtype: tuple(bool, dict)
     """
     est_today = dt.datetime.combine(now.date(),
                                     parse(DEFAULT_EMISION_TIME).time())
-    ok, info = get_info_last_ep(tz)
+    ok, info = get_info_last_ep()
     if ok:
         if (info['is_live'] or
                 (now - info['published'] < MIN_INTERVAL_BETWEEN_EPS) or
@@ -153,7 +152,7 @@ def _weekday(str_wday):
 
 
 # noinspection PyClassHasNoInit
-class AlarmClock(appapi.AppDaemon):
+class AlarmClock(hass.Hass):
     """App for run a complex morning alarm.
 
     With sunrise light simulation and launching of a Kodi add-on,
@@ -163,16 +162,16 @@ class AlarmClock(appapi.AppDaemon):
     _alarm_on = False
     _alarm_time_input = None
     _warm_up_time_input = None
-    _special_alarm_time_input = None
+    _special_alarm_input = None
     _delta_time_postponer_sec = None
     _warm_up_time_delta = None
     _max_volume = None
     _volume_ramp_sec = None
     _weekdays_alarm = None
+    _weekdays_alarm_condition = None
     _notifier = None
     _transit_time = None
     _phases_sunrise = []
-    _tz = None
     _lights_alarm = None
 
     _room_select = None
@@ -198,15 +197,14 @@ class AlarmClock(appapi.AppDaemon):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        conf_data = dict(self.config['AppDaemon'])
-        self._tz = conf.tz
-
-        self._alarm_on = (self.get_state(self.args.get('input_boolean_alarm_on')) == 'on')
-        self.listen_state(self.master_switch, self.args.get('input_boolean_alarm_on'))
+        self._alarm_on = (self.get_state(
+            self.args.get('input_boolean_alarm_on')) == 'on')
+        self.listen_state(self.master_switch,
+                          self.args.get('input_boolean_alarm_on'))
 
         self._alarm_time_input = self.args.get('alarm_time')
         self._warm_up_time_input = self.args.get('warm_up_time')
-        self._special_alarm_time_input = self.args.get('special_alarm_datetime')
+        self._special_alarm_input = self.args.get('special_alarm_datetime')
 
         self._delta_time_postponer_sec = int(
             self.args.get('postponer_minutos', DEFAULT_MIN_POSPONER)) * 60
@@ -217,26 +215,28 @@ class AlarmClock(appapi.AppDaemon):
                           DEFAULT_DURATION_VOLUME_RAMP))
         self._weekdays_alarm = [_weekday(d) for d in self.args.get(
             'alarmdays', 'mon,tue,wed,thu,fri').split(',') if _weekday(d) >= 0]
+        self._weekdays_alarm_condition = self.args.get('alarmdays_condition')
         self._warm_up_time_delta = dt.timedelta(
             seconds=int(self.args.get('warm_up_time_delta_s',
                                       DEFAULT_WARM_UP_TIME_DELTA)))
 
         self.listen_state(self.alarm_time_change, self._alarm_time_input)
         self.listen_state(self.warm_up_time_change, self._warm_up_time_input)
-        self.listen_state(self.special_alarm_time_change, self._special_alarm_time_input)
+        self.listen_state(self.special_alarm_time_change,
+                          self._special_alarm_input)
 
         # Room selection:
         self._selected_player = 'KODI'
         self._room_select = self.args.get('room_select', None)
         if self._room_select is not None:
-            self._selected_player = self.get_state(entity_id=self._room_select)
+            self._selected_player = self.get_state(self._room_select)
             self.listen_state(self.change_player, self._room_select)
 
-        self._media_player_kodi = conf_data.get('media_player')
-        self._media_player_mopidy = conf_data.get('media_player_mopidy')
-        self._mopidy_ip = conf_data.get('mopidy_ip')
-        self._mopidy_port = int(conf_data.get('mopidy_port'))
-        self._target_sensor = conf_data.get('chatid_sensor')
+        self._media_player_kodi = self.config['media_player']
+        self._media_player_mopidy = self.config['media_player_mopidy']
+        self._mopidy_ip = self.args.get('mopidy_ip')
+        self._mopidy_port = int(self.args.get('mopidy_port'))
+        self._target_sensor = self.config['chatid_sensor']
 
         # Trigger for last episode and boolean for play status
         self._manual_trigger = self.args.get('manual_trigger', None)
@@ -246,7 +246,7 @@ class AlarmClock(appapi.AppDaemon):
         # Listen to ios/telegram notification actions:
         self.listen_event(
             self.postpone_secuencia_despertador, 'postponer_despertador')
-        self._notifier = conf_data.get('notifier').replace('.', '/')
+        self._notifier = self.config['notifier'].replace('.', '/')
 
         self._lights_alarm = self.args.get('lights_alarm', None)
         total_duration = int(self.args.get('sunrise_duration', 60))
@@ -258,8 +258,8 @@ class AlarmClock(appapi.AppDaemon):
         self._set_new_warm_up_time()
         self._set_new_special_alarm_datetime()
         if self._next_alarm is not None and self._next_warm_up is not None:
-            self.log('INIT WITH ALARM AT: {:%H:%M:%S}, WARM UP AT {:%H:%M:%S}, '
-                     'NEXT SPECIAL: {} ({})'
+            self.log('INIT WITH ALARM AT: {:%H:%M:%S}, WARM UP AT {:%H:%M:%S},'
+                     ' NEXT SPECIAL: {} ({})'
                      .format(self._next_alarm, self._next_warm_up,
                              self._next_special_alarm, self._selected_player),
                      LOG_LEVEL)
@@ -271,7 +271,8 @@ class AlarmClock(appapi.AppDaemon):
 
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
-        self.call_service('switch/turn_on', entity_id="switch.calentador,switch.bomba_circ_acs")
+        self.call_service('switch/turn_on',
+                          entity_id="switch.calentador,switch.bomba_circ_acs")
         if 'delta_to_repeat' in kwargs:
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])
@@ -338,8 +339,7 @@ class AlarmClock(appapi.AppDaemon):
         if (new == 'on') and ((self._last_trigger is None)
                               or ((dt.datetime.now() - self._last_trigger)
                                   .total_seconds() > 30)):
-            _ready, ep_info = is_last_episode_ready_for_play(
-                self.datetime(), self._tz)
+            _ready, ep_info = is_last_episode_ready_for_play(self.datetime())
             self.log('TRIGGER_START with ep_ready, ep_info --> {}, {}'
                      .format(_ready, ep_info))
             if self.play_in_kodi:
@@ -382,7 +382,7 @@ class AlarmClock(appapi.AppDaemon):
     def _set_new_alarm_time(self):
         if self._handle_alarm is not None:
             self.cancel_timer(self._handle_alarm)
-        alarm_time = self.get_state(self._alarm_time_input, "all")
+        alarm_time = self.get_state(self._alarm_time_input, attribute="all")
         if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_alarm = None
             return
@@ -392,7 +392,7 @@ class AlarmClock(appapi.AppDaemon):
             minute=alarm_time['attributes']['minute'],
             second=0, microsecond=0)
 
-        self._next_alarm = time_alarm # - self._warm_up_time_delta
+        self._next_alarm = time_alarm  # - self._warm_up_time_delta
         self._handle_alarm = self.run_daily(
             self.run_alarm, self._next_alarm.time())
 
@@ -401,7 +401,7 @@ class AlarmClock(appapi.AppDaemon):
         # _handle_special_alarm
         if self._handle_warm_up is not None:
             self.cancel_timer(self._handle_warm_up)
-        alarm_time = self.get_state(self._warm_up_time_input, "all")
+        alarm_time = self.get_state(self._warm_up_time_input, attribute="all")
         if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_warm_up = None
             return
@@ -411,7 +411,7 @@ class AlarmClock(appapi.AppDaemon):
             minute=alarm_time['attributes']['minute'],
             second=0, microsecond=0)
 
-        self._next_warm_up = time_alarm #- self._warm_up_time_delta
+        self._next_warm_up = time_alarm  # - self._warm_up_time_delta
         self._handle_warm_up = self.run_daily(
             self.run_warm_up, self._next_warm_up.time())
 
@@ -419,7 +419,7 @@ class AlarmClock(appapi.AppDaemon):
     def _set_new_special_alarm_datetime(self, *args):
         if self._handle_special_alarm is not None:
             self.cancel_timer(self._handle_special_alarm)
-        alarm_time = self.get_state(self._special_alarm_time_input, "all")
+        alarm_time = self.get_state(self._special_alarm_input, attribute="all")
         if alarm_time is None or alarm_time['state'] == 'unknown':
             self._next_special_alarm = None
             return
@@ -432,7 +432,7 @@ class AlarmClock(appapi.AppDaemon):
             minute=alarm_time['attributes']['minute'],
             second=0, microsecond=0)
 
-        self._next_special_alarm = time_alarm #- self._warm_up_time_delta
+        self._next_special_alarm = time_alarm  # - self._warm_up_time_delta
         self._handle_special_alarm = self.run_at(
             self.run_alarm, self._next_special_alarm)
 
@@ -484,7 +484,7 @@ class AlarmClock(appapi.AppDaemon):
         headers = {'Content-Type': 'application/json'}
         payload = {"method": command, "jsonrpc": "2.0", "id": 1}
         if params is not None:
-            payload.update(params=params)
+            payload['params'] = params
         r = requests.post(url_base, headers=headers, data=json.dumps(payload))
         if r.ok:
             try:
@@ -563,7 +563,7 @@ class AlarmClock(appapi.AppDaemon):
         # Check if alarm is ready to launch
         if self._alarm_on and not self._in_alarm_mode:
             alarm_ready, alarm_info = is_last_episode_ready_for_play(
-                self.datetime(), self._tz)
+                self.datetime())
             if alarm_ready:
                 # self.turn_on_morning_services(dict(delta_to_repeat=30))
                 if self.play_in_kodi:
@@ -576,8 +576,8 @@ class AlarmClock(appapi.AppDaemon):
                 self.set_state(self._manual_trigger, state='on')
                 if alarm_info['duration'] is not None:
                     duration = alarm_info['duration'].total_seconds() + 20
-                    self._handler_turnoff = self.run_in(self.turn_off_alarm_clock,
-                                                        int(duration))
+                    self._handler_turnoff = self.run_in(
+                        self.turn_off_alarm_clock, int(duration))
                     self.log('ALARM RUNNING NOW. AUTO STANDBY PROGRAMMED '
                              'IN {:.0f} SECONDS'.format(duration), LOG_LEVEL)
                 elif not self.play_in_kodi:
@@ -588,28 +588,37 @@ class AlarmClock(appapi.AppDaemon):
                 self.log('POSTPONE ALARM', LOG_LEVEL)
                 self.run_in(self.trigger_service_in_alarm, STEP_RETRYING_SEC)
 
+    def is_working_day(self):
+        if ((not self._weekdays_alarm_condition
+             or self.get_state(self._weekdays_alarm_condition) == 'on') and
+                self.datetime().weekday() in self._weekdays_alarm):
+            return True
+        return False
+
     # noinspection PyUnusedLocal
     def run_alarm(self, *args):
         """Run the alarm main secuence: prepare, trigger & schedule next"""
         if not self.get_state(self._manual_trigger) == 'on':
             # self.set_state(self._manual_trigger, state='off')
-            if self._alarm_on and self.datetime().weekday() in self._weekdays_alarm:
+            if self._alarm_on and self.is_working_day():
                 self.trigger_service_in_alarm()
             else:
                 self.log('ALARM CLOCK NOT TRIGGERED TODAY '
                          '(weekday={}, alarm weekdays={})'
-                         .format(self.datetime().weekday(), self._weekdays_alarm))
+                         .format(self.datetime().weekday(),
+                                 self._weekdays_alarm))
         else:
             self.log('Alarm clock is running manually, no auto-triggering now')
 
     # noinspection PyUnusedLocal
     def run_warm_up(self, *args):
         """Run the warm up sequence"""
-        if self.datetime().weekday() in self._weekdays_alarm:
+        if self.is_working_day():
             self.turn_on_morning_services(dict(delta_to_repeat=10))
             self.log('Warm up trigger')
         else:
-            self.run_in(self.turn_on_morning_services, 1800, delta_to_repeat=10)
+            self.run_in(self.turn_on_morning_services, 1800,
+                        delta_to_repeat=10)
             self.log('Warm up trigger in 1800 s')
 
     # noinspection PyUnusedLocal
