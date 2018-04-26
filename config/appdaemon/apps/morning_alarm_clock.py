@@ -277,6 +277,13 @@ class AlarmClock(hass.Hass):
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])
 
+    def turn_on_bedroom_speakers(self, kwargs):
+        """Turn ON the speaker."""
+        if kwargs and 'off' in kwargs:
+            self.call_service('switch/turn_off', entity_id="switch.altavoz")
+        else:
+            self.call_service('switch/turn_on', entity_id="switch.altavoz")
+
     def notify_alarmclock(self, ep_info):
         """Send notification with episode info."""
         self.call_service('telegram_bot/send_message',
@@ -296,24 +303,22 @@ class AlarmClock(hass.Hass):
     def turn_off_alarm_clock(self, *args):
         """Stop current play when turning off the input_boolean."""
         if self._in_alarm_mode:
-            if self.play_in_kodi and (self.get_state(
-                    entity_id=self._media_player_kodi) == 'playing'):
+            if self.play_in_kodi and (
+                        self.get_state(self._media_player_kodi) == 'playing'):
                 self.call_service('media_player/turn_off',
                                   entity_id=self._media_player_kodi)
                 if self._manual_trigger is not None:
                     self._last_trigger = None
-                    self.set_state(entity_id=self._manual_trigger, state='off')
+                    self.set_state(self._manual_trigger, state='off')
                 self.log('TURN_OFF KODI')
             elif not self.play_in_kodi:
-                if self.get_state(
-                        entity_id=self._media_player_mopidy) == 'playing':
+                if self.get_state(self._media_player_mopidy) == 'playing':
                     self.call_service('media_player/turn_off',
                                       entity_id=self._media_player_mopidy)
-                self.call_service('switch/turn_off',
-                                  entity_id="switch.altavoz")
+                self.turn_on_bedroom_speakers({'off': True})
                 if self._manual_trigger is not None:
                     self._last_trigger = None
-                    self.set_state(entity_id=self._manual_trigger, state='off')
+                    self.set_state(self._manual_trigger, state='off')
                 self.log('TURN_OFF MOPIDY')
             if self._handler_turnoff is not None:
                 self.cancel_timer(self._handler_turnoff)
@@ -521,8 +526,8 @@ class AlarmClock(hass.Hass):
 
     def run_mopidy_stream_lacafetera(self, ep_info):
         """Play stream in mopidy."""
-        self.log('DEBUG MPD: {}'.format(ep_info))
-        self.call_service('switch/turn_on', entity_id="switch.altavoz")
+        # self.log('DEBUG MPD: {}'.format(ep_info))
+        self.turn_on_bedroom_speakers({})
         self.run_command_mopidy('core.tracklist.clear', check_result=False)
         params = {"tracks": [{"__model__": "Track",
                               "uri": MASK_URL_STREAM_MOPIDY.format(
@@ -534,7 +539,7 @@ class AlarmClock(hass.Hass):
                                   ep_info['published'])}]}
 
         # Retry:
-        self.call_service('switch/turn_on', entity_id="switch.altavoz")
+        self.run_in(self.turn_on_bedroom_speakers, 3)
 
         json_res = self.run_command_mopidy('core.tracklist.add', params=params)
         if json_res is not None:
@@ -543,6 +548,9 @@ class AlarmClock(hass.Hass):
                 track_info = json_res["result"][0]
                 self.run_command_mopidy(
                     'core.mixer.set_volume', params=dict(volume=5))
+                # Retry:
+                self.run_in(self.turn_on_bedroom_speakers, 10)
+
                 res_play = self.run_command_mopidy(
                     'core.playback.play',
                     params={"tl_track": track_info}, check_result=False)

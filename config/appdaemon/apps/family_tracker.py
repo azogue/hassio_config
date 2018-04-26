@@ -9,13 +9,13 @@ Harcoded custom logic for controlling HA with feedback from these actions.
 
 """
 from dateutil.parser import parse
-
+import pytz
 import appdaemon.plugins.hass.hassapi as hass
 
 
 # DELAY_TO_SET_DEFAULT_TARGET = 1800  # sec
 DELAY_TO_SET_DEFAULT_TARGET = 120  # sec
-
+TZ = 'Europe/Madrid'
 
 # noinspection PyClassHasNoInit
 class FamilyTracker(hass.Hass):
@@ -57,7 +57,9 @@ class FamilyTracker(hass.Hass):
             target = None
             name = self.friendly_name(dev)
             tracking_st = [self.get_state(dev),
-                           parse(self.get_state(dev, attribute='last_changed'))]
+                           parse(self.get_state(dev, attribute='last_changed')).replace(
+                tzinfo=pytz.UTC).astimezone(
+                pytz.timezone(TZ)).replace(tzinfo=None)]
             self._tracking_state[dev] = tracking_st
 
             # Listen for state changes:
@@ -74,7 +76,9 @@ class FamilyTracker(hass.Hass):
                     dev_extra = people_track[dev]['extra_tracker']
                     extra_tracking_st = [
                         self.get_state(dev_extra),
-                        parse(self.get_state(dev, attribute='last_changed'))]
+                        parse(self.get_state(dev, attribute='last_changed')).replace(
+                tzinfo=pytz.UTC).astimezone(
+                pytz.timezone(TZ)).replace(tzinfo=None)]
                     self._telegram_targets[dev_extra] = (name, target)
                     self._tracking_state[dev_extra] = extra_tracking_st
                     self.listen_state(self.track_zone_ch, dev_extra)
@@ -171,6 +175,8 @@ class FamilyTracker(hass.Hass):
         """State change listener."""
         last_st, last_ch = self._tracking_state[entity]
         self._tracking_state[entity] = [new, self.datetime()]
+
+        self.log(f"DEBUG Actual tracking state: {self._tracking_state}")
 
         # Process changes
         self._who_is_at_home(True)

@@ -268,7 +268,7 @@ class KodiAssistant(hass.Hass):
         """Kodi state change main control."""
         if new == 'playing':
             kodi_attrs = self.get_state(
-                entity_id=self._media_player, attribute="attributes")
+                self._media_player, attribute="attributes")
             self._is_playing_video = (
                 'media_content_type' in kodi_attrs
                 and kodi_attrs['media_content_type'] in TYPE_HA_ITEMS_NOTIFY)

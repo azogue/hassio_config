@@ -23,7 +23,7 @@ import requests
 
 URL_BASE = 'https://www.googleapis.com/youtube/v3/search'
 KODI_YOUTUBE_PLUGIN_MASK = "plugin://plugin.video.youtube/play/?video_id={}"
-DEFAULT_ACTION = 'No video'
+DEFAULT_ACTION = 'Nada que hacer'
 
 
 def query_youtube_videos(str_query, max_results=20, is_normal_query=True,

@@ -964,7 +964,7 @@ class EventListener(hass.Hass):
         # Get prev state:
         self._lights_notif_state = [self.get_state(l)
                                     for l in self._lights_notif.split(',')]
-        self._lights_notif_st_attr = [self.get_state(l, 'attributes')
+        self._lights_notif_st_attr = [self.get_state(l, attributes='all')
                                       for l in self._lights_notif.split(',')]
         self.log('Flashing "{}" {} times, persistence={}s.'
                  .format(self._lights_notif, n_flashes, persistence))

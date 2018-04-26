@@ -1,12 +1,35 @@
-#AutoFeedback:
-#  class: EventListener
-#  module: bot_event_listener
-#  ha_key: !secret ha_key
-#  lights_notif: light.cuenco
-#  bot_chatids: !secret bot_chatids
-#  bot_name: !secret bot_name
-#  bot_nicknames: !secret bot_nicknames
-#  base_url: !secret base_url
+AutoFeedback:
+  class: EventListener
+  module: bot_event_listener
+  ha_key: !secret ha_key
+  lights_notif: light.cuenco
+  bot_chatids: !secret bot_chatids
+  bot_name: !secret bot_name
+  bot_nicknames: !secret bot_nicknames
+  base_url: !secret base_url
+
+Alarma:
+  class: AlarmControl
+  module: alarm_control
+  ha_key: !secret ha_key
+  lights_notif: light.cuenco
+  bot_name: !secret bot_name
+  base_url: !secret base_url
+  bot_target: !secret bot_admin_target
+  rooms:
+    Estudio:
+      camera.iegeek_hd: binary_sensor.motioncam_office,10
+      binary_sensor.sensor_office_mov1: 10
+    Salón:
+      camera.sricam_360: binary_sensor.motioncam_salon,5
+      binary_sensor.sensor_livingroom_mov1: 5
+#    Cuadro:
+#      binary_sensor.local_pir:
+    Cocina:
+      binary_sensor.sensor_kitchen_mov1: 3
+    Terraza:
+      camera.kmoon_ipcam100: binary_sensor.motioncam_terraza,3
+      binary_sensor.sensor_terraza_mov1: 3
 
 FamilyTracker:
   class: FamilyTracker

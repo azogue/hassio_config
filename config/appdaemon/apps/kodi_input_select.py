@@ -10,9 +10,10 @@ It reacts to `kodi_call_method_result` events, when the used API method is:
     - VideoLibrary.GetRecentlyAddedEpisodes
     - PVR.GetChannels
 """
+import datetime as dt
 
 import appdaemon.plugins.hass.hassapi as hass
-
+from pytz import timezone
 
 EVENT_KODI_CALL_METHOD_RESULT = 'kodi_call_method_result'
 
@@ -95,6 +96,34 @@ class DynamicKodiInputSelect(hass.Hass):
                                   options=[DEFAULT_ACTION] + labels)
                 self.set_state(ENTITY,
                                attributes={"friendly_name": 'TV channels',
+                                           "icon": 'mdi:play-box-outline'})
+            elif method == 'PVR.GetRecordings':
+                values = sorted(result['recordings'],
+                                key=lambda x: x['starttime'], reverse=True)
+
+                def _date(starttime):
+                    ts = dt.datetime.strptime(
+                        starttime, '%Y-%m-%d %H:%M:%S'
+                    ).replace(tzinfo=timezone('UTC')
+                              ).astimezone(timezone('CET')
+                                           ).strftime('%H:%M %-d/%-m')
+                    if not ts:
+                        return starttime[:-3]
+                    return ts
+
+                # Has to be 'movie' type to use the file param
+                data = [('{}:{}'.format(_date(r['starttime']), r['label']),
+                         ('MOVIE', r['file'], None))
+                        for r in values]
+                self._ids_options.update(dict(zip(*zip(*data))))
+                labels = list(list(zip(*data))[0])
+                self._last_values = labels
+                self.log('{} NEW PVR RECORDING OPTS:\n{}'.format(
+                    len(labels), labels))
+                self.call_service('input_select/set_options', entity_id=ENTITY,
+                                  options=[DEFAULT_ACTION] + labels)
+                self.set_state(ENTITY,
+                               attributes={"friendly_name": 'TV Recordings',
                                            "icon": 'mdi:play-box-outline'})
 
     # noinspection PyUnusedLocal
