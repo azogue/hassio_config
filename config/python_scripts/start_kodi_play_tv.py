@@ -45,7 +45,6 @@ play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
     content_id = 18
     media_dest = 'La Sexta HD'
-    play_live_tv = False  # TODO Eliminar
 elif now.hour < 16:
     content_id = 33
     media_dest = 'Antena 3 HD'
@@ -89,10 +88,8 @@ else:
     time.sleep(3)
     state_select = hass.states.get(INPUT_SELECT_OPTS)
     options = state_select.attributes.get('options')[1:] or []
-    logger.warning("recording options: {}".format(options))
     media_dest = options[0]
     notify_msg = "Play última grabación de TV: '{}'.".format(media_dest)
-    logger.warning("notify_msg: {}".format(notify_msg))
     hass.services.call(
             'input_select', 'select_option',
             {"entity_id": INPUT_SELECT_OPTS,
