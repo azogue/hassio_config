@@ -1,0 +1,298 @@
+      name: Demo Floorplan
+      image: /local/custom_ui/floorplan/floorplan.svg
+      stylesheet: /local/custom_ui/floorplan/floorplan.css
+      
+      # These options are optional
+      warnings:                  # enable warnings (to find out why things might ot be working correctly)
+#      pan_zoom:                  # enable experimental panning / zooming
+      hide_app_toolbar:          # hide the application toolbar (when used as a custom panel)
+      date_format: DD-MMM-YY   # Date format to use in hover-over text
+      last_motion_entity: sensor.template_last_motion
+      last_motion_class: last-motion
+
+      groups:
+        - name: Luces
+          elements:
+            - toggle_lights
+          action:
+            domain: class
+            service: toggle
+            data:
+              elements:
+                - layer_lights
+              classes:
+                - layer-visible
+                - layer-hidden
+              default_class: layer-hidden
+
+        - name: Luces por recinto
+          elements:
+            - toggle_lights_rooms
+          action:
+            domain: class
+            service: toggle
+            data:
+              elements:
+                - layer_hass_rooms_light
+              classes:
+                - layer-visible
+                - layer-hidden
+              default_class: layer-visible
+
+        - name: Movimiento por recinto
+          elements:
+            - toggle_mov_rooms
+          action:
+            domain: class
+            service: toggle
+            data:
+              elements:
+                - layer_hass_rooms
+              classes:
+                - layer-visible
+                - layer-hidden
+              default_class: layer-hidden
+
+        - name: Sensores
+          elements:
+            - toggle_sensors
+          action:
+            domain: class
+            service: toggle
+            data:
+              elements:
+                - layer_sensors
+              classes:
+                - layer-visible
+                - layer-hidden
+              default_class: layer-visible
+
+        - name: Muebles
+          elements:
+            - toggle_muebles
+          action:
+            domain: class
+            service: toggle
+            data:
+              elements:
+                - layer_muebles
+                - layer_sanitarios
+                - layer_puertas
+#                - layer_carpinteria
+              classes:
+                - layer-visible
+                - layer-hidden
+              default_class: layer-visible
+
+        - name: Power Sensors
+          entities:
+             -  sensor.esp32ener_power
+          text_template: '${entity.state ? entity.state + "W" : "??"}'
+          class_template: '
+            var power = parseFloat(entity.state);
+            if (power < 350)
+              return "power-very-low-background";
+            else if (power < 500)
+              return "power-below-average-background";
+            else if (power < 1000)
+              return "power-average-background";
+            else if (power < 2500)
+              return "power-high-background";
+            else
+              return "power-very-high-background";
+            '
+
+        - name: Temperature Sensors
+          entities:
+             - sensor.temperatura_stats_mean
+             - sensor.sensor_terraza_temperature
+             - sensor.sensor_galeria_temperature
+             - sensor.sensor_kitchen_temperature
+             - sensor.sensor_livingroom_temperature
+             - sensor.sensor_office_temperature
+             - sensor.sensor_study_temperature
+             - sensor.dormitorio_temperature_rpi2mpd
+          text_template: '${entity.state ? entity.state + "°C" : "??"}'
+          # An example of rounding up a number, i.e. a temperature of 90.1 becomes 91
+#          text_template: '${entity.state ? Math.ceil(entity.state) : "??"}'
+          class_template: '
+            var temp = parseFloat(entity.state.replace("°", ""));
+            if (temp < 15)
+              return "color-dark-blue";
+            else if (temp < 17)
+              return "color-blue";
+            else if (temp < 19)
+              return "color-light-blue";
+            else if (temp < 25)
+              return "color-green";
+            else if (temp < 28)
+              return "color-yellow";
+            else if (temp < 30)
+              return "color-orange";
+            else
+              return "color-red";
+            '
+
+        - name: Humidity Sensors
+          entities:
+             - sensor.humedad_stats_mean
+             - sensor.sensor_terraza_humidity
+             - sensor.sensor_galeria_humidity
+             - sensor.sensor_kitchen_humidity
+             - sensor.sensor_livingroom_humidity
+             - sensor.sensor_office_humidity
+             - sensor.sensor_study_humidity
+             - sensor.dormitorio_humidity_rpi2mpd
+          text_template: '${entity.state ? entity.state + "%" : "??"}'
+          class_template: '
+            var humid = parseFloat(entity.state.replace("%", ""));
+            if (humid < 30)
+              return "color-orange";
+            else if (humid < 45)
+              return "color-yellow";
+            else if (humid < 60)
+              return "color-green";
+            else if (humid < 75)
+              return "color-blue";
+            else
+              return "color-dark-blue";
+            '
+
+        - name: Lights
+          entities:
+             - light.salon
+             - light.cuenco
+             - light.bola_grande
+             - light.central
+             - light.tira
+             - light.pie_sofa
+             - light.pie_tv
+             - light.lamparita
+             - light.yeelight_strip_7811dca21ecf
+             - light.aura_habitacion
+             - light.hue_habitacion
+             - light.dormitorio
+             - light.go
+             - light.flexo
+             - light.estudio
+             - light.terraza
+             - light.exterior
+          states:
+            - state: 'on'
+              class: 'light-on'
+            - state: 'off'
+              class: 'light-off'
+          action:
+            domain: homeassistant   # This optional parameter allows you to use other services such as homeassistant.toggle like here.
+            service: toggle
+
+        - name: Switches
+          entities:
+             - switch.office_floor
+             - switch.tv_power
+             - switch.camara
+#             - switch.sonoff_simple_1
+             - switch.calentador
+             - switch.bomba_circ_acs
+             - switch.altavoz
+          states:
+            - state: 'on'
+              class: 'switch-on'
+            - state: 'off'
+              class: 'switch-off'
+          action:
+            domain: switch
+            service: toggle
+
+        - name: Kodi
+          entities:
+             - media_player.kodi_tv
+          states:
+            - state: 'off'
+              class: 'squeezebox-off'
+            - state: 'idle'
+              class: 'squeezebox-off'
+            - state: 'paused'
+              class: 'squeezebox-pause'
+            - state: 'playing'
+              class: 'squeezebox-playing'
+
+#        - name: NVR
+#          entities:
+#             - binary_sensor.hass_safety_alert
+#          text_template: '${(entity.state === "on") ? "online" : "offline"}'
+#          states:
+#            - state: 'off'
+#              class: 'success-text'
+#            - state: 'on'
+#              class: 'danger-text'
+
+        - name: Alarm Panel
+          entities:
+             - alarm_control_panel.alarma
+          states:
+            - state: 'armed_away'
+              class: 'alarm-armed'
+            - state: 'armed_home'
+              class: 'alarm-armed'
+            - state: 'disarmed'
+              class: 'alarm-disarmed'
+
+        - name: Binary sensors
+          entities:
+            - binary_sensor.services_notok
+#            - binary_sensor.pir_dormitorio_rpi2mpd
+            - binary_sensor.sensor_kitchen_mov1
+            - binary_sensor.sensor_office_mov1
+            - binary_sensor.sensor_terraza_mov1
+            - binary_sensor.sensor_livingroom_mov1
+#            - binary_sensor.motioncam_salon
+            - binary_sensor.local_pir
+          states:
+            - state: 'off'
+              class: 'info-no-movement'
+            - state: 'on'
+              class: 'warning-movement'
+          state_transitions:
+            - name: On to off
+              from_state: 'on'
+              to_state: 'off'
+              duration: 3
+
+        - name: Cameras
+          entities:
+            - camera.sricam_360
+            - camera.kmoon_ipcam100
+            - camera.iegeek_hd
+          states:
+            - state: 'idle'
+              class: 'camera-idle'
+            - state: 'recording'
+              class: 'camera-recording'
+
+        - name: Trackers
+          entities:
+            - group.eugenio
+            - group.carmen
+          states:
+            - state: 'home'
+              class: 'at-home'
+            - state: 'not_home'
+              class: 'outside'
+
+#        - name: thermostat_temp
+#          entities:
+#            - climate.downstairs
+#            - climate.upstairs
+#          text_template: '${entity.attributes.current_temperature ? entity.attributes.current_temperature : "undefined"}'
+#
+# The above text_template uses extended attributes from the climate.* objects to get current temperature.
+
+#        - name: text_states
+#          entities:
+#            - sensor.downstairs_thermostat_humidity
+#            - sensor.dark_sky_temperature
+#            - sensor.last_message
+#          text_template: '${entity.state ? entity.state.replace(/\s{2,}/g,"") : "undefined"}'
+#
+# The above text_template uses jQuery syntax to search and replace any instance of 2 consecutive (or more) spaces in a string of text.
