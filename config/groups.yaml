@@ -626,6 +626,7 @@ Automatizaciones:
     - automation.apagado_automatico_de_termo_acs
     - automation.encendido_automatico_de_cam_salon
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
+    - automation.encendido_luces_estudio
     - automation.encendido_luces_dormitorio
     - automation.sync_tira_tv_con_tira_sofa
     - automation.botvac_error_notification
