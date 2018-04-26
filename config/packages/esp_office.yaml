@@ -11,17 +11,17 @@ homeassistant:
 #      homebridge_hidden: true
       homebridge_name: Humedad estudio
       homebridge_sensor_type: humidity
-#    sensor.sensor_office_pressure:
-#      friendly_name: Presión
-#      icon: mdi:weather-cloudy
-#      homebridge_hidden: true
+    sensor.sensor_office_pressure:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+      homebridge_hidden: true
     sensor.sensor_office_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
       homebridge_hidden: true
 
     sensor.sensor_office__snum:
-      friendly_name: 'Sample # (estudio)'
+      friendly_name: 'Sample # (office)'
       homebridge_hidden: true
       
     sensor.sensor_office_adc1:
@@ -44,13 +44,13 @@ homeassistant:
 #      homebridge_hidden: true
     
     binary_sensor.sensor_office_mov1:
-      friendly_name: 'Movimiento (estudio)'
+      friendly_name: 'Movimiento (office)'
       homebridge_hidden: true
 #    binary_sensor.sensor_office_mov2:
 #      friendly_name: 'Movimiento 2'
 #      homebridge_hidden: true
     binary_sensor.sensor_office_online:
-      friendly_name: Estudio Online
+      friendly_name: Office Online
       homebridge_hidden: true
 
 
@@ -94,14 +94,14 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_esp_office_status
-#    value_template: "{{ value_json.sample.pres | round(1) }}"
-#    name: sensor_office_pressure
-#    unit_of_measurement: "mb"
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: !secret mqtt_default_expiration
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_office_status
+    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
+    name: sensor_office_pressure
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
@@ -112,39 +112,11 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_esp_office_status
-#    value_template: "{{ value_json.sample.ds_temps[0] | round(1) }}"
-#    name: sensor_office_imp
-#    unit_of_measurement: "°C"
-#    qos: !secret mqtt_default_qos
-#    device_class: motion
-#    force_update: true
-#    expire_after: !secret mqtt_default_expiration
-#
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_esp_office_status
-#    value_template: "{{ value_json.sample.ds_temps[1] | round(1) }}"
-#    name: sensor_office_ret
-#    unit_of_measurement: "°C"
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: !secret mqtt_default_expiration
-#
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_esp_office_status
-#    value_template: "{{ value_json.sample.ds_temps[2] | round(1) }}"
-#    name: sensor_office_acs
-#    unit_of_measurement: "°C"
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: !secret mqtt_default_expiration
-
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'status,ts'
+    json_attributes: 'status,network,ts'
     name: sensor_office__snum
     qos: !secret mqtt_default_qos
     force_update: true

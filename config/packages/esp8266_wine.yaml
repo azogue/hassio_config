@@ -1,0 +1,43 @@
+homeassistant:
+  customize:
+    sensor.esp1_temperature:
+      friendly_name: Temperatura Vinoteca
+      icon: mdi:thermometer
+#      homebridge_name: Temperatura Vinoteca
+      homebridge_hidden: true
+    sensor.esp1_humidity:
+      friendly_name: Humedad Vinoteca
+      icon: mdi:water-percent
+      homebridge_hidden: true
+#      homebridge_name: Humedad Vinoteca
+      homebridge_sensor_type: humidity
+    binary_sensor.vinoteca_online:
+      friendly_name: Vinoteca Online
+      homebridge_hidden: true
+
+
+binary_sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp1_online
+    name: Vinoteca Online
+  #  qos (Optional): The maximum QoS level of the state topic. Default is 0.
+    payload_on: "on"
+    payload_off: "off"
+    device_class: connectivity
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp1_hum
+    name: 'esp1_Humidity'
+    unit_of_measurement: '%'
+    qos: 2
+    force_update: true
+    expire_after: 180
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp1_temp
+    name: 'esp1_Temperature'
+    unit_of_measurement: '°C'
+    qos: 2
+    force_update: true
+    expire_after: 180
+
