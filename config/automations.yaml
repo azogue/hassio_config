@@ -28,11 +28,11 @@
       state: 'off'
       for:
         minutes: 5
-    - condition: state
-      entity_id: light.estudio
-      state: 'off'
-      for:
-        minutes: 5
+#    - condition: state
+#      entity_id: light.estudio
+#      state: 'off'
+#      for:
+#        minutes: 5
 
     # Family at home
     - condition: state
@@ -353,7 +353,7 @@
 #    entity_id: sensor.hue_dimmer_switch
 #    to: '1_hold'
 #  action:
-#    - service: script.play_kodi_pvr
+#    - service: python_script.start_kodi_play_tv
 #    - event: flash_light
 #      event_data:
 #        color: orange
@@ -434,8 +434,8 @@
         for:
           seconds: 30
       - condition: state
-        entity_id: switch.switch_master_alarm
-        state: 'off'
+        entity_id: alarm_control_panel.alarma
+        state: 'disarmed'
       - condition: template
         value_template: '{{ states.sensor.dormitorio_light_level_rpi2mpd.state |int < 15 }}'
       - condition: time
@@ -447,6 +447,37 @@
         entity_id: light.aura_habitacion
         brightness: 222
         xy_color: [0.3945,0.406]
+
+
+- alias: Encendido luces estudio
+  id: ligths_on_study
+  trigger:
+    platform: state
+    entity_id: binary_sensor.sensor_study_mov1
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.family
+        state: 'home'
+      - condition: state
+        entity_id: light.estudio
+        state: 'off'
+        for:
+          seconds: 30
+      - condition: state
+        entity_id: alarm_control_panel.alarma
+        state: 'disarmed'
+      - condition: template
+        value_template: '{{ states.sensor.sensor_study_illumination.state | int < 15 }}'
+      - condition: time
+        after: '8:30:00'
+        before: '23:00:00'
+  action:
+    - service: python_script.select_light_profile
+      data_template:
+        scene: 'Estudio'
 
 - alias: Botvac error notification
   id: botvac_error_notify
@@ -512,7 +543,7 @@
       data_template:
         title: '*Llegada a Hospital*'
         target: !secret telegram_bot_chat_id_admin
-        message: 'Carmen ha llegado al hospital *hace 5 minutos*.'
+        message: 'Carmen acaba de llegar al hospital.'
         disable_notification: true
 #        inline_keyboard:
 #          - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
@@ -555,6 +586,11 @@
       to: 'off'
       for:
         minutes: 2
+    - platform: state
+      entity_id: binary_sensor.vinoteca_online
+      to: 'off'
+      for:
+        minutes: 3
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -567,6 +603,15 @@
   trigger:
     - platform: state
       entity_id: light.tira
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: light.tira
+        state: 'on'
+      - condition: state
+        entity_id: light.tira
+        state: 'off'
   action:
     - service: python_script.sync_yeelight
       data_template:
@@ -590,14 +635,26 @@
       for:
         minutes: 30
   action:
-    - service: switch.turn_off
-      entity_id: switch.calentador
     - service: telegram_bot.send_message
       data_template:
         title: '*Calentador apagado*'
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado'
+        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado (tb la bomba de circulación) [ON:{{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}}h]'
         disable_notification: true
         inline_keyboard:
           - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
           - Encender bomba ACS:/service_call switch.turn_on switch.bomba_circ_acs, Apagar bomba ACS:/service_call switch.turn_off switch.bomba_circ_acs
+    - service: switch.turn_off
+      entity_id: switch.calentador,switch.bomba_circ_acs
+
+- alias: Notificación de cambio de IP
+  id: notif_cambio_ip
+  trigger:
+    platform: state
+    entity_id: sensor.ip_externa
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*Cambio de IP*'
+        target: !secret telegram_bot_chat_id_admin
+        message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*, la anterior era: _{{ trigger.from_state.state }}_'

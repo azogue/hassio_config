@@ -1,12 +1,11 @@
-Interior:
+Ambiente:
 #  - sensor.temperatura_interior
   - sensor.temperatura_stats_mean
 #  - sensor.humedad_interior
   - sensor.humedad_stats_mean
-
-Exterior:
   - sensor.temperatura_exterior
   - sensor.humedad_exterior
+  - weblink.grafana
 
 Salón:
   name: Luces salón
@@ -22,11 +21,8 @@ Salón:
     - light.pie_sofa
     - light.cuenco
     - light.lamparita
-    - light.go
     - light.tira
-#    - light.tira_tv
     - light.yeelight_strip_7811dca21ecf
-#    - switch.tv_power
 
 control_salon:
   name: Control Salón
@@ -35,18 +31,20 @@ control_salon:
     - input_number.light_main_slider_salon
     - input_number.light_temp_slider_salon
     - input_select.salon_light_scene
-    - switch.tv_power
     - cover.sonoff_cover_ventanal
     - cover.sonoff_cover_puerta_terraza
     - script.set_mid_position_cover_1
     - script.set_mid_position_cover_2
+    - switch.tv_power
+    - switch.camara
     - light.terraza
 
-#Estudio:
-##  entities:
-##    control: hidden
-#    - light.flexo
-##    - switch.estudio_light_relay
+control_estudio:
+  name: Luces estudio
+#  control: hidden
+  entities:
+    - light.flexo
+    - light.go
 
 control_dormitorio:
   name: Luces dormitorio
@@ -85,21 +83,22 @@ Despertador:
     - input_boolean.manual_trigger_lacafetera
 
 Enchufes:
+  name: Más enchufes
   control: hidden
   entities:
     - vacuum.robot_aspirador
     - switch.bomba_circ_acs
     - switch.calentador
-    - switch.camara
-    - switch.tv_power
+#    - switch.tv_power
+#    - switch.camara
     - switch.altavoz
     - switch.office_floor
+    - switch.vinoteca
 
     - switch.cocina
     - switch.new_switch_2
     - switch.new_switch_3
     - switch.sonoff_simple_1
-    - switch.test_switch
     - switch.test_switch_2
 
 #Terraza:
@@ -118,15 +117,16 @@ elec_power_complete:
     - sensor.sonoff_pow_1
     - binary_sensor.electricity_high_cost_interval
     - sensor.pvpc
+    - sensor.elecprice_range
     - sensor.esp32ener_consumption_day
 
 elec_power_simple:
   name: Consumo eléctrico
   entities:
     - sensor.esp32ener_power
-    - binary_sensor.electricity_high_cost_interval
+    - sensor.elecprice_range
     - sensor.esp32ener_consumption_day
-    - weblink.grafana
+    - weblink.consumo_electrico
 
 kodi_mp:
   - media_player.kodi_tv
@@ -139,6 +139,7 @@ Media select:
     - script.recent_episodes
     - script.recent_movies
     - script.pvr_channels
+    - script.pvr_recordings
     - input_select.kodi_results
     - input_text.q_youtube
     - input_select.youtube_videos
@@ -168,6 +169,25 @@ Host Dormitorio:
   - sensor.ram_available_rpi2mpd
   - sensor.disk_used__rpi2mpd
   - sensor.last_boot_rpi2mpd
+
+QNAP NAS:
+  control: hidden
+  entities:
+    - sensor.nashome_status
+    - sensor.nashome_cpu_usage
+    - sensor.nashome_memory_usage
+    - sensor.nashome_system_temperature
+#    - sensor.nashome_temperature_drive_02
+#    - sensor.nashome_temperature_drive_03
+#    - sensor.nashome_temperature_drive_04
+#    - sensor.nashome_smart_status_drive_02
+#    - sensor.nashome_smart_status_drive_03
+#    - sensor.nashome_smart_status_drive_04
+    - sensor.nashome_network_down_eth0
+    - sensor.nashome_network_up_eth0
+#    - sensor.nashome_network_down_eth1
+#    - sensor.nashome_network_up_eth1
+    - sensor.nashome_volume_used_datavol1
 
 Resto de hosts:
 #  - sensor.enerpi_cpu_temperature
@@ -201,12 +221,12 @@ esp_livingroom:
 #    - sensor.sensor_livingroom__snum
 
 esp_office:
-  name: Estudio
+  name: Office
   control: hidden
   entities:
     - sensor.sensor_office_temperature
     - sensor.sensor_office_humidity
-#      - sensor.sensor_office_pressure
+    - sensor.sensor_office_pressure
     - sensor.sensor_office_illumination
     - sensor.sensor_office_adc1
     - sensor.sensor_office_adc2
@@ -215,6 +235,15 @@ esp_office:
 #    light.sensor_office__switch_led
 #    - binary_sensor.sensor_office_online
 #    - sensor.sensor_office__snum
+
+esp_estudio:
+  name: Estudio
+  control: hidden
+  entities:
+    - sensor.sensor_study_temperature
+    - sensor.sensor_study_humidity
+    - sensor.sensor_study_pressure
+    - sensor.sensor_study_illumination
 
 esp_kitchen:
   name: Cocina
@@ -261,6 +290,12 @@ Termo:
     - sensor.sensor_acs_probe_5
     - sensor.sensor_acs_probe_6
 
+Vinoteca:
+  - sensor.esp1_temperature
+  - sensor.esp1_humidity
+  - binary_sensor.vinoteca_online
+  - switch.vinoteca
+
 Local:
   name: Cuadro
   entities:
@@ -268,29 +303,45 @@ Local:
     - sensor.local_htu21d_humidity
     - sensor.local_light_level
 
-Cámaras:
-  - camera.sricam_360
+Alarma:
+  - alarm_control_panel.alarma
+  - sensor.current_alarm_level
+  - weblink.motioneye
 
 Movimiento:
-  - binary_sensor.local_pir
   - binary_sensor.motioncam_salon
   - binary_sensor.sensor_livingroom_mov1
   - binary_sensor.sensor_kitchen_mov1
+  - binary_sensor.sensor_study_mov1
   - binary_sensor.pir_dormitorio_rpi2mpd
+  - binary_sensor.motioncam_office
   - binary_sensor.sensor_office_mov1
+  - binary_sensor.motioncam_terraza
   - binary_sensor.sensor_terraza_mov1
+  - binary_sensor.local_pir
+
+Cámaras:
+  name: Videovigilancia
+  entities:
+    - camera.sricam_360
+    - camera.iegeek_hd
+    - camera.kmoon_ipcam100
+    - switch.camara
+    - switch.motion_detection_sricam_360
+    - switch.motion_detection_iegeek_hd
+    - switch.motion_detection_kmoon_ipcam100
 
 Conectivity:
   - binary_sensor.services_notok
   - sensor.ip_externa
   - binary_sensor.router_on
   - binary_sensor.dormitorio_online
-#  - binary_sensor.estudio_online
   - binary_sensor.sensor_livingroom_online
   - binary_sensor.sensor_office_online
   - binary_sensor.sensor_kitchen_online
   - binary_sensor.sensor_terraza_online
   - binary_sensor.sensor_galeria_online
+  - binary_sensor.sensor_study_online
   - binary_sensor.esp32_ener_online
 
   - sensor.sensor_livingroom__snum
@@ -298,6 +349,7 @@ Conectivity:
   - sensor.sensor_kitchen__snum
   - sensor.sensor_terraza__snum
   - sensor.sensor_galeria__snum
+  - sensor.sensor_study__snum
 
   - binary_sensor.database_ok
   - binary_sensor.internet_online
@@ -381,28 +433,40 @@ Dispositivos:
     #  - device_tracker.ipad_wifi
     #  - sensor.ipad_de_eugenio_battery_level
     #  - sensor.ipad_de_eugenio_battery_state
+    - device_tracker.konnected_alarm
     - device_tracker.nas_qnap
     - device_tracker.nas_syno
     - device_tracker.hue_bridge
     - device_tracker.yeelight_strip
+    - device_tracker.tv_toshiba
     - device_tracker.home_cinema
-    - device_tracker.rpi3_enerpi
-    - device_tracker.rpi3_osmc
+    - device_tracker.rpi3b_libreelec
     - device_tracker.rpi2_bedroom
     - device_tracker.b827ebcaec07
     - device_tracker.b827ebee3f3b
     - device_tracker.xiaomi_router
     - device_tracker.xiaomi_vacuum
-    - device_tracker.jo01
+    - device_tracker.airport_extreme
     - device_tracker.airport_express_a
+    - device_tracker.airport_express_b
+    - device_tracker.printer_brother_hl3140cw
     - device_tracker.qnap_ubuntu
     - device_tracker.router_movistar
+    - device_tracker.switch_salon
+    - device_tracker.wifi_sta_salon
     - device_tracker.deco_movistar
     - device_tracker.camera_sricam360
+    - device_tracker.camera_kmoon
+    - device_tracker.camera_iegeek
+    - device_tracker.rpi3_enerpi
+    - device_tracker.rpi3_osmc
+    - device_tracker.jo01
 
 Dev boards:
   control: hidden
   entities:
+    # wrover_kit
+    - device_tracker.wrover_kit
     # new wroom32-1 - ener: (WROOM32 (Energy meter))
     - device_tracker.30aea41607a8
     # Wroom32batt Salón
@@ -415,6 +479,9 @@ Dev boards:
     - device_tracker.240ac4057954
     # Sparkfun Terraza
     - device_tracker.240ac48124a4
+
+    # Wemos 8266 Batt (vinoteca)
+    - device_tracker.6001944ed7c4
 
     # Wemos OLED (estudio - dev)
     - device_tracker.30aea4132c40
@@ -455,6 +522,9 @@ Baterías:
 Smarty:
   - device_tracker.30aea443c180
 
+Vecinos cercanos:
+  - device_tracker.iphone6s_de_carlos_ortega
+
 Pi Hole:
   - sensor.pihole_ads_blocked_today
   - sensor.pihole_ads_percentage_blocked_today
@@ -463,27 +533,15 @@ Pi Hole:
   - sensor.pihole_dns_unique_domains
 #  - sensor.pihole_domains_blocked
 
-QNAP NAS:
-  control: hidden
-  entities:
-    - sensor.nashome_status
-    - sensor.nashome_cpu_usage
-    - sensor.nashome_memory_usage
-    - sensor.nashome_system_temperature
-#    - sensor.nashome_temperature_drive_02
-#    - sensor.nashome_temperature_drive_03
-#    - sensor.nashome_temperature_drive_04
-#    - sensor.nashome_smart_status_drive_02
-#    - sensor.nashome_smart_status_drive_03
-#    - sensor.nashome_smart_status_drive_04
-    - sensor.nashome_network_down_eth0
-    - sensor.nashome_network_up_eth0
-#    - sensor.nashome_network_down_eth1
-#    - sensor.nashome_network_up_eth1
-    - sensor.nashome_volume_used_datavol1
+weather_cams:
+  - weather.local_weather
+  - camera.weather_svg
+  - camera.webcam_playa_1
+  - camera.webcam_playa_2
+  - camera.webcam_playa_3
 
-weather_dark_sky_now:
-  name: Ahora
+weather_dark_sky_today:
+  name: Hoy
   entities:
     - sensor.dark_sky_summary
     - sensor.dark_sky_temperature
@@ -492,10 +550,6 @@ weather_dark_sky_now:
 
     - sensor.dark_sky_humidity
     - sensor.dark_sky_pressure
-
-weather_dark_sky_today:
-  name: Hoy
-  entities:
     - sensor.dark_sky_hourly_summary
     - sensor.dark_sky_daily_high_apparent_temperature
     - sensor.dark_sky_daily_high_temperature
@@ -504,7 +558,6 @@ weather_dark_sky_today:
 weather_dark_sky_tomorrow:
   name: Mañana
   entities:
-    - camera.weather_svg
     - sensor.dark_sky_daily_summary
 
     - sensor.dark_sky_temperature_1
@@ -585,6 +638,7 @@ Automatizaciones:
     - automation.carmen_llega_al_hospital
     - automation.update_notifications
     - automation.start_homeassistant
+    - automation.notificacion_de_cambio_de_ip
     - automation.aviso_de_sensor_mqtt_offline
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -597,26 +651,20 @@ Status:
   view: yes
   entities:
     - group.elec_power_simple
-    - group.interior
-    - group.exterior
+    - group.ambiente
 #    - group.salon
     - group.esp_livingroom
-    - camera.sricam_360
 #    - group.control_dormitorio
     - group.sensors_dormitorio
-#    - group.estudio
+    - group.esp_estudio
     - group.esp_kitchen
     - group.esp_office
 #    - group.terraza
     - group.esp_terraza
     - group.esp_galeria
+    - group.vinoteca
     - group.termo
     - group.local
-    # - group.salon
-    # - group.salon_simple
-    # - group.cocina
-    # - group.cocina_simple
-#    - group.camaras
 
 Control:
   name: Home Control
@@ -626,21 +674,9 @@ Control:
     - group.control_salon
     - group.salon
     - group.control_dormitorio
+    - group.control_estudio
     - group.terraza
-    - group.estudio
-    - vacuum.robot_aspirador
-    - group.all_lights
     - group.enchufes
-    # - group.master_luces_del_salon
-    # - group.luces_salon
-    # - group.luces_dormitorio
-    # - group.luces_estudio
-    # - group.enchufes
-    # - media_player.kodi_tv
-    # - group.kodi
-    # - media_player.dormitorio_mopidy
-    # - group.xiaomi_vacuum_robot
-#    - group.despertador
 
 kodi_control:
   name: Kodi
@@ -676,13 +712,8 @@ Weather:
   icon: mdi:weather-partlycloudy
   view: yes
   entities:
-    - weather.local_weather
-    - camera.weather_svg
-    - camera.webcam_playa_1
-    - camera.webcam_playa_2
-    - camera.webcam_playa_3
+    - group.weather_cams
     - group.aislamiento
-    - group.weather_dark_sky_now
     - group.weather_dark_sky_today
     - group.weather_dark_sky_tomorrow
     - group.weather_dark_sky_aftertomorrow
@@ -707,16 +738,17 @@ Home Network:
   entities:
     - group.links
     - group.family
-    - group.dispositivos
     - group.localhost
+    - group.qnap_nas
     - group.host_dormitorio
     - group.resto_de_hosts
+    - group.dispositivos
+    - group.baterias
     - group.dev_boards
     - group.wifi_appliances
-    - group.baterias
     - group.smarty
+    - group.vecinos_cercanos
     - group.pi_hole
-    - group.qnap_nas
 
     #- group.red_e_internet
 

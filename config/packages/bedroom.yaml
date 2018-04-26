@@ -127,7 +127,7 @@ sensor:
     name: hass_cpu_temperature_rpi2mpd
     unit_of_measurement: '°C'
     force_update: true
-    expire_after: 600
+    expire_after: 3600
     qos: 2
   - platform: mqtt
     state_topic: ha_bedroom/sensor/cpu_used/state
@@ -162,4 +162,4 @@ media_player:
     host: !secret mpd_host
     port: !secret mpd_port
     name: Dormitorio (Mopidy)
-  #  scan_interval: 60
+    scan_interval: 60

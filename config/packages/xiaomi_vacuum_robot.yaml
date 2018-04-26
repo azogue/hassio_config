@@ -10,3 +10,4 @@ vacuum:
   name: robot_aspirador
   host: !secret xiaomi_vacuum_robot_ip
   token: !secret xiaomi_vacuum_robot_token
+  scan_interval: 60

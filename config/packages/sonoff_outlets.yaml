@@ -31,7 +31,7 @@ homeassistant:
       friendly_name: Puerta terraza
       homebridge_cover_type: rollershutter
     sensor.sonoff_pow_1:
-      icon: mdi:flash
+      icon: mdi:radiator
       friendly_name: Consumo en termo
       homebridge_hidden: true
 
@@ -91,9 +91,10 @@ cover:
         payload_stop_open: "4off"
         payload_close: "3on"
         payload_stop_close: "3off"
-        delay_full_open: 28.2
+        delay_full_open: 27.0
         qos: 1
         retain: true
+        optimistic: false
 
       sonoff_cover_puerta_terraza:
         friendly_name: Puerta terraza
@@ -105,9 +106,10 @@ cover:
         payload_stop_open: "2off"
         payload_close: "1on"
         payload_stop_close: "1off"
-        delay_full_open: 28.2
+        delay_full_open: 27.0
         qos: 1
         retain: true
+        optimistic: false
 
 # Sonoff POW voltage and power sensors
 sensor:

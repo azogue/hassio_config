@@ -12,7 +12,7 @@ homeassistant:
       homebridge_switch_type: outlet
       assumed_state: true
     switch.camara:
-      icon: mdi:video
+      icon: mdi:video-off
       friendly_name: Enchufe de videocámara
       homebridge_name: Cámara Video
       homebridge_switch_type: outlet
@@ -23,9 +23,9 @@ homeassistant:
       homebridge_name: Altavoz
       homebridge_switch_type: outlet
       assumed_state: true
-    switch.test_switch:
-      icon: mdi:home-automation
-      friendly_name: Enchufe test
+    switch.vinoteca:
+      icon: mdi:fridge-filled
+      friendly_name: Power Vinoteca
       homebridge_hidden: true
       assumed_state: true
     switch.test_switch_2:
@@ -59,16 +59,16 @@ switch:
 #        code_on: 4527411
 #        code_off: 4527420
 #        signal_repetitions: 20
-      test_switch:
+      vinoteca:
         pulselength: 185
         code_on: 4527555
         code_off: 4527564
         signal_repetitions: 80
-#      camara:
-#        pulselength: 185
-#        code_on: 4527875
-#        code_off: 4527884
-#        signal_repetitions: 40
+      camara:
+        pulselength: 185
+        code_on: 4527875
+        code_off: 4527884
+        signal_repetitions: 60
       office_floor:
         pulselength: 185
         code_on: 4529411

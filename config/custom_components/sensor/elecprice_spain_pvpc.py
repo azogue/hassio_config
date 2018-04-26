@@ -16,6 +16,7 @@ from homeassistant.const import CONF_NAME, CONF_TIMEOUT
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
 from homeassistant.helpers.event import track_time_change, track_point_in_time
 from homeassistant.helpers.restore_state import async_get_last_state
+from homeassistant.util import Throttle
 import homeassistant.util.dt as dt_util
 
 # TODO request async
@@ -78,6 +79,8 @@ def scrap_pvpc_current_prices(rate=RATES[0], timeout=10):
             s.find_all('input', attrs={"type": "date"})[0].attrs['max'],
             '%Y-%m-%d').date()
         return date, prices
+    # else:
+        # TODO scrap main source in 'https://www.esios.ree.es/es/pvpc'
     _LOGGER.error("Parsing error: '%s'", str(prices))
     return None
 
@@ -149,6 +152,7 @@ class ElecPriceSensor(Entity):
         """Attributes."""
         return self._attributes
 
+    @Throttle(timedelta(seconds=1800))
     def update(self, *args):
         """Update the sensor."""
         # _LOGGER.warning('In update with: {}'.format(args))

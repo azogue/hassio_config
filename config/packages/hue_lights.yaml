@@ -74,18 +74,18 @@ homeassistant:
 #      hidden: True
       homebridge_hidden: True
 
-light:
-  - platform: hue
-    host: 192.168.1.45
-    allow_unreachable: true
-    homebridge_hidden: true
-    scan_interval: 12
+#light:
+#  - platform: hue
+#    host: 192.168.1.45
+#    allow_unreachable: true
+#    homebridge_hidden: true
+#    scan_interval: 12
 
-#hue:
-#  bridges:
-#    - host: 192.168.1.45
-#      allow_unreachable: true
-#
+hue:
+  bridges:
+    - host: 192.168.1.45
+      allow_unreachable: true
+
 ## sensor.hue_dimmer_switch
 #sensor:
 #- platform: hue
@@ -117,38 +117,14 @@ input_select:
      - Energía
      - Relax
      - Lectura
+     - Estudio
+#     - Comida
+#     - Cena
+     - Atardecer
+     - Aurora boreal
+     - Flor primaveral
+     - Ocaso tropical
+     - TV Night
      - 'OFF'
     initial: Energía
     icon: mdi:lightbulb
-
-#group:
-#  Master luces del salón:
-#    - input_number.light_main_slider_salon
-#    - input_number.light_temp_slider_salon
-#    - input_select.salon_light_scene
-#
-#  Luces Estudio:
-##    control: hidden
-#    entities:
-#      - switch.estudio_light_relay
-#      - light.flexo
-#
-#  Luces Salón:
-#    - light.bola_grande
-#    - light.central
-#    - light.pie_tv
-#    - light.pie_sofa
-#    - light.cuenco
-#    - light.lamparita
-#    - light.go
-#    - light.tira
-#
-#  Luces Dormitorio:
-#    - light.aura_habitacion
-#    - light.hue_habitacion
-#
-#  Luces Terraza:
-#    - light.terraza
-#  Hue sensors:
-#    - sensor.hue_dimmer_switch
-#    - sensor.iphone

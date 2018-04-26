@@ -8,12 +8,13 @@ good_night:
 #      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.cocina
       entity_id: switch.kodi_tv_salon,switch.tv_power,switch.bomba_circ_acs,switch.calentador
 
-    - alias: Bajada de persianas
-      service: cover.close_cover
-      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
-#    - alias: Encendido de CAM Salón
-#      service: switch.turn_on
-#      entity_id: switch.camara
+#    - alias: Bajada de persianas
+#      service: cover.close_cover
+#      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
+
+    - alias: Encendido de CAM Salón
+      service: switch.turn_on
+      entity_id: switch.camara
     - alias: Notificación de buenas noches
       service: telegram_bot.send_message
       data_template:
@@ -46,52 +47,54 @@ good_morning:
         disable_notification: true
 
 play_kodi_pvr:
-#  id: play_kodi_pvr:
+#  id: play_kodi_pvr
   alias: Enciende la caja tonta
   sequence:
-    - alias: TV on
-      service: media_player.turn_on
-      data:
-        entity_id: media_player.kodi
-
-    - alias: Play TV channel
-      service: media_player.play_media
-      data_template:
-        entity_id: media_player.kodi
-        #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
-        # [('La 1 HD', 32), ('La 2', 10), ('Antena 3 HD', 33), ('Cuatro HD', 42), ('Telecinco HD', 44), ('La Sexta HD', 18),
-        #  ('#0 HD', 55), ('TV Mediterráneo ', 29), ('TV3 HD ', 52), ('FDF', 17), ('Neox', 6), ('Atreseries HD', 8), ('Energy', 41),
-        #  ('Ten', 4), ('Paramount Channel', 7), ('DEPORTES HD', 34), ('Teledeporte', 31), ('Teledeporte HD', 57), ('Discovery Max', 58),
-        #  ('DKISS ', 49), ('Divinity', 19), ('Nova', 43), ('MEGA', 39), ('Disney Channel HD', 16), ('Boing', 9), ('Clan TVE', 2),
-        #  ('24 Horas', 20), ('Xarxa Televisions ', 5), ('Movistar+ HD', 1)]
-        media_content_type: "CHANNEL"
-        media_content_id: >
-          {% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}
-            18
-          {% elif (now().hour < 16) %}
-            33
-          {% elif (now().hour < 20) %}
-            20
-          {% elif (now().hour == 20) and (now().minute < 50) %}
-            18
-          {% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}
-            33
-          {% else %}
-            55
-          {% endif %}
-
-    - alias: Notificación de selección de canal
-      service: telegram_bot.send_message
-      data_template:
-        title: '*TV PVR ON*'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        disable_notification: true
-        message: >
-          Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}#0 HD{% endif %}'.
-        inline_keyboard:
-          - OFF:/service_call media_player.turn_off media_player.kodi, ON:/service_call media_player.turn_on media_player.kodi, ‖:/service_call media_player.media_play_pause media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+      service: python_script.start_kodi_play_tv
+#    - alias: TV on
+#      service: media_player.turn_on
+#      data:
+#        entity_id: media_player.kodi
+#
+#    - alias: Play TV channel
+#      service: media_player.play_media
+#      data_template:
+#        entity_id: media_player.kodi
+#        #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
+#        # [('La 1 HD', 32), ('La 2', 10), ('Antena 3 HD', 33), ('Cuatro HD', 42), ('Telecinco HD', 44), ('La Sexta HD', 18),
+#        #  ('#0 HD', 55), ('TV Mediterráneo ', 29), ('TV3 HD ', 52), ('FDF', 17), ('Neox', 6), ('Atreseries HD', 8), ('Energy', 41),
+#        #  ('Ten', 4), ('Paramount Channel', 7), ('DEPORTES HD', 34), ('Teledeporte', 31), ('Teledeporte HD', 57), ('Discovery Max', 58),
+#        #  ('DKISS ', 49), ('Divinity', 19), ('Nova', 43), ('MEGA', 39), ('Disney Channel HD', 16), ('Boing', 9), ('Clan TVE', 2),
+#        #  ('24 Horas', 20), ('Xarxa Televisions ', 5), ('Movistar+ HD', 1)]
+#        media_content_type: "CHANNEL"
+#        media_content_id: >
+#          {% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}
+#            18
+#          {% elif (now().hour < 16) %}
+#            33
+#          {% elif (now().hour < 20) %}
+#            20
+#          {% elif (now().hour == 20) and (now().minute < 50) %}
+#            18
+#          {% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}
+#            33
+#          {% else %}
+#            55
+#          {% endif %}
+#
+#    - alias: Notificación de selección de canal
+#      service: telegram_bot.send_message
+#      data_template:
+#        title: '*TV PVR ON*'
+#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+#        disable_notification: true
+#        message: >
+#          Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}#0 HD{% endif %}'.
+#        inline_keyboard:
+#          - OFF:/service_call media_player.turn_off media_player.kodi, ON:/service_call media_player.turn_on media_player.kodi, ‖:/service_call media_player.media_play_pause media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
 
 restart_kodi_osmc:
+#  id: restart_kodi
   alias: Restart KODI
   sequence:
     - service: notify.ios_iphone
@@ -110,6 +113,7 @@ restart_kodi_osmc:
     - service: shell_command.cmd_kill_kodi
 
 stop_kodi:
+#  id: stop_kodi
   alias: Stop playback in Kodi
   sequence:
       service: media_player.media_stop
@@ -117,6 +121,7 @@ stop_kodi:
         entity_id: media_player.kodi
 
 quit_kodi:
+#  id: quit_kodi
   alias: Quit Kodi
   sequence:
     service: media_player.kodi_call_method
@@ -160,6 +165,19 @@ recent_episodes:
           - lastplayed
           - dateadded
           - firstaired
+
+pvr_recordings:
+  alias: Últimas grabaciones de TV
+  sequence:
+    - alias: Call Kodi API
+      service: media_player.kodi_call_method
+      data:
+        entity_id: media_player.kodi
+        method: PVR.GetRecordings
+        properties:
+          - title
+          - starttime
+          - file
 
 pvr_channels:
   alias: Canales de TV

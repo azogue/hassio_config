@@ -2,6 +2,8 @@ entities:
 # WAN access
   - name: Grafana
     url: !secret grafana_url
+  - name: Consumo eléctrico
+    url: !secret grafana_elec_url
   - name: NAS QNAP
     url: !secret weblink_nas_qnap_url
   - name: NAS Synology

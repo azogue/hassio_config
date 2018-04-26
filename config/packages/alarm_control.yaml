@@ -1,0 +1,36 @@
+homeassistant:
+  customize:
+    alarm_control_panel.alarma:
+      friendly_name: Alarma del hogar
+      homebridge_name: Alarma
+      icon: mdi:security-home
+
+
+#{{ states.alarm_control_panel.alarma.state }}
+#
+#{{ states.alarm_control_panel.alarma.attributes.changed_by }}
+#{{ states.alarm_control_panel.alarma.attributes }}
+
+###############################################################################
+# ALARM PANEL
+###############################################################################
+alarm_control_panel:
+  - platform: manual
+    name: Alarma
+#    code: !secret ha_alarmcode
+#    code_template: '{{ states.}}'
+    pending_time: 30
+    delay_time: 20
+    trigger_time: 20
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      pending_time: 0
+      delay_time: 0
+      trigger_time: 3
+    armed_night:
+      pending_time: 0
+      delay_time: 10
+      trigger_time: 1
+
+#    armed_custom_bypass/armed_home/armed_away/armed_night/disarmed/triggered:

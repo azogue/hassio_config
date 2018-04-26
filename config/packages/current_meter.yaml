@@ -19,6 +19,9 @@ homeassistant:
     sensor.pvpc:
       homebridge_hidden: true
 #      icon: mdi:cash
+    sensor.elecprice_range:
+      homebridge_hidden: true
+      icon: mdi:currency-eur
     sensor.esp32ener_consumption_day:
       icon: mdi:flash-outline
       homebridge_hidden: true
@@ -40,16 +43,7 @@ homeassistant:
       homebridge_hidden: true
 
     binary_sensor.esp32_ener_online:
-      homebridge_hidden: true
-#    sensor.enerpi_ldr:
-#      icon: mdi:lightbulb
-#      friendly_name: Iluminación en cuadro
-#      homebridge_hidden: true
-#      hidden: true
-
-    input_boolean.switch_control_enerpi_max_power:
-      friendly_name: enerPI - control de potencia
-      icon: mdi:toggle-switch
+      friendly_name: Current Meter Online
       homebridge_hidden: true
     input_number.enerpi_max_power:
       friendly_name: Max (kW)
@@ -128,12 +122,21 @@ sensor:
 #    force_update: true
 #    expire_after: 60
 
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp32_ener_stream
+#    value_template: "{{ value_json.total | float | round }}"
+#    name: esp32ener_power
+#    unit_of_measurement: "W"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: 60
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
-    value_template: "{{ value_json.total | float | round }}"
+    value_template: "{{ value_json.rms[2] | float | round }}"
+#    name: esp32ener_ch3
     name: esp32ener_power
     unit_of_measurement: "W"
-    json_attributes: 'Energy_instant_Wh,Energy_hour_Wh,Energy_day_kWh,ts,delta_ms,counter'
+    json_attributes: 'Energy_instant_Wh,Energy_hour_Wh,Energy_day_kWh,ts,delta_ms,counter,Peak_CH3,Low_CH3'
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: 60
@@ -155,15 +158,6 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: 60
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp32_ener_stream
-    value_template: "{{ value_json.rms[2] | float | round }}"
-    name: esp32ener_ch3
-    unit_of_measurement: "W"
-    json_attributes: 'Peak_CH3,Low_CH3,ts'
-    qos: !secret mqtt_default_qos
-    force_update: true
-    expire_after: 60
 
   - platform: template
     sensors:
@@ -171,6 +165,9 @@ sensor:
         friendly_name: "Consumo hoy"
         unit_of_measurement: 'kWh'
         value_template: "{{ states.sensor.esp32ener_power.attributes.Energy_day_kWh | float | round(2) }}"
+      elecprice_range:
+        friendly_name: "Precio luz"
+        value_template: "{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}"
 
   - platform: elecprice_spain_pvpc
     electric_rate: discriminacion

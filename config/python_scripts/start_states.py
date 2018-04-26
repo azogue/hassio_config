@@ -6,17 +6,6 @@ This unifies various automations and HA scripts in a simpler one.
 
 """
 
-# SWITCH_EXPERT_MODE = 'input_boolean.show_expert_mode'
-
-# # 'expert mode' for filtering groups and visibility control for ESP modules
-# expert_mode = data.get(
-#     'expert_mode_state',
-#     hass.states.get('input_boolean.show_expert_mode').state) == 'on'
-# last_state = hass.states.get(SWITCH_EXPERT_MODE)
-# # expert_mode_on = data.get('expert_mode_state', last_state.state)
-# hass.states.set(SWITCH_EXPERT_MODE, expert_mode,
-#                 attributes=last_state.attributes)
-
 # Anyone at home?
 family_home = hass.states.get('group.family').state == 'home'
 
@@ -28,12 +17,17 @@ if family_home:
         # {"entity_id": "switch.calentador,switch.bomba_circ_acs,switch.tv_power,switch.camara"})
 
 # Create motioneye binary_sensors
-BIN_SENSOR_VIDEO_MOV_1 = 'binary_sensor.motioncam_salon'
-hass.states.set(BIN_SENSOR_VIDEO_MOV_1, 'off',
-                attributes={
-                    "friendly_name": "Vídeo-Mov. en Salón",
-                    "homebridge_hidden": "true",
-                    "device_class": "motion"})
+cameras = {
+    'binary_sensor.motioncam_salon': "Vídeo-Mov. en Salón",
+    'binary_sensor.motioncam_terraza': "Vídeo-Mov. en Terraza",
+    'binary_sensor.motioncam_office': "Vídeo-Mov. en Estudio",
+}
+for bs, fn in cameras.items():
+    hass.states.set(bs, 'off',
+                    attributes={
+                        "friendly_name": fn,
+                        "homebridge_hidden": "true",
+                        "device_class": "motion"})
 
 # Sync HA dev trackers with manual HomeKit input_booleans
 dev_tracking = {'group.eugenio': 'input_boolean.eu_presence',

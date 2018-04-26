@@ -47,6 +47,8 @@ weblink.slave_hass:
 weblink.slave_hass_mpd:
   friendly_name: HA Dormitorio
   icon: mdi:home-assistant
+weblink.consumo_electrico:
+  icon: mdi:chart-areaspline
 weblink.grafana:
   icon: mdi:chart-areaspline
 weblink.contabilidad:

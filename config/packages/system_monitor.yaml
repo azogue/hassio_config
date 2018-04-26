@@ -83,6 +83,9 @@ homeassistant:
     binary_sensor.workday_sensor:
       homebridge_hidden: True
 
+    sensor.ip_externa:
+      homebridge_hidden: True
+      icon: mdi:map-marker
     sensor.iphone_battery_state:
       friendly_name: iPhone X (Batt state)
       homebridge_hidden: True
@@ -101,6 +104,9 @@ homeassistant:
     sensor.ipad_de_eugenio_battery_level:
       friendly_name: iPad (Battery)
       homebridge_hidden: True
+    sensor.season:
+      homebridge_hidden: True
+      icon: mdi:tree
 
   # Customize entities matching a pattern
   customize_glob:
@@ -175,11 +181,17 @@ binary_sensor:
   #  excludes: List of workday excludes (defaults to sat, sun, holiday).
 
 sensor:
+- platform: rest
+  resource: http://ip.jsontest.com
+  name: IP Externa
+  value_template: '{{ value_json.ip }}'
+  scan_interval: 60
+
 - platform: season
 
 - platform: htu21d
   name: local_htu21d
-  scan_interval: 30
+  scan_interval: 45
 
 - platform: darksky
   api_key: !secret darksky_api_key
@@ -195,8 +207,8 @@ sensor:
     - temperature_max
     - temperature_min
     - apparent_temperature
-    - apparent_temperature_max
-    - dew_point
+#    - apparent_temperature_max
+#    - dew_point
     - humidity
     - pressure
   update_interval: "0:20:00"
@@ -237,32 +249,14 @@ sensor:
 #    - domains_being_blocked
   scan_interval: 180
 
-- platform: speedtest
-  minute:
-    - 35
-  monitored_conditions:
-    - ping
-    - download
-    - upload
+#- platform: speedtest
+#  minute:
+#    - 35
+#  monitored_conditions:
+#    - ping
+#    - download
+#    - upload
 
-camera:
-  - platform: generic
-    still_image_url: !secret sricam_motioneye_local_snapshot
-    name: SriCAM 360
-
-#  - platform: ffmpeg
-#    input: !secret sricam_full_rstp
-#    name: SriCAM 360
-#    port: 5000
-#    extra_arguments:
-
-#  - platform: onvif
-#    host: !secret sricam_lan_ip
-#    name: SriCAM 360
-#    username: !secret sricam_user
-#    password: !secret sricam_pwd
-##    port: 5000
-##    extra_arguments:
 
 shell_command:
   # Init SSH keys
@@ -270,9 +264,10 @@ shell_command:
 
 device_tracker:
 - platform: nmap_tracker
-  hosts: 192.168.1.1-60
-  #exclude:
-  #  - !secret local_ip
+  hosts: 192.168.1.1-100
+  exclude:
+    - !secret local_ip
+    - '127.0.0.1'
   home_interval: 30
 # # If new discovered devices are tracked by default (default: yes)
 #   track_new_devices: no
@@ -281,10 +276,9 @@ device_tracker:
 #   # Seconds to wait till marking someone as not home after not being seen
 #   # (default: 180)
   consider_home: 300
+  track_new_devices: yes
 
-#- platform: bluetooth_tracker
-#  home_interval: 30
-#  track_new_devices: yes
+- platform: bluetooth_tracker
 
 - platform: owntracks
   max_gps_accuracy: 200
