@@ -188,13 +188,16 @@ class ElecPriceSensor(Entity):
                 self._attributes[ATTR_TOMORROW_PRICES] = self._tomorrow_prices
             elif ATTR_TOMORROW_PRICES in self._attributes:
                 self._attributes.pop(ATTR_TOMORROW_PRICES)
+        elif self._today_prices is not None:
+            now = dt_util.now()
+            self._state = self._today_prices[now.hour]
         else:
             self._state = None
             _LOGGER.warning("Trying to update later, after %d seconds",
                             self._timeout)
             track_point_in_time(
                 self.hass, self.update,
-                dt_util.now() + timedelta(seconds=self._timeout))
+                dt_util.now() + timedelta(seconds=3 * self._timeout))
 
         self.schedule_update_ha_state(False)
 

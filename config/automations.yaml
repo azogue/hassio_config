@@ -521,7 +521,6 @@
         title: '*Salida del Hospital*'
         target: !secret telegram_bot_chat_id_admin
         message: 'Carmen ha salido del hospital *hace 5 minutos*, al menos.'
-#        disable_notification: true
 
 - alias: Carmen llega al hospital
   id: dev_tracker_carmen_in_hospital
@@ -545,8 +544,6 @@
         target: !secret telegram_bot_chat_id_admin
         message: 'Carmen acaba de llegar al hospital.'
         disable_notification: true
-#        inline_keyboard:
-#          - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
 
 - alias: Aviso de sensor MQTT offline
   id: mqtt_sensor_go_offline_notify
@@ -624,7 +621,7 @@
     entity_id: sensor.esp32ener_ch2
     # At least one of the following required
 #    above: 17
-    below: 200
+    below: 300
     # If given, will trigger when condition has been for X time.
     for:
       minutes: 2
@@ -639,7 +636,7 @@
       data_template:
         title: '*Calentador apagado*'
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado (tb la bomba de circulación) [ON:{{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}}h]'
+        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado (tb la bomba de circulación) [ON: {{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}}h]'
         disable_notification: true
         inline_keyboard:
           - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
@@ -658,3 +655,13 @@
         title: '*Cambio de IP*'
         target: !secret telegram_bot_chat_id_admin
         message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*, la anterior era: _{{ trigger.from_state.state }}_'
+
+- alias: Vacuum select rooms to clean
+  id: select_rooms_to_clean
+  trigger:
+    platform: state
+    entity_id: input_select.vacuum_clean_combination
+  action:
+    - service: python_script.select_vacuum_cleaning
+      data_template:
+        room: '{{ trigger.to_state.state }}'

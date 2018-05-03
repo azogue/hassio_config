@@ -264,7 +264,7 @@ shell_command:
 
 device_tracker:
 - platform: nmap_tracker
-  hosts: 192.168.1.1-100
+  hosts: 192.168.1.1-230
   exclude:
     - !secret local_ip
     - '127.0.0.1'

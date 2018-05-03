@@ -430,7 +430,7 @@ class AlarmClock(hass.Hass):
             return
 
         time_alarm = dt.datetime.now().replace(
-            # year=alarm_time['attributes']['year'],
+            year=alarm_time['attributes']['year'],
             month=alarm_time['attributes']['month'],
             day=alarm_time['attributes']['day'],
             hour=alarm_time['attributes']['hour'],
@@ -438,8 +438,12 @@ class AlarmClock(hass.Hass):
             second=0, microsecond=0)
 
         self._next_special_alarm = time_alarm  # - self._warm_up_time_delta
-        self._handle_special_alarm = self.run_at(
-            self.run_alarm, self._next_special_alarm)
+        try:
+            self._handle_special_alarm = self.run_at(
+                self.run_alarm, self._next_special_alarm)
+        except ValueError:
+            self.log(f"ERROR setting special alarm at {time_alarm}!")
+            self._handle_special_alarm = None
 
     def _set_sunrise_phase(self, *args_runin):
         self.log('SET_SUNRISE_PHASE: XY={xy_color}, '

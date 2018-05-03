@@ -171,6 +171,7 @@ sensor:
 
   - platform: elecprice_spain_pvpc
     electric_rate: discriminacion
+    timeout: 20
 
 # Grafana dashboards as generic cameras
 camera:

@@ -13,8 +13,8 @@ family_home = hass.states.get('group.family').state == 'home'
 if family_home:
     hass.services.call(
         'switch', 'turn_on',
-        {"entity_id": "switch.bomba_circ_acs,switch.tv_power,switch.camara"})
-        # {"entity_id": "switch.calentador,switch.bomba_circ_acs,switch.tv_power,switch.camara"})
+        {"entity_id": "switch.tv_power,switch.camara,switch.vinoteca"})
+        # {"entity_id": "switch.calentador,switch.bomba_circ_acs"})
 
 # Create motioneye binary_sensors
 cameras = {

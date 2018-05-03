@@ -82,11 +82,17 @@ Despertador:
     - switch.altavoz
     - input_boolean.manual_trigger_lacafetera
 
+vacuum_cleaner:
+  name: Limpieza
+  control: hidden
+  entities:
+    - vacuum.robot_aspirador
+    - input_select.vacuum_clean_combination
+
 Enchufes:
   name: Más enchufes
   control: hidden
   entities:
-    - vacuum.robot_aspirador
     - switch.bomba_circ_acs
     - switch.calentador
 #    - switch.tv_power
@@ -524,6 +530,12 @@ Smarty:
 
 Vecinos cercanos:
   - device_tracker.iphone6s_de_carlos_ortega
+  - device_tracker.nokia_130
+  - device_tracker.huawei_y7
+  - device_tracker.artes
+  - device_tracker.huawei_p10
+  - device_tracker.mi6
+  - device_tracker.elena_
 
 Pi Hole:
   - sensor.pihole_ads_blocked_today
@@ -629,6 +641,7 @@ Automatizaciones:
     - automation.encendido_luces_estudio
     - automation.encendido_luces_dormitorio
     - automation.sync_tira_tv_con_tira_sofa
+    - automation.vacuum_select_rooms_to_clean
     - automation.botvac_error_notification
     - automation.salon_select_scene
     - automation.brillo_salon
@@ -676,7 +689,7 @@ Control:
     - group.salon
     - group.control_dormitorio
     - group.control_estudio
-    - group.terraza
+    - group.vacuum_cleaner
     - group.enchufes
 
 kodi_control:

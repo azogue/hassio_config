@@ -11,3 +11,18 @@ vacuum:
   host: !secret xiaomi_vacuum_robot_ip
   token: !secret xiaomi_vacuum_robot_token
   scan_interval: 60
+
+input_select:
+  vacuum_clean_combination:
+    name: Selección de zona de aspirado
+    options:
+     - Nada
+     - Cocina
+     - Cocina y salón
+     - Salón
+     - Mesa de centro
+     - Zonas interiores
+     - Zona office
+     - Zona dormitorio y baño
+    initial: Nada
+    icon: mdi:robot-vacuum
