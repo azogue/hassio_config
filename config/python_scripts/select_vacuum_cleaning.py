@@ -53,6 +53,7 @@ elif room_selection == 'Cocina y salón':
                              [28600, 24300, 30500, 26000, 1],
                              [30500, 24000, 36000, 28500, 1]]
 elif room_selection == 'Salón':
+    call_kwargs["params"] = [[30500, 24000, 36000, 28500, 1]]
 elif room_selection == 'Mesa de centro':
     call_kwargs["params"] = [[33000, 24000, 36000, 26500, 2]]
 elif room_selection == 'Zonas interiores':
@@ -69,7 +70,7 @@ elif room_selection == 'Zona dormitorio y baño':
     call_kwargs["params"] = [[33300, 28500, 36900, 31500, 2],
                              [30500, 29800, 32600, 31400, 1]]
 elif room_selection == 'Nada':
-    logger.info(f"No Cleaning of zone [{room_selection}]")
+    logger.info("No Cleaning of zone %s", room_selection)
     make_the_call = False
 else:
     logger.error("ROOM not recognized: %s", room_selection)
@@ -77,7 +78,8 @@ else:
 
 if make_the_call:
     hass.services.call('vacuum', 'send_command', call_kwargs)
-    logger.info(f"Cleaning ZONE {room_selection}: {call_kwargs['params']}")
+    logger.info("Cleaning ZONE %s: %s", room_selection,
+                str(call_kwargs['params']))
 
 
 # GOTO command:

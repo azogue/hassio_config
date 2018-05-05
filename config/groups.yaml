@@ -1,4 +1,6 @@
 Ambiente:
+#  - sensor.temperatura_ac
+  - climate.termostato_ac
 #  - sensor.temperatura_interior
   - sensor.temperatura_stats_mean
 #  - sensor.humedad_interior
@@ -33,11 +35,9 @@ control_salon:
     - input_select.salon_light_scene
     - cover.sonoff_cover_ventanal
     - cover.sonoff_cover_puerta_terraza
-    - script.set_mid_position_cover_1
-    - script.set_mid_position_cover_2
+    - light.terraza
     - switch.tv_power
     - switch.camara
-    - light.terraza
 
 control_estudio:
   name: Luces estudio
@@ -95,6 +95,7 @@ Enchufes:
   entities:
     - switch.bomba_circ_acs
     - switch.calentador
+    - switch.ac_dry_contact
 #    - switch.tv_power
 #    - switch.camara
     - switch.altavoz
@@ -125,6 +126,7 @@ elec_power_complete:
     - sensor.pvpc
     - sensor.elecprice_range
     - sensor.esp32ener_consumption_day
+    - weblink.consumo_electrico
 
 elec_power_simple:
   name: Consumo eléctrico
@@ -262,6 +264,14 @@ esp_kitchen:
 #    - binary_sensor.sensor_kitchen_online
 #    - sensor.sensor_kitchen__snum
 
+esp_bathroom_1:
+  name: Baño
+#    control: hidden
+  entities:
+    - sensor.sensor_bathroom_ac_temperature
+    - sensor.sensor_bathroom_ac_humidity
+    - sensor.sensor_bathroom_ac_illumination
+
 esp_terraza:
   name: Terraza
 #    control: hidden
@@ -315,16 +325,17 @@ Alarma:
   - weblink.motioneye
 
 Movimiento:
+  - binary_sensor.local_pir
   - binary_sensor.motioncam_salon
+  - binary_sensor.pir_dormitorio_rpi2mpd
   - binary_sensor.sensor_livingroom_mov1
   - binary_sensor.sensor_kitchen_mov1
   - binary_sensor.sensor_study_mov1
-  - binary_sensor.pir_dormitorio_rpi2mpd
   - binary_sensor.motioncam_office
   - binary_sensor.sensor_office_mov1
+  - binary_sensor.sensor_bathroom_ac_mov1
   - binary_sensor.motioncam_terraza
   - binary_sensor.sensor_terraza_mov1
-  - binary_sensor.local_pir
 
 Cámaras:
   name: Videovigilancia
@@ -341,21 +352,23 @@ Conectivity:
   - binary_sensor.services_notok
   - sensor.ip_externa
   - binary_sensor.router_on
+  - binary_sensor.esp32_ener_online
   - binary_sensor.dormitorio_online
   - binary_sensor.sensor_livingroom_online
-  - binary_sensor.sensor_office_online
   - binary_sensor.sensor_kitchen_online
+  - binary_sensor.sensor_study_online
+  - binary_sensor.sensor_office_online
+  - binary_sensor.sensor_bathroom_ac_online
   - binary_sensor.sensor_terraza_online
   - binary_sensor.sensor_galeria_online
-  - binary_sensor.sensor_study_online
-  - binary_sensor.esp32_ener_online
 
   - sensor.sensor_livingroom__snum
-  - sensor.sensor_office__snum
   - sensor.sensor_kitchen__snum
+  - sensor.sensor_study__snum
+  - sensor.sensor_office__snum
+  - sensor.sensor_bathroom_ac__snum
   - sensor.sensor_terraza__snum
   - sensor.sensor_galeria__snum
-  - sensor.sensor_study__snum
 
   - binary_sensor.database_ok
   - binary_sensor.internet_online
@@ -388,6 +401,9 @@ general_config:
     - script.good_night
     - script.good_morning
     - script.start_status_sonoff_outlets
+    - script.set_mid_position_cover_1
+    - script.set_mid_position_cover_2
+
 
 dt_imac:
 #  hidden: true
@@ -475,6 +491,8 @@ Dev boards:
     - device_tracker.wrover_kit
     # new wroom32-1 - ener: (WROOM32 (Energy meter))
     - device_tracker.30aea41607a8
+    # WROOM32 Dry-Contact (baño)
+    - device_tracker.30aea41960dc
     # Wroom32batt Salón
     - device_tracker.30aea4060680
     # new wroom32-2 - Cocina:
@@ -673,7 +691,7 @@ Status:
     - group.esp_estudio
     - group.esp_kitchen
     - group.esp_office
-#    - group.terraza
+    - group.esp_bathroom_1
     - group.esp_terraza
     - group.esp_galeria
     - group.vinoteca
@@ -711,6 +729,7 @@ current_meter_control:
     - camera.electricidad_24h
     - switch.bomba_circ_acs
     - switch.calentador
+    - switch.ac_dry_contact
 
 alarm_clock:
   name: Despertador

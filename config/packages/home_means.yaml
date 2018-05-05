@@ -8,6 +8,10 @@ homeassistant:
       friendly_name: Temperatura interior (rm)
       icon: mdi:thermometer
       homebridge_hidden: true
+    sensor.temperatura_ac:
+      icon: mdi:thermometer
+      homebridge_hidden: true
+      hidden: true
     sensor.temperatura_exterior:
       icon: mdi:thermometer
       homebridge_hidden: true
@@ -34,12 +38,23 @@ homeassistant:
 sensor:
   - platform: min_max
     type: mean
+    name: Temperatura AC
+    entity_ids:
+      -  sensor.sensor_livingroom_temperature
+      -  sensor.sensor_study_temperature
+      -  sensor.sensor_office_temperature
+      -  sensor.dormitorio_temperature_rpi2mpd
+
+  - platform: min_max
+    type: mean
     name: Temperatura interior
     entity_ids:
       -  sensor.sensor_kitchen_temperature
-      -  sensor.sensor_livingroom_temperature
+      -  sensor.sensor_study_temperature
       -  sensor.sensor_office_temperature
+      -  sensor.sensor_livingroom_temperature
       -  sensor.dormitorio_temperature_rpi2mpd
+      -  sensor.sensor_bathroom_ac_temperature
 
   - platform: min_max
     type: mean
@@ -53,9 +68,11 @@ sensor:
     name: Humedad interior
     entity_ids:
       -  sensor.sensor_kitchen_humidity
-      -  sensor.sensor_livingroom_humidity
+      -  sensor.sensor_study_humidity
       -  sensor.sensor_office_humidity
+      -  sensor.sensor_livingroom_humidity
       -  sensor.dormitorio_humidity_rpi2mpd
+      -  sensor.sensor_bathroom_ac_humidity
 
   - platform: min_max
     type: mean

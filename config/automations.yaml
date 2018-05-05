@@ -564,6 +564,11 @@
       for:
         minutes: 2
     - platform: state
+      entity_id: binary_sensor.sensor_study_online
+      to: 'off'
+      for:
+        minutes: 2
+    - platform: state
       entity_id: binary_sensor.sensor_office_online
       to: 'off'
       for:
@@ -584,16 +589,21 @@
       for:
         minutes: 2
     - platform: state
+      entity_id: binary_sensor.sensor_bathroom_ac_online
+      to: 'off'
+      for:
+        minutes: 2
+    - platform: state
       entity_id: binary_sensor.vinoteca_online
       to: 'off'
       for:
-        minutes: 3
+        minutes: 5
   action:
     - service: telegram_bot.send_message
       data_template:
         title: '*Sensor offline*'
         target: !secret telegram_bot_chat_id_admin
-        message: "El sensor `{{ trigger.to_state.attributes.friendly_name }}` parece que *ha fallado*. Revísalo!"
+        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha fallado*. Revísalo!"
 
 - alias: Sync Tira TV con Tira sofá
   id: sync_light_strips
