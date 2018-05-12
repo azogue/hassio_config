@@ -111,6 +111,7 @@
              - sensor.sensor_livingroom_temperature
              - sensor.sensor_office_temperature
              - sensor.sensor_study_temperature
+             - sensor.sensor_bathroom_ac_temperature
              - sensor.dormitorio_temperature_rpi2mpd
           text_template: '${entity.state ? entity.state + "°C" : "??"}'
           # An example of rounding up a number, i.e. a temperature of 90.1 becomes 91
@@ -142,6 +143,7 @@
              - sensor.sensor_livingroom_humidity
              - sensor.sensor_office_humidity
              - sensor.sensor_study_humidity
+             - sensor.sensor_bathroom_ac_humidity
              - sensor.dormitorio_humidity_rpi2mpd
           text_template: '${entity.state ? entity.state + "%" : "??"}'
           class_template: '
@@ -176,6 +178,8 @@
              - light.flexo
              - light.estudio
              - light.terraza
+             - light.hall
+             - switch.hall_light
              - light.exterior
           states:
             - state: 'on'
@@ -195,6 +199,7 @@
              - switch.calentador
              - switch.bomba_circ_acs
              - switch.altavoz
+             - switch.ac_dry_contact
           states:
             - state: 'on'
               class: 'switch-on'

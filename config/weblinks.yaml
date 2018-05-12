@@ -15,6 +15,9 @@ entities:
   - name: Router Movistar
     url: http://192.168.1.1
 
+  - name: Wifi repeater
+    url: http://192.168.1.54
+
   - name: HASSIO LAN
     url: !secret weblink_hassio_lan
   - name: HASSIO PI-Hole

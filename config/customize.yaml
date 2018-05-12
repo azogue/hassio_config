@@ -25,6 +25,8 @@ camera.webcam_playa_3:
 
 weblink.router_movistar:
   icon: mdi:router-wireless
+weblink.wifi_repeater:
+  icon: mdi:router-wireless
 weblink.enerpi:
   icon: mdi:flash
 weblink.mopidy:

@@ -1,0 +1,157 @@
+homeassistant:
+  customize:
+#    sensor.sensor_hall_temperature:
+#      friendly_name: Temperatura
+#      icon: mdi:thermometer
+#      homebridge_name: Temperatura hall
+##      homebridge_hidden: true
+#    sensor.sensor_hall_humidity:
+#      friendly_name: Humedad
+#      icon: mdi:water-percent
+##      homebridge_hidden: true
+#      homebridge_name: Humedad hall
+#      homebridge_sensor_type: humidity
+##    sensor.sensor_hall_pressure:
+##      friendly_name: Presión
+##      icon: mdi:weather-cloudy
+##      homebridge_hidden: true
+    sensor.sensor_hall_illumination:
+      friendly_name: Iluminación (hall)
+      icon: mdi:lightbulb-on
+      homebridge_hidden: true
+
+    sensor.sensor_hall__snum:
+      friendly_name: 'Sample # (hall)'
+      homebridge_hidden: true
+    
+    binary_sensor.sensor_hall_light_switch:
+      friendly_name: 'Interruptor (hall)'
+      homebridge_hidden: true
+    binary_sensor.sensor_hall_relay_1:
+      friendly_name: 'Relay 1'
+      homebridge_hidden: true
+    binary_sensor.sensor_hall_relay_2:
+      friendly_name: 'Relay 2'
+      homebridge_hidden: true
+    binary_sensor.sensor_hall_online:
+      friendly_name: Hall Online
+      homebridge_hidden: true
+
+    switch.hall_light:
+      friendly_name: "Luz hall"
+      icon: mdi:lightbulb-outline
+      homebridge_switch_type: light
+      homebridge_name: Entrada
+
+binary_sensor:
+  - platform: mqtt
+    device_class: connectivity
+    state_topic: !secret mqtt_topic_esp_hall_lwt
+    name: sensor_hall_online
+    qos: !secret mqtt_default_qos
+    payload_on: "online"
+    payload_off: "offline"
+
+  - platform: mqtt
+#    device_class: power
+    device_class: light
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: "{{ value_json.sample.bin[0]}}"
+    name: sensor_hall_light_switch
+    qos: !secret mqtt_default_qos
+    payload_on: 1
+    payload_off: 0
+    availability_topic: !secret mqtt_topic_esp_hall_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - platform: mqtt
+    device_class: power
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: "{{ value_json.sample.relays[0]}}"
+    name: sensor_hall_relay_1
+    qos: !secret mqtt_default_qos
+    payload_on: 1
+    payload_off: 0
+    availability_topic: !secret mqtt_topic_esp_hall_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - platform: mqtt
+    device_class: power
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: "{{ value_json.sample.relays[1]}}"
+    name: sensor_hall_relay_2
+    qos: !secret mqtt_default_qos
+    payload_on: 1
+    payload_off: 0
+    availability_topic: !secret mqtt_topic_esp_hall_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+
+sensor:
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_hall_status
+#    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
+#    name: sensor_hall_temperature
+#    unit_of_measurement: "°C"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+#
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_hall_status
+#    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
+#    name: sensor_hall_humidity
+#    unit_of_measurement: "%"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
+    name: sensor_hall_illumination
+    unit_of_measurement: "lx"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: "{{ value_json.sample.snum}}"
+    unit_of_measurement: "sample"
+#    json_attributes: 'status.version,status.wake,status.wake_reason,status.error,status.c_error'
+    json_attributes: 'status,network,ts,bin,relays,act'
+    name: sensor_hall__snum
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+switch:
+  - platform: mqtt
+    name: hall_light
+    state_topic: !secret mqtt_topic_esp_hall_status
+    value_template: '{"switch": {{ value_json.sample.bin[1]}}}'
+    command_topic: !secret mqtt_topic_esp_hall_command
+    payload_on: '{"switch": 1}'
+    payload_off: '{"switch": 0}'
+    availability_topic: !secret mqtt_topic_esp_hall_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+    optimistic: false
+    qos: 2
+    retain: true
+
+#
+#group:
+#  Hall:
+#    - switch.hall_light
+#    - binary_sensor.sensor_hall_light_switch
+#    - binary_sensor.sensor_hall_relay_1
+#    - binary_sensor.sensor_hall_relay_2
+##    - sensor.sensor_hall_temperature
+##    - sensor.sensor_hall_humidity
+#    - sensor.sensor_hall_illumination
+#    - binary_sensor.sensor_hall_online
+#    - sensor.sensor_hall__snum

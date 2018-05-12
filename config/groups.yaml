@@ -33,6 +33,7 @@ control_salon:
     - input_number.light_main_slider_salon
     - input_number.light_temp_slider_salon
     - input_select.salon_light_scene
+    - switch.hall_light
     - cover.sonoff_cover_ventanal
     - cover.sonoff_cover_puerta_terraza
     - light.terraza
@@ -272,6 +273,20 @@ esp_bathroom_1:
     - sensor.sensor_bathroom_ac_humidity
     - sensor.sensor_bathroom_ac_illumination
 
+esp_hall:
+  name: Hall
+#    control: hidden
+  entities:
+    - switch.hall_light
+    - binary_sensor.sensor_hall_light_switch
+    - binary_sensor.sensor_hall_relay_1
+    - binary_sensor.sensor_hall_relay_2
+#    - sensor.sensor_hall_temperature
+#    - sensor.sensor_hall_humidity
+    - sensor.sensor_hall_illumination
+#    - binary_sensor.sensor_hall_online
+#    - sensor.sensor_hall__snum
+
 esp_terraza:
   name: Terraza
 #    control: hidden
@@ -315,6 +330,7 @@ Vinoteca:
 Local:
   name: Cuadro
   entities:
+    - sensor.sensor_hall_illumination
     - sensor.local_htu21d_temperature
     - sensor.local_htu21d_humidity
     - sensor.local_light_level
@@ -356,6 +372,7 @@ Conectivity:
   - binary_sensor.dormitorio_online
   - binary_sensor.sensor_livingroom_online
   - binary_sensor.sensor_kitchen_online
+  - binary_sensor.sensor_hall_online
   - binary_sensor.sensor_study_online
   - binary_sensor.sensor_office_online
   - binary_sensor.sensor_bathroom_ac_online
@@ -364,6 +381,7 @@ Conectivity:
 
   - sensor.sensor_livingroom__snum
   - sensor.sensor_kitchen__snum
+  - sensor.sensor_hall__snum
   - sensor.sensor_study__snum
   - sensor.sensor_office__snum
   - sensor.sensor_bathroom_ac__snum
@@ -491,6 +509,9 @@ Dev boards:
     - device_tracker.wrover_kit
     # new wroom32-1 - ener: (WROOM32 (Energy meter))
     - device_tracker.30aea41607a8
+    # WROOM32-EVB falso techo Hall
+    - device_tracker.esp32_evb_1_wifi
+    - device_tracker.esp32_evb_1_eth
     # WROOM32 Dry-Contact (baño)
     - device_tracker.30aea41960dc
     # Wroom32batt Salón
@@ -641,6 +662,7 @@ Links:
   - weblink.tv_headend
   - weblink.mopidy
   - weblink.router_movistar
+  - weblink.wifi_repeater
 
 Red e Internet:
   - sensor.speedtest_ping
@@ -804,3 +826,4 @@ Master conf:
     - group.red_e_internet
     - group.automatizaciones
     - group.all_scripts
+    - group.esp_hall

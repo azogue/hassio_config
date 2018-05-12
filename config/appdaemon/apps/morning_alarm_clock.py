@@ -440,7 +440,7 @@ class AlarmClock(hass.Hass):
         self._next_special_alarm = time_alarm  # - self._warm_up_time_delta
         try:
             self._handle_special_alarm = self.run_at(
-                self.run_alarm, self._next_special_alarm)
+                self.trigger_service_in_alarm, self._next_special_alarm)
         except ValueError:
             self.log(f"ERROR setting special alarm at {time_alarm}!")
             self._handle_special_alarm = None

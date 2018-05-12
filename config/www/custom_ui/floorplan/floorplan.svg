@@ -23,7 +23,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -42,12 +42,12 @@
      showgrid="false"
      showguides="false"
      inkscape:zoom="1.1507587"
-     inkscape:cx="609.66132"
+     inkscape:cx="405.01373"
      inkscape:cy="347.81949"
-     inkscape:window-x="48"
-     inkscape:window-y="0"
+     inkscape:window-x="34"
+     inkscape:window-y="22"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer_controls"
+     inkscape:current-layer="layer_menu"
      inkscape:snap-intersection-paths="false"
      inkscape:snap-object-midpoints="true"
      inkscape:object-nodes="false"
@@ -1666,18 +1666,18 @@
        id="light.salon"
        d="m 235.32798,504.60969 0,-11.39435 16.14836,0 0,-77.30922 -21.4644,0 0,-102.0981 -118.63225,0 0,15.32448 -14.823902,0 0,175.47719 z"
        style="opacity:1;fill:#f3da2a;fill-opacity:0.33469388;fill-rule:evenodd;stroke:#e79836;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       inkscape:label="#path56834">
+       inkscape:label="#light.salon">
       <title
          id="title56836">Luz Salón</title>
     </path>
     <path
        sodipodi:nodetypes="cccccccccc"
        inkscape:connector-curvature="0"
-       id="path56838"
+       id="light.hall"
        d="m 106.41411,241.81248 53.90224,0 0,45.12128 -2.65802,0 0,23.64092 -46.27864,-0.386 0,-9.0834 -4.96558,0 0,-17.48005 z"
-       style="opacity:1;fill:#fcbb7d;fill-opacity:0.07960199;fill-rule:evenodd;stroke:#e79836;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+       style="opacity:1;fill:#f3da2a;fill-opacity:0.33333333;fill-rule:evenodd;stroke:#e79836;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <title
-         id="title56840">Mov hall</title>
+         id="title56840">Luz hall</title>
     </path>
     <path
        inkscape:connector-curvature="0"
@@ -9784,7 +9784,7 @@
      inkscape:groupmode="layer"
      id="layer_muebles"
      inkscape:label="Muebles"
-     style="display:inline"
+     style="display:none"
      transform="translate(-2.1825442,18.747119)"
      sodipodi:insensitive="true">
     <rect
@@ -10594,6 +10594,36 @@
          x="202.87726"
          id="tspan37825"
          sodipodi:role="line">HR est</tspan></text>
+    <text
+       transform="scale(0.89836177,1.1131373)"
+       inkscape:label="#sensor.sensor_bathroom_ac_temperature"
+       sodipodi:linespacing="125%"
+       id="sensor.sensor_bathroom_ac_temperature"
+       y="218.02614"
+       x="347.67047"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.6093874px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><title
+         id="title8126">Temp aseo</title><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.6093874px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
+         y="218.02614"
+         x="347.67047"
+         id="tspan8128"
+         sodipodi:role="line">Tª aseo</tspan></text>
+    <text
+       transform="scale(0.89836177,1.1131373)"
+       inkscape:label="#sensor.sensor_bathroom_ac_humidity"
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.71635818px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="347.54202"
+       y="227.14915"
+       id="sensor.sensor_bathroom_ac_humidity"
+       sodipodi:linespacing="125%"><title
+         id="title8132">Hum aseo</title><tspan
+         sodipodi:role="line"
+         id="tspan8134"
+         x="347.54202"
+         y="227.14915"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.71635818px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR aseo</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10708,6 +10738,15 @@
       <title
          id="title31743">Go</title>
     </path>
+    <path
+       inkscape:label="#switch.hall_light"
+       d="m 133.41002,260.13189 a 8.1561091,8.983149 0 0 1 8.15611,8.98315 c 0,3.05427 -1.38654,5.73638 -3.49548,7.36618 l 0,2.90028 a 1.1651584,1.283307 0 0 1 -1.16516,1.2833 l -6.99095,0 a 1.1651584,1.283307 0 0 1 -1.16516,-1.2833 l 0,-2.90028 c -2.10893,-1.6298 -3.49547,-4.31191 -3.49547,-7.36618 a 8.1561091,8.983149 0 0 1 8.15611,-8.98315 m -3.49548,24.38284 0,-1.28331 6.99095,0 0,1.28331 a 1.1651584,1.283307 0 0 1 -1.16516,1.2833 l -4.66063,0 a 1.1651584,1.283307 0 0 1 -1.16516,-1.2833 m 3.49548,-21.81622 a 5.8257922,6.416535 0 0 0 -5.82579,6.41653 c 0,2.63078 1.43314,4.8894 3.49547,5.87755 l 0,3.1056 4.66063,0 0,-3.1056 c 2.06234,-0.98815 3.49548,-3.24677 3.49548,-5.87755 a 5.8257922,6.416535 0 0 0 -5.82579,-6.41653 z"
+       id="switch.hall_light"
+       inkscape:connector-curvature="0"
+       style="display:inline;fill:#e50000;fill-opacity:1">
+      <title
+         id="title8138">Luz hall</title>
+    </path>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10782,8 +10821,8 @@
      id="layer_menu"
      inkscape:label="hass_menu"
      style="display:inline"
-     sodipodi:insensitive="true"
-     transform="translate(-2.1825442,-0.43289581)">
+     transform="translate(-2.1825442,-0.43289581)"
+     sodipodi:insensitive="true">
     <g
        id="toggle_muebles"
        inkscape:label="#g37847"
@@ -10947,8 +10986,8 @@
     </g>
     <g
        id="toggle_mov_rooms"
-       transform="translate(-35.50686,36.750067)"
-       inkscape:label="#g48961">
+       transform="translate(-54.277087,37.445261)"
+       inkscape:label="#toggle_mov_rooms">
       <rect
          y="306.8284"
          x="61.739483"
@@ -10961,6 +11000,22 @@
          style="fill:#fb00c6;fill-opacity:0.96078431"
          id="path48263"
          d="m 79.789506,312.26494 a 2,2 0 0 0 2,-2 2,2 0 0 0 -2,-2 2,2 0 0 0 -2,2 2,2 0 0 0 2,2 m -3.6,13.9 1,-4.4 2.1,2 0,6 2,0 0,-7.5 -2.1,-2 0.6,-3 c 1.39,1.59 3.39,2.5 5.5,2.5 l 0,-2 c -1.76,0.03 -3.4,-0.89 -4.3,-2.4 l -1,-1.6 c -0.36,-0.6 -1,-1 -1.7,-1 -0.3,0 -0.5,0.1 -0.8,0.1 l -5.2,2.2 0,4.7 2,0 0,-3.4 1.8,-0.7 -1.6,8.1 -4.9,-1 -0.4,2 7,1.4 m -8.9,-10.4 a 1,1 0 0 1 -1,-1 1,1 0 0 1 1,-1 l 3,0 0,2 -3,0 m 1,-4 a 1,1 0 0 1 -1,-1 1,1 0 0 1 1,-1 l 5,0 0,2 -5,0 m -2,8 a 1,1 0 0 1 -1,-1 1,1 0 0 1 1,-1 l 4,0 0,2 -4,0 z" />
+    </g>
+    <g
+       id="switch.ac_dry_contact"
+       transform="translate(30.588519,-77.166482)">
+      <rect
+         style="display:inline;opacity:1;fill:#000000;fill-opacity:0.3731346;stroke:#fb00c6;stroke-width:1.29958236;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96078431"
+         id="rect12793"
+         width="29.469921"
+         height="23.550156"
+         x="14.644879"
+         y="421.51151" />
+      <path
+         d="m 23.551951,424.5748 c 2.52075,-1.39059 5.256949,0.30731 5.870978,2.9502 0.463216,0 0.915657,0.0922 1.32501,0.26122 0.560166,-0.46097 1.055699,-1.09096 0.861796,-1.79778 -0.452444,-1.65181 2.143714,-2.98862 4.610602,-0.70682 1.949811,1.79778 -0.430898,3.74922 -4.147388,4.18714 0,0.33036 -0.118496,0.66072 -0.366263,0.95267 0.646346,0.39182 1.529687,0.74523 2.52075,0.60694 2.29453,-0.32268 4.179706,1.5212 0.980293,3.28825 -2.520752,1.39059 -5.256951,-0.30731 -5.87098,-2.9502 -0.463214,0 -0.915656,-0.0999 -1.314237,-0.2689 -0.560166,0.46097 -1.066471,1.09864 -0.872567,1.80546 0.452442,1.64413 -2.143715,2.98862 -4.610603,0.70682 -1.960584,-1.80546 0.430897,-3.7569 4.147388,-4.18714 0,-0.33036 0.140042,-0.65304 0.377036,-0.94499 -0.646347,-0.39182 -1.529686,-0.75291 -2.531523,-0.61462 -2.294529,0.32268 -4.179706,-1.5212 -0.980292,-3.28825 m -1.712817,11.78545 2.154487,0 a 2.1544875,1.5365649 0 0 1 2.154487,1.53657 l 0,4.60969 -2.154487,0 0,-1.53656 -2.154487,0 0,1.53656 -2.154488,0 0,-4.60969 a 2.1544875,1.5365649 0 0 1 2.154488,-1.53657 m 0,1.53657 0,1.53656 2.154487,0 0,-1.53656 -2.154487,0 m 8.542542,-1.53657 2.229895,0 -3.156324,6.14626 -2.229894,0 3.156323,-6.14626 m 5.461626,0 3.231731,0 0,1.53657 -3.231731,0 0,3.07313 3.231731,0 0,1.53656 -3.231731,0 a 2.1544875,1.5365649 0 0 1 -2.154488,-1.53656 l 0,-3.07313 a 2.1544875,1.5365649 0 0 1 2.154488,-1.53657 z"
+         id="path12117"
+         inkscape:connector-curvature="0"
+         style="fill:#fb00c6;fill-opacity:0.96078431" />
     </g>
   </g>
   <g
