@@ -104,7 +104,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_livingroom_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'status,network,ts'
+    json_attributes: 'status,network,ts,sample'
     name: sensor_livingroom__snum
     qos: !secret mqtt_default_qos
     force_update: true

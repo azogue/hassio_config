@@ -116,7 +116,7 @@ sensor:
     state_topic: !secret mqtt_topic_esp_office_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'status,network,ts'
+    json_attributes: 'status,network,ts,sample'
     name: sensor_office__snum
     qos: !secret mqtt_default_qos
     force_update: true

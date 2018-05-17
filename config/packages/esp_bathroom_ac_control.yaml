@@ -90,7 +90,7 @@ sensor:
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
 #    json_attributes: 'status.version,status.wake,status.wake_reason,status.error,status.c_error'
-    json_attributes: 'status,network,ts'
+    json_attributes: 'status,network,ts,sample'
     name: sensor_bathroom_ac__snum
     qos: !secret mqtt_default_qos
     force_update: true
