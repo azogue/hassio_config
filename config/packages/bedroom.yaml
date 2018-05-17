@@ -32,20 +32,20 @@ homeassistant:
 #      homebridge_hidden: true
 #      icon: mdi:lightbulb
 #      device_class: light
-
-    sensor.dormitorio_temperature_rpi2mpd:
-      icon: mdi:thermometer
-      friendly_name: Temperatura
-      homebridge_name: Temperatura Dormitorio
-    sensor.dormitorio_humidity_rpi2mpd:
-      icon: mdi:water-percent
-      friendly_name: Humedad
-      homebridge_name: Humedad Dormitorio
-      homebridge_sensor_type: humidity
-    sensor.dormitorio_pressure_rpi2mpd:
-      friendly_name: Presión
-      icon: mdi:weather-cloudy
-      homebridge_hidden: true
+#
+#    sensor.dormitorio_temperature_rpi2mpd:
+#      icon: mdi:thermometer
+#      friendly_name: Temperatura
+#      homebridge_name: Temperatura Dormitorio
+#    sensor.dormitorio_humidity_rpi2mpd:
+#      icon: mdi:water-percent
+#      friendly_name: Humedad
+#      homebridge_name: Humedad Dormitorio
+#      homebridge_sensor_type: humidity
+#    sensor.dormitorio_pressure_rpi2mpd:
+#      friendly_name: Presión
+#      icon: mdi:weather-cloudy
+#      homebridge_hidden: true
 
 #    sensor.dormitorio_htu21d_temperature_rpi2mpd:
 #      homebridge_hidden: True
@@ -77,27 +77,27 @@ homeassistant:
 
 
 sensor:
-  - platform: mqtt
-    state_topic: ha_bedroom/sensor/dormitorio_temperature/state
-    name: dormitorio_temperature_rpi2mpd
-    unit_of_measurement: '°C'
-    force_update: true
-    expire_after: 7200
-    qos: 2
-  - platform: mqtt
-    state_topic: ha_bedroom/sensor/dormitorio_humidity/state
-    name: dormitorio_humidity_rpi2mpd
-    unit_of_measurement: '%'
-    force_update: true
-    expire_after: 600
-    qos: 2
-  - platform: mqtt
-    state_topic: ha_bedroom/sensor/dormitorio_pressure/state
-    name: dormitorio_pressure_rpi2mpd
-    unit_of_measurement: 'mb'
-    force_update: true
-    expire_after: 600
-    qos: 2
+#  - platform: mqtt
+#    state_topic: ha_bedroom/sensor/dormitorio_temperature/state
+#    name: dormitorio_temperature_rpi2mpd
+#    unit_of_measurement: '°C'
+#    force_update: true
+#    expire_after: 7200
+#    qos: 2
+#  - platform: mqtt
+#    state_topic: ha_bedroom/sensor/dormitorio_humidity/state
+#    name: dormitorio_humidity_rpi2mpd
+#    unit_of_measurement: '%'
+#    force_update: true
+#    expire_after: 600
+#    qos: 2
+#  - platform: mqtt
+#    state_topic: ha_bedroom/sensor/dormitorio_pressure/state
+#    name: dormitorio_pressure_rpi2mpd
+#    unit_of_measurement: 'mb'
+#    force_update: true
+#    expire_after: 600
+#    qos: 2
 
 #  - platform: mqtt
 #    state_topic: ha_bedroom/sensor/dormitorio_light_level/state

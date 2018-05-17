@@ -1,0 +1,131 @@
+homeassistant:
+  customize:
+# Por conservación de entity_name, se utilizan los nombres de sensores = RPI2
+#    sensor.sensor_bedroom_temperature:
+#      friendly_name: Temperatura
+#      icon: mdi:thermometer
+#      homebridge_name: Temperatura bedroom
+##      homebridge_hidden: true
+#    sensor.sensor_bedroom_humidity:
+#      friendly_name: Humedad
+#      icon: mdi:water-percent
+##      homebridge_hidden: true
+#      homebridge_name: Humedad bedroom
+#      homebridge_sensor_type: humidity
+#    sensor.sensor_bedroom_pressure:
+#      friendly_name: Presión
+#      icon: mdi:weather-cloudy
+#      homebridge_hidden: true
+
+    sensor.dormitorio_temperature_rpi2mpd:
+      icon: mdi:thermometer
+      friendly_name: Temperatura
+      homebridge_name: Temperatura Dormitorio
+    sensor.dormitorio_humidity_rpi2mpd:
+      icon: mdi:water-percent
+      friendly_name: Humedad
+      homebridge_name: Humedad Dormitorio
+      homebridge_sensor_type: humidity
+    sensor.dormitorio_pressure_rpi2mpd:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+      homebridge_hidden: true
+
+#    sensor.sensor_bedroom_illumination:
+#      friendly_name: Iluminación (bedroom)
+#      icon: mdi:lightbulb-on
+#      homebridge_hidden: true
+
+    sensor.sensor_bedroom__snum:
+      friendly_name: 'Sample # (dormitorio)'
+      homebridge_hidden: true
+    
+    binary_sensor.sensor_bedroom_mov1:
+      friendly_name: 'Movimiento (dormitorio)'
+      homebridge_hidden: true
+    binary_sensor.sensor_bedroom_online:
+      friendly_name: Dormitorio Online
+      homebridge_hidden: true
+
+binary_sensor:
+  - platform: mqtt
+    device_class: connectivity
+    state_topic: !secret mqtt_topic_esp_bedroom_lwt
+    name: sensor_bedroom_online
+    qos: !secret mqtt_default_qos
+    payload_on: "online"
+    payload_off: "offline"
+
+  - platform: mqtt
+    device_class: motion
+    state_topic: !secret mqtt_topic_esp_bedroom_status
+    value_template: "{{ value_json.sample.bin[0]}}"
+    name: sensor_bedroom_mov1
+    qos: !secret mqtt_default_qos
+    payload_on: 1
+    payload_off: 0
+    availability_topic: !secret mqtt_topic_esp_bedroom_lwt
+    payload_available: "online"
+    payload_not_available: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_bedroom_status
+    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
+    name: dormitorio_temperature_rpi2mpd
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_bedroom_status
+    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
+    name: dormitorio_humidity_rpi2mpd
+    unit_of_measurement: "%"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_livingroom_status
+    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
+    name: dormitorio_pressure_rpi2mpd
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_bedroom_status
+#    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
+#    name: sensor_bedroom_illumination
+#    unit_of_measurement: "lx"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
+    
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_bedroom_status
+    value_template: "{{ value_json.sample.snum}}"
+    unit_of_measurement: "sample"
+#    json_attributes: 'status.version,status.wake,status.wake_reason,status.error,status.c_error'
+    json_attributes: 'status,network,ts,sample'
+    name: sensor_bedroom__snum
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+
+#
+#group:
+#  Dormitorio:
+#    - switch.bedroom_light
+#    - binary_sensor.sensor_bedroom_light_switch
+#    - binary_sensor.sensor_bedroom_relay_1
+#    - binary_sensor.sensor_bedroom_relay_2
+##    - sensor.sensor_bedroom_temperature
+##    - sensor.sensor_bedroom_humidity
+#    - sensor.sensor_bedroom_illumination
+#    - binary_sensor.sensor_bedroom_online
+#    - sensor.sensor_bedroom__snum
