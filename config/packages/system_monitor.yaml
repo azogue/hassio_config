@@ -9,17 +9,20 @@ homeassistant:
     sensor.local_htu21d_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
+      homebridge_hidden: True
     sensor.local_htu21d_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_sensor_type: humidity
-  
+#      homebridge_sensor_type: humidity
+      homebridge_hidden: True
+
     sensor.local_light_level:
       friendly_name: Iluminación
       icon: mdi:lightbulb
       device_class: light
-      homebridge_sensor_type: light
-  
+#      homebridge_sensor_type: light
+      homebridge_hidden: True
+
     sensor.hass_cpu_temperature:
       homebridge_hidden: True
     sensor.kodi_cpu_temperature:
@@ -184,8 +187,8 @@ sensor:
 - platform: rest
   resource: http://ip.jsontest.com
   name: IP Externa
-  value_template: '{{ value_json.ip }}'
-  scan_interval: 60
+  value_template: '{% if value_json %}{{ value_json.ip }}{% endif %}'
+  scan_interval: 180
 
 - platform: season
 

@@ -58,6 +58,10 @@ elif scene_selection == 'Estudio':
     hass.services.call('hue', 'hue_activate_scene',
                        {"group_name": "Estudio", "scene_name": "Estudiar"})
 
+elif scene_selection == 'bedroom_activate_minimal':
+    hass.services.call('hue', 'hue_activate_scene',
+                       {"group_name": "Dormitorio", "scene_name": "Minimal"})
+
 elif scene_selection == 'Atardecer':
     hass.services.call('light', 'turn_on',
                        {"entity_id": "light.yeelight_strip_7811dca21ecf_2",

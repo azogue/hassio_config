@@ -29,14 +29,19 @@ homeassistant:
       homebridge_hidden: true
       assumed_state: true
     switch.test_switch_2:
-      icon: mdi:home-automation
-      friendly_name: Enchufe test 2 (old b.acs)
-      homebridge_hidden: true
+#      icon: mdi:home-automation
+      icon: mdi:bug
+      friendly_name: Enchufe Antimosquitos 2
+#      homebridge_hidden: true
+      homebridge_name: Antimosquitos
       assumed_state: true
     switch.office_floor:
-      icon: mdi:home-automation
-      friendly_name: Enchufe en estudio
-      homebridge_hidden: true
+#      icon: mdi:home-automation
+      icon: mdi:bug
+      friendly_name: Enchufe Antimosquitos
+#      homebridge_hidden: true
+      homebridge_name: Antimosquitos
+#      friendly_name: Enchufe en estudio
       assumed_state: true
     switch.new_switch_2:
       icon: mdi:fan

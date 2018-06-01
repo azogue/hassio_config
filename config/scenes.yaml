@@ -1,0 +1,24 @@
+# Testing scenes...
+- name: La caja tonta
+  entities:
+    script.play_kodi_pvr: on
+
+- name: Modo series
+  entities:
+    script.start_tvshows_mode: on
+
+#- name: Cuenco red
+#  entities:
+#    light.cuenco:
+#      state: on
+#      transition: 1
+#      brightness: 100
+#      rgb_color: [255, 0, 0]
+#
+#- name: Cuenco blue
+#  entities:
+#    light.cuenco:
+#      state: on
+#      transition: 1
+#      brightness: 100
+#      rgb_color: [0, 0, 255]

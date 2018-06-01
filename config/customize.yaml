@@ -1,18 +1,8 @@
 
-# binary_sensor.pir_galeria:
-#   friendly_name: Movimiento (galería)
-#   device_class: motion
-#   homebridge_hidden: true
-
-# sensor.ds18b20_s1_temperature:
-#   friendly_name: ACS
-#   homebridge_hidden: true
-# sensor.ds18b20_s2_temperature:
-#   friendly_name: Impulsión
-#   homebridge_hidden: true
-# sensor.ds18b20_s3_temperature:
-#   friendly_name: Retorno
-#   homebridge_hidden: true
+script.start_tvshows_mode:
+  hidden: true
+script.start_status_sonoff_outlets:
+  hidden: true
 
 camera.weather_svg:
   friendly_name: !secret weather_svg_cam_name

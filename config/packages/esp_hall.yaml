@@ -37,10 +37,9 @@ homeassistant:
       friendly_name: Hall Online
       homebridge_hidden: true
 
-    switch.hall_light:
+    light.hall_light:
       friendly_name: "Luz hall"
       icon: mdi:lightbulb-outline
-      homebridge_switch_type: light
       homebridge_name: Entrada
 
 binary_sensor:
@@ -122,18 +121,18 @@ sensor:
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
 #    json_attributes: 'status.version,status.wake,status.wake_reason,status.error,status.c_error'
-    json_attributes: 'status,network,ts,bin,relays,act'
+    json_attributes: 'status,network,ts,sample'
     name: sensor_hall__snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
-switch:
+light:
   - platform: mqtt
     name: hall_light
-    state_topic: !secret mqtt_topic_esp_hall_status
-    value_template: '{"switch": {{ value_json.sample.bin[1]}}}'
     command_topic: !secret mqtt_topic_esp_hall_command
+    state_topic: !secret mqtt_topic_esp_hall_status
+    state_value_template: '{"switch": {{ value_json.sample.bin[1]}}}'
     payload_on: '{"switch": 1}'
     payload_off: '{"switch": 0}'
     availability_topic: !secret mqtt_topic_esp_hall_lwt
@@ -146,7 +145,7 @@ switch:
 #
 #group:
 #  Hall:
-#    - switch.hall_light
+#    - light.hall_light
 #    - binary_sensor.sensor_hall_light_switch
 #    - binary_sensor.sensor_hall_relay_1
 #    - binary_sensor.sensor_hall_relay_2

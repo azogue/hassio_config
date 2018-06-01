@@ -20,7 +20,9 @@ input_select:
      - Cocina
      - Cocina y salón
      - Salón
+     - Ir al salón
      - Mesa de centro
+     - Ir al distribuidor
      - Zonas interiores
      - Zona office
      - Zona dormitorio y baño

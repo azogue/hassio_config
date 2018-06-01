@@ -28,7 +28,7 @@ good_night:
         seconds: 10
     - alias: Apagado total de TV y Home cinema
       service: switch.turn_off
-      entity_id: switch.tv_power
+      entity_id: switch.tv_power,switch.hall_light
 
 good_morning:
   alias: Buenos días
@@ -51,47 +51,12 @@ play_kodi_pvr:
   alias: Enciende la caja tonta
   sequence:
       service: python_script.start_kodi_play_tv
-#    - alias: TV on
-#      service: media_player.turn_on
-#      data:
-#        entity_id: media_player.kodi
-#
-#    - alias: Play TV channel
-#      service: media_player.play_media
-#      data_template:
-#        entity_id: media_player.kodi
-#        #      The type of the content to play. Must be one of MUSIC, TVSHOW, VIDEO, EPISODE, CHANNEL or PLAYLIST
-#        # [('La 1 HD', 32), ('La 2', 10), ('Antena 3 HD', 33), ('Cuatro HD', 42), ('Telecinco HD', 44), ('La Sexta HD', 18),
-#        #  ('#0 HD', 55), ('TV Mediterráneo ', 29), ('TV3 HD ', 52), ('FDF', 17), ('Neox', 6), ('Atreseries HD', 8), ('Energy', 41),
-#        #  ('Ten', 4), ('Paramount Channel', 7), ('DEPORTES HD', 34), ('Teledeporte', 31), ('Teledeporte HD', 57), ('Discovery Max', 58),
-#        #  ('DKISS ', 49), ('Divinity', 19), ('Nova', 43), ('MEGA', 39), ('Disney Channel HD', 16), ('Boing', 9), ('Clan TVE', 2),
-#        #  ('24 Horas', 20), ('Xarxa Televisions ', 5), ('Movistar+ HD', 1)]
-#        media_content_type: "CHANNEL"
-#        media_content_id: >
-#          {% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}
-#            18
-#          {% elif (now().hour < 16) %}
-#            33
-#          {% elif (now().hour < 20) %}
-#            20
-#          {% elif (now().hour == 20) and (now().minute < 50) %}
-#            18
-#          {% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}
-#            33
-#          {% else %}
-#            55
-#          {% endif %}
-#
-#    - alias: Notificación de selección de canal
-#      service: telegram_bot.send_message
-#      data_template:
-#        title: '*TV PVR ON*'
-#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-#        disable_notification: true
-#        message: >
-#          Encendido de caja tonta en canal '{% if (now().hour < 14) or ((now().hour == 14) and (now().minute < 50)) %}laSexta HD{% elif (now().hour < 16) %}antena3 HD{% elif (now().hour < 20) %}24h{% elif (now().hour == 20) and (now().minute < 50) %}laSexta HD{% elif (now().hour == 20) or ((now().hour == 21) and (now().minute < 15)) %}antena3 HD{% else %}#0 HD{% endif %}'.
-#        inline_keyboard:
-#          - OFF:/service_call media_player.turn_off media_player.kodi, ON:/service_call media_player.turn_on media_player.kodi, ‖:/service_call media_player.media_play_pause media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+
+start_tvshows_mode:
+#  id: start_tvshows_mode
+  alias: Set TVShows Mode
+  sequence:
+      service: python_script.start_tvshows_mode
 
 restart_kodi_osmc:
 #  id: restart_kodi

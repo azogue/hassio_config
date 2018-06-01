@@ -33,12 +33,10 @@ control_salon:
     - input_number.light_main_slider_salon
     - input_number.light_temp_slider_salon
     - input_select.salon_light_scene
-    - switch.hall_light
+    - light.hall_light
     - cover.sonoff_cover_ventanal
     - cover.sonoff_cover_puerta_terraza
     - light.terraza
-    - switch.tv_power
-    - switch.camara
 
 control_estudio:
   name: Luces estudio
@@ -97,17 +95,20 @@ Enchufes:
     - switch.bomba_circ_acs
     - switch.calentador
     - switch.ac_dry_contact
-#    - switch.tv_power
-#    - switch.camara
+    - switch.tv_power
+    - switch.camara
     - switch.altavoz
+    # Antimosquitos
     - switch.office_floor
+    # Antimosquitos 2
+    - switch.test_switch_2
+
     - switch.vinoteca
 
     - switch.cocina
     - switch.new_switch_2
     - switch.new_switch_3
     - switch.sonoff_simple_1
-    - switch.test_switch_2
 
 #Terraza:
 #  - light.terraza
@@ -277,7 +278,7 @@ esp_hall:
   name: Hall
 #    control: hidden
   entities:
-    - switch.hall_light
+    - light.hall_light
     - binary_sensor.sensor_hall_light_switch
     - binary_sensor.sensor_hall_relay_1
     - binary_sensor.sensor_hall_relay_2
@@ -343,7 +344,7 @@ Alarma:
 Movimiento:
   - binary_sensor.local_pir
   - binary_sensor.motioncam_salon
-  - binary_sensor.pir_dormitorio_rpi2mpd
+  - binary_sensor.sensor_bedroom_mov1
   - binary_sensor.sensor_livingroom_mov1
   - binary_sensor.sensor_kitchen_mov1
   - binary_sensor.sensor_study_mov1
@@ -375,15 +376,18 @@ Conectivity:
   - binary_sensor.sensor_hall_online
   - binary_sensor.sensor_study_online
   - binary_sensor.sensor_office_online
+  - binary_sensor.sensor_bedroom_online
   - binary_sensor.sensor_bathroom_ac_online
   - binary_sensor.sensor_terraza_online
   - binary_sensor.sensor_galeria_online
+  - binary_sensor.vinoteca_online
 
   - sensor.sensor_livingroom__snum
   - sensor.sensor_kitchen__snum
   - sensor.sensor_hall__snum
   - sensor.sensor_study__snum
   - sensor.sensor_office__snum
+  - sensor.sensor_bedroom__snum
   - sensor.sensor_bathroom_ac__snum
   - sensor.sensor_terraza__snum
   - sensor.sensor_galeria__snum
@@ -480,6 +484,7 @@ Dispositivos:
     - device_tracker.yeelight_strip
     - device_tracker.tv_toshiba
     - device_tracker.home_cinema
+    - device_tracker.home_cinema_2
     - device_tracker.rpi3b_libreelec
     - device_tracker.rpi2_bedroom
     - device_tracker.b827ebcaec07
@@ -520,6 +525,8 @@ Dev boards:
     - device_tracker.30aea4208170
     # WROOM32 miniOLED (estudio)
     - device_tracker.30aea4001d1c
+    # WROOM32 (dormitorio):
+    - device_tracker.30aea4155644
     # WROOM32 (galería)
     - device_tracker.240ac4057954
     # Sparkfun Terraza
@@ -680,6 +687,7 @@ Automatizaciones:
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
     - automation.encendido_luces_estudio
     - automation.encendido_luces_dormitorio
+    - automation.luz_hall_abriendo_cuadro
     - automation.sync_tira_tv_con_tira_sofa
     - automation.vacuum_select_rooms_to_clean
     - automation.botvac_error_notification
@@ -716,7 +724,7 @@ Status:
     - group.esp_bathroom_1
     - group.esp_terraza
     - group.esp_galeria
-    - group.vinoteca
+#    - group.vinoteca
     - group.termo
     - group.local
 

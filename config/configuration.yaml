@@ -14,7 +14,7 @@ homeassistant:
   #customize_glob: !include frontend/customize_glob.yaml
 
 frontend:
-  javascript_version: latest
+#  javascript_version: latest
   extra_html_url:
     - /local/custom_ui/state-card-floorplan.html
   themes: !include themes.yaml
@@ -47,8 +47,8 @@ logger:
     miio: critical
     homeassistant.components.media_player: info
     homeassistant.components.tts: debug
-    homeassistant.components.telegram_bot: debug
-    custom_components.telegram_bot: debug
+#    homeassistant.components.telegram_bot: debug
+#    custom_components.telegram_bot: debug
 
 mqtt:
   discovery: true
@@ -141,3 +141,4 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 weblink: !include weblinks.yaml
+scene: !include scenes.yaml
