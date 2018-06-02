@@ -1,0 +1,73 @@
+# psychrometrics custom component from PsychroCam
+homeassistant:
+  customize:
+    camera.psychrometric_chart:
+      friendly_name: Diagrama psicrométrico
+#      custom_ui_state_card: camera_nocaption
+    sensor.psychrometric_evolution:
+      hidden: True
+      homebridge_hidden: True
+  customize_glob:
+    sensor.temp_change_*:
+      icon: mdi:delta
+      homebridge_hidden: True
+
+camera:
+  - platform: generic
+    name: psychrometric_chart
+    still_image_url: !secret psychrocam_svgchart_url
+    content_type: 'image/svg+xml'
+
+sensor:
+  - platform: rest
+    name: psychrometric_evolution
+    resource: !secret psychrocam_ha_evo_url
+    unit_of_measurement: "sample"
+    json_attributes:
+      - pressure_kPa
+      - Office
+      - Salón
+      - Dormitorio
+      - Cocina
+      - Estudio
+      - Aseo
+      - Terraza
+      - Galería
+      - Previsto
+    scan_interval: 30
+    value_template: '{{ value_json.num_points | int }}'
+
+  - platform: template
+    sensors:
+      temp_change_office:
+        friendly_name: '∆T Office'
+        value_template: '{% if "Office" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Office"]["first"]["∆T [°C/h]"] | round(2)  }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_kitchen:
+        friendly_name: '∆T Cocina'
+        value_template: '{% if "Cocina" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Cocina"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_livingroom:
+        friendly_name: '∆T Salón'
+        value_template: '{% if "Salón" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Salón"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_bedroom:
+        friendly_name: '∆T Dormitorio'
+        value_template: '{% if "Dormitorio" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Dormitorio"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_bathroom_ac:
+        friendly_name: '∆T Aseo'
+        value_template: '{% if "Aseo" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Aseo"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_study:
+        friendly_name: '∆T Estudio'
+        value_template: '{% if "Estudio" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Estudio"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_terraza:
+        friendly_name: '∆T Terraza'
+        value_template: '{% if "Terraza" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Terraza"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'
+      temp_change_galeria:
+        friendly_name: '∆T Galería'
+        value_template: '{% if "Galería" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Galería"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
+        unit_of_measurement: '°C/h'

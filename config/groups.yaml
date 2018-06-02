@@ -1,6 +1,7 @@
 Ambiente:
 #  - sensor.temperatura_ac
   - climate.termostato_ac
+  - binary_sensor.floorplan
 #  - sensor.temperatura_interior
   - sensor.temperatura_stats_mean
 #  - sensor.humedad_interior
@@ -591,7 +592,23 @@ Pi Hole:
   - sensor.pihole_dns_unique_domains
 #  - sensor.pihole_domains_blocked
 
+aislamiento:
+  name: Cambios de temperatura
+  entities:
+    - sensor.temp_change_galeria
+    - sensor.temp_change_kitchen
+    - sensor.temp_change_study
+    - sensor.temp_change_office
+    - sensor.temp_change_bathroom_ac
+    - sensor.temp_change_bedroom
+    - sensor.temp_change_livingroom
+    - sensor.temp_change_terraza
+    - sensor.psychrometric_evolution
+#    - sensor.house_delta_temperature
+#    - binary_sensor.close_house
+
 weather_cams:
+  - camera.psychrometric_chart
   - weather.local_weather
   - camera.weather_svg
   - camera.webcam_playa_1

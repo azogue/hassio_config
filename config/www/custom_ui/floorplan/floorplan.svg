@@ -41,9 +41,9 @@
      id="namedview32641"
      showgrid="false"
      showguides="false"
-     inkscape:zoom="1.1507587"
-     inkscape:cx="405.01373"
-     inkscape:cy="347.81949"
+     inkscape:zoom="1.5965771"
+     inkscape:cx="222.65314"
+     inkscape:cy="384.25955"
      inkscape:window-x="34"
      inkscape:window-y="22"
      inkscape:window-maximized="0"
@@ -1561,7 +1561,7 @@
     <path
        style="opacity:1;fill:none;fill-rule:evenodd;stroke:#96fba5;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 332.08164,536.25625 0,-13.08873 14.40063,0 0,-107.2614 -59.49135,0 0,-126.04481 -32.51065,0 0,246.39494 z"
-       id="binary_sensor.pir_dormitorio_rpi2mpd"
+       id="binary_sensor.sensor_bedroom_mov1"
        inkscape:connector-curvature="0">
       <title
          id="title24351">Mov dormitorio</title>
@@ -1673,7 +1673,7 @@
     <path
        sodipodi:nodetypes="cccccccccc"
        inkscape:connector-curvature="0"
-       id="light.hall"
+       id="light.hall_light"
        d="m 106.41411,241.81248 53.90224,0 0,45.12128 -2.65802,0 0,23.64092 -46.27864,-0.386 0,-9.0834 -4.96558,0 0,-17.48005 z"
        style="opacity:1;fill:#f3da2a;fill-opacity:0.33333333;fill-rule:evenodd;stroke:#e79836;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <title
@@ -1714,10 +1714,10 @@
     </path>
     <path
        inkscape:connector-curvature="0"
-       id="light.exterior"
+       id="light.terraza"
        d="m 96.555788,593.67796 -0.146787,-80.13744 155.242679,0.15758 0.17511,25.48569 -0.007,54.59068 z"
        style="opacity:1;fill:#f3da2a;fill-opacity:0.33469388;fill-rule:evenodd;stroke:#e79836;stroke-width:1.38648927;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       inkscape:label="#path56856">
+       inkscape:label="#light.terraza">
       <title
          id="title56858">Luz terraza</title>
     </path>
@@ -7938,6 +7938,19 @@
       <title
          id="title30408">Luz salón</title>
     </path>
+    <path
+       style="display:inline;fill:#0000ed;fill-opacity:1"
+       inkscape:connector-curvature="0"
+       id="switch.tv_power"
+       d="m 245.43301,459.65313 0,-5.93769 -3.00047,0 0,5.93769 -6.00096,0 0,-5.93769 -3.00047,0 0,5.93769 0,0 c -1.50025,0 -3.00049,1.48444 -3.00049,2.96888 l 0,8.16434 5.25083,5.1955 0,4.4533 7.5012,0 0,-4.4533 5.25085,-5.1955 0,-8.16434 c 0,-1.48444 -1.50025,-2.96888 -3.00049,-2.96888 z" />
+    <path
+       d="m 108.03985,466.70925 0,-4.3788 -2.08184,0 0,4.3788 -4.16369,0 0,-4.3788 -2.081845,0 0,4.3788 0,0 c -1.040931,0 -2.081855,1.09472 -2.081855,2.18943 l 0,6.02087 3.64323,3.83147 0,3.28413 5.20462,0 0,-3.28413 3.64324,-3.83147 0,-6.02087 c 0,-1.09471 -1.04093,-2.18943 -2.08186,-2.18943 z"
+       id="switch.camara"
+       inkscape:connector-curvature="0"
+       style="display:inline;fill:#0000ed;fill-opacity:1">
+      <title
+         id="title7944">Interruptor Cam Salón</title>
+    </path>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10466,31 +10479,31 @@
        inkscape:label="#sensor.sensor_galeria_temperature"
        sodipodi:linespacing="125%"
        id="sensor.sensor_galeria_temperature"
-       y="8.7827148"
-       x="189.03978"
+       y="7.2372775"
+       x="137.68849"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.89648438px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"
        transform="scale(0.96589847,1.0353055)"><title
          id="title33418">Temp galería</title><tspan
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.89648438px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
-         y="8.7827148"
-         x="189.03978"
+         y="7.2372775"
+         x="137.68849"
          id="tspan33420"
          sodipodi:role="line">Tª gal</tspan></text>
     <text
        inkscape:label="#sensor.sensor_galeria_humidity"
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6736784px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="191.42223"
-       y="22.03998"
+       x="139.36803"
+       y="20.515411"
        id="sensor.sensor_galeria_humidity"
        sodipodi:linespacing="125%"
        transform="scale(0.95285584,1.0494767)"><title
          id="title33424">Hum galería</title><tspan
          sodipodi:role="line"
          id="tspan33426"
-         x="191.42223"
-         y="22.03998"
+         x="139.36803"
+         y="20.515411"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6736784px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR gal</tspan></text>
     <text
        xml:space="preserve"
@@ -10595,35 +10608,35 @@
          id="tspan37825"
          sodipodi:role="line">HR est</tspan></text>
     <text
-       transform="scale(0.89836177,1.1131373)"
+       transform="scale(0.91780983,1.0895503)"
        inkscape:label="#sensor.sensor_bathroom_ac_temperature"
        sodipodi:linespacing="125%"
        id="sensor.sensor_bathroom_ac_temperature"
-       y="218.02614"
-       x="347.67047"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.6093874px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       y="227.45874"
+       x="347.70276"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.4490366px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><title
          id="title8126">Temp aseo</title><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.6093874px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
-         y="218.02614"
-         x="347.67047"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.4490366px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
+         y="227.45874"
+         x="347.70276"
          id="tspan8128"
          sodipodi:role="line">Tª aseo</tspan></text>
     <text
-       transform="scale(0.89836177,1.1131373)"
+       transform="scale(0.91780983,1.0895503)"
        inkscape:label="#sensor.sensor_bathroom_ac_humidity"
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.71635818px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="347.54202"
-       y="227.14915"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33757305px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="347.54291"
+       y="238.81325"
        id="sensor.sensor_bathroom_ac_humidity"
        sodipodi:linespacing="125%"><title
          id="title8132">Hum aseo</title><tspan
          sodipodi:role="line"
          id="tspan8134"
-         x="347.54202"
-         y="227.14915"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.71635818px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR aseo</tspan></text>
+         x="347.54291"
+         y="238.81325"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33757305px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR aseo</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10708,7 +10721,7 @@
        style="fill:#e50000;fill-opacity:1"
        inkscape:connector-curvature="0"
        id="light.yeelight_strip_7811dca21ecf"
-       d="m 239.78515,425.15213 -0.0179,16.64263 1.01621,-0.076 -4.8e-4,1.95052 2.00404,-0.13663 0.008,-1.95793 2.00403,-0.13663 0.007,1.95693 2.00403,-0.13663 4.9e-4,-1.95055 1.01621,-0.0622 -0.01,-16.6407 -8.0304,0.54691 m 2.01071,1.82047 4.00811,-0.27292 0.004,12.71935 -4.0223,0.27391 0.01,-12.72035 m 1.0018,0.90703 -0.008,1.9579 2.01826,-0.13742 -0.007,-1.95695 -2.00406,0.13663 m -0.008,2.94008 0.007,1.95694 2.00403,-0.13648 0.008,-1.95791 -2.01829,0.13741 m -6.8e-4,2.9327 0.007,1.95695 2.00406,-0.13664 0.008,-1.95792 -2.01823,0.13741 m -6.9e-4,2.93268 0.007,1.95696 2.00401,-0.13665 0.008,-1.95791 -2.01829,0.13741 z">
+       d="m 242.98515,444.35213 -0.0179,16.64263 1.01621,-0.076 -4.8e-4,1.95052 2.00404,-0.13663 0.008,-1.95793 2.00403,-0.13663 0.007,1.95693 2.00403,-0.13663 4.9e-4,-1.95055 1.01621,-0.0622 -0.01,-16.6407 -8.0304,0.54691 m 2.01071,1.82047 4.00811,-0.27292 0.004,12.71935 -4.0223,0.27391 0.01,-12.72035 m 1.0018,0.90703 -0.008,1.9579 2.01826,-0.13742 -0.007,-1.95695 -2.00406,0.13663 m -0.008,2.94008 0.007,1.95694 2.00403,-0.13648 0.008,-1.95791 -2.01829,0.13741 m -6.8e-4,2.9327 0.007,1.95695 2.00406,-0.13664 0.008,-1.95792 -2.01823,0.13741 m -6.9e-4,2.93268 0.007,1.95696 2.00401,-0.13665 0.008,-1.95791 -2.01829,0.13741 z">
       <title
          id="title32414">Yeelight</title>
     </path>
@@ -10722,30 +10735,12 @@
          id="title38850">Luz estudio</title>
     </path>
     <path
-       d="m 170.33603,516.06773 a 11.258412,10.930842 0 0 1 11.25841,10.93085 c 0,3.71648 -1.91393,6.98013 -4.82505,8.9633 l 0,3.5291 a 1.6083445,1.5615488 0 0 1 -1.60834,1.56155 l -9.65006,0 a 1.6083445,1.5615488 0 0 1 -1.60835,-1.56155 l 0,-3.5291 c -2.9111,-1.98317 -4.82503,-5.24682 -4.82503,-8.9633 a 11.258412,10.930842 0 0 1 11.25842,-10.93085 m -4.82504,29.66944 0,-1.56156 9.65006,0 0,1.56156 a 1.6083445,1.5615488 0 0 1 -1.60835,1.56154 l -6.43337,0 a 1.6083445,1.5615488 0 0 1 -1.60834,-1.56154 m 4.82504,-26.54633 a 8.0417225,7.8077442 0 0 0 -8.04174,7.80774 c 0,3.20117 1.97827,5.9495 4.82504,7.1519 l 0,3.77894 6.43337,0 0,-3.77894 c 2.84678,-1.2024 4.82504,-3.95073 4.82504,-7.1519 a 8.0417225,7.8077442 0 0 0 -8.04171,-7.80774 z"
-       id="light.terraza"
-       inkscape:connector-curvature="0"
-       style="display:inline;fill:#e50000;fill-opacity:1"
-       inkscape:label="#light.terraza">
-      <title
-         id="title30400">Luz terraza</title>
-    </path>
-    <path
        d="m 169.45691,174.07723 -1.91608,15.74015 7.66432,0 -1.91608,-15.74015 -3.83216,0 m 1.43706,3.32964 a 0.71852978,0.90808509 0 0 1 0.71853,0.90809 0.71852978,0.90808509 0 0 1 -0.71853,0.90809 0.71852978,0.90808509 0 0 1 -0.71853,-0.90809 0.71852978,0.90808509 0 0 1 0.71853,-0.90809 m 0.95804,3.32963 a 0.95803971,1.2107801 0 0 1 0.95804,1.2108 0.95803971,1.2107801 0 0 1 -0.95804,1.21079 0.95803971,1.2107801 0 0 1 -0.95804,-1.21079 0.95803971,1.2107801 0 0 1 0.95804,-1.2108 m -0.95804,4.23774 a 1.4370595,1.8161703 0 0 1 1.43706,1.81619 1.4370595,1.8161703 0 0 1 -1.43706,1.81617 1.4370595,1.8161703 0 0 1 -1.43706,-1.81617 1.4370595,1.8161703 0 0 1 1.43706,-1.81619 m -3.35314,6.05391 1.91608,2.42156 -1.91608,2.42158 7.66432,0 -1.91608,-2.42158 1.91608,-2.42156 -7.66432,0 z"
        id="light.go"
        inkscape:connector-curvature="0"
        style="fill:#e50000;fill-opacity:1">
       <title
          id="title31743">Go</title>
-    </path>
-    <path
-       inkscape:label="#switch.hall_light"
-       d="m 133.41002,260.13189 a 8.1561091,8.983149 0 0 1 8.15611,8.98315 c 0,3.05427 -1.38654,5.73638 -3.49548,7.36618 l 0,2.90028 a 1.1651584,1.283307 0 0 1 -1.16516,1.2833 l -6.99095,0 a 1.1651584,1.283307 0 0 1 -1.16516,-1.2833 l 0,-2.90028 c -2.10893,-1.6298 -3.49547,-4.31191 -3.49547,-7.36618 a 8.1561091,8.983149 0 0 1 8.15611,-8.98315 m -3.49548,24.38284 0,-1.28331 6.99095,0 0,1.28331 a 1.1651584,1.283307 0 0 1 -1.16516,1.2833 l -4.66063,0 a 1.1651584,1.283307 0 0 1 -1.16516,-1.2833 m 3.49548,-21.81622 a 5.8257922,6.416535 0 0 0 -5.82579,6.41653 c 0,2.63078 1.43314,4.8894 3.49547,5.87755 l 0,3.1056 4.66063,0 0,-3.1056 c 2.06234,-0.98815 3.49548,-3.24677 3.49548,-5.87755 a 5.8257922,6.416535 0 0 0 -5.82579,-6.41653 z"
-       id="switch.hall_light"
-       inkscape:connector-curvature="0"
-       style="display:inline;fill:#e50000;fill-opacity:1">
-      <title
-         id="title8138">Luz hall</title>
     </path>
   </g>
   <g
@@ -10756,10 +10751,13 @@
      transform="translate(-2.1825442,18.747119)"
      sodipodi:insensitive="true">
     <path
-       d="m 339.15162,176.50081 0,-6.1154 -3.09026,0 0,6.1154 -6.18054,0 0,-6.1154 -3.09026,0 0,6.1154 0,0 c -1.54514,0 -3.09028,1.52884 -3.09028,3.0577 l 0,8.40866 5.40798,5.35098 0,4.58656 7.72566,0 0,-4.58656 5.40798,-5.35098 0,-8.40866 c 0,-1.52886 -1.54514,-3.0577 -3.09028,-3.0577 z"
+       d="m 229.7509,360.33854 0,-4.55651 -2.25514,0 0,4.55651 -4.5103,0 0,-4.55651 -2.25514,0 0,4.55651 0,0 c -1.12758,0 -2.25516,1.13912 -2.25516,2.27825 l 0,6.26519 3.94652,3.98695 0,3.41739 5.63786,0 0,-3.41739 3.94652,-3.98695 0,-6.26519 c 0,-1.13913 -1.12758,-2.27825 -2.25516,-2.27825 z"
        id="switch.office_floor"
        inkscape:connector-curvature="0"
-       style="fill:#0000ed;fill-opacity:1" />
+       style="fill:#0000ed;fill-opacity:1">
+      <title
+         id="title8163">Interruptor antimosquitos salón</title>
+    </path>
     <path
        d="m 330.77442,501.78957 a 5.0494818,5.3863933 0 0 0 -5.0495,5.38638 5.0494818,5.3863933 0 0 0 5.0495,5.38638 5.0494818,5.3863933 0 0 0 5.04945,-5.38638 5.0494818,5.3863933 0 0 0 -5.04945,-5.38638 m 0,14.36368 a 8.4158028,8.9773222 0 0 1 -8.41582,-8.9773 8.4158028,8.9773222 0 0 1 8.41582,-8.97732 8.4158028,8.9773222 0 0 1 8.41579,8.97732 8.4158028,8.9773222 0 0 1 -8.41579,8.9773 m 0,-28.72742 a 3.3663212,3.590929 0 0 1 3.36629,3.59094 3.3663212,3.590929 0 0 1 -3.36629,3.59092 c -1.86835,0 -3.36632,-1.61592 -3.36632,-3.59092 0,-1.99296 1.49797,-3.59094 3.36632,-3.59094 m 8.41579,-3.59092 -16.83161,0 c -1.8683,0 -3.36632,1.59796 -3.36632,3.59092 l 0,28.72742 a 3.3663212,3.590929 0 0 0 3.36632,3.59094 l 16.83161,0 a 3.3663212,3.590929 0 0 0 3.36632,-3.59094 l 0,-28.72742 c 0,-1.99296 -1.51484,-3.59092 -3.36632,-3.59092 z"
        id="switch.altavoz"
@@ -10768,30 +10766,9 @@
       <title
          id="title32380">Altavoz</title>
     </path>
-    <path
-       style="fill:#0000ed;fill-opacity:1"
-       inkscape:connector-curvature="0"
-       id="switch.tv_power"
-       d="m 245.43301,459.65313 0,-5.93769 -3.00047,0 0,5.93769 -6.00096,0 0,-5.93769 -3.00047,0 0,5.93769 0,0 c -1.50025,0 -3.00049,1.48444 -3.00049,2.96888 l 0,8.16434 5.25083,5.1955 0,4.4533 7.5012,0 0,-4.4533 5.25085,-5.1955 0,-8.16434 c 0,-1.48444 -1.50025,-2.96888 -3.00049,-2.96888 z" />
-    <path
-       d="m 142.6282,26.340473 c 0,0 1.27516,1.520572 1.27516,2.452534 a 1.2751566,1.4014481 0 0 1 -1.27516,1.401448 1.2751566,1.4014481 0 0 1 -1.27515,-1.401448 c 0,-0.931962 1.27515,-2.452534 1.27515,-2.452534 m -8.92609,2.452534 0,-6.306516 a 1.2751566,1.4014481 0 0 1 -1.27516,-1.401448 1.2751566,1.4014481 0 0 1 1.27516,-1.401448 l 0,-0.700724 a 1.2751566,1.4014481 0 0 1 1.27515,-1.401448 l 1.27516,0 a 1.2751566,1.4014481 0 0 1 1.27515,1.401448 l 0,0.700724 5.10063,0 a 1.2751566,1.4014481 0 0 1 1.27516,1.401448 l 0,1.401448 0,1.401448 a 0.63757827,0.70072401 0 0 1 0.63758,0.700724 0.63757827,0.70072401 0 0 1 -0.63758,0.700724 l -2.55031,0 a 0.63757827,0.70072401 0 0 1 -0.63758,-0.700724 0.63757827,0.70072401 0 0 1 0.63758,-0.700724 l 0,-1.401448 -3.82548,0 0,6.306516 0.63758,0 a 1.2751566,1.4014481 0 0 1 1.27516,1.401448 l 0,1.401449 -7.65093,0 0,-1.401449 a 1.2751566,1.4014481 0 0 1 1.27515,-1.401448 l 0.63758,0 z"
-       id="switch.bomba_circ_acs"
-       style="fill:#c700fe;fill-opacity:1"
-       inkscape:connector-curvature="0">
-      <title
-         id="title48001">Bomba ACS</title>
-    </path>
-    <path
-       d="m 108.75,12.619985 -1.42,2.19 1.42,2.21 -0.01,0 -1.99,3.1 -1.73,-0.9 1.42,-2.21 -1.42,-2.2 2,-3.1 1.73,0.91 m 6,-0.11 -1.42,2.21 1.42,2.2 -0.01,0.01 -1.99,3.09 -1.73,-0.9 1.42,-2.2 -1.42,-2.2 2,-3.1 1.73,0.89 m 6.05,0 -1.44,2.21 1.44,2.2 0,0.01 -2,3.09 -1.75,-0.9 1.42,-2.2 -1.42,-2.2 2,-3.1 1.75,0.89 m -18,19.11 0,-8 a 2,2 0 0 1 2,-2 l 16,0 a 2,2 0 0 1 2,2 l 0,8 -2,0 0,-2 -16,0 0,2 -2,0 m 4,-8 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 z"
-       id="switch.calentador"
-       style="fill:#f18311;fill-opacity:1"
-       inkscape:connector-curvature="0">
-      <title
-         id="title47999">Calentador</title>
-    </path>
     <g
        id="media_player.kodi_tv"
-       transform="translate(11.2,-11.2)">
+       transform="translate(12.8,3.2)">
       <title
          id="title37862">Kodi</title>
       <rect
@@ -10808,25 +10785,24 @@
          d="m 220.18725,456.85389 -37.1682,0 0,-21.63696 37.1682,0 m 0,-3.60617 -37.1682,0 a 4.1298005,3.6061616 0 0 0 -4.1298,3.60617 l 0,21.63696 a 4.1298005,3.6061616 0 0 0 4.1298,3.60616 l 10.3245,0 0,3.60617 16.5192,0 0,-3.60617 10.3245,0 a 4.1298005,3.6061616 0 0 0 4.1298,-3.60616 l 0,-21.63696 a 4.1298005,3.6061616 0 0 0 -4.1298,-3.60617 z" />
     </g>
     <path
-       d="m 112.63301,461.25313 0,-5.93769 -3.00047,0 0,5.93769 -6.00096,0 0,-5.93769 -3.00047,0 0,5.93769 0,0 c -1.50025,0 -3.00049,1.48444 -3.00049,2.96888 l 0,8.16434 5.25083,5.1955 0,4.4533 7.5012,0 0,-4.4533 5.25085,-5.1955 0,-8.16434 c 0,-1.48444 -1.50025,-2.96888 -3.00049,-2.96888 z"
-       id="switch.camara"
+       style="fill:#0000ed;fill-opacity:1"
        inkscape:connector-curvature="0"
-       style="fill:#0000ed;fill-opacity:1">
+       id="switch.test_switch_2"
+       d="m 267.46426,418.04959 0,-4.8242 -2.4994,0 0,4.8242 -4.99881,0 0,-4.8242 -2.4994,0 0,4.8242 0,0 c -1.24972,0 -2.49942,1.20607 -2.49942,2.41213 l 0,6.63329 4.37396,4.22119 0,3.61818 6.24852,0 0,-3.61818 4.37397,-4.22119 0,-6.63329 c 0,-1.20606 -1.24971,-2.41213 -2.49942,-2.41213 z">
       <title
-         id="title7944">Interruptor Cam Salón</title>
+         id="title8161">Interruptor Antimosquitos dormitorio</title>
     </path>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer_menu"
      inkscape:label="hass_menu"
-     style="display:inline"
-     transform="translate(-2.1825442,-0.43289581)"
-     sodipodi:insensitive="true">
+     style="display:inline;opacity:0.83300003"
+     transform="translate(-2.1825442,-0.43289581)">
     <g
        id="toggle_muebles"
        inkscape:label="#g37847"
-       transform="translate(6.4,-48)">
+       transform="translate(25.600002,-320)">
       <rect
          y="330.67252"
          x="0.92775673"
@@ -10847,7 +10823,7 @@
     <g
        id="toggle_sensors"
        inkscape:label="#g37843"
-       transform="translate(14.4,-48)">
+       transform="translate(-4.4814708,-291.4389)">
       <rect
          y="330.67255"
          x="31.013371"
@@ -10863,7 +10839,7 @@
          d="m 50.900237,346.50477 4.55,-7.87 0,11.69 0,2 -20,0 0,-18 2,0 0,12.54 5.5,-9.54 6.5,3.78 4.24,-7.33 1.73,1 -5.23,9.05 -6.51,-3.75 -5.92,10.25 2.26,0 4.39,-7.56 6.49,3.74 z" />
     </g>
     <path
-       d="m 69.353584,220.85038 a 3.4625335,3.0031078 0 0 1 3.462534,3.00311 3.4625335,3.0031078 0 0 1 -3.462534,3.00312 3.4625335,3.0031078 0 0 1 -3.462534,-3.00312 3.4625335,3.0031078 0 0 1 3.462534,-3.00311 m -2.596901,30.03109 0,-9.00933 -5.1938,0 4.483981,-11.39679 c 0.432817,-1.23128 1.748579,-2.1172 3.30672,-2.1172 1.558138,0 2.873903,0.88592 3.306718,2.1172 l 4.483982,11.39679 -5.193801,0 0,9.00933 -5.1938,0 z"
+       d="m 226.62421,60.006284 a 3.0796781,2.7024648 0 0 1 3.07967,2.702467 3.0796781,2.7024648 0 0 1 -3.07967,2.702475 3.0796781,2.7024648 0 0 1 -3.07969,-2.702475 3.0796781,2.7024648 0 0 1 3.07969,-2.702467 m -2.30977,27.024658 0,-8.1074 -4.61952,0 3.9882,-10.25585 c 0.38495,-1.108016 1.55522,-1.905246 2.94109,-1.905246 1.38584,0 2.55613,0.79723 2.94108,1.905246 l 3.98819,10.25585 -4.61952,0 0,8.1074 -4.61952,0 z"
        id="group.carmen"
        inkscape:connector-curvature="0"
        style="fill:#fa00c6;fill-opacity:0.96078431">
@@ -10871,7 +10847,7 @@
          id="title56893">Carmen</title>
     </path>
     <path
-       d="m 48.453485,220.85038 a 3.4625335,3.0031078 0 0 1 3.462534,3.00311 3.4625335,3.0031078 0 0 1 -3.462534,3.00312 3.4625335,3.0031078 0 0 1 -3.462533,-3.00312 3.4625335,3.0031078 0 0 1 3.462533,-3.00311 m -2.5969,7.50777 5.1938,0 a 3.4625335,3.0031078 0 0 1 3.462534,3.00312 l 0,8.25854 -2.5969,0 0,11.26166 -6.925067,0 0,-11.26166 -2.5969,0 0,-8.25854 a 3.4625335,3.0031078 0 0 1 3.462533,-3.00312 z"
+       d="m 209.89805,60.006284 a 3.0796781,2.7024648 0 0 1 3.07968,2.702467 3.0796781,2.7024648 0 0 1 -3.07968,2.702475 3.0796781,2.7024648 0 0 1 -3.07968,-2.702475 3.0796781,2.7024648 0 0 1 3.07968,-2.702467 m -2.30976,6.756162 4.61952,0 a 3.0796781,2.7024648 0 0 1 3.07968,2.702476 l 0,7.431772 -2.30976,0 0,10.134248 -6.15936,0 0,-10.134248 -2.30976,0 0,-7.431772 a 3.0796781,2.7024648 0 0 1 3.07968,-2.702476 z"
        id="group.eugenio"
        inkscape:connector-curvature="0"
        style="fill:#fa00c6;fill-opacity:0.96078431">
@@ -10881,7 +10857,7 @@
     <g
        id="toggle_lights"
        inkscape:label="#g37838"
-       transform="translate(-15.309743,-17.075448)">
+       transform="translate(-34.191214,-260.51435)">
       <rect
          style="opacity:1;fill:#000000;fill-opacity:0.3731346;stroke:#fb00c6;stroke-width:1.29958236;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96078431"
          id="rect37829"
@@ -10902,7 +10878,7 @@
     <g
        id="g33474"
        style="display:inline;fill:#fa00c6;fill-opacity:0.95812809"
-       transform="matrix(1.3883965,0,0,1.5351419,-200.50422,-179.05372)">
+       transform="matrix(1.0276598,0,0,1.1514489,86.08696,-263.10072)">
       <g
          id="sensor.esp32ener_power"
          style="fill:#fa00c6;fill-opacity:0.95812809">
@@ -10928,7 +10904,7 @@
       </g>
     </g>
     <path
-       d="m 19.488165,240.94299 -2.617603,0 0,-5.32097 2.617603,0 m 0,10.64193 -2.617603,0 0,-2.66048 2.617603,0 m -15.7056208,6.6512 28.7936378,0 L 18.179363,224.9801 3.7825442,250.25467 Z"
+       d="m 42.588781,417.97635 -2.617603,0 0,-5.32097 2.617603,0 m 0,10.64193 -2.617603,0 0,-2.66048 2.617603,0 m -15.705621,6.6512 28.793638,0 -14.396819,-25.27457 -14.396819,25.27457 z"
        id="alarm_control_panel.alarma"
        inkscape:connector-curvature="0"
        style="display:inline;fill:#fa00c6;fill-opacity:0.96078431">
@@ -10936,37 +10912,37 @@
          id="title7946">Alarma</title>
     </path>
     <text
-       transform="matrix(0.95285584,0,0,1.0494767,0,19.180015)"
+       transform="scale(0.95285584,1.0494767)"
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.84644127px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="40.334011"
-       y="165.51506"
+       x="258.67517"
+       y="32.531631"
        id="sensor.temperatura_stats_mean"
        sodipodi:linespacing="125%"><title
          id="title56897">Temp interior</title><tspan
          sodipodi:role="line"
          id="tspan56899"
-         x="40.334011"
-         y="165.51506"
+         x="258.67517"
+         y="32.531631"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.84644127px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">Tª int</tspan></text>
     <text
-       transform="matrix(0.95285584,0,0,1.0494767,0,19.180015)"
+       transform="scale(0.95285584,1.0494767)"
        sodipodi:linespacing="125%"
        id="sensor.humedad_stats_mean"
-       y="183.46852"
-       x="40.081379"
+       y="50.485092"
+       x="258.42252"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.08902359px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><title
          id="title56903">Hum interior</title><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.08902359px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
-         y="183.46852"
-         x="40.081379"
+         y="50.485092"
+         x="258.42252"
          id="tspan56905"
          sodipodi:role="line">HR int</tspan></text>
     <g
        id="toggle_lights_rooms"
        inkscape:label="#g46118"
-       transform="translate(6.4,6.4)">
+       transform="translate(25.600002,-208)">
       <rect
          y="307.33722"
          x="0.81574243"
@@ -10986,7 +10962,7 @@
     </g>
     <g
        id="toggle_mov_rooms"
-       transform="translate(-54.277087,37.445261)"
+       transform="translate(-35.077086,-176.95474)"
        inkscape:label="#toggle_mov_rooms">
       <rect
          y="306.8284"
@@ -11003,7 +10979,7 @@
     </g>
     <g
        id="switch.ac_dry_contact"
-       transform="translate(30.588519,-77.166482)">
+       transform="translate(11.395645,-109.8425)">
       <rect
          style="display:inline;opacity:1;fill:#000000;fill-opacity:0.3731346;stroke:#fb00c6;stroke-width:1.29958236;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96078431"
          id="rect12793"
@@ -11017,14 +10993,102 @@
          inkscape:connector-curvature="0"
          style="fill:#fb00c6;fill-opacity:0.96078431" />
     </g>
+    <g
+       id="g8164"
+       inkscape:label="#switch.bomba_circ_acs"
+       transform="translate(-3.2000004,-65.6)">
+      <title
+         id="title8176">Bomba ACS</title>
+      <rect
+         style="display:inline;opacity:1;fill:#000000;fill-opacity:0.3731346;stroke:#fb00c6;stroke-width:1.29958236;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96078431"
+         id="rect8158"
+         width="29.469921"
+         height="23.550156"
+         x="29.745018"
+         y="436.47568" />
+      <path
+         inkscape:connector-curvature="0"
+         style="display:inline;fill:#f700c2;fill-opacity:0.98431373"
+         id="switch.bomba_circ_acs"
+         d="m 49.995269,450.37836 c 0,0 1.575804,1.84677 1.575804,2.97865 a 1.5757999,1.7020913 0 0 1 -1.575804,1.7021 1.5757999,1.7020913 0 0 1 -1.575792,-1.7021 c 0,-1.13188 1.575792,-2.97865 1.575792,-2.97865 m -11.030592,2.97865 0,-7.65941 a 1.5757999,1.7020913 0 0 1 -1.575804,-1.70208 1.5757999,1.7020913 0 0 1 1.575804,-1.7021 l 0,-0.85105 a 1.5757999,1.7020913 0 0 1 1.575792,-1.70208 l 1.575804,0 a 1.5757999,1.7020913 0 0 1 1.575792,1.70208 l 0,0.85105 6.303204,0 a 1.5757999,1.7020913 0 0 1 1.575804,1.7021 l 0,1.70208 0,1.70209 a 0.78789993,0.8510456 0 0 1 0.787902,0.85106 0.78789993,0.8510456 0 0 1 -0.787902,0.85104 l -3.151596,0 a 0.78789993,0.8510456 0 0 1 -0.787902,-0.85104 0.78789993,0.8510456 0 0 1 0.787902,-0.85106 l 0,-1.70209 -4.727412,0 0,7.65941 0.787902,0 a 1.5757999,1.7020913 0 0 1 1.575804,1.7021 l 0,1.70209 -9.454788,0 0,-1.70209 a 1.5757999,1.7020913 0 0 1 1.575792,-1.7021 l 0.787902,0 z">
+        <title
+           id="title48001">Bomba ACS</title>
+      </path>
+    </g>
+    <g
+       id="g8169"
+       inkscape:label="#switch.calentador"
+       transform="translate(-3.2000004,-65.6)">
+      <title
+         id="title8174">Calentador ACS</title>
+      <rect
+         y="406.91245"
+         x="29.243946"
+         height="23.550156"
+         width="29.469921"
+         id="rect8148"
+         style="display:inline;opacity:1;fill:#000000;fill-opacity:0.3731346;stroke:#fb00c6;stroke-width:1.29958236;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.96078431" />
+      <path
+         inkscape:connector-curvature="0"
+         style="display:inline;fill:#f800c3;fill-opacity:0.97647059"
+         id="switch.calentador"
+         d="m 39.928907,409.68752 -1.42,2.19 1.42,2.21 -0.01,0 -1.99,3.1 -1.73,-0.9 1.42,-2.21 -1.42,-2.2 2,-3.1 1.73,0.91 m 6,-0.11 -1.42,2.21 1.42,2.2 -0.01,0.01 -1.99,3.09 -1.73,-0.9 1.42,-2.2 -1.42,-2.2 2,-3.1 1.73,0.89 m 6.05,0 -1.44,2.21 1.44,2.2 0,0.01 -2,3.09 -1.75,-0.9 1.42,-2.2 -1.42,-2.2 2,-3.1 1.75,0.89 m -18,19.11 0,-8 a 2,2 0 0 1 2,-2 l 16,0 a 2,2 0 0 1 2,2 l 0,8 -2,0 0,-2 -16,0 0,2 -2,0 m 4,-8 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 m 4,0 a 1,1 0 0 0 -1,1 l 0,2 a 1,1 0 0 0 1,1 1,1 0 0 0 1,-1 l 0,-2 a 1,1 0 0 0 -1,-1 z">
+        <title
+           id="title47999">Calentador</title>
+      </path>
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="sensor.temperatura_exterior"
+       y="26.237329"
+       x="326.27408"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.61693192px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       transform="scale(1.0070581,0.99299137)"><title
+         id="title8169">Temp exterior</title><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.61693192px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
+         y="26.237329"
+         x="326.27408"
+         id="tspan8171"
+         sodipodi:role="line">Tª ext</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.41563034px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="326.10138"
+       y="38.509605"
+       id="sensor.humedad_exterior"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0070581,0.99299137)"><title
+         id="title8175">Hum exterior</title><tspan
+         sodipodi:role="line"
+         id="tspan8177"
+         x="326.10138"
+         y="38.509605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.41563034px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR ext</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="opacity:0.79599998;fill:none;fill-opacity:0.98431373;stroke:#f58511;stroke-width:3.60400009;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path8185"
+       sodipodi:sides="4"
+       sodipodi:cx="231.17242"
+       sodipodi:cy="42.522957"
+       sodipodi:r1="43.593262"
+       sodipodi:r2="21.796633"
+       sodipodi:arg1="0.80978357"
+       sodipodi:arg2="1.5951817"
+       inkscape:flatsided="true"
+       inkscape:rounded="0.19"
+       inkscape:randomized="0"
+       d="m 261.23674,74.090491 c -8.48221,8.0783 -53.55355,6.978999 -61.63185,-1.503216 -8.0783,-8.482214 -6.979,-53.553553 1.50322,-61.631852 8.48221,-8.0783001 53.55355,-6.9789993 61.63185,1.503215 8.0783,8.482215 6.979,53.553553 -1.50322,61.631853 z"
+       transform="matrix(1.4063695,0,0,1.2190091,-78.478803,-0.79468993)" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="hass_menu_dev"
      style="display:none"
-     sodipodi:insensitive="true"
-     transform="translate(-2.1825442,-0.43289581)">
+     transform="translate(-2.1825442,-0.43289581)"
+     sodipodi:insensitive="true">
     <path
        d="m 17.301535,322.68129 5.5,0 -5.5,-5.5 0,5.5 m -7,-7 8,0 6,6 0,12 a 2,2 0 0 1 -2,2 l -12,0 c -1.11,0 -2,-0.9 -2,-2 l 0,-16 c 0,-1.11 0.89,-2 2,-2 m 9,16 0,-2 -9,0 0,2 9,0 m 3,-4 0,-2 -12,0 0,2 12,0 z"
        id="path53717"

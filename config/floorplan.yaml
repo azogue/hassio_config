@@ -1,4 +1,4 @@
-      name: Demo Floorplan
+      name: Main Floorplan
       image: /local/custom_ui/floorplan/floorplan.svg
       stylesheet: /local/custom_ui/floorplan/floorplan.css
       
@@ -104,6 +104,7 @@
 
         - name: Temperature Sensors
           entities:
+             - sensor.temperatura_exterior
              - sensor.temperatura_stats_mean
              - sensor.sensor_terraza_temperature
              - sensor.sensor_galeria_temperature
@@ -136,6 +137,7 @@
 
         - name: Humidity Sensors
           entities:
+             - sensor.humedad_exterior
              - sensor.humedad_stats_mean
              - sensor.sensor_terraza_humidity
              - sensor.sensor_galeria_humidity
@@ -178,9 +180,9 @@
              - light.flexo
              - light.estudio
              - light.terraza
-             - light.hall
-             - switch.hall_light
-             - light.exterior
+#             - light.hall
+             - light.hall_light
+#             - light.exterior
           states:
             - state: 'on'
               class: 'light-on'
@@ -193,6 +195,7 @@
         - name: Switches
           entities:
              - switch.office_floor
+             - switch.test_switch_2
              - switch.tv_power
              - switch.camara
 #             - switch.sonoff_simple_1
@@ -246,7 +249,7 @@
         - name: Binary sensors
           entities:
             - binary_sensor.services_notok
-#            - binary_sensor.pir_dormitorio_rpi2mpd
+            - binary_sensor.sensor_bedroom_mov1
             - binary_sensor.sensor_kitchen_mov1
             - binary_sensor.sensor_office_mov1
             - binary_sensor.sensor_terraza_mov1

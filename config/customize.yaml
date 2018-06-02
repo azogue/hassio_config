@@ -1,3 +1,6 @@
+binary_sensor.floorplan:
+  custom_ui_state_card: state-card-floorplan
+  config: !include floorplan.yaml
 
 script.start_tvshows_mode:
   hidden: true

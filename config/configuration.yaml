@@ -15,8 +15,14 @@ homeassistant:
 
 frontend:
 #  javascript_version: latest
-  extra_html_url:
+  javascript_version: es5
+#  javascript_version: auto
+#  extra_html_url:
+#    - /local/custom_ui/state-card-floorplan.html
+#    - /local/custom_ui/floorplan/ha-floorplan.html
+  extra_html_url_es5:
     - /local/custom_ui/state-card-floorplan.html
+    - /local/custom_ui/floorplan/ha-floorplan.html
   themes: !include themes.yaml
 
 config:
@@ -40,6 +46,7 @@ logger:
     homeassistant.components.recorder: info
     homeassistant.components.history: info
     homeassistant.components.script: info
+    homeassistant.components.floorplan: debug
     homeassistant.components.automation: info
     components.vacuum.xiaomi_miio: critical
     custom_components.vacuum.myxiaomi_miio: critical
@@ -123,6 +130,10 @@ panel_iframe:
     title: Grafana
     url: !secret grafana_url
     icon: mdi:chart-areaspline
+#  psychrochart:
+#    title: Psicrométrico
+#    url: !secret psychrocam_svgchart_url
+#    icon: mdi:gradient
 
 panel_custom:
   - name: floorplan
@@ -136,6 +147,12 @@ weather:
     api_key: !secret openweathermap_api_key
     name: Local Weather
     scan_interval: 120
+
+# Entity needed to show Floorplan with custom-state-card
+binary_sensor:
+  - platform: mqtt
+    state_topic: dummy/floorplan/sensor
+    name: Floorplan
 
 group: !include groups.yaml
 automation: !include automations.yaml
