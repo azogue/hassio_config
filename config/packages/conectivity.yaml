@@ -4,7 +4,7 @@ homeassistant:
     sensor.ip_externa:
       homebridge_hidden: true
       friendly_name: IP externa
-      icon: mdi:sim
+      icon: mdi:map-marker
 
     binary_sensor.estudio_online:
       homebridge_hidden: true
@@ -15,37 +15,37 @@ homeassistant:
     binary_sensor.heating:
       homebridge_hidden: true
 
-    sensor.error_counter_notifiers:
-      homebridge_hidden: true
-      friendly_name: Errores de notificación
-      icon: mdi:alert
-    sensor.warning_counter_core:
-      homebridge_hidden: true
-      friendly_name: "# Warnings"
-      icon: mdi:alert-outline
-    sensor.core_error_counter:
-      homebridge_hidden: true
-      icon: mdi:alert-outline
+#    sensor.error_counter_notifiers:
+#      homebridge_hidden: true
+#      friendly_name: Errores de notificación
+#      icon: mdi:alert
+#    sensor.warning_counter_core:
+#      homebridge_hidden: true
+#      friendly_name: "# Warnings"
+#      icon: mdi:alert-outline
+#    sensor.core_error_counter:
+#      homebridge_hidden: true
+#      icon: mdi:alert-outline
     binary_sensor.internet_online:
       friendly_name: ¿Hay conexión a internet?
       homebridge_hidden: true
-    binary_sensor.database_ok:
-      friendly_name: ¿Base de datos OK?
-      homebridge_hidden: true
+#    binary_sensor.database_ok:
+#      friendly_name: ¿Base de datos OK?
+#      homebridge_hidden: true
     binary_sensor.nas_online:
       homebridge_hidden: true
-    binary_sensor.pushbullet_online:
-      friendly_name: ¿Hay notificaciones PushBullet?
-      homebridge_hidden: true
-    binary_sensor.email_online:
-      friendly_name: ¿Hay notificaciones por email?
-      homebridge_hidden: true
-    binary_sensor.telegram_online:
-      homebridge_hidden: true
-    binary_sensor.ios_online:
-      homebridge_hidden: true
-    binary_sensor.kodi_online:
-      homebridge_hidden: true
+#    binary_sensor.pushbullet_online:
+#      friendly_name: ¿Hay notificaciones PushBullet?
+#      homebridge_hidden: true
+#    binary_sensor.email_online:
+#      friendly_name: ¿Hay notificaciones por email?
+#      homebridge_hidden: true
+#    binary_sensor.telegram_online:
+#      homebridge_hidden: true
+#    binary_sensor.ios_online:
+#      homebridge_hidden: true
+#    binary_sensor.kodi_online:
+#      homebridge_hidden: true
     binary_sensor.services_notok:
       homebridge_hidden: true
     sensor.ssl_certificate_expiry:
@@ -85,53 +85,53 @@ binary_sensor:
     payload_off: "fail"
     scan_interval: 240
 
-  - platform: command_line
-    name: Pushbullet Online
-    command: "bash /config/shell/check_notifiers.sh pushbullet"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 240
+#  - platform: command_line
+#    name: Pushbullet Online
+#    command: "bash /config/shell/check_notifiers.sh pushbullet"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 240
 
-  - platform: command_line
-    name: Email Online
-    command: "bash /config/shell/check_notifiers.sh richsmtp"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 240
+#  - platform: command_line
+#    name: Email Online
+#    command: "bash /config/shell/check_notifiers.sh richsmtp"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 240
 
-  - platform: command_line
-    name: Telegram Online
-    command: "bash /config/shell/check_notifiers.sh telegram"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 240
+#  - platform: command_line
+#    name: Telegram Online
+#    command: "bash /config/shell/check_notifiers.sh telegram"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 240
+#
+#  - platform: command_line
+#    name: iOS Online
+#    command: "bash /config/shell/check_notifiers.sh ios"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 240
 
-  - platform: command_line
-    name: iOS Online
-    command: "bash /config/shell/check_notifiers.sh ios"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 240
+#  - platform: command_line
+#    name: Kodi Online
+#    command: "bash /config/shell/check_notifiers.sh kodi"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 240
 
-  - platform: command_line
-    name: Kodi Online
-    command: "bash /config/shell/check_notifiers.sh kodi"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 240
-
-  - platform: command_line
-    name: Database OK
-    command: "bash /config/shell/check_notifiers.sh recorder"
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 180
+#  - platform: command_line
+#    name: Database OK
+#    command: "bash /config/shell/check_notifiers.sh recorder"
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 180
 
   - platform: template
     sensors:
@@ -140,15 +140,9 @@ binary_sensor:
         device_class: safety
         value_template: >
           {{
-           (states.binary_sensor.kodi_online.state == 'off') or
-           (states.binary_sensor.pushbullet_online.state == 'off') or
-           (states.binary_sensor.email_online.state == 'off') or
-           (states.binary_sensor.ios_online.state == 'off') or
-           (states.binary_sensor.telegram_online.state == 'off') or
            (states.binary_sensor.router_on.state == 'off') or
            (states.binary_sensor.internet_online.state == 'off') or
-           (states.switch.systemd_appdaemon.state == 'off') or
-           (states.switch.systemd_homebridge.state == 'off')
+           (states.sensor.ip_externa.state == 'unknown')
            }}
 #        entity_id:
 #          - binary_sensor.kodi_online
@@ -162,28 +156,45 @@ binary_sensor:
 #          - switch.systemd_homebridge
 
 sensor:
-- platform: command_line
-  name: CORE Error counter
-  command: "bash /config/shell/check_notifiers.sh"
-
-- platform: command_line
-  name: Error counter (notifiers)
-  command: "bash /config/shell/check_notifiers.sh"
-
-- platform: command_line
-  name: Warning counter (core)
-  command: "bash /config/shell/check_notifiers.sh core_warning"
+#- platform: command_line
+#  name: CORE Error counter
+#  command: "bash /config/shell/check_notifiers.sh"
+#
+#- platform: command_line
+#  name: Error counter (notifiers)
+#  command: "bash /config/shell/check_notifiers.sh"
+#
+#- platform: command_line
+#  name: Warning counter (core)
+#  command: "bash /config/shell/check_notifiers.sh core_warning"
 
 #- platform: command_line
 #  name: IP externa
 #  command: "cat /config/external_ip.txt"
+- platform: rest
+  resource: http://ip.jsontest.com
+  name: IP Externa
+  value_template: '{% if value_json %}{{ value_json.ip }}{% endif %}'
+  scan_interval: 180
 
 - platform: cert_expiry
   host: !secret base_host
+  scan_interval: 7200
 #    port: 443
 
 - platform: uptime
   unit_of_measurement: hours
+
+- platform: pi_hole
+  host: !secret pihole_host
+  monitored_conditions:
+    - dns_queries_today
+    - ads_blocked_today
+    - ads_percentage_today
+    - unique_clients
+    - unique_domains
+#    - domains_being_blocked
+  scan_interval: 180
 
 no_ip:
   domain: !secret base_host

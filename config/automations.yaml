@@ -215,7 +215,7 @@
     offset: '+00:00:00'
   action:
   - service: telegram_bot.send_message
-    data:
+    data_template:
       title: 'Empieza la noche!'
       message: 'Acaba de ponerse el sol... ¿Encendemos luces?'
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
@@ -224,15 +224,15 @@
         - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle group.luces_dormitorio
         - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call switch.toggle switch.estudio_light_relay, +:/init
 
-  - service: notify.ios_iphone
-    data:
-      title: 'Empieza la noche!'
-      message: 'Acaba de ponerse el sol..'
-      data:
-        push:
-          badge: 0
-          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
-          category: "confirm"
+#  - service: notify.ios_iphone
+#    data:
+#      title: 'Empieza la noche!'
+#      message: 'Acaba de ponerse el sol..'
+#      data:
+#        push:
+#          badge: 0
+#          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
+#          category: "confirm"
 
 # Set a light scene with a python_script
 - alias: Salón Select Scene
@@ -717,3 +717,117 @@
     - service: python_script.select_vacuum_cleaning
       data_template:
         room: '{{ trigger.to_state.state }}'
+
+- alias: Botvac reset select command
+  id: 'botvac_reset_select_command'
+  trigger:
+    platform: time
+    minutes: '/5'
+    seconds: 00
+#  trigger:
+#    platform: state
+#    entity_id: vacuum.robot_aspirador
+#    to: 'off'
+  condition:
+    condition: template
+    value_template: '{{ (states.vacuum.robot_aspirador.state == "off") and (states.vacuum.robot_aspirador.attributes.status == "Charging") and (states.input_select.vacuum_clean_combination.state != "Nada") }}'
+  action:
+    service: input_select.select_option
+    entity_id: input_select.vacuum_clean_combination
+    data:
+      option: "Nada"
+
+#
+#switch.altavoz
+#switch.test_switch_2
+#switch.office_floor
+
+- alias: Apagado automático de enchufes a las 6h
+  id: 'switches_auto_off_after_8hours'
+  trigger:
+    - platform: state
+      entity_id: switch.test_switch_2
+      to: 'on'
+      for:
+        hours: 6
+    - platform: state
+      entity_id: switch.office_floor
+      to: 'on'
+      for:
+        hours: 6
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
+        target: !secret telegram_bot_chat_id_admin
+        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ trigger.to_state.last_changed }})"
+        disable_notification: true
+        inline_keyboard:
+          - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
+          - Antimosquitos Salón ON:/service_call switch.turn_on switch.office_floor, Antimosquitos Salón OFF:/service_call switch.turn_off switch.office_floor
+    - service: switch.turn_off
+      entity_id: switch.test_switch_2,switch.office_floor
+
+- alias: Retry etekcity commands
+  id: 'retry_etekcity_commands'
+  trigger:
+    - platform: state
+      entity_id: switch.vinoteca
+      to: 'on'
+      for:
+        seconds: 10
+    - platform: state
+      entity_id: switch.camara
+      to: 'on'
+      for:
+        seconds: 30
+    - platform: state
+      entity_id: switch.altavoz
+      to: 'on'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: switch.test_switch_2
+      to: 'on'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: switch.office_floor
+      to: 'on'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: switch.vinoteca
+      to: 'off'
+      for:
+        seconds: 10
+    - platform: state
+      entity_id: switch.camara
+      to: 'off'
+      for:
+        seconds: 30
+    - platform: state
+      entity_id: switch.altavoz
+      to: 'off'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: switch.test_switch_2
+      to: 'off'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: switch.office_floor
+      to: 'off'
+      for:
+        seconds: 20
+  action:
+    - service_template: 'switch.{% if trigger.to_state.state == "off" %}turn_off{% else %}turn_on{% endif %}'
+      data_template:
+        entity_id: '{{ trigger.entity_id }}'
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '*Auto-Retry* de {{ trigger.to_state.attributes.friendly_name }}'
+#        target: !secret telegram_bot_chat_id_admin
+#        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ trigger.to_state.last_changed }})"
+#        disable_notification: true

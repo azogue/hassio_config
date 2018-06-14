@@ -1,7 +1,5 @@
 Ambiente:
-#  - sensor.temperatura_ac
   - climate.termostato_ac
-  - binary_sensor.floorplan
 #  - sensor.temperatura_interior
   - sensor.temperatura_stats_mean
 #  - sensor.humedad_interior
@@ -9,6 +7,34 @@ Ambiente:
   - sensor.temperatura_exterior
   - sensor.humedad_exterior
   - weblink.grafana
+
+ambiente_floorplan_psychrometric:
+  name: Floorplan
+  control: hidden
+  entities:
+  - binary_sensor.floorplan
+  - camera.psychrometric_chart
+  - weblink.grafana
+  - weblink.consumo_electrico
+
+ambiente_simple:
+  name: Status
+  control: hidden
+  entities:
+  - climate.termostato_ac
+  - input_select.salon_light_scene
+  - input_number.light_main_slider_salon
+  - input_number.light_temp_slider_salon
+  - script.play_kodi_pvr
+  - cover.sonoff_cover_ventanal
+  - cover.sonoff_cover_puerta_terraza
+  - vacuum.robot_aspirador
+  - input_select.vacuum_clean_combination
+  - light.salon
+  - light.dormitorio
+  - light.estudio
+  - light.hall_light
+  - light.terraza
 
 Salón:
   name: Luces salón
@@ -38,6 +64,7 @@ control_salon:
     - cover.sonoff_cover_ventanal
     - cover.sonoff_cover_puerta_terraza
     - light.terraza
+    - climate.termostato_ac
 
 control_estudio:
   name: Luces estudio
@@ -68,7 +95,6 @@ sensors_dormitorio:
     - sensor.dormitorio_htu21d_humidity_rpi2mpd
     - sensor.dormitorio_light_level_rpi2mpd
 
-
 Despertador:
   control: hidden
   entities:
@@ -88,6 +114,19 @@ vacuum_cleaner:
   entities:
     - vacuum.robot_aspirador
     - input_select.vacuum_clean_combination
+
+Enchufes_simple:
+  name: Enchufes
+  control: hidden
+  entities:
+    - switch.bomba_circ_acs
+    - switch.calentador
+    - switch.ac_dry_contact
+    - switch.altavoz
+    # Antimosquitos
+    - switch.office_floor
+    # Antimosquitos 2
+    - switch.test_switch_2
 
 Enchufes:
   name: Más enchufes
@@ -152,8 +191,12 @@ Media select:
     - script.pvr_channels
     - script.pvr_recordings
     - input_select.kodi_results
+Media search:
+  control: hidden
+  entities:
     - input_text.q_youtube
     - input_select.youtube_videos
+    - input_text.q_torrents
 
 Kodi:
   control: hidden
@@ -167,19 +210,12 @@ Kodi:
     - script.quit_kodi
     - script.restart_kodi_osmc
 
-LocalHost:
+Hassio:
   - sensor.hass_cpu_temperature
   - sensor.processor_use
   - sensor.memory_free
   - sensor.disk_use_percent_
   - sensor.last_boot
-
-Host Dormitorio:
-  - sensor.hass_cpu_temperature_rpi2mpd
-  - sensor.cpu_used_rpi2mpd
-  - sensor.ram_available_rpi2mpd
-  - sensor.disk_used__rpi2mpd
-  - sensor.last_boot_rpi2mpd
 
 QNAP NAS:
   control: hidden
@@ -200,7 +236,13 @@ QNAP NAS:
 #    - sensor.nashome_network_up_eth1
     - sensor.nashome_volume_used_datavol1
 
-Resto de hosts:
+Otras RPI:
+  - sensor.hass_cpu_temperature_rpi2mpd
+  - sensor.cpu_used_rpi2mpd
+  - sensor.ram_available_rpi2mpd
+  - sensor.disk_used__rpi2mpd
+  - sensor.last_boot_rpi2mpd
+#Resto de hosts:
 #  - sensor.enerpi_cpu_temperature
   - sensor.kodi_cpu_temperature
 
@@ -368,6 +410,7 @@ Cámaras:
 
 Conectivity:
   - binary_sensor.services_notok
+  - binary_sensor.internet_online
   - sensor.ip_externa
   - binary_sensor.router_on
   - binary_sensor.esp32_ener_online
@@ -393,20 +436,18 @@ Conectivity:
   - sensor.sensor_terraza__snum
   - sensor.sensor_galeria__snum
 
-  - binary_sensor.database_ok
-  - binary_sensor.internet_online
+#  - binary_sensor.database_ok
   - binary_sensor.nas_online
-  - binary_sensor.pushbullet_online
-  - binary_sensor.email_online
-  - binary_sensor.telegram_online
-  - binary_sensor.ios_online
-  - binary_sensor.kodi_online
+#  - binary_sensor.pushbullet_online
+#  - binary_sensor.email_online
+#  - binary_sensor.telegram_online
+#  - binary_sensor.ios_online
+#  - binary_sensor.kodi_online
   - sensor.uptime
   - sensor.ssl_certificate_expiry
-  - sensor.error_counter_notifiers
-  - sensor.core_error_counter
-  - sensor.warning_counter_core
-  - sensor.telegram_default_chatid
+#  - sensor.error_counter_notifiers
+#  - sensor.core_error_counter
+#  - sensor.warning_counter_core
 
 general_config:
   name: General
@@ -421,12 +462,12 @@ general_config:
     - input_boolean.switch_control_enerpi_max_power
     - input_number.enerpi_max_power
     - input_number.enerpi_max_power_reset
+    - sensor.telegram_default_chatid
     - script.good_night
     - script.good_morning
     - script.start_status_sonoff_outlets
     - script.set_mid_position_cover_1
     - script.set_mid_position_cover_2
-
 
 dt_imac:
 #  hidden: true
@@ -583,6 +624,7 @@ Vecinos cercanos:
   - device_tracker.huawei_p10
   - device_tracker.mi6
   - device_tracker.elena_
+  - device_tracker.desktop4rp450i
 
 Pi Hole:
   - sensor.pihole_ads_blocked_today
@@ -626,9 +668,9 @@ weather_dark_sky_today:
     - sensor.dark_sky_humidity
     - sensor.dark_sky_pressure
     - sensor.dark_sky_hourly_summary
-    - sensor.dark_sky_daily_high_apparent_temperature
-    - sensor.dark_sky_daily_high_temperature
-    - sensor.dark_sky_daily_low_temperature
+
+    - sensor.dark_sky_daytime_high_temperature
+    - sensor.dark_sky_overnight_low_temperature
 
 weather_dark_sky_tomorrow:
   name: Mañana
@@ -641,9 +683,8 @@ weather_dark_sky_tomorrow:
     - sensor.dark_sky_humidity_1
     - sensor.dark_sky_pressure_1
 
-    - sensor.dark_sky_daily_high_apparent_temperature_1
-    - sensor.dark_sky_daily_high_temperature_1
-    - sensor.dark_sky_daily_low_temperature_1
+    - sensor.dark_sky_daytime_high_temperature_1
+    - sensor.dark_sky_overnight_low_temperature_1
 
 weather_dark_sky_aftertomorrow:
   name: Pasado mañana
@@ -654,9 +695,8 @@ weather_dark_sky_aftertomorrow:
     - sensor.dark_sky_humidity_2
     - sensor.dark_sky_pressure_2
 
-    - sensor.dark_sky_daily_high_apparent_temperature_2
-    - sensor.dark_sky_daily_high_temperature_2
-    - sensor.dark_sky_daily_low_temperature_2
+    - sensor.dark_sky_daytime_high_temperature_2
+    - sensor.dark_sky_overnight_low_temperature_2
 
 weather_dark_sky_afterthree:
   name: En tres dias
@@ -667,9 +707,8 @@ weather_dark_sky_afterthree:
     - sensor.dark_sky_humidity_3
     - sensor.dark_sky_pressure_3
 
-    - sensor.dark_sky_daily_high_apparent_temperature_3
-    - sensor.dark_sky_daily_high_temperature_3
-    - sensor.dark_sky_daily_low_temperature_3
+    - sensor.dark_sky_daytime_high_temperature_3
+    - sensor.dark_sky_overnight_low_temperature_3
 
 Links:
   - weblink.grafana
@@ -688,41 +727,74 @@ Links:
   - weblink.router_movistar
   - weblink.wifi_repeater
 
-Red e Internet:
+Speedtest:
   - sensor.speedtest_ping
   - sensor.speedtest_download
   - sensor.speedtest_upload
 
-Automatizaciones:
+Automatizaciones de luz y medios:
   control: hidden
   entities:
-    - automation.buenas_noches
-    - automation.encendido_de_tv_si_apagada_y_kodi_play
-    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle__10_min
-    - automation.apagado_automatico_de_termo_acs
-    - automation.encendido_automatico_de_cam_salon
-    - automation.apagado_de_cam_salon_en_kodi_play_nocturno
     - automation.encendido_luces_estudio
     - automation.encendido_luces_dormitorio
     - automation.luz_hall_abriendo_cuadro
     - automation.sync_tira_tv_con_tira_sofa
-    - automation.vacuum_select_rooms_to_clean
-    - automation.botvac_error_notification
     - automation.salon_select_scene
     - automation.brillo_salon
     - automation.tono_salon
+    - automation.encendido_de_tv_si_apagada_y_kodi_play
+    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle__10_min
+    - automation.encendido_automatico_de_cam_salon
+    - automation.apagado_de_cam_salon_en_kodi_play_nocturno
+
+Automatizaciones de notificación:
+  control: hidden
+  entities:
+    - automation.start_homeassistant
     - automation.notify_sunset
+    - automation.update_notifications
+    - automation.notificacion_de_cambio_de_ip
+    - automation.aviso_de_sensor_mqtt_offline
     - automation.new_bt_device_notifier
     - automation.carmen_sale_del_hospital
     - automation.carmen_llega_al_hospital
-    - automation.update_notifications
-    - automation.start_homeassistant
-    - automation.notificacion_de_cambio_de_ip
-    - automation.aviso_de_sensor_mqtt_offline
+
+Resto de Automatizaciones:
+  control: hidden
+  entities:
+    - automation.buenas_noches
+    - automation.apagado_automatico_de_termo_acs
+    - automation.apagado_automatico_de_enchufes_a_las_6h
+    - automation.retry_etekcity_commands
+
+    - automation.vacuum_select_rooms_to_clean
+    - automation.botvac_error_notification
+    - automation.botvac_reset_select_command
+
+Escenas:
+  control: hidden
+  entities:
+    - scene.la_caja_tonta
+    - scene.modo_series
 
 # ----------------------------------------------------------------------------------------------------------------------
 # VIEWS
 # ----------------------------------------------------------------------------------------------------------------------
+
+#default_view:
+default_view_test:
+  name: Quick Status
+  view: yes
+  icon: mdi:home
+  entities:
+    - group.ambiente_simple
+    - media_player.kodi_tv
+    - group.ambiente_floorplan_psychrometric
+    - group.salon
+    - group.control_dormitorio
+    - group.control_estudio
+#    - group.vacuum_cleaner
+    - group.enchufes_simple
 
 Status:
   name: Home Status
@@ -765,6 +837,7 @@ kodi_control:
     - group.kodi_mp
     - group.media_select
     - group.kodi
+    - group.media_search
 
 current_meter_control:
   name: Consumos
@@ -818,19 +891,18 @@ Home Network:
   entities:
     - group.links
     - group.family
-    - group.localhost
+    - group.hassio
     - group.qnap_nas
-    - group.host_dormitorio
-    - group.resto_de_hosts
+    - group.otras_rpi
     - group.dispositivos
     - group.baterias
     - group.dev_boards
     - group.wifi_appliances
     - group.smarty
-    - group.vecinos_cercanos
     - group.pi_hole
+    - group.speedtest
+    - group.vecinos_cercanos
 
-    #- group.red_e_internet
 
 Master conf:
   name: Master configuration
@@ -848,7 +920,10 @@ Master conf:
 #      - automation.encendido_luces_estudio
 #      - automation.apagado_luces_estudio
 #      - automation.apagado_de_climatizador_evaporativo
-    - group.red_e_internet
-    - group.automatizaciones
+#    - group.red_e_internet
+    - group.automatizaciones_de_luz_y_medios
+    - group.automatizaciones_de_notificacion
+    - group.resto_de_automatizaciones
     - group.all_scripts
+    - group.escenas
     - group.esp_hall

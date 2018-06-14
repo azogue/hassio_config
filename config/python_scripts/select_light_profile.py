@@ -13,6 +13,7 @@ Hue profiles (x, y, bright):
 INPUT_SELECT = 'input_select.salon_light_scene'
 HUE_LIGHTS_TO_CONTROL = 'light.bola_grande,light.central,light.cuenco,' \
                     'light.pie_sofa,light.pie_tv,light.tira'
+COVER_VENTANAL = "cover.sonoff_cover_ventanal"
 
 scene_selection = data.get("scene")
 
@@ -125,13 +126,16 @@ elif scene_selection == 'TV Night':
     hass.services.call('light', 'turn_on',
                        {"entity_id": "light.central",
                         "xy_color": [0.1576, 0.2175], "brightness": 137})
-    # # Set cover position:
+    # Set cover position:
+    cover_state = hass.states.get(COVER_VENTANAL)
+    if int(cover_state.attributes['current_position']) > 20:
+        hass.services.call('cover', 'set_position',
+                           {"entity_id": COVER_VENTANAL,
+                            "position": 10})
+
     # hass.services.call('cover', 'set_position',
     #                    {"entity_id": "cover.sonoff_cover_puerta_terraza",
     #                     "position": 70})
-    # hass.services.call('cover', 'set_position',
-    #                    {"entity_id": "cover.sonoff_cover_ventanal",
-    #                     "position": 0})
 else:
     logger.error("SCENE not recognized: %s", scene_selection)
     # - Comida

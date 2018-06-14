@@ -85,10 +85,8 @@ homeassistant:
 
     binary_sensor.workday_sensor:
       homebridge_hidden: True
+      friendly_name: Día laborable
 
-    sensor.ip_externa:
-      homebridge_hidden: True
-      icon: mdi:map-marker
     sensor.iphone_battery_state:
       friendly_name: iPhone X (Batt state)
       homebridge_hidden: True
@@ -110,6 +108,9 @@ homeassistant:
     sensor.season:
       homebridge_hidden: True
       icon: mdi:tree
+      friendly_name: Estación
+    sun.sun:
+      friendly_name: Sol
 
   # Customize entities matching a pattern
   customize_glob:
@@ -184,12 +185,6 @@ binary_sensor:
   #  excludes: List of workday excludes (defaults to sat, sun, holiday).
 
 sensor:
-- platform: rest
-  resource: http://ip.jsontest.com
-  name: IP Externa
-  value_template: '{% if value_json %}{{ value_json.ip }}{% endif %}'
-  scan_interval: 180
-
 - platform: season
 
 - platform: htu21d
@@ -207,8 +202,8 @@ sensor:
     - hourly_summary
     - daily_summary
     - temperature
-    - temperature_max
-    - temperature_min
+    - temperature_high
+    - temperature_low
     - apparent_temperature
 #    - apparent_temperature_max
 #    - dew_point
@@ -240,17 +235,6 @@ sensor:
     - type: processor_use
     - type: last_boot
   scan_interval: 30
-
-- platform: pi_hole
-  host: 192.168.1.10:81
-  monitored_conditions:
-    - dns_queries_today
-    - ads_blocked_today
-    - ads_percentage_today
-    - unique_clients
-    - unique_domains
-#    - domains_being_blocked
-  scan_interval: 180
 
 #- platform: speedtest
 #  minute:

@@ -118,25 +118,14 @@ climate:
     heater: switch.ac_dry_contact
     ac_mode: True
     target_sensor: sensor.temperatura_ac
-#    min_temp: 18
-#    max_temp: 30
-    target_temp: 25
-    cold_tolerance: 0.5
+    min_temp: 18
+    max_temp: 30
+    target_temp: 27
+    cold_tolerance: 1.0
     hot_tolerance: 0.5
     min_cycle_duration:
-      minutes: 5
+      minutes: 10
     keep_alive:
       minutes: 5
-    initial_operation_mode: "off"
+    initial_operation_mode: "auto"
 #    away_temp: 28
-
-#group:
-#  Baño:
-#    - switch.ac_dry_contact
-#    - sensor.sensor_bathroom_ac_temperature
-#    - sensor.sensor_bathroom_ac_humidity
-#    - sensor.sensor_bathroom_ac_illumination
-#    - binary_sensor.sensor_bathroom_ac_mov1
-#    - binary_sensor.sensor_bathroom_ac_online
-#    - sensor.sensor_bathroom_ac__snum
-#    - climate.aire_acondicionado

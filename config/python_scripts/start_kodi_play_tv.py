@@ -3,34 +3,21 @@ Script para encender la TV y, en función de la hora del día, poner emisión
 en directo de un canal con noticias, o bien reproducir la última grabación.
 
 # Lista canales MovistarTV en tvheadend:
-        10, 'La 2',
-        33, 'Antena 3 HD',
-        42, 'Cuatro HD',
-        44, 'Telecinco HD',
-        18, 'La Sexta HD',
-        55, '#0 HD',
-        29, 'TV Mediterráneo ',
-        52, 'TV3 HD ',
-        17, 'FDF',
-        6, 'Neox',
-        8, 'Atreseries HD',
-        41, 'Energy',
-        4, 'Ten',
-        7, 'Paramount Channel',
-        34, 'DEPORTES HD',
-        31, 'Teledeporte',
-        57, 'Teledeporte HD',
-        58, 'Discovery Max',
-        49, 'DKISS ',
-        19, 'Divinity',
-        43, 'Nova',
-        39, 'MEGA',
-        16, 'Disney Channel HD',
-        9, 'Boing',
-        2, 'Clan TVE',
-        20, '24 Horas',
-        5, 'Xarxa Televisions ',
-        1, 'Movistar+ HD',
+
+		80, 'La 1 HD',
+		71, 'La 2 HD',
+		91, 'Antena 3 HD',
+		72, 'Cuatro HD',
+		120, 'Telecinco HD',
+		106, 'La Sexta HD',
+		84, '#0 HD',
+		25, 'TV3 HD ',
+		118, 'TV3 HD ',
+		42, 'FDF',
+		117, 'Atreseries HD',
+		92, '24 Horas',
+		19, 'Movistar+ HD',
+
 """
 
 # Participant entities
@@ -43,25 +30,25 @@ TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 now = datetime.datetime.now()
 play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
-    content_id = 18
+    content_id = 106
     media_dest = 'La Sexta HD'
 elif now.hour < 16:
-    content_id = 33
+    content_id = 91
     media_dest = 'Antena 3 HD'
 elif now.hour < 20:
-    content_id = 20
+    content_id = 92
     media_dest = '24 Horas'
     # Last record?
     play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
-    content_id = 18
+    content_id = 106
     media_dest = 'La Sexta HD'
 elif (now.hour == 20) or ((now.hour == 21) and (now.minute < 15)):
-    content_id = 33
+    content_id = 91
     media_dest = 'Antena 3 HD'
 else:
     media_dest = '#0 HD'
-    content_id = 55
+    content_id = 84
     # Last record?
     play_live_tv = False
 
@@ -85,15 +72,23 @@ if play_live_tv:
          "media_content_id": content_id})
 else:
     hass.services.call('script', 'pvr_recordings')
-    time.sleep(3)
+    time.sleep(4)
     state_select = hass.states.get(INPUT_SELECT_OPTS)
     options = state_select.attributes.get('options')[1:] or []
-    media_dest = options[0]
-    notify_msg = "Play última grabación de TV: '{}'.".format(media_dest)
-    hass.services.call(
-            'input_select', 'select_option',
-            {"entity_id": INPUT_SELECT_OPTS,
-             "option": media_dest})
+    if options:
+        media_dest = options[0]
+        notify_msg = "Play última grabación de TV: '{}'.".format(media_dest)
+        hass.services.call(
+                'input_select', 'select_option',
+                {"entity_id": INPUT_SELECT_OPTS,
+                 "option": media_dest})
+    else:
+        notify_msg = "Encendido de caja tonta en '{}'. *No hay grabaciones disponibles*".format(media_dest)
+        hass.services.call(
+            'media_player', 'play_media',
+            {"entity_id": MEDIA_PLAYER,
+             "media_content_type": "CHANNEL",
+             "media_content_id": content_id})
 
 # Notify:
 target = int(hass.states.get(TELEGRAM_TARGET).state)
