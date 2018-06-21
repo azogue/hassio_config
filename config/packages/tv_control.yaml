@@ -49,9 +49,9 @@ homeassistant:
     input_select.kodi_results:
       icon: mdi:kodi
     input_text.q_youtube:
-      icon: mdi:youtube-play
+      icon: mdi:youtube
     input_select.youtube_videos:
-      icon: mdi:youtube-play
+      icon: mdi:youtube
 
 input_boolean:
   kodi_tv_state:
@@ -172,7 +172,7 @@ shell_command:
 
 input_text:
   q_youtube:
-    name: Buscador
+    name: YouTube search:
     initial: ''
 
 input_select:

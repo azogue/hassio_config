@@ -51,16 +51,9 @@
       for:
         minutes: 10
 
-#    # Low Light level
-#    - condition: template
-#      value_template: >
-#        {% if states.sensor.enerpi_ldr and states.sensor.esp1_light %}
-#          {{ (states.sensor.enerpi_ldr.state|float < 5) and (states.sensor.esp1_light.state|float < 10)}}
-#        {% elif states.sensor.esp1_light %}
-#          {{ states.sensor.esp1_light.state|float < 10}}
-#        {% else %}
-#          1
-#        {% endif %}
+    # Low Light level in office
+    - condition: template
+      value_template: '{{ (states.sensor.sensor_office_illumination.state|int < 50) }}'
 
     # No multi-trigger!
     - condition: template

@@ -18,7 +18,7 @@ ambiente_floorplan_psychrometric:
   - weblink.consumo_electrico
 
 ambiente_simple:
-  name: Status
+  name: Control
   control: hidden
   entities:
   - climate.termostato_ac
@@ -191,12 +191,12 @@ Media select:
     - script.pvr_channels
     - script.pvr_recordings
     - input_select.kodi_results
+
 Media search:
   control: hidden
   entities:
     - input_text.q_youtube
     - input_select.youtube_videos
-    - input_text.q_torrents
 
 Kodi:
   control: hidden
@@ -209,6 +209,13 @@ Kodi:
     - script.update_library
     - script.quit_kodi
     - script.restart_kodi_osmc
+
+Torrents:
+  control: hidden
+  entities:
+    - input_text.q_torrents
+    - script.torrent_search
+    - weblink.buscador_de_torrents
 
 Hassio:
   - sensor.hass_cpu_temperature
@@ -529,6 +536,7 @@ Dispositivos:
     - device_tracker.home_cinema_2
     - device_tracker.rpi3b_libreelec
     - device_tracker.rpi2_bedroom
+    - device_tracker.rpi3dev
     - device_tracker.b827ebcaec07
     - device_tracker.b827ebee3f3b
     - device_tracker.xiaomi_router
@@ -625,6 +633,7 @@ Vecinos cercanos:
   - device_tracker.mi6
   - device_tracker.elena_
   - device_tracker.desktop4rp450i
+  - device_tracker.galaxy_j5
 
 Pi Hole:
   - sensor.pihole_ads_blocked_today
@@ -781,8 +790,7 @@ Escenas:
 # VIEWS
 # ----------------------------------------------------------------------------------------------------------------------
 
-#default_view:
-default_view_test:
+default_view:
   name: Quick Status
   view: yes
   icon: mdi:home
@@ -795,6 +803,58 @@ default_view_test:
     - group.control_estudio
 #    - group.vacuum_cleaner
     - group.enchufes_simple
+
+
+kodi_control:
+  name: Kodi
+  icon: mdi:kodi
+  view: yes
+  entities:
+    - group.kodi_mp
+    - group.media_select
+    - group.kodi
+    - group.media_search
+    - group.torrents
+
+
+Weather:
+  name: El tiempo
+  icon: mdi:weather-partlycloudy
+  view: yes
+  entities:
+    - group.weather_cams
+    - group.aislamiento
+    - group.weather_dark_sky_today
+    - group.weather_dark_sky_tomorrow
+    - group.weather_dark_sky_aftertomorrow
+    - group.weather_dark_sky_afterthree
+    - group.weather_forecast
+    - group.weather
+
+
+current_meter_control:
+  name: Consumos
+  view: yes
+  icon: mdi:flash
+  entities:
+    - group.elec_power_complete
+    - camera.consumo_7d
+    - camera.electricidad_24h
+    - switch.bomba_circ_acs
+    - switch.calentador
+    - switch.ac_dry_contact
+
+
+Alarm Panel:
+  name: Alarm configuration
+  icon: mdi:shield-outline
+  view: yes
+  entities:
+    - group.alarma
+    - group.camaras
+    - group.movimiento
+    - group.alarm_control
+
 
 Status:
   name: Home Status
@@ -815,7 +875,9 @@ Status:
     - group.esp_galeria
 #    - group.vinoteca
     - group.termo
+    - group.esp_hall
     - group.local
+
 
 Control:
   name: Home Control
@@ -829,27 +891,6 @@ Control:
     - group.vacuum_cleaner
     - group.enchufes
 
-kodi_control:
-  name: Kodi
-  icon: mdi:kodi
-  view: yes
-  entities:
-    - group.kodi_mp
-    - group.media_select
-    - group.kodi
-    - group.media_search
-
-current_meter_control:
-  name: Consumos
-  view: yes
-  icon: mdi:flash
-  entities:
-    - group.elec_power_complete
-    - camera.consumo_7d
-    - camera.electricidad_24h
-    - switch.bomba_circ_acs
-    - switch.calentador
-    - switch.ac_dry_contact
 
 alarm_clock:
   name: Despertador
@@ -860,29 +901,6 @@ alarm_clock:
     - media_player.dormitorio_mopidy
     - media_player.kodi_tv
 
-Weather:
-  name: El tiempo
-  icon: mdi:weather-partlycloudy
-  view: yes
-  entities:
-    - group.weather_cams
-    - group.aislamiento
-    - group.weather_dark_sky_today
-    - group.weather_dark_sky_tomorrow
-    - group.weather_dark_sky_aftertomorrow
-    - group.weather_dark_sky_afterthree
-    - group.weather_forecast
-    - group.weather
-
-Alarm Panel:
-  name: Alarm configuration
-  icon: mdi:shield-outline
-  view: yes
-  entities:
-    - group.alarma
-    - group.camaras
-    - group.movimiento
-    - group.alarm_control
 
 Home Network:
   name: Red local
@@ -926,4 +944,3 @@ Master conf:
     - group.resto_de_automatizaciones
     - group.all_scripts
     - group.escenas
-    - group.esp_hall
