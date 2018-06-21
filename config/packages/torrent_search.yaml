@@ -1,0 +1,51 @@
+# Custom SaaS
+
+homeassistant:
+  customize:
+    script.torrent_search:
+      homebridge_hidden: true
+      friendly_name: Email torrents
+      icon: mdi:email
+    input_text.q_torrents:
+      homebridge_hidden: true
+      icon: mdi:search-web
+    weblink.buscador_de_torrents:
+      icon: mdi:magnet-on
+      friendly_name: Buscador de torrents
+
+notify:
+  - name: torrent_search
+    platform: rest
+    resource: !secret url_saas_torrent_search
+    method: POST
+    message_param_name: 'search'
+    data:
+      action_type: "email_results"
+
+input_text:
+  q_torrents:
+    name: 'Busca:'
+    initial: ''
+
+#weblink:
+#  entities:
+#    - name: Buscador de torrents
+#      url: !secret url_saas_torrent_search
+
+script:
+  torrent_search:
+    sequence:
+      - service: notify.torrent_search
+        data_template:
+          message: '{{ states.input_text.q_torrents.state }}'
+      - service: persistent_notification.create
+        data_template:
+          notification_id: 'torrent_search'
+          title: 'Torrent search'
+          message: 'Se **envían por email** los resultados de búsqueda para: *`{{ states.input_text.q_torrents.state }}`* '
+
+#group:
+#  Torrents:
+#    - input_text.q_torrents
+#    - script.torrent_search
+#    - weblink.buscador_de_torrents

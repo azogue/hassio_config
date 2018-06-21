@@ -37,3 +37,7 @@ entities:
     url: http://192.168.1.52:8123/
   - name: MotionEye
     url: !secret motioneye_url
+
+# Custom SaaS
+  - name: Buscador de torrents
+    url: !secret url_saas_torrent_search
