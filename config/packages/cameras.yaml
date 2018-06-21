@@ -6,6 +6,7 @@ homeassistant:
       friendly_name: Estudio
     camera.kmoon_ipcam100:
       friendly_name: Terraza
+
     switch.motion_detection_sricam_360:
       friendly_name: VideoMov. Salón
       homebridge_hidden: True
@@ -115,25 +116,3 @@ camera:
 #    password: !secret sricam_pwd
 ##    port: 5000
 ##    extra_arguments:
-
-###############################################################################
-# SVG CAMERAS
-###############################################################################
-#  - platform: generic
-#    name: webcam_playa_1
-#    still_image_url: !secret webcam_playa_1
-#    scan_interval: 300
-
-#  - platform: generic
-#    name: webcam_playa_2
-#    still_image_url: !secret webcam_playa_2
-#    scan_interval: 300
-  # - platform: generic
-  #   name: webcam_playa_3
-  #   still_image_url: !secret webcam_playa_3
-
-  - platform: generic
-    name: weather_svg
-    still_image_url: !secret weather_svg_cam_url
-    content_type: 'image/svg+xml'
-    scan_interval: 300

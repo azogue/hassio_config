@@ -1,5 +1,5 @@
 homeassistant:
-  name: Sweet Home
+  name: Domus
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: !secret elevation
@@ -15,14 +15,9 @@ homeassistant:
 
 frontend:
   javascript_version: latest
-#  javascript_version: es5
-#  javascript_version: auto
   extra_html_url:
     - /local/custom_ui/state-card-floorplan.html
     - /local/custom_ui/floorplan/ha-floorplan.html
-#  extra_html_url_es5:
-#    - /local/custom_ui/state-card-floorplan.html
-#    - /local/custom_ui/floorplan/ha-floorplan.html
   themes: !include themes.yaml
 
 config:
@@ -46,6 +41,7 @@ logger:
     homeassistant.components.recorder: info
     homeassistant.components.history: info
     homeassistant.components.script: info
+    homeassistant.components.python_script: info
     homeassistant.components.floorplan: debug
     homeassistant.components.automation: info
     homeassistant.components.vacuum.xiaomi_miio: critical
@@ -82,8 +78,6 @@ discovery:
 #    - homekit
 
 conversation:
-sun:
-map:
 python_script:
 
 # Text to speech
@@ -91,8 +85,6 @@ tts:
   platform: google
   language: 'es'
 
-#history: !include database/history.yaml
-#logbook: !include database/logbook.yaml
 history:
   include:
     domains:
@@ -133,25 +125,6 @@ panel_iframe:
 #    title: Psicrométrico
 #    url: !secret psychrocam_svgchart_url
 #    icon: mdi:gradient
-
-panel_custom:
-  - name: floorplan
-    sidebar_title: Floorplan
-    sidebar_icon: mdi:home
-    url_path: floorplan
-    config: !include floorplan.yaml
-
-weather:
-  - platform: openweathermap
-    api_key: !secret openweathermap_api_key
-    name: Local Weather
-    scan_interval: 120
-
-# Entity needed to show Floorplan with custom-state-card
-binary_sensor:
-  - platform: mqtt
-    state_topic: dummy/floorplan/sensor
-    name: Floorplan
 
 group: !include groups.yaml
 automation: !include automations.yaml
