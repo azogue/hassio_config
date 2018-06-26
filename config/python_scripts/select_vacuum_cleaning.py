@@ -1,17 +1,36 @@
-"""Python script to select target rooms to clean."""
-# vacuum_clean_combination:
-#     name: Selección de zona de aspirado
-#     options:
-#      - Nada
-#      - Cocina
-#      - Cocina y salón
-#      - Salón
-#      - Mesa de centro
-#      - Zonas interiores
-#      - Zona office
-#      - Zona dormitorio y baño
-#     initial: Nada
+"""Python script to select target rooms to clean.
 
+vacuum_clean_combination:
+    name: Selección de zona de aspirado
+    options:
+     - Nada
+     - Cocina
+     - Cocina y salón
+     - Salón
+     - Mesa de centro
+     - Zonas interiores
+     - Zona office
+     - Zona dormitorio y baño
+    initial: Nada
+
+Call example:
+  vacuum.send_command
+    {
+     "entity_id": "vacuum.robot_aspirador",
+     "command": "app_zoned_clean",
+     "params": [[28900, 29700, 30400, 31400, 1]]
+    }
+
+    {
+     "entity_id": "vacuum.robot_aspirador",
+     "command": "app_goto_target",
+     "params": [29400, 29600]
+    }
+
+    elif room_selection == 'Ir al distribuidor':
+    call_kwargs["command"] = ""
+    call_kwargs["params"] = [29100, 29100]
+"""
 
 INPUT_SELECT = 'input_select.vacuum_clean_combination'
 VACUUM_ENTITY = 'vacuum.robot_aspirador'
@@ -31,11 +50,12 @@ elif room_selection == 'Salón':
 elif room_selection == 'Mesa de centro':
     call_kwargs["params"] = [[33000, 24000, 36000, 26500, 2]]
 elif room_selection == 'Zonas interiores':
+    # TODO fix 2nd bathroom
     # Estudio + Pasillo + Baño 2 + *Pasillo dorm* + Baño dorm + dorm
     call_kwargs["params"] = [[24600, 26000, 28800, 28750, 1],
                              [28900, 26000, 29900, 29800, 1],
-                             [28900, 29800, 30500, 31700, 1],
-                         [30500, 28500, 36900, 31400, 1]]
+                             [28900, 29700, 30400, 31400, 1],
+                             [30500, 28500, 36900, 31400, 1]]
 elif room_selection == 'Zona office':
     call_kwargs["params"] = [[24800, 29000, 28800, 31800, 2]]
 elif room_selection == 'Zona dormitorio y baño':
