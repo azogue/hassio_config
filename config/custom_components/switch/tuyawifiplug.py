@@ -32,8 +32,7 @@ import datetime as dt
 # Tested with Python 3.6
 
 
-
-REQUIREMENTS = ['pycryptodome==3.6.1']
+REQUIREMENTS = ['pycryptodome==3.6.3']
 _LOGGER = logging.getLogger(__name__)
 
 CONF_DEVICE_ID = 'device_id'
