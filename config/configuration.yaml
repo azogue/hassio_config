@@ -12,6 +12,12 @@ homeassistant:
     - !secret ext_dir_2
 #    - !secret ext_dir_3
   #customize_glob: !include frontend/customize_glob.yaml
+#  auth_providers:
+#   - type: homeassistant
+#   - type: legacy_api_password
+
+# Enable the auth component
+#auth:
 
 frontend:
   javascript_version: latest
@@ -24,9 +30,10 @@ config:
 http:
   base_url: !secret base_url
   api_password: !secret hass_pw
-  use_x_forwarded_for: True
+  use_x_forwarded_for: False
   ip_ban_enabled: True
-  login_attempts_threshold: 10
+  login_attempts_threshold: 5
+#  trusted_proxies:
   trusted_networks:
     - 127.0.0.1
     - 192.168.1.0/24
@@ -42,6 +49,7 @@ logger:
     homeassistant.components.history: info
     homeassistant.components.script: info
     homeassistant.components.python_script: info
+    homeassistant.components.http.auth: error
     homeassistant.components.floorplan: debug
     homeassistant.components.automation: info
     homeassistant.components.vacuum.xiaomi_miio: critical
