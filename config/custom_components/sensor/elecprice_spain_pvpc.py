@@ -75,10 +75,13 @@ def scrap_pvpc_current_prices(rate=RATES[0], timeout=10):
         _LOGGER.error("Parsing exception: %s [%s]", str(exc), exc.__class__)
         return None
     if prices and len(prices) == 24:
-        date = datetime.strptime(
-            s.find_all('input', attrs={"type": "date"})[0].attrs['max'],
-            '%Y-%m-%d').date()
-        return date, prices
+        try:
+            date = datetime.strptime(
+                s.find_all('input', attrs={"name": "date"})[0].attrs['max'],
+                '%Y-%m-%d').date()
+            return date, prices
+        except IndexError:
+            return dt_util.utcnow().date(), prices
     # else:
         # TODO scrap main source in 'https://www.esios.ree.es/es/pvpc'
     _LOGGER.error("Parsing error: '%s'", str(prices))
