@@ -166,13 +166,22 @@ media_player:
 #    source: media_player.kodi|source
 #    source_list: media_player.kodi|source_list
 
+sensor:
+- platform: history_stats
+  name: Horas de TV
+  entity_id: media_player.kodi
+  state: 'playing'
+  type: time
+  start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+  end: '{{ now() }}'
+
 shell_command:
   # Kill OSMC Kodi (when frozen)
   cmd_kill_kodi: !secret kill_kodi_cmd
 
 input_text:
   q_youtube:
-    name: YouTube search:
+    name: 'YouTube search:'
     initial: ''
 
 input_select:

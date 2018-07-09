@@ -96,6 +96,14 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
+  - platform: history_stats
+    name: Horas de AC
+    entity_id: climate.termostato_ac
+    state: 'cool'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+
 switch:
   - platform: mqtt
     name: ac_dry_contact
