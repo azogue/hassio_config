@@ -154,7 +154,9 @@ TELEGRAM_IOS_COMMANDS = {  # AWAY category
                          '/luceson': 'LIGHTS_ON',  # Lights ON!
                          '/ambilighttoggle': 'HYPERION_TOGGLE',
                          '/ambilightconfig': 'HYPERION_CHANGE',
-                         # ALARMCLOCK category
+                         # '/ambilighttoggle': 'HYPERION_TOGGLE',
+                         # '/ambilightconfig': 'HYPERION_CHANGE',
+                         # # ALARMCLOCK category
                          '/ducha': 'INIT_DAY',  # Luces Energy + Calefactor ON
                          '/posponer': 'POSTPONE_ALARMCLOCK',  # Postponer alarm
                          '/despertadoroff': 'ALARMCLOCK_OFF',  # Luces Energy
@@ -964,7 +966,7 @@ class EventListener(hass.Hass):
         # Get prev state:
         self._lights_notif_state = [self.get_state(l)
                                     for l in self._lights_notif.split(',')]
-        self._lights_notif_st_attr = [self.get_state(l, attributes='all')
+        self._lights_notif_st_attr = [self.get_state(l, attribute='all')
                                       for l in self._lights_notif.split(',')]
         self.log('Flashing "{}" {} times, persistence={}s.'
                  .format(self._lights_notif, n_flashes, persistence))
@@ -1368,20 +1370,46 @@ class EventListener(hass.Hass):
             self.call_service('light/turn_on',
                               entity_id="light.salon", brightness=255)
             action_msg_log += 'LIGHTS ON: LIGHT MAIN SLIDER SALON 254'
-        elif action == 'HYPERION_TOGGLE':  # Toggle Ambilight
-            self.frontend_notif(action, origin,
-                                mask=NOTIF_MASK_TOGGLE_AMB,
-                                title="Toggle Ambilight")
-            self.toggle("switch.toggle_kodi_ambilight")
-            action_msg_log += 'TOGGLE KODI AMBILIGHT'
+        elif action == 'TV_NIGHT_MODE':
+            self.select_option("input_select.salon_light_scene",
+                               option="TV Night")
+            action_msg_log += 'TV_NIGHT_MODE'
             self.light_flash(XY_COLORS['blue'], persistence=2, n_flashes=2)
-        elif action == 'HYPERION_CHANGE':  # Change Ambilight conf
-            self.frontend_notif(action, origin,
-                                mask=NOTIF_MASK_TOGGLE_AMB_CONF,
-                                title="Cambio de modo Ambilight")
-            self.toggle("switch.toggle_config_kodi_ambilight")
-            action_msg_log += 'CHANGE AMBILIGHT CONF'
+        elif action == 'COVERS_DOWN':
+            # Set cover position:
+            position1 = int(self.get_state('cover.sonoff_cover_ventanal',
+                                           attribute='current_position'))
+            if position1 > 50:
+                self.call_service(
+                    'cover/set_position',
+                    entity_id='cover.sonoff_cover_ventanal', position=20)
+            elif position1 >= 20:
+                self.call_service(
+                    'cover/close_cover',
+                    entity_id='cover.sonoff_cover_ventanal')
+            position2 = int(self.get_state('cover.sonoff_cover_puerta_terraza',
+                                           attribute='current_position'))
+            if position2 > 70:
+                self.call_service(
+                    'cover/set_position',
+                    entity_id='cover.sonoff_cover_puerta_terraza', position=70)
+            action_msg_log += 'COVERS_DOWN'
             self.light_flash(XY_COLORS['violet'], persistence=2, n_flashes=2)
+
+        # elif action == 'HYPERION_TOGGLE':  # Toggle Ambilight
+        #     self.frontend_notif(action, origin,
+        #                         mask=NOTIF_MASK_TOGGLE_AMB,
+        #                         title="Toggle Ambilight")
+        #     self.toggle("switch.toggle_kodi_ambilight")
+        #     action_msg_log += 'TOGGLE KODI AMBILIGHT'
+        #     self.light_flash(XY_COLORS['blue'], persistence=2, n_flashes=2)
+        # elif action == 'HYPERION_CHANGE':  # Change Ambilight conf
+        #     self.frontend_notif(action, origin,
+        #                         mask=NOTIF_MASK_TOGGLE_AMB_CONF,
+        #                         title="Cambio de modo Ambilight")
+        #     self.toggle("switch.toggle_config_kodi_ambilight")
+        #     action_msg_log += 'CHANGE AMBILIGHT CONF'
+        #     self.light_flash(XY_COLORS['violet'], persistence=2, n_flashes=2)
 
         # ALARMCLOCK category
         elif action == 'INIT_DAY':  # Luces Energy + Calefactor!

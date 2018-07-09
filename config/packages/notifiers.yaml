@@ -160,20 +160,34 @@ ios:
             destructive: no
             behavior: 'default'
             context: 'default'
-          - identifier: 'HYPERION_TOGGLE'
-            title: 'Toggle Ambilight'
+          - identifier: 'TV_NIGHT_MODE'
+            title: 'Night mode'
             activationMode: 'background'
             authenticationRequired: no
             destructive: no
             behavior: 'default'
             context: 'default'
-          - identifier: 'HYPERION_CHANGE'
-            title: 'Change Ambilight conf'
+          - identifier: 'COVERS_DOWN'
+            title: 'Cierra persianas'
             activationMode: 'background'
             authenticationRequired: no
             destructive: yes
             behavior: 'default'
             context: 'default'
+#          - identifier: 'HYPERION_TOGGLE'
+#            title: 'Toggle Ambilight'
+#            activationMode: 'background'
+#            authenticationRequired: no
+#            destructive: no
+#            behavior: 'default'
+#            context: 'default'
+#          - identifier: 'HYPERION_CHANGE'
+#            title: 'Change Ambilight conf'
+#            activationMode: 'background'
+#            authenticationRequired: no
+#            destructive: yes
+#            behavior: 'default'
+#            context: 'default'
 
       - name: alarmclock
         identifier: 'alarmclock'

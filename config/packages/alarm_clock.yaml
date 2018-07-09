@@ -17,6 +17,9 @@ homeassistant:
     input_boolean.manual_trigger_lacafetera:
       icon: mdi:play-circle
       homebridge_hidden: true
+    input_boolean.use_heater:
+#      icon: mdi:play-circle
+      homebridge_hidden: true
 
 #Programación despertador:
 #    - input_datetime.alarm_clock_time
@@ -29,6 +32,9 @@ input_boolean:
   manual_trigger_lacafetera:
     name: Reproduce LaCafetera de Radiocable
     initial: off
+  use_heater:
+    name: Encendido diario de calentador
+    initial: on
 
 input_select:
   room_altavoces:

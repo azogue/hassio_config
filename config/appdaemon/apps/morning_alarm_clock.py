@@ -162,6 +162,7 @@ class AlarmClock(hass.Hass):
     _alarm_on = False
     _alarm_time_input = None
     _warm_up_time_input = None
+    _warm_up_boolean = None
     _special_alarm_input = None
     _delta_time_postponer_sec = None
     _warm_up_time_delta = None
@@ -204,6 +205,7 @@ class AlarmClock(hass.Hass):
 
         self._alarm_time_input = self.args.get('alarm_time')
         self._warm_up_time_input = self.args.get('warm_up_time')
+        self._warm_up_boolean = self.args.get('warm_up_boolean')
         self._special_alarm_input = self.args.get('special_alarm_datetime')
 
         self._delta_time_postponer_sec = int(
@@ -222,6 +224,7 @@ class AlarmClock(hass.Hass):
 
         self.listen_state(self.alarm_time_change, self._alarm_time_input)
         self.listen_state(self.warm_up_time_change, self._warm_up_time_input)
+        self.listen_state(self.warm_up_time_change, self._warm_up_boolean)
         self.listen_state(self.special_alarm_time_change,
                           self._special_alarm_input)
 
@@ -374,8 +377,6 @@ class AlarmClock(hass.Hass):
     def warm_up_time_change(self, entity, attribute, old, new, kwargs):
         """Re-schedule next alarm when alarm time sliders change."""
         self._set_new_warm_up_time()
-        self.log('CHANGING WARM UP TIME TO: {:%H:%M:%S}'
-                 .format(self._next_warm_up), LOG_LEVEL)
 
     # noinspection PyUnusedLocal
     def special_alarm_time_change(self, entity, attribute, old, new, kwargs):
@@ -407,8 +408,13 @@ class AlarmClock(hass.Hass):
         if self._handle_warm_up is not None:
             self.cancel_timer(self._handle_warm_up)
         alarm_time = self.get_state(self._warm_up_time_input, attribute="all")
-        if alarm_time is None or alarm_time['state'] == 'unknown':
+        trigger_warm_up = self.get_state(self._warm_up_time_input) == 'on'
+
+        if (not trigger_warm_up
+                or (alarm_time is None)
+                or (alarm_time['state'] == 'unknown')):
             self._next_warm_up = None
+            self.log('Remove WARM UP TIME', LOG_LEVEL)
             return
 
         time_alarm = dt.datetime.now().replace(
@@ -419,6 +425,8 @@ class AlarmClock(hass.Hass):
         self._next_warm_up = time_alarm  # - self._warm_up_time_delta
         self._handle_warm_up = self.run_daily(
             self.run_warm_up, self._next_warm_up.time())
+        self.log('CHANGING WARM UP TIME TO: {:%H:%M:%S}'
+                 .format(self._next_warm_up), LOG_LEVEL)
 
     # noinspection PyUnusedLocal
     def _set_new_special_alarm_datetime(self, *args):
