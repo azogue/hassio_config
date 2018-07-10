@@ -36,13 +36,10 @@ ambiente_simple:
   - light.hall_light
   - light.terraza
 
-Salón:
+salon:
   name: Luces salón
 #  control: hidden
   entities:
-#    - input_number.light_main_slider_salon
-#    - input_number.light_temp_slider_salon
-#    - input_select.salon_light_scene
     - light.bola_grande
     - light.bola_pequena
     - light.central
@@ -102,6 +99,7 @@ Despertador:
   #  - input_boolean.alarm_clock_status
     - input_datetime.alarm_clock_time
     - input_datetime.water_boiler_start_time
+    - input_boolean.use_heater
     - input_datetime.next_special_wake_up
     - input_select.room_altavoces
     # From rf outlets:
@@ -115,7 +113,7 @@ vacuum_cleaner:
     - vacuum.robot_aspirador
     - input_select.vacuum_clean_combination
 
-Enchufes_simple:
+enchufes_simple:
   name: Enchufes
   control: hidden
   entities:
@@ -168,6 +166,9 @@ elec_power_complete:
     - sensor.pvpc
     - sensor.elecprice_range
     - sensor.esp32ener_consumption_day
+    - sensor.horas_de_ac
+    - sensor.horas_de_termo
+
     - weblink.consumo_electrico
 
 elec_power_simple:
@@ -191,6 +192,7 @@ Media select:
     - script.pvr_channels
     - script.pvr_recordings
     - input_select.kodi_results
+    - sensor.horas_de_tv
 
 Media search:
   control: hidden
@@ -556,6 +558,8 @@ Dispositivos:
     - device_tracker.rpi3_enerpi
     - device_tracker.rpi3_osmc
     - device_tracker.jo01
+    - device_tracker.kindle_1
+    - device_tracker.kindle_2
 
 Dev boards:
   control: hidden
@@ -662,6 +666,7 @@ weather_cams:
   - camera.psychrometric_chart
   - weather.local_weather
   - camera.weather_svg
+  - camera.worldtime
   - camera.webcam_playa_1
   - camera.webcam_playa_2
   - camera.webcam_playa_3
@@ -798,6 +803,7 @@ default_view:
     - group.ambiente_simple
     - media_player.kodi_tv
     - group.ambiente_floorplan_psychrometric
+    - camera.psychrometric_chart
     - group.salon
     - group.control_dormitorio
     - group.control_estudio
@@ -863,9 +869,7 @@ Status:
   entities:
     - group.elec_power_simple
     - group.ambiente
-#    - group.salon
     - group.esp_livingroom
-#    - group.control_dormitorio
     - group.sensors_dormitorio
     - group.esp_estudio
     - group.esp_kitchen
@@ -873,7 +877,6 @@ Status:
     - group.esp_bathroom_1
     - group.esp_terraza
     - group.esp_galeria
-#    - group.vinoteca
     - group.termo
     - group.esp_hall
     - group.local
