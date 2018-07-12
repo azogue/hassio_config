@@ -9,12 +9,12 @@ script.start_status_sonoff_outlets:
 
 camera.weather_svg:
   friendly_name: !secret weather_svg_cam_name
-camera.webcam_playa_1:
-  friendly_name: !secret webcam_playa_1
-camera.webcam_playa_2:
-  friendly_name: !secret webcam_playa_2_name
-camera.webcam_playa_3:
-  friendly_name: !secret webcam_playa_3_name
+#camera.webcam_playa_1:
+#  friendly_name: !secret webcam_playa_1
+#camera.webcam_playa_2:
+#  friendly_name: !secret webcam_playa_2_name
+#camera.webcam_playa_3:
+#  friendly_name: !secret webcam_playa_3_name
 
 weblink.router_movistar:
   icon: mdi:router-wireless
