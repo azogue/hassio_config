@@ -1,4 +1,4 @@
-# Home Assistant / HASS.io personal config
+# Home Assistant / HASS.io personal config [![Travis Status](https://travis-ci.org/azogue/hassio_config.svg?branch=master)](https://travis-ci.org/azogue/hassio_config)
 
 <img src="https://github.com/azogue/hassio_config/blob/master/screenshots/addons_and_services_schema.png?raw=true" width="100%" height="100%">
 
