@@ -1,9 +1,13 @@
 language: python
+
 python:
   - "3.6"
+
 before_install:
   - mv config/travis_secrets.yaml config/secrets.yaml
+
 install:
   - pip3 install homeassistant
+
 script:
   - hass -c config/ --script check_config
