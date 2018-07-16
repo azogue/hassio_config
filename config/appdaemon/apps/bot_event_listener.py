@@ -956,9 +956,15 @@ class EventListener(hass.Hass):
                                         self._lights_notif_state,
                                         self._lights_notif_st_attr):
                 if st == 'on':
-                    self.call_service('light/turn_on', entity_id=light,
-                                      transition=1, xy_color=attrs['xy_color'],
-                                      brightness=attrs['brightness'])
+                    try:
+                        self.call_service('light/turn_on', entity_id=light,
+                                          transition=1, xy_color=attrs['xy_color'],
+                                          brightness=attrs['brightness'])
+                    except KeyError as exc:
+                        self.log("BAD LIGHT[{}] RESTORE ATTRS: {}"
+                                 .format(light, attrs))
+                        self.call_service('light/turn_on', entity_id=light,
+                                          transition=1, **attrs)
                 else:
                     self.call_service('light/turn_off', entity_id=light,
                                       transition=1)

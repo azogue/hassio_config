@@ -128,7 +128,7 @@ class KodiAssistant(hass.Hass):
                     self._notify_telegram_message(self._item_playing)
             else:
                 self.log('RECEIVED BAD KODI RESULT: {}'
-                         .format(result), 'warning')
+                         .format(result), 'WARNING')
         elif event_id == EVENT_KODI_CALL_METHOD_RESULT \
                 and method == METHOD_GET_PLAYERS:
             self.log('KODI GET_PLAYERS RECEIVED: {}'.format(result))

@@ -408,7 +408,7 @@ class AlarmClock(hass.Hass):
         if self._handle_warm_up is not None:
             self.cancel_timer(self._handle_warm_up)
         alarm_time = self.get_state(self._warm_up_time_input, attribute="all")
-        trigger_warm_up = self.get_state(self._warm_up_time_input) == 'on'
+        trigger_warm_up = self.get_state(self._warm_up_boolean) == 'on'
 
         if (not trigger_warm_up
                 or (alarm_time is None)
@@ -450,7 +450,7 @@ class AlarmClock(hass.Hass):
             self._handle_special_alarm = self.run_at(
                 self.trigger_service_in_alarm, self._next_special_alarm)
         except ValueError:
-            self.log(f"ERROR setting special alarm at {time_alarm}!")
+            self.log("ERROR setting special alarm at {}!".format(time_alarm))
             self._handle_special_alarm = None
 
     def _set_sunrise_phase(self, *args_runin):
@@ -502,7 +502,13 @@ class AlarmClock(hass.Hass):
         payload = {"method": command, "jsonrpc": "2.0", "id": 1}
         if params is not None:
             payload['params'] = params
-        r = requests.post(url_base, headers=headers, data=json.dumps(payload))
+        try:
+            r = requests.post(url_base, headers=headers,
+                              data=json.dumps(payload))
+        except requests.exceptions.ConnectionError:
+            self.log("ERROR MPD CONNECT to {}, data: {}"
+                     .format(url_base, payload))
+            return None
         if r.ok:
             try:
                 res = json.loads(r.content.decode())
@@ -540,6 +546,7 @@ class AlarmClock(hass.Hass):
         """Play stream in mopidy."""
         # self.log('DEBUG MPD: {}'.format(ep_info))
         self.turn_on_bedroom_speakers({})
+        
         self.run_command_mopidy('core.tracklist.clear', check_result=False)
         params = {"tracks": [{"__model__": "Track",
                               "uri": MASK_URL_STREAM_MOPIDY.format(

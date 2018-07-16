@@ -61,7 +61,7 @@ class YoutubeSearch(hass.Hass):
         self._input_text = self.args.get('input_text')
         self._media_player = self.args.get('media_player', 'media_player.kodi')
         self._youtube_key = self.args.get('youtube_key')
-        self.log(f"Youtube API Key: {self._youtube_key}")
+        # self.log(f"Youtube API Key: {self._youtube_key}")
         self.listen_state(self.new_youtube_query, self._input_text)
         self.listen_state(self.video_selection, self._input_select)
         self._ids_options = {DEFAULT_ACTION: None}

@@ -98,8 +98,17 @@ class DynamicKodiInputSelect(hass.Hass):
                                attributes={"friendly_name": 'TV channels',
                                            "icon": 'mdi:play-box-outline'})
             elif method == 'PVR.GetRecordings':
-                values = sorted(result['recordings'],
-                                key=lambda x: x['starttime'], reverse=True)
+                try:
+                    values = sorted(result['recordings'],
+                                    key=lambda x: x['starttime'], reverse=True)
+                except KeyError as exc:
+                    self.log("No recordings found: {}".format(result),
+                             "WARNING")
+                    self.persistent_notification(
+                        "No recordings found: {}. Can't set recordings menu"
+                            .format(result), title="KODI ERROR",
+                        id='bad_set_kodi_recordings')
+                    return
 
                 def _date(starttime):
                     ts = dt.datetime.strptime(
@@ -130,7 +139,14 @@ class DynamicKodiInputSelect(hass.Hass):
     def _change_selected_result(self, entity, attribute, old, new, kwargs):
         if new != old:
             # self.log('SELECTED OPTION: {} (from {})'.format(new, old))
-            selected = self._ids_options[new]
+            try:
+                selected = self._ids_options[new]
+            except KeyError as exc:
+                self.persistent_notification(
+                    "Selection not found: '{}'. Sorry. Keys are: {}"
+                        .format(result, self._ids_options.keys()), title="KODI OPTIONS ERROR",
+                    id='bad_select_kodi_option')
+                return
             if selected:
                 mediatype, file, _last_played = selected
                 self.log('PLAY MEDIA: {} {} [file={}]'
