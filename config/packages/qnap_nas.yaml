@@ -32,6 +32,7 @@ sensor:
     password: !secret nas_qnap_password
     nics: eth0
     scan_interval: 60
+    timeout: 10
     monitored_conditions:
       - status
       - cpu_usage
