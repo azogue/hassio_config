@@ -18,7 +18,7 @@ homeassistant:
       icon: mdi:play-circle
       homebridge_hidden: true
     input_boolean.use_heater:
-#      icon: mdi:play-circle
+      icon: mdi:toggle-switch
       homebridge_hidden: true
 
 #Programación despertador:
