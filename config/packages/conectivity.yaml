@@ -55,7 +55,7 @@ homeassistant:
 binary_sensor:
   - platform: mqtt
     state_topic: "hass/status_bedroom"
-    name: Dormitorio Online
+    name: Dormitorio Online (RPI2)
     device_class: connectivity
     payload_on: "on"
     payload_off: "off"
@@ -174,7 +174,7 @@ sensor:
 - platform: rest
   resource: http://ip.jsontest.com
   name: IP Externa
-  value_template: '{% if value_json %}{{ value_json.ip }}{% endif %}'
+  value_template: '{% if value_json %}{{ value_json.ip }}{% else %}{{ states.sensor.ip_externa.state}}{% endif %}'
   scan_interval: 180
 
 - platform: cert_expiry
