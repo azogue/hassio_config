@@ -124,3 +124,7 @@ camera:
     still_image_url: !secret weather_svg_cam_url
     content_type: 'image/svg+xml'
     scan_interval: 300
+
+  - platform: generic
+    name: worldtime
+    still_image_url: https://imgs.xkcd.com/comics/now.png
