@@ -22,14 +22,14 @@ homeassistant:
 #      friendly_name: Circuito de Termo
 #      homebridge_name: Circuito de Termo
 #      homebridge_switch_type: outlet
-    cover.sonoff_cover_ventanal:
-      friendly_name: Ventanal
-      homebridge_name: Ventanal
-      homebridge_cover_type: rollershutter
-    cover.sonoff_cover_puerta_terraza:
-      homebridge_name: Puerta terraza
-      friendly_name: Puerta terraza
-      homebridge_cover_type: rollershutter
+#    cover.sonoff_cover_ventanal:
+#      friendly_name: Ventanal
+#      homebridge_name: Ventanal
+#      homebridge_cover_type: rollershutter
+#    cover.sonoff_cover_puerta_terraza:
+#      homebridge_name: Puerta terraza
+#      friendly_name: Puerta terraza
+#      homebridge_cover_type: rollershutter
     sensor.sonoff_pow_1:
       icon: mdi:radiator
       friendly_name: Consumo en termo
@@ -78,38 +78,38 @@ switch:
     retain: true
 
 # Sonoff 4ch as 2 custom covers
-cover:
-  - platform: mqttcoverswitch
-    covers:
-      sonoff_cover_ventanal:
-        friendly_name: Ventanal
-        state_switch_open_topic: "sonoff/4cover/stat4"
-        state_switch_close_topic: "sonoff/4cover/stat3"
-        command_switch_open_topic: "sonoff/4cover"
-        command_switch_close_topic: "sonoff/4cover"
-        payload_open: "4on"
-        payload_stop_open: "4off"
-        payload_close: "3on"
-        payload_stop_close: "3off"
-        delay_full_open: 27.0
-        qos: 1
-        retain: true
-        optimistic: false
-
-      sonoff_cover_puerta_terraza:
-        friendly_name: Puerta terraza
-        state_switch_open_topic: "sonoff/4cover/stat2"
-        state_switch_close_topic: "sonoff/4cover/stat1"
-        command_switch_open_topic: "sonoff/4cover"
-        command_switch_close_topic: "sonoff/4cover"
-        payload_open: "2on"
-        payload_stop_open: "2off"
-        payload_close: "1on"
-        payload_stop_close: "1off"
-        delay_full_open: 27.0
-        qos: 1
-        retain: true
-        optimistic: false
+#cover:
+#  - platform: mqttcoverswitch
+#    covers:
+#      sonoff_cover_ventanal:
+#        friendly_name: Ventanal
+#        state_switch_open_topic: "sonoff/4cover/stat4"
+#        state_switch_close_topic: "sonoff/4cover/stat3"
+#        command_switch_open_topic: "sonoff/4cover"
+#        command_switch_close_topic: "sonoff/4cover"
+#        payload_open: "4on"
+#        payload_stop_open: "4off"
+#        payload_close: "3on"
+#        payload_stop_close: "3off"
+#        delay_full_open: 27.0
+#        qos: 1
+#        retain: true
+#        optimistic: false
+#
+#      sonoff_cover_puerta_terraza:
+#        friendly_name: Puerta terraza
+#        state_switch_open_topic: "sonoff/4cover/stat2"
+#        state_switch_close_topic: "sonoff/4cover/stat1"
+#        command_switch_open_topic: "sonoff/4cover"
+#        command_switch_close_topic: "sonoff/4cover"
+#        payload_open: "2on"
+#        payload_stop_open: "2off"
+#        payload_close: "1on"
+#        payload_stop_close: "1off"
+#        delay_full_open: 27.0
+#        qos: 1
+#        retain: true
+#        optimistic: false
 
 # Sonoff POW voltage and power sensors
 sensor:

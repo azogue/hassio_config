@@ -1,0 +1,82 @@
+homeassistant:
+  customize:
+    sensor.sensor_covers__snum:
+      friendly_name: 'Sample # (persianas)'
+      homebridge_hidden: true
+    
+    binary_sensor.sensor_covers_online:
+      friendly_name: Persianas Online
+      homebridge_hidden: true
+
+    cover.sonoff_cover_ventanal:
+      friendly_name: Ventanal
+      homebridge_name: Ventanal
+      homebridge_cover_type: rollershutter
+    cover.sonoff_cover_puerta_terraza:
+      homebridge_name: Puerta terraza
+      friendly_name: Puerta terraza
+      homebridge_cover_type: rollershutter
+
+cover:
+  - platform: mqtt
+    name: sonoff_cover_ventanal
+
+    command_topic: !secret mqtt_topic_esp_covers_command
+    set_position_topic: !secret mqtt_topic_esp_covers_command
+    state_topic: !secret mqtt_topic_esp_covers_status
+    availability_topic: !secret mqtt_topic_esp_covers_lwt
+
+    value_template: '{{ value_json.cover1_position }}'
+    set_position_template: '{"cover1": {"command": "goto", "value": {{position}} }}'
+
+    qos: !secret mqtt_default_qos
+    retain: true
+    payload_available: "online"
+    payload_not_available: "offline"
+
+    payload_open: '{"cover1": {"command": "open"}}'
+    payload_close: '{"cover1": {"command": "close"}}'
+    payload_stop: '{"cover1": {"command": "stop"}}'
+    optimistic: false
+
+  - platform: mqtt
+    name: sonoff_cover_puerta_terraza
+
+    command_topic: !secret mqtt_topic_esp_covers_command
+    set_position_topic: !secret mqtt_topic_esp_covers_command
+    state_topic: !secret mqtt_topic_esp_covers_status
+    availability_topic: !secret mqtt_topic_esp_covers_lwt
+
+    value_template: '{{ value_json.cover2_position }}'
+    set_position_template: '{"cover2": {"command": "goto", "value": {{position}} }}'
+
+    qos: !secret mqtt_default_qos
+    retain: true
+    payload_available: "online"
+    payload_not_available: "offline"
+
+    payload_open: '{"cover2": {"command": "open"}}'
+    payload_close: '{"cover2": {"command": "close"}}'
+    payload_stop: '{"cover2": {"command": "stop"}}'
+    optimistic: false
+
+
+binary_sensor:
+  - platform: mqtt
+    device_class: connectivity
+    state_topic: !secret mqtt_topic_esp_covers_lwt
+    name: sensor_covers_online
+    qos: !secret mqtt_default_qos
+    payload_on: "online"
+    payload_off: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_covers_status
+    value_template: "{{ value_json.sample.snum}}"
+    unit_of_measurement: "sample"
+    json_attributes: 'cover1_state,cover2_state,cover1_position,cover2_position,status,network,ts'
+    name: sensor_covers__snum
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
