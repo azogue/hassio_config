@@ -594,6 +594,11 @@
       for:
         minutes: 2
     - platform: state
+      entity_id: binary_sensor.sensor_covers_online
+      to: 'off'
+      for:
+        minutes: 2
+    - platform: state
       entity_id: binary_sensor.sensor_study_online
       to: 'off'
       for:

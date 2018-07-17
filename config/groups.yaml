@@ -477,6 +477,17 @@ general_config:
     - script.start_status_sonoff_outlets
     - script.set_mid_position_cover_1
     - script.set_mid_position_cover_2
+    - script.step_up_cover_1
+    - script.step_down_cover_1
+    - script.step_up_cover_2
+    - script.step_down_cover_2
+    - binary_sensor.acs_consumo_on
+    - binary_sensor.acs_solar_off
+    - sensor.temperatura_ac
+    - input_boolean.ac_target_include_livingroom
+    - input_boolean.ac_target_include_study
+    - input_boolean.ac_target_include_office
+    - input_boolean.ac_target_include_bedroom
 
 dt_imac:
 #  hidden: true
@@ -690,7 +701,6 @@ weather_dark_sky_tomorrow:
   name: Mañana
   entities:
     - sensor.dark_sky_daily_summary
-
     - sensor.dark_sky_temperature_1
     - sensor.dark_sky_apparent_temperature_1
     - sensor.dark_sky_dew_point_1
@@ -791,9 +801,9 @@ Escenas:
     - scene.la_caja_tonta
     - scene.modo_series
 
-# ----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # VIEWS
-# ----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 default_view:
   name: Quick Status

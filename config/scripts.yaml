@@ -154,21 +154,62 @@ pvr_channels:
         method: PVR.GetChannels
         channelgroupid: 1
 
+step_up_cover_1:
+  alias: Ventanal Up
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover1": {"command": "step_up"}}'
+        qos: !secret mqtt_default_qos
+        retain: true
+step_down_cover_1:
+  alias: Ventanal Down
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover1": {"command": "step_down"}}'
+        qos: !secret mqtt_default_qos
+        retain: true
+step_up_cover_2:
+  alias: Puerta Up
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover2": {"command": "step_up"}}'
+        qos: !secret mqtt_default_qos
+        retain: true
+step_down_cover_2:
+  alias: Puerta Down
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover2": {"command": "step_down"}}'
+        qos: !secret mqtt_default_qos
+        retain: true
+
 set_mid_position_cover_1:
   alias: Ventanal está en 50
   sequence:
-    - service: cover.set_actual_position
+    - service: mqtt.publish
       data:
-        entity_id: "cover.sonoff_cover_ventanal"
-        position: 50
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover1": {"command": "set_position", "value": 50 }}'
+        qos: !secret mqtt_default_qos
+        retain: true
 
 set_mid_position_cover_2:
   alias: Puerta está en 50
   sequence:
-    - service: cover.set_actual_position
+    - service: mqtt.publish
       data:
-        entity_id: "cover.sonoff_cover_puerta_terraza"
-        position: 50
+        topic: !secret mqtt_topic_esp_covers_command
+        payload: '{"cover2": {"command": "set_position", "value": 50 }}'
+        qos: !secret mqtt_default_qos
+        retain: true
 
 # Sonoff script to request initial state in HA start
 start_status_sonoff_outlets:
