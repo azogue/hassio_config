@@ -412,28 +412,30 @@ Conectivity:
   - binary_sensor.internet_online
   - sensor.ip_externa
   - binary_sensor.router_on
-  - binary_sensor.esp32_ener_online
+#  - binary_sensor.esp32_ener_online
   - binary_sensor.dormitorio_online
-  - binary_sensor.sensor_livingroom_online
-  - binary_sensor.sensor_kitchen_online
-  - binary_sensor.sensor_hall_online
-  - binary_sensor.sensor_study_online
-  - binary_sensor.sensor_office_online
-  - binary_sensor.sensor_bedroom_online
-  - binary_sensor.sensor_bathroom_ac_online
-  - binary_sensor.sensor_terraza_online
-  - binary_sensor.sensor_galeria_online
+#  - binary_sensor.sensor_livingroom_online
+#  - binary_sensor.sensor_kitchen_online
+#  - binary_sensor.sensor_hall_online
+#  - binary_sensor.sensor_study_online
+#  - binary_sensor.sensor_office_online
+#  - binary_sensor.sensor_bedroom_online
+#  - binary_sensor.sensor_bathroom_ac_online
+#  - binary_sensor.sensor_terraza_online
+#  - binary_sensor.sensor_galeria_online
+#  - binary_sensor.sensor_covers_online
   - binary_sensor.vinoteca_online
-
-  - sensor.sensor_livingroom__snum
-  - sensor.sensor_kitchen__snum
-  - sensor.sensor_hall__snum
-  - sensor.sensor_study__snum
-  - sensor.sensor_office__snum
-  - sensor.sensor_bedroom__snum
-  - sensor.sensor_bathroom_ac__snum
-  - sensor.sensor_terraza__snum
-  - sensor.sensor_galeria__snum
+#
+#  - sensor.sensor_livingroom__snum
+#  - sensor.sensor_kitchen__snum
+#  - sensor.sensor_hall__snum
+#  - sensor.sensor_study__snum
+#  - sensor.sensor_office__snum
+#  - sensor.sensor_bedroom__snum
+#  - sensor.sensor_bathroom_ac__snum
+#  - sensor.sensor_terraza__snum
+#  - sensor.sensor_galeria__snum
+#  - sensor.sensor_covers__snum
 
 #  - binary_sensor.database_ok
   - binary_sensor.nas_online
@@ -447,6 +449,79 @@ Conectivity:
 #  - sensor.error_counter_notifiers
 #  - sensor.core_error_counter
 #  - sensor.warning_counter_core
+
+esp32_conectivity:
+  name: Conectivity
+  entities:
+    - binary_sensor.esp32_ener_online
+    - binary_sensor.sensor_livingroom_online
+    - binary_sensor.sensor_kitchen_online
+    - binary_sensor.sensor_hall_online
+    - binary_sensor.sensor_study_online
+    - binary_sensor.sensor_office_online
+    - binary_sensor.sensor_bedroom_online
+    - binary_sensor.sensor_bathroom_ac_online
+    - binary_sensor.sensor_terraza_online
+    - binary_sensor.sensor_galeria_online
+    - binary_sensor.sensor_covers_online
+
+esp32_samples:
+  name: Samples
+  entities:
+    - sensor.sensor_livingroom__snum
+    - sensor.sensor_kitchen__snum
+    - sensor.sensor_hall__snum
+    - sensor.sensor_study__snum
+    - sensor.sensor_office__snum
+    - sensor.sensor_bedroom__snum
+    - sensor.sensor_bathroom_ac__snum
+    - sensor.sensor_terraza__snum
+    - sensor.sensor_galeria__snum
+    - sensor.sensor_covers__snum
+
+esp32_tracking:
+  control: hidden
+  name: Tracking
+  entities:
+    # new wroom32-1 - ener: (WROOM32 (Energy meter))
+    - device_tracker.30aea41607a8
+    # Wroom32batt Salón
+    - device_tracker.30aea4060680
+    # new wroom32-2 - Cocina:
+    - device_tracker.30aea4208170
+    # WROOM32-EVB falso techo Hall
+    - device_tracker.esp32_evb_1_wifi
+    # WROOM32 miniOLED (estudio)
+    - device_tracker.30aea4001d1c
+    # Wemos OLED (estudio - dev)
+    - device_tracker.30aea4132c40
+    # WROOM32 (dormitorio):
+    - device_tracker.30aea4155644
+    # WROOM32 Dry-Contact (baño)
+    - device_tracker.30aea41960dc
+    # Sparkfun Terraza
+    - device_tracker.240ac48124a4
+    # WROOM32 (galería)
+    - device_tracker.240ac4057954
+    # WROOM32 Covers living room
+    - device_tracker.esp_covers
+    # WROOM32 TEST
+    - device_tracker.240ac40a6288
+
+esp32_time_sync:
+  name: Time drift
+  entities:
+    - sensor.sensor_power__time_drift
+    - sensor.sensor_livingroom__time_drift
+    - sensor.sensor_kitchen__time_drift
+    - sensor.sensor_hall__time_drift
+    - sensor.sensor_study__time_drift
+    - sensor.sensor_office__time_drift
+    - sensor.sensor_bedroom__time_drift
+    - sensor.sensor_bathroom_ac__time_drift
+    - sensor.sensor_terraza__time_drift
+    - sensor.sensor_galeria__time_drift
+    - sensor.sensor_covers__time_drift
 
 general_config:
   name: General
@@ -563,35 +638,8 @@ Dispositivos:
     - device_tracker.jo01
     - device_tracker.kindle_1
     - device_tracker.kindle_2
-
-Dev boards:
-  control: hidden
-  entities:
-    # wrover_kit
-    - device_tracker.wrover_kit
-    # new wroom32-1 - ener: (WROOM32 (Energy meter))
-    - device_tracker.30aea41607a8
-    # WROOM32-EVB falso techo Hall
-    - device_tracker.esp32_evb_1_wifi
-    - device_tracker.esp32_evb_1_eth
-    # WROOM32 Dry-Contact (baño)
-    - device_tracker.30aea41960dc
-    # Wroom32batt Salón
-    - device_tracker.30aea4060680
-    # new wroom32-2 - Cocina:
-    - device_tracker.30aea4208170
-    # WROOM32 miniOLED (estudio)
-    - device_tracker.30aea4001d1c
-    # WROOM32 (dormitorio):
-    - device_tracker.30aea4155644
-    # WROOM32 (galería)
-    - device_tracker.240ac4057954
-    # Sparkfun Terraza
-    - device_tracker.240ac48124a4
-
     # Wemos 8266 Batt (vinoteca)
     - device_tracker.6001944ed7c4
-
     # Wemos OLED (estudio - dev)
     - device_tracker.30aea4132c40
     # Sparkfun (old - galería)
@@ -666,14 +714,6 @@ aislamiento:
 #    - sensor.house_delta_temperature
 #    - binary_sensor.close_house
 
-weather_cams:
-  - camera.psychrometric_chart
-  - weather.local_weather
-  - camera.weather_svg
-  - camera.worldtime
-  - camera.webcam_playa_1
-  - camera.webcam_playa_2
-  - camera.webcam_playa_3
 
 weather_dark_sky_today:
   name: Hoy
@@ -831,14 +871,19 @@ Weather:
   icon: mdi:weather-partlycloudy
   view: yes
   entities:
-    - group.weather_cams
-    - group.aislamiento
+    - camera.psychrometric_chart
+    - weather.local_weather
+    - camera.weather_svg
     - group.weather_dark_sky_today
+    - group.aislamiento
     - group.weather_dark_sky_tomorrow
     - group.weather_dark_sky_aftertomorrow
     - group.weather_dark_sky_afterthree
-    - group.weather_forecast
-    - group.weather
+#    - group.weather_forecast
+    - camera.webcam_playa_1
+    - camera.webcam_playa_2
+    - camera.webcam_playa_3
+    - camera.worldtime
 
 
 current_meter_control:
@@ -917,13 +962,21 @@ Home Network:
     - group.otras_rpi
     - group.dispositivos
     - group.baterias
-    - group.dev_boards
     - group.wifi_appliances
     - group.smarty
     - group.pi_hole
     - group.speedtest
     - group.vecinos_cercanos
 
+esp32_devs:
+  name: ESP32 devices
+  view: yes
+  icon: mdi:developer-board
+  entities:
+    - group.esp32_samples
+    - group.esp32_conectivity
+    - group.esp32_tracking
+    - group.esp32_time_sync
 
 Master conf:
   name: Master configuration
