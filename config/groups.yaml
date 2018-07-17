@@ -98,8 +98,6 @@ Despertador:
     - switch.alarm_clock_status
   #  - input_boolean.alarm_clock_status
     - input_datetime.alarm_clock_time
-    - input_datetime.water_boiler_start_time
-    - input_boolean.use_heater
     - input_datetime.next_special_wake_up
     - input_select.room_altavoces
     # From rf outlets:
@@ -148,9 +146,6 @@ Enchufes:
     - switch.new_switch_3
     - switch.sonoff_simple_1
 
-#Terraza:
-#  - light.terraza
-
 elec_power_complete:
   name: Consumo eléctrico
   entities:
@@ -168,8 +163,17 @@ elec_power_complete:
     - sensor.esp32ener_consumption_day
     - sensor.horas_de_ac
     - sensor.horas_de_termo
-
     - weblink.consumo_electrico
+
+big_consumers:
+  name: ACS y AC
+  control: hidden
+  entities:
+    - switch.ac_dry_contact
+    - input_datetime.water_boiler_start_time
+    - input_boolean.use_heater
+    - switch.calentador
+    - switch.bomba_circ_acs
 
 elec_power_simple:
   name: Consumo eléctrico
@@ -278,9 +282,6 @@ esp_livingroom:
     - sensor.sensor_livingroom_humidity
     - sensor.sensor_livingroom_pressure
     - sensor.sensor_livingroom_illumination
-#    light.sensor_livingroom__rgblight
-#    - binary_sensor.sensor_livingroom_online
-#    - sensor.sensor_livingroom__snum
 
 esp_office:
   name: Office
@@ -292,11 +293,6 @@ esp_office:
     - sensor.sensor_office_illumination
     - sensor.sensor_office_adc1
     - sensor.sensor_office_adc2
-#    light.sensor_office__rgblight
-#    #switch.sensor_office__switch_led
-#    light.sensor_office__switch_led
-#    - binary_sensor.sensor_office_online
-#    - sensor.sensor_office__snum
 
 esp_estudio:
   name: Estudio
@@ -315,8 +311,6 @@ esp_kitchen:
     - sensor.sensor_kitchen_humidity
 #      - sensor.sensor_kitchen_pressure
     - sensor.sensor_kitchen_illumination
-#    - binary_sensor.sensor_kitchen_online
-#    - sensor.sensor_kitchen__snum
 
 esp_bathroom_1:
   name: Baño
@@ -337,8 +331,6 @@ esp_hall:
 #    - sensor.sensor_hall_temperature
 #    - sensor.sensor_hall_humidity
     - sensor.sensor_hall_illumination
-#    - binary_sensor.sensor_hall_online
-#    - sensor.sensor_hall__snum
 
 esp_terraza:
   name: Terraza
@@ -349,8 +341,6 @@ esp_terraza:
     - sensor.sensor_terraza_humidity
     - sensor.sensor_terraza_pressure
     - sensor.sensor_terraza_illumination
-#    - binary_sensor.sensor_terraza_online
-#    - sensor.sensor_terraza__snum
 
 esp_galeria:
   name: Galería
@@ -555,6 +545,7 @@ Dispositivos:
     - device_tracker.xiaomi_router
     - device_tracker.xiaomi_vacuum
     - device_tracker.airport_extreme
+    - device_tracker.airport_extreme_w
     - device_tracker.airport_express_a
     - device_tracker.airport_express_b
     - device_tracker.printer_brother_hl3140cw
@@ -566,6 +557,7 @@ Dispositivos:
     - device_tracker.camera_sricam360
     - device_tracker.camera_kmoon
     - device_tracker.camera_iegeek
+    - device_tracker.camera_iegeek_eth
     - device_tracker.rpi3_enerpi
     - device_tracker.rpi3_osmc
     - device_tracker.jo01
@@ -610,6 +602,7 @@ Dev boards:
     - device_tracker.240ac48163f8
     # RPI Zero Ethernet
     - device_tracker.00e04c534458
+
 
 Wifi appliances:
   control: hidden
@@ -856,10 +849,7 @@ current_meter_control:
     - group.elec_power_complete
     - camera.consumo_7d
     - camera.electricidad_24h
-    - switch.bomba_circ_acs
-    - switch.calentador
-    - switch.ac_dry_contact
-
+    - group.big_consumers
 
 Alarm Panel:
   name: Alarm configuration
