@@ -323,13 +323,12 @@ class AlarmClock(hass.Hass):
                     self._last_trigger = None
                     self.set_state(self._manual_trigger, state='off')
                 self.log('TURN_OFF MOPIDY')
-            if self._handler_turnoff is not None:
-                self.cancel_timer(self._handler_turnoff)
-                self._handler_turnoff = None
         else:
             self.log('TURN_OFF ALARM CLOCK, BUT ALREADY OFF?')
+        if self._handler_turnoff is not None:
+            self.cancel_timer(self._handler_turnoff)
+            self._handler_turnoff = None
         self._in_alarm_mode = False
-        self._handler_turnoff = None
 
     # noinspection PyUnusedLocal
     def master_switch(self, entity, attribute, old, new, kwargs):
