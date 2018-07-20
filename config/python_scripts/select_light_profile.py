@@ -128,11 +128,12 @@ elif scene_selection == 'TV Night':
                         "xy_color": [0.1576, 0.2175], "brightness": 137})
     # Set cover position:
     cover_state = hass.states.get(COVER_VENTANAL)
-    if int(cover_state.attributes['current_position']) > 20:
-        hass.services.call('cover', 'set_position',
+    if int(cover_state.attributes['current_position']) > 30:
+        hass.services.call('cover', 'set_cover_position',
                            {"entity_id": COVER_VENTANAL,
-                            "position": 10})
-
+                            "position": 15})
+        logger.warning("TV Night SCENE, cover_state: from %d to 15",
+                       int(cover_state.attributes['current_position']))
     # hass.services.call('cover', 'set_position',
     #                    {"entity_id": "cover.sonoff_cover_puerta_terraza",
     #                     "position": 70})
