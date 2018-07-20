@@ -215,16 +215,16 @@ set_mid_position_cover_2:
 start_status_sonoff_outlets:
   alias: Requerir estado de Sonoff
   sequence:
-    - service: mqtt.publish
-      data:
-        topic: "sonoff/4cover"
-        payload: "stat"
-        qos: 1
-#      - service: mqtt.publish
-#        data:
-#          topic: "sonoff/dual1"
-#          payload: "stat"
-#          qos: 1
+#    - service: mqtt.publish
+#      data:
+#        topic: "sonoff/4cover"
+#        payload: "stat"
+#        qos: 1
+##      - service: mqtt.publish
+##        data:
+##          topic: "sonoff/dual1"
+##          payload: "stat"
+##          qos: 1
     - service: mqtt.publish
       data:
         topic: "sonoff/pow/1"
