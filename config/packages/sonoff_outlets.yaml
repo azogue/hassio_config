@@ -35,6 +35,15 @@ homeassistant:
       friendly_name: Consumo en termo
       homebridge_hidden: true
 
+    input_boolean.use_heater:
+      icon: mdi:toggle-switch
+      homebridge_hidden: true
+
+input_boolean:
+  use_heater:
+    name: Encendido diario de calentador
+#    initial: on
+
 switch:
 # Sonoff POW 16A
   - platform: mqtt
