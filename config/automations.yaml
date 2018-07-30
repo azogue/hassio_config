@@ -634,10 +634,10 @@
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.vinoteca_online
+      entity_id: binary_sensor.sensor_wine_online
       to: 'off'
       for:
-        minutes: 5
+        minutes: 10
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -699,6 +699,9 @@
   trigger:
     platform: state
     entity_id: sensor.ip_externa
+  condition:
+    condition: template
+    value_template: "{{ (trigger.to_state.state | length > 10) and (trigger.to_state.state != 'unavailable') }}"
   action:
     - service: telegram_bot.send_message
       data_template:
