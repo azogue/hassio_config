@@ -518,13 +518,13 @@ views:
 
   - type: glance
     title: Cocina
+    show_name: false
+    column_width: 'calc(100% / 4)'
     entities:
     - entity: sensor.sensor_kitchen_temperature
-      name: T
     - entity: sensor.sensor_kitchen_humidity
-      name: HR
+    - entity: sensor.sensor_kitchen_pressure
     - entity: sensor.sensor_kitchen_illumination
-      name: I
 
   - type: glance
     title: Office

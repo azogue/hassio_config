@@ -11,10 +11,10 @@ homeassistant:
 #      homebridge_hidden: true
       homebridge_name: Humedad cocina
       homebridge_sensor_type: humidity
-#    sensor.sensor_kitchen_pressure:
-#      friendly_name: Presión
-#      icon: mdi:weather-cloudy
-#      homebridge_hidden: true
+    sensor.sensor_kitchen_pressure:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+      homebridge_hidden: true
     sensor.sensor_kitchen_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
@@ -76,6 +76,15 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
     
+  - platform: mqtt
+    state_topic: !secret mqtt_topic_esp_kitchen_status
+    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
+    name: sensor_kitchen_pressure
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_kitchen_status
     value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"

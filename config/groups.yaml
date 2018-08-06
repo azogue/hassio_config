@@ -309,7 +309,7 @@ esp_kitchen:
   entities:
     - sensor.sensor_kitchen_temperature
     - sensor.sensor_kitchen_humidity
-#      - sensor.sensor_kitchen_pressure
+    - sensor.sensor_kitchen_pressure
     - sensor.sensor_kitchen_illumination
 
 esp_bathroom_1:
