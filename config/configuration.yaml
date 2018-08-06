@@ -85,6 +85,7 @@ mqtt:
 updater:
   include_used_components: true
 
+hassio:
 discovery:
 #  enable:
 #    - homekit
