@@ -20,9 +20,8 @@ homeassistant:
 cover:
   - platform: mqtt
     name: sonoff_cover_ventanal
-
-    command_topic: !secret mqtt_topic_esp_covers_command
-    set_position_topic: !secret mqtt_topic_esp_covers_command
+    command_topic: !secret mqtt_topic_esp_covers_command_cover1
+    set_position_topic: !secret mqtt_topic_esp_covers_command_cover1
     state_topic: !secret mqtt_topic_esp_covers_status
     availability_topic: !secret mqtt_topic_esp_covers_lwt
 
@@ -41,9 +40,8 @@ cover:
 
   - platform: mqtt
     name: sonoff_cover_puerta_terraza
-
-    command_topic: !secret mqtt_topic_esp_covers_command
-    set_position_topic: !secret mqtt_topic_esp_covers_command
+    command_topic: !secret mqtt_topic_esp_covers_command_cover2
+    set_position_topic: !secret mqtt_topic_esp_covers_command_cover2
     state_topic: !secret mqtt_topic_esp_covers_status
     availability_topic: !secret mqtt_topic_esp_covers_lwt
 

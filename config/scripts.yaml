@@ -159,7 +159,7 @@ step_up_cover_1:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover1
         payload: '{"cover1": {"command": "step_up"}}'
         qos: !secret mqtt_default_qos
         retain: true
@@ -168,7 +168,7 @@ step_down_cover_1:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover1
         payload: '{"cover1": {"command": "step_down"}}'
         qos: !secret mqtt_default_qos
         retain: true
@@ -177,7 +177,7 @@ step_up_cover_2:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover2
         payload: '{"cover2": {"command": "step_up"}}'
         qos: !secret mqtt_default_qos
         retain: true
@@ -186,7 +186,7 @@ step_down_cover_2:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover2
         payload: '{"cover2": {"command": "step_down"}}'
         qos: !secret mqtt_default_qos
         retain: true
@@ -196,7 +196,7 @@ set_mid_position_cover_1:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover1
         payload: '{"cover1": {"command": "set_position", "value": 50 }}'
         qos: !secret mqtt_default_qos
         retain: true
@@ -206,7 +206,7 @@ set_mid_position_cover_2:
   sequence:
     - service: mqtt.publish
       data:
-        topic: !secret mqtt_topic_esp_covers_command
+        topic: !secret mqtt_topic_esp_covers_command_cover2
         payload: '{"cover2": {"command": "set_position", "value": 50 }}'
         qos: !secret mqtt_default_qos
         retain: true
