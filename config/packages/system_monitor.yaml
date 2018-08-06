@@ -183,9 +183,9 @@ sensor:
   sensors:
     sensor_power__time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.esp32ener_power.last_updated)
+        {% if states.sensor.esp32ener_power.attributes.ts %}{{(as_timestamp(states.sensor.esp32ener_power.last_updated)
         - as_timestamp(strptime(states.sensor.esp32ener_power.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
+              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
       unit_of_measurement: "s"
       friendly_name: Time sync Current meter
     sensor_bathroom_ac__time_drift:
