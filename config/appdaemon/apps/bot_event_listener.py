@@ -703,7 +703,18 @@ class EventListener(hass.Hass):
                         msg = {'entity_id': cmd_args[1].lstrip('entity_id=')}
                 elif len(cmd_args) > 2:
                     msg['entity_id'] = cmd_args[1]
-                    if cmd_args[2][0] == '{':
+                    if serv == 'climate/set_operation_mode':
+                        msg['operation_mode'] = cmd_args[2]
+                        # WTF:
+                        # when creating InlineKeyboardButton's, this call fails with: 'Button_data_invalid'
+                        # "inline_keyboard": ["Deshacer:/service_call climate.set_operation_mode climate.termostato_ac off"],
+                        # but these are ok:
+                        # "inline_keyboard": ["Deshacer:/service_call climate.set_operation_mode termostato_ac off"],
+                        # "inline_keyboard": ["Deshacer:/service_call set_operation_mode climate.termostato_ac off"],
+                        # like there is a problem when the number of '.' is > 1 ¿¿¿???
+                        if 'climate.' not in msg['entity_id']:
+                            msg['entity_id'] = 'climate.' + msg['entity_id']
+                    elif cmd_args[2][0] == '{':
                         msg = json.loads(' '.join(cmd_args[2:]))
                     else:
                         self.error('Service call bad args (no JSON): {}'
