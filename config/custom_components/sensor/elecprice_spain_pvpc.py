@@ -8,19 +8,21 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 
+import aiohttp
+import async_timeout
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.components.sensor import PLATFORM_SCHEMA, ENTITY_ID_FORMAT
 from homeassistant.const import CONF_NAME, CONF_TIMEOUT
 from homeassistant.helpers.entity import Entity, async_generate_entity_id
-from homeassistant.helpers.event import track_time_change, track_point_in_time
-from homeassistant.helpers.restore_state import async_get_last_state
-from homeassistant.util import Throttle
+from homeassistant.helpers.event import (
+    async_track_point_in_time, async_track_time_change)
 import homeassistant.util.dt as dt_util
 
-# TODO request async
-REQUIREMENTS = ['requests', 'beautifulsoup4==4.6.0']
+
+REQUIREMENTS = ['beautifulsoup4']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,27 +43,16 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-def scrap_pvpc_current_prices(rate=RATES[0], timeout=10):
+def scrap_pvpc_current_prices(html_text):
     """Simple scraper of the electricity prices per hour."""
 
     def _clean_div_price(text):
         return float(text.rstrip().lstrip().rstrip(' €/kWh').split()[-1])
 
     from bs4 import BeautifulSoup as Soup
-    import requests
 
-    url = 'https://tarifaluzhora.es/?tarifa=' + rate
-    try:
-        req = requests.get(url, timeout=timeout)
-    except requests.exceptions.Timeout:
-        _LOGGER.error("Timeout error requesting data from '%s'", url)
-        return None
-    if not req.ok:
-        _LOGGER.error("Request error in '%s' [status: %d]",
-                      url, req.status_code)
-        return None
-    # s = Soup(req.text, 'html5lib')
-    s = Soup(req.text, 'html.parser')
+    # s = Soup(html_text, 'html5lib')
+    s = Soup(html_text, 'html.parser')
     hour_prices = s.find_all('div', id='hour_prices')
     if not hour_prices:
         _LOGGER.error("Prices not found in HTML data")
@@ -88,20 +79,24 @@ def scrap_pvpc_current_prices(rate=RATES[0], timeout=10):
     return None
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices,
+                               discovery_info=None):
     """Set up the electricity price sensor."""
-    add_devices([ElecPriceSensor(hass,
-                                 config.get(CONF_NAME),
-                                 config.get(CONF_ELEC_RATE),
-                                 config.get(CONF_TIMEOUT))], True)
+    websession = async_get_clientsession(hass)
+    async_add_devices(
+        [ElecPriceSensor(hass, websession,
+                         config.get(CONF_NAME),
+                         config.get(CONF_ELEC_RATE),
+                         config.get(CONF_TIMEOUT))])
 
 
 class ElecPriceSensor(Entity):
     """Class to hold the prices of electricity as a sensor."""
 
-    def __init__(self, hass, name, rate, timeout):
+    def __init__(self, hass, websession, name, rate, timeout):
         """Initialize the sensor object."""
         self.hass = hass
+        self._websession = websession
         self._name = name
         self.entity_id = async_generate_entity_id(
             ENTITY_ID_FORMAT, self._name, hass=self.hass)
@@ -111,16 +106,13 @@ class ElecPriceSensor(Entity):
         self._state = None
         self._today_prices = None
         self._tomorrow_prices = None
-        track_time_change(self.hass, self.update, second=[0], minute=[0])
-        _LOGGER.debug("Setup of %s (%s) ok", self.name, self.entity_id)
+        async_track_time_change(self.hass, self.async_update,
+                                second=[0], minute=[0, 15, 30, 45])
+        _LOGGER.info("Setup of %s (%s) ok", self.name, self.entity_id)
 
-    @asyncio.coroutine
-    def async_added_to_hass(self):
+    async def async_added_to_hass(self):
         """Handle all entity which are about to be added."""
-        state = yield from async_get_last_state(self.hass, self.entity_id)
-        if not state:
-            return
-        self._state = state.state
+        await self.async_update()
 
     @property
     def should_poll(self):
@@ -155,11 +147,24 @@ class ElecPriceSensor(Entity):
         """Attributes."""
         return self._attributes
 
-    @Throttle(timedelta(seconds=1800))
-    def update(self, *args):
+    async def async_update(self, *args):
         """Update the sensor."""
-        # _LOGGER.warning('In update with: {}'.format(args))
-        data = scrap_pvpc_current_prices(rate=self.rate, timeout=self._timeout)
+        url = 'https://tarifaluzhora.es/?tarifa=' + self.rate
+        data = None
+        try:
+            with async_timeout.timeout(self._timeout, loop=self.hass.loop):
+                req = await self._websession.get(url)
+                if req.status < 400:
+                    text = await req.text()
+                    data = scrap_pvpc_current_prices(text)
+                else:
+                    _LOGGER.error("Request error in '%s' [status: %d]",
+                                  url, req.status)
+        except asyncio.TimeoutError:
+            _LOGGER.warning("Timeout error requesting data from '%s'", url)
+        except aiohttp.ClientError:
+            _LOGGER.error("Client error in '%s'", url)
+
         if data:
             date, prices = data
             if args:
@@ -172,7 +177,7 @@ class ElecPriceSensor(Entity):
                                 date.strftime('%Y-%m-%d'), str(prices))
                 self._tomorrow_prices = prices
             elif today == date:
-                _LOGGER.debug("Updating today prices: %s", str(prices))
+                _LOGGER.warning("Updating today prices: %s", str(prices))
                 self._today_prices = prices
             else:
                 _LOGGER.error("Bad date scrapping data? '%s', prices: %s",
@@ -198,12 +203,27 @@ class ElecPriceSensor(Entity):
             self._state = None
             _LOGGER.warning("Trying to update later, after %d seconds",
                             self._timeout)
-            track_point_in_time(
-                self.hass, self.update,
+            async_track_point_in_time(
+                self.hass, self.async_update,
                 dt_util.now() + timedelta(seconds=3 * self._timeout))
 
-        self.schedule_update_ha_state(False)
+        self.async_schedule_update_ha_state()
 
 
-if __name__ == '__main__':
-    scrap_pvpc_current_prices()
+# if __name__ == '__main__':
+#     import requests
+#
+#     url = 'https://tarifaluzhora.es/?tarifa=' + RATES[1]
+#     req_data = None
+#     try:
+#         req = requests.get(url, timeout=10)
+#         if not req.ok:
+#             print("Request error in '%s' [status: %d]", url, req.status_code)
+#         else:
+#             req_data = req.text
+#     except requests.exceptions.Timeout:
+#         print("Timeout error requesting data from '%s'", url)
+#
+#     if req_data:
+#         prices = scrap_pvpc_current_prices(req_data)
+#         print(prices)

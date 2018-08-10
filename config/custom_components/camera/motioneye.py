@@ -49,9 +49,8 @@ RG_STATUS = re.compile('> Detection status (\w+)\n')
 RG_CONTROL = re.compile('> Detection (\w+)\n')
 
 
-@asyncio.coroutine
 # pylint: disable=unused-argument
-def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     """Set up a generic IP Camera."""
     async_add_devices([MotionEyeCamera(hass, config)])
 
@@ -76,7 +75,7 @@ class MotionEyeCamera(Camera):
             self._control_url = (
                 f"{url_p.scheme}://{url_p.netloc.split(':')[0]}"
                 f":{control_port}/{url_p.path.split('/')[2]}/detection/")
-            # yield from self.async_get_camera_motion_status(command='status')
+            # await self.async_get_camera_motion_status(command='status')
 
         self._last_image = None
         self._last_status = None
@@ -105,20 +104,18 @@ class MotionEyeCamera(Camera):
         """Return the camera model."""
         return "MotionEye Snapshot Camera"
 
-    @asyncio.coroutine
-    def async_enable_motion_detection(self):
+    async def async_enable_motion_detection(self):
         """Enable motion detection in the camera."""
         self.is_streaming = True
-        yield from self.async_get_camera_motion_status(command='start')
-        yield from self.async_update_ha_state()
+        await self.async_get_camera_motion_status(command='start')
+        self.async_schedule_update_ha_state()
         # self.async_schedule_update_ha_state()
 
-    @asyncio.coroutine
-    def async_disable_motion_detection(self):
+    async def async_disable_motion_detection(self):
         """Disable motion detection in camera."""
         self.is_streaming = False
-        yield from self.async_get_camera_motion_status(command='pause')
-        yield from self.async_update_ha_state()
+        await self.async_get_camera_motion_status(command='pause')
+        self.async_schedule_update_ha_state()
         # self.async_schedule_update_ha_state()
 
     def camera_image(self):
@@ -126,25 +123,24 @@ class MotionEyeCamera(Camera):
         return run_coroutine_threadsafe(
             self.async_camera_image(), self.hass.loop).result()
 
-    @asyncio.coroutine
-    def async_camera_image(self):
+    async def async_camera_image(self):
         """Return a still image response from the camera."""
         try:
             websession = async_get_clientsession(self.hass)
             with async_timeout.timeout(10, loop=self.hass.loop):
-                response = yield from websession.get(self._snapshot_url)
-            self._last_image = yield from response.read()
+                response = await websession.get(self._snapshot_url)
+            self._last_image = await response.read()
             if (self._control_url is None or
                     (self._last_status is not None
                      and (utcnow() - self._last_status).total_seconds() < 60)):
                 return self._last_image
 
-            yield from self.async_get_camera_motion_status(command='status')
+            await self.async_get_camera_motion_status(command='status')
             # url = self._control_url + 'status'
             # reg_expr = RG_STATUS
             # with async_timeout.timeout(5, loop=self.hass.loop):
-            #     response = yield from websession.get(url)
-            # raw = yield from response.read()
+            #     response = await websession.get(url)
+            # raw = await response.read()
             # if not raw:
             #     _LOGGER.error(f"No control response in {url}")
             #     return self._last_image
@@ -160,7 +156,8 @@ class MotionEyeCamera(Camera):
             #     self._motion_detection_active = True
             # else:
             #     self._motion_detection_active = False
-        except asyncio.TimeoutError:
+        # except asyncio.TimeoutError:
+        except aiohttp.Timeout:
             _LOGGER.warning("Timeout getting camera image")
             return self._last_image
         except aiohttp.ClientError as err:
@@ -170,8 +167,7 @@ class MotionEyeCamera(Camera):
 
         return self._last_image
 
-    @asyncio.coroutine
-    def async_get_camera_motion_status(self, command='status'):
+    async def async_get_camera_motion_status(self, command='status'):
         """Asks for the motion detection status of the camera."""
         if self._control_url is None:
             self._motion_detection_active = False
@@ -182,8 +178,8 @@ class MotionEyeCamera(Camera):
         try:
             websession = async_get_clientsession(self.hass)
             with async_timeout.timeout(10, loop=self.hass.loop):
-                response = yield from websession.get(url)
-            raw = yield from response.read()
+                response = await websession.get(url)
+            raw = await response.read()
             if not raw:
                 _LOGGER.error(f"No control response in {url}")
 
@@ -204,7 +200,7 @@ class MotionEyeCamera(Camera):
                           f"{str(err)}")
             # return
 
-        # yield from self.async_update_ha_state()
+        # self.async_schedule_update_ha_state()
         # return
 
     @property
