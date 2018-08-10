@@ -1,7 +1,7 @@
 title: Domus
 
 resources:
-- url: /local/custom_ui/monster-card.js?v=1
+- url: /local/custom_ui/monster-card.js?v=3
   type: js
 - url: /local/custom_ui/gauge-card.js?v=1
   type: js
@@ -23,85 +23,124 @@ views:
 - icon: mdi:home
   title: Quick Status
   cards:
+  - type: entity-filter
+    entities:
+      - media_player.kodi
+    state_filter:
+      - 'playing'
+    card:
+      type: media-control
+      entity: media_player.kodi
+
   - type: entities
     title: Control
     show_header_toggle: false
     entities:
-    - climate.termostato_ac
+    - entity: climate.termostato_ac
+      secondary_info: 'last-changed'
     - input_select.salon_light_scene
-    - script.play_kodi_pvr
-    - cover.sonoff_cover_ventanal
-    - cover.sonoff_cover_puerta_terraza
-    - vacuum.robot_aspirador
-    - type: "custom:entity-attributes-card"
-      entity: vacuum.robot_aspirador
-      attributes:
-        - status
-        - battery_level
+    - entity: script.play_kodi_pvr
+      secondary_info: 'last-changed'
+    - entity: cover.sonoff_cover_ventanal
+      secondary_info: 'last-changed'
+    - entity: cover.sonoff_cover_puerta_terraza
+      secondary_info: 'last-changed'
+    - entity: vacuum.robot_aspirador
+      secondary_info: 'last-changed'
+#    - type: "custom:entity-attributes-card"
+#      entity: vacuum.robot_aspirador
+#      attributes:
+#        - status
+#        - battery_level
     - input_select.vacuum_clean_combination
+
   - type: vertical-stack
     cards:
     - type: entities
       entities:
       - input_number.light_main_slider_salon
-      - input_number.light_temp_slider_salon
+      - entity: input_number.light_temp_slider_salon
+        name: 'Tª Color'
     - type: glance
+      show_state: false
+      column_width: 'calc(100% / 3)'
       entities:
-      - light.salon
-      - light.dormitorio
-      - light.estudio
-      - light.hall_light
-      - light.terraza
-  - type: media-control
-    entity: media_player.kodi_tv
-  - type: vertical-stack
-    title: Luces
-    cards:
+      - entity: light.salon
+        tap_action: 'toggle'
+      - entity: light.dormitorio
+        tap_action: 'toggle'
+      - entity: light.estudio
+        tap_action: 'toggle'
+      - entity: light.hall_light
+        tap_action: 'toggle'
+      - entity: light.terraza
+        tap_action: 'toggle'
+
+#  - type: media-control
+#    entity: media_player.kodi_tv
+
+#  - type: vertical-stack
+#    title: Luces
+#    cards:
     - type: glance
-      title: Salón
+#      title: Salón
+      column_width: 'calc(100% / 4)'
+      show_state: false
       entities:
       - entity: light.bola_grande
         name: Bola
       - light.central
       - light.pie_tv
       - light.pie_sofa
+      - type: divider
       - light.cuenco
       - light.lamparita
       - light.tira
       - light.yeelight_strip_7811dca21ecf
     - type: glance
-      title: Dormitorio
+#      title: Dormitorio
+      column_width: 'calc(100% / 2)'
+      show_state: false
       entities:
-      - entity: light.aura_habitacion
-        name: Aura
       - entity: light.hue_habitacion
-        name: Hue techo
+        name: Dormitorio
+      - entity: light.aura_habitacion
+        name: Mesilla noche
     - type: glance
-      title: Estudio
+      show_state: false
+      column_width: 'calc(100% / 2)'
+#      title: Estudio
       entities:
-      - light.flexo
-      - light.go
-  - type: vertical-stack
-    cards:
-    - type: picture-entity
-      entity: camera.psychrometric_chart
-      show_info: false
-    - type: entities
-#      title: Floorplan
-      entities:
-  #    - binary_sensor.floorplan
-      - weblink.grafana
-      - weblink.consumo_electrico
+      - entity: light.flexo
+        name: Techo estudio
+      - entity: light.go
+        name: Go Mesa estudio
+
+#    - type: entities
+##      title: Floorplan
+#      entities:
+#  #    - binary_sensor.floorplan
+#      - weblink.grafana
+#      - weblink.consumo_electrico
+
   - type: entities
     title: Enchufes
     show_header_toggle: false
+    secondary_info: 'last-changed'
     entities:
-    - switch.bomba_circ_acs
-    - switch.calentador
-    - switch.ac_dry_contact
-    - switch.altavoz
-    - switch.office_floor
-    - switch.test_switch_2
+    - entity: switch.bomba_circ_acs
+      secondary_info: 'last-changed'
+    - entity: switch.calentador
+      secondary_info: 'last-changed'
+    - entity: switch.ac_dry_contact
+      secondary_info: 'last-changed'
+    - entity: switch.altavoz
+      secondary_info: 'last-changed'
+    - type: divider
+    - entity: switch.office_floor
+      secondary_info: 'last-changed'
+    - entity: switch.test_switch_2
+      secondary_info: 'last-changed'
 
 #  - type: entity-filter
 #    filter:
@@ -114,6 +153,11 @@ views:
 #    card:
 #      title: Lights
 
+  - type: picture-entity
+    entity: camera.psychrometric_chart
+    show_name: false
+    show_state: false
+
 - icon: mdi:kodi
   title: Kodi
   cards:
@@ -124,6 +168,13 @@ views:
     title: Media select
     show_header_toggle: false
     entities:
+    - type: call-service
+      icon: mdi:tv
+      name: TV
+      action_name: Encender
+      service: script.play_kodi_pvr
+#      service_data:
+#        entity_id: light.bed_light
     - script.recent_episodes
     - script.recent_movies
     - script.pvr_channels
@@ -131,36 +182,47 @@ views:
     - input_select.kodi_results
     - sensor.horas_de_tv
 
-  - type: entities
-    title: Media search
-    entities:
-    - input_text.q_youtube
-    - input_select.youtube_videos
+  - type: vertical-stack
+    cards:
+    - type: glance
+      title: Kodi
+      show_header_toggle: false
+      show_name: false
+      show_state: false
+      column_width: 'calc(100% / 3)'
+      entities:
+      - entity: switch.tv_power
+  #      tap_action: 'toggle'
+        name: Enchufe
+      - entity: script.play_kodi_pvr
+        tap_action: 'toggle'
+        name: Play
+      - entity: script.stop_kodi
+        tap_action: 'toggle'
+        name: Stop
+      - entity: script.update_library
+        tap_action: 'toggle'
+        name: Update
+      - entity: script.quit_kodi
+  #      tap_action: 'toggle'
+        name: 'QUIT'
+      - entity: script.restart_kodi_osmc
+  #      tap_action: 'toggle'
+        name: 'RESTART'
 
-  - type: glance
-    title: Kodi
-    show_header_toggle: false
-    entities:
-    - entity: switch.tv_power
-      name: Enchufe
-    - entity: script.play_kodi_pvr
-      name: Play
-    - entity: script.stop_kodi
-      name: Stop
-    - entity: script.update_library
-      name: Update
-    - entity: script.quit_kodi
-      name: 'QUIT'
-    - entity: script.restart_kodi_osmc
-      name: 'RESTART'
-
-  - type: entities
-    title: Torrents
-    show_header_toggle: false
-    entities:
-    - input_text.q_torrents
-    - script.torrent_search
-    - weblink.buscador_de_torrents
+    - type: entities
+      show_header_toggle: false
+  #    title: Media search
+      entities:
+      - input_text.q_youtube
+      - input_select.youtube_videos
+  #  - type: entities
+  #    title: Torrents
+  #    entities:
+      - type: divider
+      - input_text.q_torrents
+      - script.torrent_search
+  #    - weblink.buscador_de_torrents
 
   - type: media-control
     entity: media_player.home_cinema
@@ -174,12 +236,14 @@ views:
       cards:
       - type: picture-entity
         entity: camera.psychrometric_chart
-        show_info: false
+        show_name: false
+        show_state: false
       - type: weather-forecast
         entity: weather.local_weather
       - type: picture-entity
         entity: camera.weather_svg
-        show_info: false
+        show_name: false
+        show_state: false
 #      - sensor.psychrometric_evolution
 
     - type: vertical-stack
@@ -188,29 +252,33 @@ views:
         title: Hoy
         entities:
         - sensor.dark_sky_summary
-        - sensor.dark_sky_apparent_temperature
-        - sensor.dark_sky_hourly_summary
+        - entity: sensor.dark_sky_hourly_summary
+          name: '->'
       - type: glance
+        column_width: 'calc(100% / 3)'
         entities:
+        - entity: sensor.dark_sky_apparent_temperature
+          name: T. Aparente
         - entity: sensor.dark_sky_temperature
           name: T
-        - sensor.dark_sky_dew_point
         - entity: sensor.dark_sky_humidity
           name: HR
-        - entity: sensor.dark_sky_pressure
-          name: P
         - entity: sensor.dark_sky_daytime_high_temperature
           name: Máxima
         - entity: sensor.dark_sky_overnight_low_temperature
           name: Mínima
+        - entity: sensor.dark_sky_pressure
+          name: P
 
     - type: vertical-stack
       cards:
       - type: entities
         title: Mañana
         entities:
-        - sensor.dark_sky_daily_summary
+        - entity: sensor.dark_sky_daily_summary
+          name: '>'
       - type: glance
+        column_width: 'calc(100% / 4)'
         entities:
         - sensor.dark_sky_temperature_1
         - sensor.dark_sky_apparent_temperature_1
@@ -225,6 +293,7 @@ views:
           name: Mínima
       - type: glance
         title: Pasado mañana
+        column_width: 'calc(100% / 4)'
         entities:
         - sensor.dark_sky_temperature_2
         - sensor.dark_sky_apparent_temperature_2
@@ -239,6 +308,7 @@ views:
           name: Mínima
       - type: glance
         title: En tres días
+        column_width: 'calc(100% / 4)'
         entities:
         - sensor.dark_sky_temperature_3
         - sensor.dark_sky_apparent_temperature_3
@@ -254,6 +324,7 @@ views:
 
     - type: glance
       title: Deltas
+      column_width: 'calc(100% / 4)'
       entities:
       - entity: sensor.temp_change_galeria
         name: Galería
@@ -312,21 +383,34 @@ views:
 
     - type: glance
 #      title: Consumo eléctrico
+      show_name: false
+      column_width: 'calc(100% / 3)'
       entities:
       - sensor.esp32ener_ch1
       - sensor.esp32ener_ch2
       - sensor.esp32ener_ch3
       - entity: sensor.sonoff_pow_1
-        name: Termo
+#        name: Termo
       - entity: binary_sensor.electricity_high_cost_interval
-        name: Punta
+#        name: Punta
       - entity: sensor.elecprice_range
-        name: Precio
+#        name: Precio
 
     - type: entities
       entities:
       - sensor.horas_de_ac
       - sensor.horas_de_termo
+      - type: divider
+  #    - switch.bomba_circ_acs
+      - entity: switch.calentador
+        secondary_info: 'last-changed'
+      - entity: switch.ac_dry_contact
+        secondary_info: 'last-changed'
+      - type: weblink
+        icon: mdi:chart-areaspline
+        name: Consumo eléctrico
+        url: !secret grafana_elec_url
+#    - weblink.consumo_electrico
 #      title: Consumo eléctrico
 #  #    - sensor.esp32ener_power
 #      - sensor.esp32ener_ch1
@@ -339,40 +423,69 @@ views:
 
   - type: picture-entity
     entity: camera.consumo_7d
-    show_info: false
+    show_name: false
+    show_state: false
 
   - type: picture-entity
     entity: camera.electricidad_24h
-    show_info: false
+    show_name: false
+    show_state: false
 
-  - type: entities
-#    title: Enchufes
-    entities:
-#    - switch.bomba_circ_acs
-    - switch.calentador
-    - switch.ac_dry_contact
-    - weblink.consumo_electrico
 
 - icon: mdi:shield-outline
   title: Alarm configuration
   cards:
-  - type: entities
-    title: Consumo eléctrico
-    entities:
-    - alarm_control_panel.alarma
-    - sensor.current_alarm_level
-    - weblink.motioneye
-  - type: markdown
-    content: >
-      ## Lovelace
+  - type: vertical-stack
+    cards:
+    - type: entities
+      title: Alarma
+      entities:
+      - entity: alarm_control_panel.alarma
+        secondary_info: 'last-changed'
+      - entity: sensor.current_alarm_level
+        secondary_info: 'last-changed'
 
-      Starting with Home Assistant 0.72, we're experimenting with a new way of defining your interface. We're calling it the **Lovelace UI**.
+#    - type: glance
+#      show_state: false
+#      column_width: 'calc(100% / 4)'
+#      entities:
+#      - entity: switch.camara
+#      - entity: switch.motion_detection_sricam_360
+#      - entity: switch.motion_detection_iegeek_hd
+#      - entity: switch.motion_detection_kmoon_ipcam100
 
-      This is a test: _{{ states.sun.sun.state }}_
+    - type: glance
+      show_state: false
+      column_width: 'calc(100% / 4)'
+      entities:
+      - entity: binary_sensor.local_pir
+        name: Cuadro
+  #    - binary_sensor.motioncam_salon
+  #    - binary_sensor.sensor_livingroom_mov1
+      - entity: binary_sensor.sensor_kitchen_mov1
+        name: Cocina
+      - entity: binary_sensor.sensor_study_mov1
+        name: Estudio
+      - entity: binary_sensor.sensor_bedroom_mov1
+        name: Dormitorio
+  #    - binary_sensor.motioncam_office
+  #    - binary_sensor.sensor_office_mov1
+  #    - entity: binary_sensor.sensor_bathroom_ac_mov1
+  #    - binary_sensor.motioncam_terraza
+  #    - binary_sensor.sensor_terraza_mov1
+
+#    - weblink.motioneye
+#  - type: markdown
+#    content: >
+#      ## Lovelace
+#
+#      Starting with Home Assistant 0.72, we're experimenting with a new way of defining your interface. We're calling it the **Lovelace UI**.
+#
+#      This is a test: _{{ states.sun.sun.state }}_
 
   - type: picture-glance
     camera_image: camera.sricam_360
-    title: Salón
+#    title: Salón
     entities:
 #    - switch.camara
     - binary_sensor.motioncam_salon
@@ -381,7 +494,7 @@ views:
 
   - type: picture-glance
     camera_image: camera.iegeek_hd
-    title: Estudio
+    title: Office
     entities:
     - binary_sensor.motioncam_office
     - binary_sensor.sensor_office_mov1
@@ -395,30 +508,16 @@ views:
     - binary_sensor.sensor_terraza_mov1
     - switch.motion_detection_kmoon_ipcam100
 
-  - type: glance
-#    title: Movimiento
-    entities:
-    - binary_sensor.local_pir
-#    - binary_sensor.motioncam_salon
-    - binary_sensor.sensor_bedroom_mov1
-#    - binary_sensor.sensor_livingroom_mov1
-    - binary_sensor.sensor_kitchen_mov1
-    - binary_sensor.sensor_study_mov1
-#    - binary_sensor.motioncam_office
-#    - binary_sensor.sensor_office_mov1
-    - binary_sensor.sensor_bathroom_ac_mov1
-#    - binary_sensor.motioncam_terraza
-#    - binary_sensor.sensor_terraza_mov1
-
 - icon: mdi:castle
   title: Home Status
   cards:
   - type: vertical-stack
+    panel: true
     cards:
-    - type: entities
-      title: Interior
-      entities:
-      - sensor.nonexistent
+#    - type: entities
+#      title: Interior
+#      entities:
+#      - sensor.nonexistent
     - type: horizontal-stack
       cards:
       - type: vertical-stack
@@ -445,10 +544,11 @@ views:
           title: Baño (°C)
           entity: sensor.sensor_bathroom_ac_temperature
 
-    - type: entities
-      title: Exterior
-      entities:
-      - sensor.nonexistent
+#    - type: entities
+#      title: Exterior
+#      entities:
+#      - sensor.nonexistent
+    - type: divider
     - type: horizontal-stack
       cards:
   #    - type: custom:bignumber-card
@@ -461,6 +561,7 @@ views:
 
   - type: glance
     title: Electricidad
+    column_width: 'calc(100% / 3)'
     entities:
     - entity: sensor.esp32ener_power
       name: Potencia
@@ -480,41 +581,36 @@ views:
     - sensor.humedad_stats_mean
     - sensor.temperatura_exterior
     - sensor.humedad_exterior
-    - weblink.grafana
+#    - weblink.grafana
 
   - type: glance
     title: Salón
+    column_width: 'calc(100% / 4)'
+    show_name: false
     entities:
     - entity: sensor.sensor_livingroom_temperature
-      name: T
     - entity: sensor.sensor_livingroom_humidity
-      name: HR
     - entity: sensor.sensor_livingroom_pressure
-      name: P
     - entity: sensor.sensor_livingroom_illumination
-      name: I
 
   - type: glance
     title: Dormitorio
+    show_name: false
+    column_width: 'calc(100% / 3)'
     entities:
     - entity: sensor.dormitorio_temperature_rpi2mpd
-      name: T
     - entity: sensor.dormitorio_humidity_rpi2mpd
-      name: HR
     - entity: sensor.dormitorio_pressure_rpi2mpd
-      name: P
 
   - type: glance
     title: Estudio
+    show_name: false
+    column_width: 'calc(100% / 4)'
     entities:
     - entity: sensor.sensor_study_temperature
-      name: T
     - entity: sensor.sensor_study_humidity
-      name: HR
     - entity: sensor.sensor_study_pressure
-      name: P
     - entity: sensor.sensor_study_illumination
-      name: I
 
   - type: glance
     title: Cocina
@@ -527,49 +623,45 @@ views:
     - entity: sensor.sensor_kitchen_illumination
 
   - type: glance
+    show_name: false
     title: Office
+    column_width: 'calc(100% / 4)'
     entities:
     - entity: sensor.sensor_office_temperature
-      name: T
     - entity: sensor.sensor_office_humidity
-      name: HR
     - entity: sensor.sensor_office_pressure
-      name: P
     - entity: sensor.sensor_office_illumination
-      name: I
 
   - type: glance
     title: Baño
+    show_name: false
+    column_width: 'calc(100% / 3)'
     entities:
     - entity: sensor.sensor_bathroom_ac_temperature
-      name: T
     - entity: sensor.sensor_bathroom_ac_humidity
-      name: HR
     - entity: sensor.sensor_bathroom_ac_illumination
-      name: I
 
   - type: glance
     title: Terraza
+    show_name: false
+    column_width: 'calc(100% / 4)'
     entities:
-#    - light.terraza
     - entity: sensor.sensor_terraza_temperature
-      name: T
     - entity: sensor.sensor_terraza_humidity
-      name: HR
     - entity: sensor.sensor_terraza_pressure
-      name: P
     - entity: sensor.sensor_terraza_illumination
-      name: I
+
   - type: glance
     title: Galería
+    show_name: false
+    column_width: 'calc(100% / 2)'
     entities:
     - entity: sensor.sensor_galeria_temperature
-      name: T
     - entity: sensor.sensor_galeria_humidity
-      name: HR
 
   - type: glance
     title: Hall
+    column_width: 'calc(100% / 4)'
     entities:
 #    - light.hall_light
     - entity: binary_sensor.sensor_hall_light_switch
@@ -581,15 +673,18 @@ views:
 
   - type: vertical-stack
     cards:
-    - type: entities
+    - type: glance
+      column_width: 'calc(100% / 4)'
       title: ACS
       entities:
-      - switch.calentador
-      - switch.bomba_circ_acs
-      - sensor.sensor_acs_probe_5
-      - sensor.sensor_acs_probe_6
-    - type: glance
-      entities:
+      - entity: switch.calentador
+        name: Calentador
+      - entity: switch.bomba_circ_acs
+        name: Bomba Circ.
+      - entity: sensor.sensor_acs_probe_5
+        name: Retorno Solar
+      - entity: sensor.sensor_acs_probe_6
+        name: Impulsión Solar
       - entity: sensor.sensor_acs_probe_1
         name: Fría
       - entity: sensor.sensor_acs_probe_2
@@ -600,12 +695,12 @@ views:
         name: Superficial
 
   - type: glance
+    column_width: 'calc(100% / 2)'
+    show_name: false
     title: Cuadro
     entities:
     - entity: sensor.local_htu21d_temperature
-      name: T
     - entity: sensor.local_htu21d_humidity
-      name: HR
 
 #- icon: mdi:auto-fix
 #  title: Home Control
@@ -652,6 +747,20 @@ views:
 - icon: mdi:alarm
   title: Despertador
   cards:
+  - type: entities
+    title: Despertador
+    show_header_toggle: false
+    entities:
+    - switch.alarm_clock_status
+  #  - input_boolean.alarm_clock_status
+    - input_datetime.alarm_clock_time
+    - input_datetime.water_boiler_start_time
+    - input_boolean.use_heater
+    - input_datetime.next_special_wake_up
+    - input_select.room_altavoces
+    # From rf outlets:
+    - switch.altavoz
+    - input_boolean.manual_trigger_lacafetera
   - type: media-control
     entity: media_player.dormitorio_mopidy
   - type: media-control
@@ -660,45 +769,163 @@ views:
 - icon: mdi:sitemap
   title: Red local
   cards:
+  - type: vertical-stack
+    cards:
+    - type: entities
+      title: Family
+      show_header_toggle: false
+      entities:
+      - entity: group.eugenio
+      - entity: group.carmen
+    - type: glance
+      column_width: 'calc(100% / 3)'
+      entities:
+      - device_tracker.iphone_bt
+      - device_tracker.iphone
+      - device_tracker.homeadmin_iphone
+    - type: glance
+      column_width: 'calc(100% / 4)'
+      entities:
+      - device_tracker.iphone_de_carmen_bt
+      - device_tracker.iphone_se
+      - device_tracker.iphonese
+      - device_tracker.homeadmin_iphonese
 
-  - type: entities
-    title: Links
+#  - type: entities
+#    title: Links
+#    entities:
+#    - weblink.grafana
+#    - weblink.nas_qnap
+#    - weblink.nas_synology
+#    - weblink.contabilidad
+#    - weblink.hassio_lan
+#    - weblink.hassio_pihole
+#    - weblink.slave_hass
+#    - weblink.slave_hass_mpd
+#    - weblink.enerpi
+#    - weblink.motioneye
+#    - weblink.kodi_web_interface
+#    - weblink.tv_headend
+#    - weblink.mopidy
+#    - weblink.router_movistar
+#    - weblink.wifi_repeater
+
+  - type: entity-filter
+    show_empty: true
+    state_filter:
+      - "not_home"
+    card:
+      type: glance
+      title: Offline
+      show_state: false
+      column_width: 'calc(100% / 3)'
     entities:
-    - weblink.grafana
-    - weblink.nas_qnap
-    - weblink.nas_synology
-    - weblink.contabilidad
-    - weblink.hassio_lan
-    - weblink.hassio_pihole
-    - weblink.slave_hass
-    - weblink.slave_hass_mpd
-    - weblink.enerpi
-    - weblink.motioneye
-    - weblink.kodi_web_interface
-    - weblink.tv_headend
-    - weblink.mopidy
-    - weblink.router_movistar
-    - weblink.wifi_repeater
+  #    - group.dt_imac
+  #    - group.dt_mbp
+  #    - group.dt_ipad
+#      - device_tracker.applewatch
+#      - device_tracker.applewatch_carmen
+  #    - input_boolean.eu_presence
+  #    - input_boolean.carmen_presence
+#      - device_tracker.konnected_alarm
+      - device_tracker.velop_1
+      - device_tracker.velop_2
+      - device_tracker.velop_3
+      - device_tracker.nas_qnap
+      - device_tracker.nas_syno
+      - device_tracker.hue_bridge
+      - device_tracker.yeelight_strip
+      - device_tracker.tv_toshiba
+      - device_tracker.home_cinema
+#      - device_tracker.home_cinema_2
+#      - device_tracker.xiaomi_router
+      - device_tracker.xiaomi_vacuum
+#      - device_tracker.airport_extreme
+#      - device_tracker.airport_express_a
+#      - device_tracker.airport_express_b
+      - device_tracker.printer_brother_hl3140cw
+#      - device_tracker.qnap_ubuntu
+      - device_tracker.router_movistar
+      - device_tracker.switch_salon
+#      - device_tracker.wifi_sta_salon
+      - device_tracker.deco_movistar
+      - device_tracker.rpi3b_libreelec
+      - device_tracker.rpi2_bedroom
+      # RPI3Docker
+      # RPI3 Black?
+#      - device_tracker.b827ebee3f3b
+      - device_tracker.camera_sricam360
+      - device_tracker.camera_kmoon
+      - device_tracker.camera_iegeek
+      - device_tracker.rpi3dev1
+      - device_tracker.rpi3dev1_wifi
+      - device_tracker.rpi3dev2
+      - device_tracker.rpi3dev2_wifi
+      - device_tracker.b827ebbb6a6e
+#      - device_tracker.rpi3_osmc
+#      - device_tracker.jo01
+#      - device_tracker.kindle_1
+#      - device_tracker.kindle_2
 
-#  - type: horizontal-stack
-#    title: Speedtest
-#    cards:
-##    - type: entities
-##      entities:
-##      - entity: sensor.speedtest_ping
-##        name: Ping
-#    - type: entities
-#      entities:
-#      - entity: sensor.speedtest_download
-#        name: Download
-#    - type: entities
-#      entities:
-#      - entity: sensor.speedtest_upload
-#        name: Upload
+      # wrover_kit
+#      - device_tracker.wrover_kit
+      # new wroom32-1 - ener: (WROOM32 (Energy meter))
+      - device_tracker.30aea41607a8
+      # WROOM32-EVB falso techo Hall
+      - device_tracker.esp32_evb_1_wifi
+#      - device_tracker.esp32_evb_1_eth
+      # WROOM32 Dry-Contact (baño)
+      - device_tracker.30aea41960dc
+      # Wroom32batt Salón
+      - device_tracker.30aea4060680
+      # new wroom32-2 - Cocina:
+#      - device_tracker.30aea4208170
+      - device_tracker.240ac40a6288
+      # WROOM32 miniOLED (estudio)
+      - device_tracker.30aea4001d1c
+      # WROOM32 (dormitorio):
+      - device_tracker.30aea4155644
+      # WROOM32 (galería)
+      - device_tracker.240ac4057954
+      # Sparkfun Terraza
+      - device_tracker.240ac48124a4
+      # WROOM32 Covers living room
+      - device_tracker.esp_covers
 
-#  - type: glance
-  - type: entities
+      # Wemos 8266 Batt (vinoteca)
+#      - device_tracker.6001944ed7c4
+      # Sparkfun Batt (vinoteca)
+      - device_tracker.240ac481661c
+
+      # Wemos OLED (estudio - dev)
+      - device_tracker.30aea4132c40
+      # Sparkfun (old - galería)
+#      - device_tracker.240ac4817724
+      # Sparkfun (old - salón)
+#      - device_tracker.240ac4817974
+      # Sparkfun Old
+#      - device_tracker.240ac48163f8
+      # RPI Zero Ethernet
+#      - device_tracker.00e04c534458
+
+      # Sonoff
+#      - device_tracker.6001948433c2
+#      # Sonoff (b. acs)
+#      - device_tracker.5ccf7faf2f3f
+      # Pow
+      - device_tracker.5ccf7f9237c1
+#      - device_tracker.5ccf7f2aa1fe
+
+      # Wifi plug (bomba acs) (192.168.1.37)
+      - device_tracker.dc4f22293a7f
+
+      # Regleta wifi (192.168.1.38)
+#      - device_tracker.60019487e707
+
+  - type: glance
+#  - type: entities
     title: Speedtest
+    column_width: 'calc(100% / 3)'
     entities:
     - entity: sensor.speedtest_ping
       name: Ping
@@ -707,6 +934,65 @@ views:
     - entity: sensor.speedtest_upload
       name: Upload
 
+#  - type: glance
+##  - type: entities
+#    title: Pi-Hole
+#    show_empty: false
+#    entities:
+#    - entity: sensor.pihole_ads_blocked_today
+#      name: Ads today
+#    - entity: sensor.pihole_ads_percentage_blocked_today
+#      name: Ads today (%)
+#    - entity: sensor.pihole_dns_queries_today
+#      name: DNS qs
+##    - entity: sensor.pihole_dns_unique_clients
+##      name: DNS clients
+#    - entity: sensor.pihole_dns_unique_domains
+#      name: DNS domains
+#  #  - sensor.pihole_domains_blocked
+
+  - type: vertical-stack
+    cards:
+    - type: entities
+      title: Hass.io
+      entities:
+      - sensor.hass_cpu_temperature
+      - sensor.processor_use
+      - sensor.memory_free
+      - sensor.disk_use_percent_
+      - sensor.last_boot
+    - type: entities
+      title: QNAP
+      entities:
+      - sensor.nashome_status
+      - sensor.nashome_cpu_usage
+      - sensor.nashome_memory_usage
+      - sensor.nashome_system_temperature
+  #    - sensor.nashome_temperature_drive_02
+  #    - sensor.nashome_temperature_drive_03
+  #    - sensor.nashome_temperature_drive_04
+  #    - sensor.nashome_smart_status_drive_02
+  #    - sensor.nashome_smart_status_drive_03
+  #    - sensor.nashome_smart_status_drive_04
+      - sensor.nashome_network_down_eth0
+      - sensor.nashome_network_up_eth0
+  #    - sensor.nashome_network_down_eth1
+  #    - sensor.nashome_network_up_eth1
+      - sensor.nashome_volume_used_datavol1
+    - type: entities
+      title: Otras RPI
+      entities:
+      - sensor.hass_cpu_temperature_rpi2mpd
+      - sensor.cpu_used_rpi2mpd
+      - sensor.ram_available_rpi2mpd
+      - sensor.disk_used__rpi2mpd
+      - sensor.last_boot_rpi2mpd
+      - type: divider
+      - sensor.kodi_cpu_temperature
+      - type: divider
+      - sensor.rpi3dev1_cpu_temperature
+      - sensor.rpi3dev2_cpu_temperature
+#      - sensor.rpi3dev3_cpu_temperature
 
 #  dt_imac:
 ##  hidden: true
@@ -732,14 +1018,15 @@ views:
 #
   - type: glance
     title: Dispositivos
+    column_width: 'calc(100% / 3)'
     entities:
     - group.dt_imac
     - group.dt_mbp
     - group.dt_ipad
     - device_tracker.applewatch
     - device_tracker.applewatch_carmen
-    - input_boolean.eu_presence
-    - input_boolean.carmen_presence
+#    - input_boolean.eu_presence
+#    - input_boolean.carmen_presence
     #  - device_tracker.imac
     #  - device_tracker.imac_wifi
     #  - device_tracker.imac_bt
@@ -768,8 +1055,6 @@ views:
     - device_tracker.home_cinema_2
     - device_tracker.rpi3b_libreelec
     - device_tracker.rpi2_bedroom
-    - device_tracker.rpi3dev
-    - device_tracker.b827ebcaec07
     - device_tracker.b827ebee3f3b
     - device_tracker.xiaomi_router
     - device_tracker.xiaomi_vacuum
@@ -785,13 +1070,18 @@ views:
     - device_tracker.camera_sricam360
     - device_tracker.camera_kmoon
     - device_tracker.camera_iegeek
-    - device_tracker.rpi3_enerpi
+    - device_tracker.rpi3dev1
+    - device_tracker.rpi3dev1_wifi
+    - device_tracker.rpi3dev2
+    - device_tracker.rpi3dev2_wifi
+    - device_tracker.b827ebbb6a6e
     - device_tracker.rpi3_osmc
     - device_tracker.jo01
     - device_tracker.kindle_1
     - device_tracker.kindle_2
   - type: glance
     title: Dev boards
+    column_width: 'calc(100% / 3)'
     entities:
     # wrover_kit
     - device_tracker.wrover_kit
@@ -805,7 +1095,8 @@ views:
     # Wroom32batt Salón
     - device_tracker.30aea4060680
     # new wroom32-2 - Cocina:
-    - device_tracker.30aea4208170
+#    - device_tracker.30aea4208170
+    - device_tracker.240ac40a6288
     # WROOM32 miniOLED (estudio)
     - device_tracker.30aea4001d1c
     # WROOM32 (dormitorio):
@@ -814,9 +1105,13 @@ views:
     - device_tracker.240ac4057954
     # Sparkfun Terraza
     - device_tracker.240ac48124a4
+    # WROOM32 Covers living room
+    - device_tracker.esp_covers
 
     # Wemos 8266 Batt (vinoteca)
     - device_tracker.6001944ed7c4
+    # Sparkfun Batt (vinoteca)
+    - device_tracker.240ac481661c
 
     # Wemos OLED (estudio - dev)
     - device_tracker.30aea4132c40
@@ -831,6 +1126,7 @@ views:
 
   - type: glance
     title: Wifi appliances
+    column_width: 'calc(100% / 3)'
     entities:
     # Sonoff
     - device_tracker.6001948433c2
@@ -848,6 +1144,8 @@ views:
     cards:
     - type: glance
       title: iPhone X
+      show_name: false
+      column_width: 'calc(100% / 2)'
       entities:
       - entity: sensor.iphone_battery_state
         name: State
@@ -856,19 +1154,19 @@ views:
       - sensor.bateria_iphone_x
     - type: glance
       title: iPhone SE
+      show_name: false
+      column_width: 'calc(100% / 2)'
       entities:
       - entity: sensor.iphone_de_maria_del_carmen_battery_state
-        name: State
       - entity: sensor.iphone_de_maria_del_carmen_battery_level
-        name: Level
       - sensor.bateria_iphone_se
     - type: glance
       title: "iPad"
+      show_name: false
+      column_width: 'calc(100% / 2)'
       entities:
       - entity: sensor.ipad_de_eugenio_battery_state
-        name: State
       - entity: sensor.ipad_de_eugenio_battery_level
-        name: Level
 
   - type: entities
     title: Smarty
@@ -892,7 +1190,230 @@ views:
       - "home"
     card:
       type: glance
+      show_state: false
+      column_width: 'calc(100% / 3)'
       title: Vecinos cercanos
+
+- icon: mdi:developer-board
+  title: ESP32 devices
+  cards:
+  - type: entities
+    title: 'ESP # samples'
+    entities:
+    - entity: sensor.sensor_livingroom__snum
+      name: Salón
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_livingroom__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_covers__snum
+      name: Persianas
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_covers__snum
+      attributes:
+        - cover1_position
+        - cover2_position
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_kitchen__snum
+      name: Cocina
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_kitchen__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_hall__snum
+      name: Hall
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_hall__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_study__snum
+      name: Estudio
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_study__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_office__snum
+      name: Office
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_office__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_bedroom__snum
+      name: Dormitorio
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_bedroom__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_bathroom_ac__snum
+      name: Baño
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_bathroom_ac__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_wine__snum
+      name: Vinoteca
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_wine__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+#    - type: divider
+    - entity: sensor.sensor_terraza__snum
+      name: Terraza
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_terraza__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+    - entity: sensor.sensor_galeria__snum
+      name: Galería
+      icon: mdi:developer-board
+      secondary_info: 'last-changed'
+    - type: "custom:entity-attributes-card"
+      entity: sensor.sensor_galeria__snum
+      attributes:
+        - wifi_ap
+        - rssi
+        - ip
+
+
+#esp32_conectivity:
+  - type: glance
+    title: Conectivity
+    column_width: 'calc(100% / 4)'
+    show_state: false
+    entities:
+    - binary_sensor.esp32_ener_online
+    - binary_sensor.sensor_livingroom_online
+    - binary_sensor.sensor_kitchen_online
+    - binary_sensor.sensor_hall_online
+    - binary_sensor.sensor_study_online
+    - binary_sensor.sensor_office_online
+    - binary_sensor.sensor_bedroom_online
+    - binary_sensor.sensor_bathroom_ac_online
+    - binary_sensor.sensor_terraza_online
+    - binary_sensor.sensor_galeria_online
+    - binary_sensor.sensor_covers_online
+    - binary_sensor.sensor_wine_online
+
+
+
+#esp32_samples:
+#  name: Samples
+#  entities:
+#    - sensor.sensor_livingroom__snum
+#    - sensor.sensor_kitchen__snum
+#    - sensor.sensor_hall__snum
+#    - sensor.sensor_study__snum
+#    - sensor.sensor_office__snum
+#    - sensor.sensor_bedroom__snum
+#    - sensor.sensor_bathroom_ac__snum
+#    - sensor.sensor_terraza__snum
+#    - sensor.sensor_galeria__snum
+#    - sensor.sensor_covers__snum
+#
+
+  - type: entity-filter
+#    title: Tracking
+    entities:
+    # new wroom32-1 - ener: (WROOM32 (Energy meter))
+    - device_tracker.30aea41607a8
+    # Wroom32batt Salón
+    - device_tracker.30aea4060680
+    # new wroom32-2 - Cocina:
+#    - device_tracker.30aea4208170
+    - device_tracker.240ac40a6288
+    # WROOM32-EVB falso techo Hall
+    - device_tracker.esp32_evb_1_wifi
+    # WROOM32 miniOLED (estudio)
+    - device_tracker.30aea4001d1c
+    # Wemos OLED (estudio - dev)
+    - device_tracker.30aea4132c40
+    # WROOM32 (dormitorio):
+    - device_tracker.30aea4155644
+    # WROOM32 Dry-Contact (baño)
+    - device_tracker.30aea41960dc
+    # Sparkfun Terraza
+    - device_tracker.240ac48124a4
+    # WROOM32 (galería)
+    - device_tracker.240ac4057954
+    # WROOM32 Covers living room
+    - device_tracker.esp_covers
+    # WROOM32 TEST
+    - device_tracker.240ac40a6288
+    # Sparkfun Batt (vinoteca)
+    - device_tracker.240ac481661c
+
+    # Sparkfun Old/test
+    - device_tracker.240ac48163f8
+
+    # Sparkfun (old - galería)
+    - device_tracker.240ac4817724
+    # Sparkfun (old - salón)
+    - device_tracker.240ac4817974
+    show_empty: false
+    state_filter:
+        - 'off'
+    card:
+      type: entities
+      title: Offline
+      show_state: false
+#      show_name: false
+#      secondary_info: 'last-changed'
+
+  - type: entities
+    title: Time drift
+    entities:
+    - sensor.sensor_power__time_drift
+    - sensor.sensor_livingroom__time_drift
+    - sensor.sensor_kitchen__time_drift
+    - sensor.sensor_hall__time_drift
+    - sensor.sensor_study__time_drift
+    - sensor.sensor_office__time_drift
+    - sensor.sensor_bedroom__time_drift
+    - sensor.sensor_bathroom_ac__time_drift
+    - sensor.sensor_terraza__time_drift
+    - sensor.sensor_galeria__time_drift
+    - sensor.sensor_covers__time_drift
+
 
 - icon: mdi:settings
   title: Master configuration
@@ -900,6 +1421,7 @@ views:
   - type: entity-filter
     entities:
     - binary_sensor.router_on
+    - binary_sensor.dormitorio_online_rpi2
     - binary_sensor.esp32_ener_online
     - binary_sensor.dormitorio_online
     - binary_sensor.sensor_livingroom_online
@@ -911,7 +1433,9 @@ views:
     - binary_sensor.sensor_bathroom_ac_online
     - binary_sensor.sensor_terraza_online
     - binary_sensor.sensor_galeria_online
+    - binary_sensor.sensor_covers_online
 #    - binary_sensor.vinoteca_online
+#    - binary_sensor.sensor_wine_online
     - binary_sensor.nas_online
     show_empty: false
     state_filter:
@@ -919,87 +1443,45 @@ views:
     card:
       type: entities
       title: Offline
+      show_name: false
+#      secondary_info: 'last-changed'
 
   - type: vertical-stack
     cards:
     - type: glance
-      title: General
+      column_width: 'calc(100% / 3)'
       entities:
       - binary_sensor.workday_sensor
       - sensor.season
       - sun.sun
     - type: entities
-      show_header_toggle: false
+#      show_header_toggle: false
       entities:
-#      - binary_sensor.workday_sensor
-#      - sensor.season
-#      - sun.sun
 #      - sensor.hue_dimmer_switch
 #      - input_boolean.switch_motion_lights
 #      - input_number.light_duration_after_motion
 #      - input_boolean.switch_control_enerpi_max_power
-      - input_number.enerpi_max_power
-      - input_number.enerpi_max_power_reset
-      - sensor.telegram_default_chatid
-      - script.good_night
-      - script.good_morning
+#      - input_number.enerpi_max_power
+#      - input_number.enerpi_max_power_reset
+      - entity: sensor.telegram_default_chatid
+        secondary_info: 'last-changed'
+      - entity: script.good_night
+        secondary_info: 'last-changed'
+      - entity: script.good_morning
+        secondary_info: 'last-changed'
     #    - script.start_status_sonoff_outlets
       - script.set_mid_position_cover_1
       - script.set_mid_position_cover_2
 
-  - type: glance
-    title: 'ESP # samples'
-    entities:
-    - entity: sensor.sensor_livingroom__snum
-      name: Salón
-    - entity: sensor.sensor_kitchen__snum
-      name: Cocina
-    - entity: sensor.sensor_hall__snum
-      name: Hall
-    - entity: sensor.sensor_study__snum
-      name: Estudio
-    - entity: sensor.sensor_office__snum
-      name: Office
-    - entity: sensor.sensor_bedroom__snum
-      name: Dormitorio
-    - entity: sensor.sensor_bathroom_ac__snum
-      name: Baño
-    - entity: sensor.sensor_terraza__snum
-      name: Terraza
-    - entity: sensor.sensor_galeria__snum
-      name: Galería
-
   - type: entities
     title: Conectivity
     entities:
-    - binary_sensor.services_notok
-    - binary_sensor.internet_online
-    - sensor.ip_externa
-#    - binary_sensor.router_on
-#    - binary_sensor.esp32_ener_online
-#    - binary_sensor.dormitorio_online
-#    - binary_sensor.sensor_livingroom_online
-#    - binary_sensor.sensor_kitchen_online
-#    - binary_sensor.sensor_hall_online
-#    - binary_sensor.sensor_study_online
-#    - binary_sensor.sensor_office_online
-#    - binary_sensor.sensor_bedroom_online
-#    - binary_sensor.sensor_bathroom_ac_online
-#    - binary_sensor.sensor_terraza_online
-#    - binary_sensor.sensor_galeria_online
-#    - binary_sensor.vinoteca_online
-#    - binary_sensor.nas_online
-
-#    - sensor.sensor_livingroom__snum
-#    - sensor.sensor_kitchen__snum
-#    - sensor.sensor_hall__snum
-#    - sensor.sensor_study__snum
-#    - sensor.sensor_office__snum
-#    - sensor.sensor_bedroom__snum
-#    - sensor.sensor_bathroom_ac__snum
-#    - sensor.sensor_terraza__snum
-#    - sensor.sensor_galeria__snum
-
+    - entity: binary_sensor.services_notok
+      secondary_info: 'last-changed'
+    - entity: binary_sensor.internet_online
+      secondary_info: 'last-changed'
+    - entity: sensor.ip_externa
+      secondary_info: 'last-changed'
     - sensor.uptime
     - sensor.ssl_certificate_expiry
 
@@ -1008,6 +1490,7 @@ views:
       type: glance
 #      type: entities
       title: All scripts
+      column_width: 'calc(100% / 4)'
       show_header_toggle: false
     filter:
       include:
@@ -1019,19 +1502,15 @@ views:
         - entity_id: script.set_mid_position_cover_1
         - entity_id: script.set_mid_position_cover_2
 
-#  - type: "custom:monster-card"
-#    card:
-#      type: glance
-##      type: entities
-#      title: Enabled automations
-#    filter:
-##      include: [{}]
-#      state_filter: 'on'
-#      include:
-#        - domain: automation
-##      exclude:
-##        - domain: group
-##        - domain: zone
+  - type: "custom:monster-card"
+    card:
+      type: glance
+      show_state: false
+      column_width: 'calc(100% / 3)'
+      title: Scenes
+    filter:
+      include:
+        - domain: scene
 
   - type: entity-filter
     entities:
@@ -1050,6 +1529,7 @@ views:
     - automation.start_homeassistant
     - automation.notify_sunset
     - automation.update_notifications
+    - automation.corrige_cambio_de_ip
     - automation.notificacion_de_cambio_de_ip
     - automation.aviso_de_sensor_mqtt_offline
     - automation.new_bt_device_notifier
@@ -1068,8 +1548,10 @@ views:
         - 'off'
     card:
       type: entities
+#      secondary_info: 'last-changed'
 #      type: glance
       title: Disabled automations
+
   - type: entity-filter
     entities:
     - automation.encendido_luces_estudio
@@ -1087,6 +1569,7 @@ views:
     - automation.start_homeassistant
     - automation.notify_sunset
     - automation.update_notifications
+    - automation.corrige_cambio_de_ip
     - automation.notificacion_de_cambio_de_ip
     - automation.aviso_de_sensor_mqtt_offline
     - automation.new_bt_device_notifier
@@ -1105,6 +1588,8 @@ views:
         - 'on'
     card:
       type: glance
+      show_state: false
+      column_width: 'calc(100% / 4)'
       title: Enabled automations
 
 
