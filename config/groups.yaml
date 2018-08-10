@@ -258,6 +258,9 @@ Otras RPI:
 #Resto de hosts:
 #  - sensor.enerpi_cpu_temperature
   - sensor.kodi_cpu_temperature
+  - sensor.rpi3dev1_cpu_temperature
+  - sensor.rpi3dev2_cpu_temperature
+  - sensor.rpi3dev3_cpu_temperature
 
 Eugenio:
   - device_tracker.iphone_bt
@@ -468,7 +471,8 @@ esp32_tracking:
     # Wroom32batt Salón
     - device_tracker.30aea4060680
     # new wroom32-2 - Cocina:
-    - device_tracker.30aea4208170
+#    - device_tracker.30aea4208170
+    - device_tracker.240ac40a6288
     # WROOM32-EVB falso techo Hall
     - device_tracker.esp32_evb_1_wifi
     # WROOM32 miniOLED (estudio)
@@ -489,6 +493,14 @@ esp32_tracking:
     - device_tracker.240ac40a6288
     # Sparkfun Batt (vinoteca)
     - device_tracker.240ac481661c
+
+    # Sparkfun Old/test
+    - device_tracker.240ac48163f8
+
+    # Sparkfun (old - galería)
+    - device_tracker.240ac4817724
+    # Sparkfun (old - salón)
+    - device_tracker.240ac4817974
 
 esp32_time_sync:
   name: Time drift
@@ -595,16 +607,13 @@ Dispositivos:
     - device_tracker.home_cinema
     - device_tracker.home_cinema_2
     - device_tracker.rpi3b_libreelec
-    - device_tracker.rpi2_bedroom
-    - device_tracker.rpi3dev
-    - device_tracker.b827ebcaec07
-    - device_tracker.b827ebee3f3b
     - device_tracker.xiaomi_vacuum
     - device_tracker.xiaomi_router
     - device_tracker.airport_extreme
     - device_tracker.airport_extreme_w
     - device_tracker.airport_express_a
     - device_tracker.airport_express_b
+    - device_tracker.ethernet_adapter
     - device_tracker.printer_brother_hl3140cw
     - device_tracker.qnap_ubuntu
     - device_tracker.router_movistar
@@ -618,29 +627,23 @@ Dispositivos:
     - device_tracker.camera_kmoon
     - device_tracker.camera_iegeek
     - device_tracker.camera_iegeek_eth
-    - device_tracker.rpi3_enerpi
+    - device_tracker.rpi3dev1
+    - device_tracker.rpi3dev1_wifi
+    - device_tracker.rpi3dev2
+    - device_tracker.rpi3dev2_wifi
+    - device_tracker.b827ebbb6a6e
     - device_tracker.rpi3_osmc
     - device_tracker.jo01
     - device_tracker.kindle_1
     - device_tracker.kindle_2
 
-    # Wemos 8266 Batt (vinoteca)
-    - device_tracker.6001944ed7c4
-    # Wemos OLED (estudio - dev)
-    - device_tracker.30aea4132c40
-    # Sparkfun (old - galería)
-    - device_tracker.240ac4817724
-    # Sparkfun (old - salón)
-    - device_tracker.240ac4817974
-    # Sparkfun Old
-    - device_tracker.240ac48163f8
+    - device_tracker.rpi2_bedroom
+    - device_tracker.b827ebee3f3b
     # RPI Zero Ethernet
     - device_tracker.00e04c534458
 
-
-Wifi appliances:
-  control: hidden
-  entities:
+    # Wemos 8266 Batt (vinoteca)
+    - device_tracker.6001944ed7c4
     # Sonoff
     - device_tracker.6001948433c2
     - device_tracker.5ccf7faf2f3f
@@ -676,6 +679,7 @@ Vecinos cercanos:
   - device_tracker.elena_
   - device_tracker.desktop4rp450i
   - device_tracker.galaxy_j5
+  - device_tracker.discostar
 
 Pi Hole:
   - sensor.pihole_ads_blocked_today
@@ -949,7 +953,6 @@ Home Network:
     - group.otras_rpi
     - group.dispositivos
     - group.baterias
-    - group.wifi_appliances
     - group.smarty
     - group.pi_hole
     - group.speedtest
