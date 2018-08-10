@@ -75,7 +75,7 @@ binary_sensor:
     device_class: connectivity
     payload_on: "success"
     payload_off: "fail"
-    scan_interval: 120
+    scan_interval: 180
 
   - platform: command_line
     name: Router ON
@@ -83,7 +83,7 @@ binary_sensor:
     device_class: connectivity
     payload_on: "success"
     payload_off: "fail"
-    scan_interval: 240
+    scan_interval: 300
 
 #  - platform: command_line
 #    name: Pushbullet Online
@@ -175,7 +175,7 @@ sensor:
   resource: http://ip.jsontest.com
   name: IP Externa
   value_template: '{% if value_json %}{{ value_json.ip }}{% else %}{{ states.sensor.ip_externa.state}}{% endif %}'
-  scan_interval: 180
+  scan_interval: 300
 
 - platform: cert_expiry
   host: !secret base_host
