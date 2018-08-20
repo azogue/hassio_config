@@ -12,12 +12,12 @@ homeassistant:
     - !secret ext_dir_2
 #    - !secret ext_dir_3
   #customize_glob: !include frontend/customize_glob.yaml
-#  auth_providers:
-#   - type: homeassistant
-#   - type: legacy_api_password
+  auth_providers:
+   - type: homeassistant
+   - type: legacy_api_password
 
 # Enable the auth component
-#auth:
+auth:
 
 frontend:
   javascript_version: latest
@@ -33,16 +33,24 @@ config:
 http:
   base_url: !secret base_url
   api_password: !secret hass_pw
-  use_x_forwarded_for: False
   ip_ban_enabled: True
   login_attempts_threshold: 5
-#  trusted_proxies:
   trusted_networks:
     - 127.0.0.1
     - 192.168.1.0/24
     - 172.30.33.2
     - 172.30.32.2
-
+#  use_x_forwarded_for: True
+#    trusted_proxies:
+#      - 127.0.0.1
+#      - ::1
+#    trusted_networks:
+#      - 127.0.0.1
+#      - ::1
+#      - 192.168.0.0/24
+#      - fd00::/8
+#  use_x_forwarded_for: False
+#  trusted_proxies:
 logger:
   default: warn
   logs:
