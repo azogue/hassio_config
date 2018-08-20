@@ -51,44 +51,16 @@ homeassistant:
       icon: mdi:toggle-switch
       homebridge_hidden: true
 
-input_boolean:
-  ac_target_include_livingroom:
-    initial: on
-  ac_target_include_study:
-    initial: on
-  ac_target_include_office:
-    initial: on
-  ac_target_include_bedroom:
-    initial: on
-
 sensor:
-  - platform: template
-    sensors:
-      temperatura_ac:
-        friendly_name: "Temperatura AC"
-        unit_of_measurement: °C
-        value_template: >-
-          {%- set data = [{"active": states.input_boolean.ac_target_include_livingroom.state,
-                           "temp": states.sensor.sensor_livingroom_temperature.state},
-                          {"active": states.input_boolean.ac_target_include_office.state,
-                           "temp": states.sensor.sensor_office_temperature.state},
-                          {"active": states.input_boolean.ac_target_include_study.state,
-                           "temp": states.sensor.sensor_study_temperature.state},
-                          {"active": states.input_boolean.ac_target_include_bedroom.state,
-                           "temp": states.sensor.dormitorio_temperature_rpi2mpd.state}] -%}
-          {%- if data|rejectattr('active', 'equalto', 'off')|rejectattr('temp', 'equalto', 'unknown')|list|length > 0 -%}
-          {{(data|rejectattr('active', 'equalto', 'off')|rejectattr('temp', 'equalto', 'unknown')|map(attribute='temp')|map('float')|sum
-          / data|rejectattr('active', 'equalto', 'off')|rejectattr('temp', 'equalto', 'unknown')|list|length)|round(2)}}
-          {%- else -%}{{ states.climate.termostato_ac.attributes.temperature }}{%- endif -%}
 
-#  - platform: min_max
-#    type: mean
-#    name: Temperatura AC
-#    entity_ids:
-#      -  sensor.sensor_livingroom_temperature
-#      -  sensor.sensor_study_temperature
-#      -  sensor.sensor_office_temperature
-#      -  sensor.dormitorio_temperature_rpi2mpd
+  - platform: min_max
+    type: mean
+    name: Temperatura AC
+    entity_ids:
+      -  sensor.sensor_livingroom_temperature
+      -  sensor.sensor_study_temperature
+      -  sensor.sensor_office_temperature
+      -  sensor.dormitorio_temperature_rpi2mpd
 
   - platform: min_max
     type: mean
