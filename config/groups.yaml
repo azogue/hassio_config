@@ -22,6 +22,8 @@ ambiente_simple:
   control: hidden
   entities:
   - climate.termostato_ac
+  - scene.golpe_de_frio
+  - automation.apagado_de_ac
   - input_select.salon_light_scene
   - input_number.light_main_slider_salon
   - input_number.light_temp_slider_salon

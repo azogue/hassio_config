@@ -6,6 +6,10 @@ script.start_tvshows_mode:
   hidden: true
 script.start_status_sonoff_outlets:
   hidden: true
+scene.golpe_de_frio:
+  icon: mdi:arrow-down-bold
+automation.apagado_de_ac:
+  icon: mdi:fan-off
 
 camera.weather_svg:
   friendly_name: !secret weather_svg_cam_name

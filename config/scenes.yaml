@@ -7,6 +7,10 @@
   entities:
     script.start_tvshows_mode: on
 
+- name: Golpe de frío
+  entities:
+    script.quick_cool_session: on
+
 #- name: Cuenco red
 #  entities:
 #    light.cuenco:

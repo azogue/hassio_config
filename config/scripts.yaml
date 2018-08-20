@@ -46,6 +46,13 @@ good_morning:
         message: 'Script de buenos días *auto-activado*: Subida de persianas'
         disable_notification: true
 
+quick_cool_session:
+#  id: quick_cool_session
+  alias: Quick COOL session
+  sequence:
+    - alias: Set cool mode con python script
+      service: python_script.set_cool_ac_session
+
 play_kodi_pvr:
 #  id: play_kodi_pvr
   alias: Enciende la caja tonta
