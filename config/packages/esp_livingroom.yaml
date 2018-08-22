@@ -91,14 +91,14 @@ sensor:
     force_update: true
     expire_after: !secret mqtt_default_expiration
 
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp_livingroom_status
-    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
-    name: sensor_livingroom_illumination
-    unit_of_measurement: "lx"
-    qos: !secret mqtt_default_qos
-    force_update: true
-    expire_after: !secret mqtt_default_expiration
+#  - platform: mqtt
+#    state_topic: !secret mqtt_topic_esp_livingroom_status
+#    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
+#    name: sensor_livingroom_illumination
+#    unit_of_measurement: "lx"
+#    qos: !secret mqtt_default_qos
+#    force_update: true
+#    expire_after: !secret mqtt_default_expiration
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
