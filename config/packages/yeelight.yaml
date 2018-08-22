@@ -19,7 +19,7 @@ light:
       192.168.1.46:
 #        name: Tira TV
         name: yeelight_strip_7811dca21ecf
-        transition: 1000
-        use_music_mode: True #(defaults to False)
+        transition: 600
+#        use_music_mode: True #(defaults to False)
 #        save_on_change: False #(defaults to True)
 
