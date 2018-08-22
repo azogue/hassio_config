@@ -20,10 +20,12 @@ homeassistant:
       icon: mdi:lightbulb-on
       homebridge_hidden: true
 
+    sensor.horas_de_ac:
+      homebridge_hidden: true
     sensor.sensor_bathroom_ac__snum:
       friendly_name: 'Sample # (aseo)'
       homebridge_hidden: true
-    
+
 #    binary_sensor.sensor_bathroom_ac_mov1:
 #      friendly_name: 'Movimiento (aseo)'
 #      homebridge_hidden: true

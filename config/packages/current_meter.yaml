@@ -3,19 +3,6 @@
 ###############################################################################
 homeassistant:
   customize:
-    # enerPI sensors:
-#    sensor.enerpi_power:
-#      icon: mdi:flash
-#      friendly_name: Main power
-#      homebridge_hidden: true
-#    sensor.enerpi_ch1:
-#      icon: mdi:power-plug
-#      friendly_name: Circuito 1
-#      homebridge_hidden: true
-#    sensor.enerpi_ch2:
-#      icon: mdi:flash-circle
-#      friendly_name: Circuito 2
-#      homebridge_hidden: true
     sensor.pvpc:
       homebridge_hidden: true
 #      icon: mdi:cash
@@ -42,6 +29,8 @@ homeassistant:
       friendly_name: Cocina y horno
       homebridge_hidden: true
 
+    binary_sensor.electricity_high_cost_interval:
+      homebridge_hidden: true
     binary_sensor.esp32_ener_online:
       friendly_name: Current Meter Online
       homebridge_hidden: true

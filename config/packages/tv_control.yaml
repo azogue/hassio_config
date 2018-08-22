@@ -3,6 +3,8 @@
 ###############################################################################
 homeassistant:
   customize:
+    sensor.horas_de_tv:
+      homebridge_hidden: true
     media_player.kodi:
       hidden: true
       homebridge_hidden: true

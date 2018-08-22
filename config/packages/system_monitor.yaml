@@ -34,11 +34,11 @@ homeassistant:
       homebridge_hidden: True
     sensor.enerpi_cpu_temperature:
       homebridge_hidden: True
-    sensor.ram_free:
+    sensor.memory_free:
       homebridge_hidden: True
-    sensor.cpu_use:
+    sensor.processor_use:
       homebridge_hidden: True
-    sensor.disk_use_:
+    sensor.disk_use_percent_:
       homebridge_hidden: True
     sensor.last_boot:
       homebridge_hidden: True

@@ -1,12 +1,16 @@
 # Conectivity sensors:
 homeassistant:
   customize:
+    sensor.uptime:
+      homebridge_hidden: true
     sensor.ip_externa:
       homebridge_hidden: true
       friendly_name: IP externa
       icon: mdi:map-marker
 
     binary_sensor.estudio_online:
+      homebridge_hidden: true
+    binary_sensor.dormitorio_online_rpi2:
       homebridge_hidden: true
     binary_sensor.dormitorio_online:
       homebridge_hidden: true
