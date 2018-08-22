@@ -40,33 +40,27 @@ room_selection = data.get("room")
 call_kwargs = {"entity_id": VACUUM_ENTITY, "command": "app_zoned_clean"}
 
 if room_selection == 'Cocina':
-    call_kwargs["params"] = [[23200, 24300, 28600, 25900, 2]]
+    call_kwargs["params"] = [[23900, 24300, 29300, 25900, 2]]
 elif room_selection == 'Cocina y salón':
-    call_kwargs["params"] = [[23200, 24300, 28600, 25900, 1],
-                             [28600, 24300, 30500, 26000, 1],
-                             [30500, 24000, 35800, 28100, 1]]
+    call_kwargs["params"] = [[23900, 24300, 29300, 25900, 1], [29300, 24300, 31200, 26000, 1], [31200, 24000, 36500, 28100, 1]]
 elif room_selection == 'Salón':
-    call_kwargs["params"] = [[30500, 24000, 35800, 28100, 2]]
+    call_kwargs["params"] = [[31200, 24000, 36500, 28100, 2]]
 elif room_selection == 'Mesa de centro':
-    call_kwargs["params"] = [[33000, 24000, 36000, 26500, 2]]
+    call_kwargs["params"] = [[33700, 24000, 36700, 26500, 2]]
 elif room_selection == 'Zonas interiores':
     # TODO fix 2nd bathroom
     # Estudio + Pasillo + Baño 2 + *Pasillo dorm* + Baño dorm + dorm
-    call_kwargs["params"] = [[24600, 26000, 28800, 28750, 1],
-                             [28900, 26000, 29900, 29800, 1],
-                             [28900, 29700, 30400, 31400, 1],
-                             [30500, 28500, 36900, 31400, 1]]
+    call_kwargs["params"] = [[25300, 26000, 29500, 28750, 1], [29600, 26000, 30600, 29800, 1], [29600, 29700, 31100, 31400, 1], [31200, 28500, 37600, 31400, 1]]
 elif room_selection == 'Zona office':
-    call_kwargs["params"] = [[24800, 29000, 28800, 31800, 2]]
+    call_kwargs["params"] = [[25500, 29000, 29500, 31800, 2]]
 elif room_selection == 'Zona dormitorio y baño':
-    call_kwargs["params"] = [[33300, 28500, 36900, 31500, 2],
-                             [30500, 29800, 32600, 31400, 1]]
+    call_kwargs["params"] = [[34000, 28500, 37600, 31500, 2], [31200, 29800, 33300, 31400, 1]]
 elif room_selection == 'Ir al salón':
     call_kwargs["command"] = "app_goto_target"
-    call_kwargs["params"] = [33000, 26500]
+    call_kwargs["params"] = [33700, 26500]
 elif room_selection == 'Ir al distribuidor':
     call_kwargs["command"] = "app_goto_target"
-    call_kwargs["params"] = [29100, 29100]
+    call_kwargs["params"] = [29800, 29100]
 elif room_selection == 'Nada':
     logger.info("No Cleaning of zone %s", room_selection)
     make_the_call = False
