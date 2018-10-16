@@ -50,7 +50,8 @@ RG_CONTROL = re.compile('> Detection (\w+)\n')
 
 
 # pylint: disable=unused-argument
-async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config,
+                               async_add_devices, discovery_info=None):
     """Set up a generic IP Camera."""
     async_add_devices([MotionEyeCamera(hass, config)])
 
@@ -156,8 +157,7 @@ class MotionEyeCamera(Camera):
             #     self._motion_detection_active = True
             # else:
             #     self._motion_detection_active = False
-        # except asyncio.TimeoutError:
-        except aiohttp.Timeout:
+        except asyncio.TimeoutError:
             _LOGGER.warning("Timeout getting camera image")
             return self._last_image
         except aiohttp.ClientError as err:
