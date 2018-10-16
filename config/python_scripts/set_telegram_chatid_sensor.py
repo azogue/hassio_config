@@ -9,7 +9,7 @@ chat_id = int(data.get('chat_id'))
 
 if chat_id is not None:
     if last_chat_id is None: # Init
-        logger.info("Telegram default chat_id: %s", chat_id)
+        logger.debug("Telegram default chat_id: %s", chat_id)
         hass.states.set(SENSOR_CHATID, chat_id, attributes=SENSOR_ATTRS)
     else:
         last_chat_id = int(last_chat_id.state)
