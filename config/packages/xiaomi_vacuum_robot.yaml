@@ -2,15 +2,13 @@ homeassistant:
   customize:
     vacuum.robot_aspirador:
       friendly_name: Aspiradora
-#      custom_ui_state_card: state-card-custom_vacuum
 
 vacuum:
 - platform: xiaomi_miio
-  # firmware: 3.3.9_003077
   name: robot_aspirador
   host: !secret xiaomi_vacuum_robot_ip
   token: !secret xiaomi_vacuum_robot_token
-  scan_interval: 60
+  scan_interval: 120
 
 input_select:
   vacuum_clean_combination:
