@@ -674,25 +674,26 @@
     below: 300
     # If given, will trigger when condition has been for X time.
     for:
-      minutes: 2
+      minutes: 1
+      seconds: 30
   condition:
     - condition: state
       entity_id: switch.calentador
       state: 'on'
       for:
-        minutes: 30
+        minutes: 15
   action:
+    - service: switch.turn_off
+      entity_id: switch.calentador,switch.bomba_circ_acs
     - service: telegram_bot.send_message
       data_template:
         title: '*Calentador apagado*'
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado (tb la bomba de circulación) [ON: {{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}} h]'
+        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado, junto a la bomba de circulación. ON: {{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}} h'
         disable_notification: true
         inline_keyboard:
           - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
           - Encender bomba ACS:/service_call switch.turn_on switch.bomba_circ_acs, Apagar bomba ACS:/service_call switch.turn_off switch.bomba_circ_acs
-    - service: switch.turn_off
-      entity_id: switch.calentador,switch.bomba_circ_acs
 
 - alias: Notificación de cambio de IP
   id: 'notif_cambio_ip'
@@ -708,6 +709,7 @@
         title: '*Cambio de IP*'
         target: !secret telegram_bot_chat_id_admin
         message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*, la anterior era: _{{ trigger.from_state.state }}_'
+        disable_notification: true
 
 - alias: Vacuum select rooms to clean
   id: 'select_rooms_to_clean'
@@ -731,17 +733,12 @@
 #    to: 'off'
   condition:
     condition: template
-    value_template: '{{ (states.vacuum.robot_aspirador.state == "off") and (states.vacuum.robot_aspirador.attributes.status == "Charging") and (states.input_select.vacuum_clean_combination.state != "Nada") }}'
+    value_template: '{{ (states.vacuum.robot_aspirador.state == "docked") and (states.vacuum.robot_aspirador.attributes.status == "Charging") and (states.input_select.vacuum_clean_combination.state != "Nada") }}'
   action:
     service: input_select.select_option
     entity_id: input_select.vacuum_clean_combination
     data:
       option: "Nada"
-
-#
-#switch.altavoz
-#switch.test_switch_2
-#switch.office_floor
 
 - alias: Apagado automático de enchufes a las 6h
   id: 'switches_auto_off_after_8hours'
@@ -757,6 +754,8 @@
       for:
         hours: 6
   action:
+    - service: switch.turn_off
+      entity_id: switch.test_switch_2,switch.office_floor
     - service: telegram_bot.send_message
       data_template:
         title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
@@ -766,8 +765,6 @@
         inline_keyboard:
           - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
           - Antimosquitos Salón ON:/service_call switch.turn_on switch.office_floor, Antimosquitos Salón OFF:/service_call switch.turn_off switch.office_floor
-    - service: switch.turn_off
-      entity_id: switch.test_switch_2,switch.office_floor
 
 - alias: Retry etekcity commands
   id: 'retry_etekcity_commands'
