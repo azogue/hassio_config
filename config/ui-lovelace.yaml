@@ -670,7 +670,7 @@ views:
   - type: glance
     title: Baño
     show_name: false
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     - entity: sensor.sensor_bathroom_ac_temperature
     - entity: sensor.sensor_bathroom_ac_humidity
@@ -679,7 +679,7 @@ views:
   - type: glance
     title: Terraza
     show_name: false
-    column_width: 'calc(100% / 4)'
+    columns: 4
     entities:
     - entity: sensor.sensor_terraza_temperature
     - entity: sensor.sensor_terraza_humidity
