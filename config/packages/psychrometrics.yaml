@@ -43,34 +43,42 @@ sensor:
         friendly_name: '∆T Office'
         value_template: '{% if "Office" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Office"]["first"]["∆T [°C/h]"] | round(2)  }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_kitchen:
         friendly_name: '∆T Cocina'
         value_template: '{% if "Cocina" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Cocina"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_livingroom:
         friendly_name: '∆T Salón'
         value_template: '{% if "Salón" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Salón"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_bedroom:
         friendly_name: '∆T Dormitorio'
         value_template: '{% if "Dormitorio" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Dormitorio"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_bathroom_ac:
         friendly_name: '∆T Aseo'
         value_template: '{% if "Aseo" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Aseo"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_study:
         friendly_name: '∆T Estudio'
         value_template: '{% if "Estudio" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Estudio"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_terraza:
         friendly_name: '∆T Terraza'
         value_template: '{% if "Terraza" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Terraza"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
       temp_change_galeria:
         friendly_name: '∆T Galería'
         value_template: '{% if "Galería" in states.sensor.psychrometric_evolution.attributes %}{{ states.sensor.psychrometric_evolution.attributes["Galería"]["first"]["∆T [°C/h]"] | round(2) }}{% endif %}'
         unit_of_measurement: '°C/h'
+        entity_id: sensor.psychrometric_evolution
 
 
 #psychrometrics:

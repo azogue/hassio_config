@@ -49,6 +49,7 @@ switch:
   switches:
     motion_detection_sricam_360:
       value_template: "{{ is_state('camera.sricam_360', 'recording') }}"
+      entity_id: camera.sricam_360
       turn_on:
         service: camera.enable_motion_detection
         data:
@@ -59,6 +60,7 @@ switch:
           entity_id: camera.sricam_360
     motion_detection_iegeek_hd:
       value_template: "{{ is_state('camera.iegeek_hd', 'recording') }}"
+      entity_id: camera.iegeek_hd
       turn_on:
         service: camera.enable_motion_detection
         data:
@@ -69,6 +71,7 @@ switch:
           entity_id: camera.iegeek_hd
     motion_detection_kmoon_ipcam100:
       value_template: "{{ is_state('camera.kmoon_ipcam100', 'recording') }}"
+      entity_id: camera.kmoon_ipcam100
       turn_on:
         service: camera.enable_motion_detection
         data:

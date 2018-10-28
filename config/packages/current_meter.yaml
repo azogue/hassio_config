@@ -14,7 +14,11 @@ homeassistant:
       homebridge_hidden: true
     sensor.esp32ener_power:
       icon: mdi:flash
-      friendly_name: Consumo actual
+      friendly_name: Consumo medido
+      homebridge_hidden: true
+    sensor.esp32ener_real_power:
+      icon: mdi:flash
+      friendly_name: Consumo real
       homebridge_hidden: true
     sensor.esp32ener_ch1:
       icon: mdi:power-plug
@@ -154,9 +158,20 @@ sensor:
         friendly_name: "Consumo hoy"
         unit_of_measurement: 'kWh'
         value_template: "{{ states.sensor.esp32ener_power.attributes.Energy_day_kWh | float | round(2) }}"
+        entity_id: sensor.esp32ener_power
       elecprice_range:
         friendly_name: "Precio luz"
         value_template: "{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}"
+        entity_id: sensor.pvpc
+      esp32ener_real_power:
+        friendly_name: "Potencia real"
+        unit_of_measurement: 'W'
+        # -367.9333 + [ 1.79581719  1.65896788 -0.65356452] * X
+        value_template: "{{ (-367.9333 + 1.79581719 * (states.sensor.esp32ener_ch1.state | float) + 1.65896788 * (states.sensor.esp32ener_ch2.state | float) - 0.65356452 * (states.sensor.esp32ener_power.state | float ))| round(2) }}"
+        entity_id:
+          - sensor.esp32ener_ch1
+          - sensor.esp32ener_ch2
+          - sensor.esp32ener_power
 
   - platform: elecprice_spain_pvpc
     electric_rate: discriminacion

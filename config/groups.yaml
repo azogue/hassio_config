@@ -154,6 +154,7 @@ elec_power_complete:
 #    - sensor.enerpi_power
 #    - sensor.enerpi_ch1
 #    - sensor.enerpi_ch2
+    - sensor.esp32ener_real_power
     - sensor.esp32ener_power
     - sensor.esp32ener_ch1
     - sensor.esp32ener_ch2
@@ -682,6 +683,10 @@ Vecinos cercanos:
   - device_tracker.desktop4rp450i
   - device_tracker.galaxy_j5
   - device_tracker.discostar
+  - device_tracker.huawei_p8_lite_2017
+  - device_tracker.zidane
+  - device_tracker.tlf_jose
+  - device_tracker.tlf_cami
 
 Pi Hole:
   - sensor.pihole_ads_blocked_today

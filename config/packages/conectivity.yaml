@@ -148,16 +148,10 @@ binary_sensor:
            (states.binary_sensor.internet_online.state == 'off') or
            (states.sensor.ip_externa.state == 'unknown')
            }}
-#        entity_id:
-#          - binary_sensor.kodi_online
-#          - binary_sensor.pushbullet_online
-#          - binary_sensor.email_online
-#          - binary_sensor.ios_online
-#          - binary_sensor.telegram_online
-#          - binary_sensor.router_on
-#          - binary_sensor.internet_online
-#          - switch.systemd_appdaemon
-#          - switch.systemd_homebridge
+        entity_id:
+          - binary_sensor.router_on
+          - binary_sensor.internet_online
+          - sensor.ip_externa
 
 sensor:
 #- platform: command_line
