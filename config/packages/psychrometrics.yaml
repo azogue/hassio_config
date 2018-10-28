@@ -34,7 +34,7 @@ sensor:
       - Terraza
       - Galería
       - Previsto
-    scan_interval: 30
+    scan_interval: 60
     value_template: '{{ value_json.num_points | int }}'
 
   - platform: template

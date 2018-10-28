@@ -14,7 +14,7 @@ homeassistant:
 
 light:
   - platform: yeelight
-    scan_interval: 30
+    scan_interval: 60
     devices:
       192.168.1.46:
 #        name: Tira TV

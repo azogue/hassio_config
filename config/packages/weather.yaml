@@ -67,7 +67,7 @@ weather:
   - platform: openweathermap
     api_key: !secret openweathermap_api_key
     name: Local Weather
-    scan_interval: 120
+    scan_interval: 1200
 
 binary_sensor:
   # binary_sensor.workday_sensor
