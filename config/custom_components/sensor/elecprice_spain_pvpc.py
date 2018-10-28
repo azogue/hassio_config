@@ -60,7 +60,7 @@ def scrap_xml_official_pvpc_current_prices(html_text, periodo=1):
         if columna == ident_precio \
                 and len(serie.find_all('tipoprecio')) > 0 \
                 and serie.tipoprecio['v'] == ident_tarifa:
-            values = [float(v['v']) for v in serie.find_all('ctd')]
+            values = [round(float(v['v']), 5) for v in serie.find_all('ctd')]
             return ts_st, values
     return ts_st, []
 
@@ -153,6 +153,17 @@ class ElecPriceSensor(Entity):
         except aiohttp.ClientError:
             _LOGGER.error("Client error in '%s'", url)
 
+        def _get_current_value(hourly_values, current_hour):
+            """Quickfix to handle DST changes
+
+            In DST changes, there are 23 or 25 hours, so,
+            adapt index acordingly."""
+            if len(hourly_values) == 23 and current_hour > 2:
+                return hourly_values[current_hour - 1]
+            elif len(hourly_values) == 25 and current_hour > 2:
+                return hourly_values[current_hour + 1]
+            return hourly_values[current_hour]
+
         if text:
             date, prices = scrap_xml_official_pvpc_current_prices(text, period)
             if args:
@@ -173,7 +184,7 @@ class ElecPriceSensor(Entity):
                 self._tomorrow_prices = None
 
             if self._today_prices is not None:
-                self._state = self._today_prices[now.hour]
+                self._state = _get_current_value(self._today_prices, now.hour)
                 # self._attributes[ATTR_TODAY_PRICES] = self._today_prices
                 for i, p in enumerate(self._today_prices):
                     key = ATTR_PRICE + ' {:02d}h'.format(i)
@@ -186,7 +197,7 @@ class ElecPriceSensor(Entity):
                 self._attributes.pop(ATTR_TOMORROW_PRICES)
         elif self._today_prices is not None:
             now = dt_util.now()
-            self._state = self._today_prices[now.hour]
+            self._state = _get_current_value(self._today_prices, now.hour)
         else:
             self._state = None
             _LOGGER.warning("Trying to update later, after %d seconds",
