@@ -34,6 +34,7 @@ input_text:
 
 script:
   torrent_search:
+    # id: torrent_search
     sequence:
       - service: notify.torrent_search
         data_template:
