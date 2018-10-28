@@ -12,12 +12,6 @@ homeassistant:
     - !secret ext_dir_2
 #    - !secret ext_dir_3
   #customize_glob: !include frontend/customize_glob.yaml
-  auth_providers:
-   - type: homeassistant
-   - type: legacy_api_password
-
-# Enable the auth component
-auth:
 
 frontend:
   javascript_version: latest
