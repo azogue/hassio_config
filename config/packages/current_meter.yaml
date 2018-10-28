@@ -176,19 +176,3 @@ sensor:
   - platform: elecprice_spain_pvpc
     electric_rate: discriminacion
     timeout: 20
-
-# Grafana dashboards as generic cameras
-camera:
-  - platform: generic
-    still_image_url: !secret grafana_db_elec_consumo_templ
-    name: Consumo 7d
-    username: !secret grafana_username
-    password: !secret grafana_password
-    limit_refetch_to_url_change: True
-
-  - platform: generic
-    still_image_url: !secret grafana_db_elec_power_templ
-    name: Electricidad 24h
-    username: !secret grafana_username
-    password: !secret grafana_password
-    limit_refetch_to_url_change: True
