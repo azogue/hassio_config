@@ -1,9 +1,6 @@
 title: Domus
-
 resources:
 - url: /local/custom_ui/monster-card.js?v=3
-  type: js
-- url: /local/custom_ui/gauge-card.js?v=1
   type: js
 - url: /local/custom_ui/bignumber-card.js?v=1
   type: js
@@ -19,8 +16,8 @@ resources:
   type: module
 
 views:
-
-- icon: mdi:home
+- id: home
+  icon: mdi:home
   title: Quick Status
   cards:
   - type: entity-filter
@@ -31,6 +28,9 @@ views:
     card:
       type: media-control
       entity: media_player.kodi
+
+  - type: thermostat
+    entity: climate.termostato_ac
 
   - type: entities
     title: Control
@@ -63,7 +63,7 @@ views:
         name: 'Tª Color'
     - type: glance
       show_state: false
-      column_width: 'calc(100% / 3)'
+      columns: 3
       entities:
       - entity: light.salon
         tap_action: 'toggle'
@@ -84,7 +84,7 @@ views:
 #    cards:
     - type: glance
 #      title: Salón
-      column_width: 'calc(100% / 4)'
+      columns: 4
       show_state: false
       entities:
       - entity: light.bola_grande
@@ -99,7 +99,7 @@ views:
       - light.yeelight_strip_7811dca21ecf
     - type: glance
 #      title: Dormitorio
-      column_width: 'calc(100% / 2)'
+      columns: 2
       show_state: false
       entities:
       - entity: light.hue_habitacion
@@ -108,7 +108,7 @@ views:
         name: Mesilla noche
     - type: glance
       show_state: false
-      column_width: 'calc(100% / 2)'
+      columns: 2
 #      title: Estudio
       entities:
       - entity: light.flexo
@@ -142,6 +142,15 @@ views:
     - entity: switch.test_switch_2
       secondary_info: 'last-changed'
 
+  - type: history-graph
+#    title: 'My Graph'
+    entities:
+      - entity: switch.calentador
+        name: Heater
+      - entity: switch.ac_dry_contact
+        name: AC
+      - entity: switch.bomba_circ_acs
+        name: Bomba
 #  - type: entity-filter
 #    filter:
 #      - domain: light
@@ -158,7 +167,8 @@ views:
     show_name: false
     show_state: false
 
-- icon: mdi:kodi
+- id: kodi
+  icon: mdi:kodi
   title: Kodi
   cards:
   - type: media-control
@@ -187,9 +197,9 @@ views:
     - type: glance
       title: Kodi
       show_header_toggle: false
-      show_name: false
+#      show_name: false
       show_state: false
-      column_width: 'calc(100% / 3)'
+      columns: 3
       entities:
       - entity: switch.tv_power
   #      tap_action: 'toggle'
@@ -219,17 +229,26 @@ views:
   #  - type: entities
   #    title: Torrents
   #    entities:
-      - type: divider
+#      - type: divider
       - input_text.q_torrents
       - script.torrent_search
   #    - weblink.buscador_de_torrents
+
+  - type: sensor
+    entity: sensor.horas_de_tv
+    graph: line
+    line_color: darkblue
+    height: 200
+    accuracy: 48
+    hours_to_show: 24
 
   - type: media-control
     entity: media_player.home_cinema
 #  - type: media-control
 #    entity: media_player.htse5500_hte5500
 
-- icon: mdi:weather-partlycloudy
+- id: meteo
+  icon: mdi:weather-partlycloudy
   title: El tiempo
   cards:
     - type: vertical-stack
@@ -255,7 +274,7 @@ views:
         - entity: sensor.dark_sky_hourly_summary
           name: '->'
       - type: glance
-        column_width: 'calc(100% / 3)'
+        columns: 3
         entities:
         - entity: sensor.dark_sky_apparent_temperature
           name: T. Aparente
@@ -278,7 +297,7 @@ views:
         - entity: sensor.dark_sky_daily_summary
           name: '>'
       - type: glance
-        column_width: 'calc(100% / 4)'
+        columns: 4
         entities:
         - sensor.dark_sky_temperature_1
         - sensor.dark_sky_apparent_temperature_1
@@ -293,7 +312,7 @@ views:
           name: Mínima
       - type: glance
         title: Pasado mañana
-        column_width: 'calc(100% / 4)'
+        columns: 4
         entities:
         - sensor.dark_sky_temperature_2
         - sensor.dark_sky_apparent_temperature_2
@@ -308,7 +327,7 @@ views:
           name: Mínima
       - type: glance
         title: En tres días
-        column_width: 'calc(100% / 4)'
+        columns: 4
         entities:
         - sensor.dark_sky_temperature_3
         - sensor.dark_sky_apparent_temperature_3
@@ -322,9 +341,9 @@ views:
         - entity: sensor.dark_sky_overnight_low_temperature_3
           name: Mínima
 
-    - type: glance
+    - type: entities
       title: Deltas
-      column_width: 'calc(100% / 4)'
+      columns: 4
       entities:
       - entity: sensor.temp_change_galeria
         name: Galería
@@ -343,7 +362,8 @@ views:
       - entity: sensor.temp_change_terraza
         name: Terraza
 
-- icon: mdi:flash
+- id: power
+  icon: mdi:flash
   title: Consumos
   cards:
   - type: vertical-stack
@@ -431,8 +451,8 @@ views:
     show_name: false
     show_state: false
 
-
-- icon: mdi:shield-outline
+- id: alarm
+  icon: mdi:shield-outline
   title: Alarm configuration
   cards:
   - type: vertical-stack
@@ -445,9 +465,11 @@ views:
       - entity: sensor.current_alarm_level
         secondary_info: 'last-changed'
 
+    - type: alarm-panel
+      entity: alarm_control_panel.alarma
 #    - type: glance
 #      show_state: false
-#      column_width: 'calc(100% / 4)'
+#      columns: 4
 #      entities:
 #      - entity: switch.camara
 #      - entity: switch.motion_detection_sricam_360
@@ -456,7 +478,7 @@ views:
 
     - type: glance
       show_state: false
-      column_width: 'calc(100% / 4)'
+      columns: 4
       entities:
       - entity: binary_sensor.local_pir
         name: Cuadro
@@ -485,9 +507,8 @@ views:
 
   - type: picture-glance
     camera_image: camera.sricam_360
-#    title: Salón
+    title: Salón
     entities:
-#    - switch.camara
     - binary_sensor.motioncam_salon
     - binary_sensor.sensor_livingroom_mov1
     - switch.motion_detection_sricam_360
@@ -508,7 +529,8 @@ views:
     - binary_sensor.sensor_terraza_mov1
     - switch.motion_detection_kmoon_ipcam100
 
-- icon: mdi:castle
+- id: status
+  icon: mdi:castle
   title: Home Status
   cards:
   - type: vertical-stack
@@ -559,20 +581,23 @@ views:
         title: Galería (°C)
         entity: sensor.sensor_galeria_temperature
 
-  - type: glance
-    title: Electricidad
-    column_width: 'calc(100% / 3)'
+  - type: history-graph
+#      title: Temperatura
     entities:
-    - entity: sensor.esp32ener_power
-      name: Potencia
-    - entity: sensor.elecprice_range
-      name: Precio
-    - entity: sensor.esp32ener_consumption_day
-      name: Consumo
-#    - weblink.consumo_electrico
+    - entity: sensor.temperatura_stats_mean
+      name: Int
+    - entity: sensor.temperatura_exterior
+      name: Ext
+
+  - type: history-graph
+#      title: Humedad
+    entities:
+    - entity: sensor.humedad_stats_mean
+      name: Int
+    - entity: sensor.humedad_exterior
+      name: Ext
 
   - type: entities
-#    title: Ambiente
     entities:
     - climate.termostato_ac
   #  - sensor.temperatura_interior
@@ -581,11 +606,21 @@ views:
     - sensor.humedad_stats_mean
     - sensor.temperatura_exterior
     - sensor.humedad_exterior
-#    - weblink.grafana
+
+  - type: glance
+    title: Electricidad
+    columns: 3
+    entities:
+    - entity: sensor.esp32ener_power
+      name: Potencia
+    - entity: sensor.elecprice_range
+      name: Precio
+    - entity: sensor.esp32ener_consumption_day
+      name: Consumo
 
   - type: glance
     title: Salón
-    column_width: 'calc(100% / 4)'
+    columns: 4
     show_name: false
     entities:
     - entity: sensor.sensor_livingroom_temperature
@@ -596,7 +631,7 @@ views:
   - type: glance
     title: Dormitorio
     show_name: false
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     - entity: sensor.dormitorio_temperature_rpi2mpd
     - entity: sensor.dormitorio_humidity_rpi2mpd
@@ -605,17 +640,17 @@ views:
   - type: glance
     title: Estudio
     show_name: false
-    column_width: 'calc(100% / 4)'
+    columns: 3
     entities:
     - entity: sensor.sensor_study_temperature
     - entity: sensor.sensor_study_humidity
     - entity: sensor.sensor_study_pressure
-    - entity: sensor.sensor_study_illumination
+#    - entity: sensor.sensor_study_illumination
 
   - type: glance
     title: Cocina
     show_name: false
-    column_width: 'calc(100% / 4)'
+    columns: 4
     entities:
     - entity: sensor.sensor_kitchen_temperature
     - entity: sensor.sensor_kitchen_humidity
@@ -625,7 +660,7 @@ views:
   - type: glance
     show_name: false
     title: Office
-    column_width: 'calc(100% / 4)'
+    columns: 4
     entities:
     - entity: sensor.sensor_office_temperature
     - entity: sensor.sensor_office_humidity
@@ -654,37 +689,37 @@ views:
   - type: glance
     title: Galería
     show_name: false
-    column_width: 'calc(100% / 2)'
+    columns: 2
     entities:
     - entity: sensor.sensor_galeria_temperature
     - entity: sensor.sensor_galeria_humidity
 
   - type: glance
     title: Hall
-    column_width: 'calc(100% / 4)'
+    columns: 4
     entities:
 #    - light.hall_light
     - entity: binary_sensor.sensor_hall_light_switch
-      name: Interr.
+      name: Switch
     - binary_sensor.sensor_hall_relay_1
     - binary_sensor.sensor_hall_relay_2
     - entity: sensor.sensor_hall_illumination
-      name: I
+      name:
 
   - type: vertical-stack
     cards:
     - type: glance
-      column_width: 'calc(100% / 4)'
+      columns: 4
       title: ACS
       entities:
       - entity: switch.calentador
-        name: Calentador
+        name: Heater
       - entity: switch.bomba_circ_acs
-        name: Bomba Circ.
+        name: Bomba
       - entity: sensor.sensor_acs_probe_5
-        name: Retorno Solar
+        name: Ret. Solar
       - entity: sensor.sensor_acs_probe_6
-        name: Impulsión Solar
+        name: Imp. Solar
       - entity: sensor.sensor_acs_probe_1
         name: Fría
       - entity: sensor.sensor_acs_probe_2
@@ -695,7 +730,7 @@ views:
         name: Superficial
 
   - type: glance
-    column_width: 'calc(100% / 2)'
+    columns: 2
     show_name: false
     title: Cuadro
     entities:
@@ -744,7 +779,8 @@ views:
 #    - vacuum.robot_aspirador
 #    - input_select.vacuum_clean_combination
 
-- icon: mdi:alarm
+- id: alarmclock
+  icon: mdi:alarm
   title: Despertador
   cards:
   - type: entities
@@ -766,7 +802,8 @@ views:
   - type: media-control
     entity: media_player.kodi_tv
 
-- icon: mdi:sitemap
+- id: network
+  icon: mdi:sitemap
   title: Red local
   cards:
   - type: vertical-stack
@@ -778,13 +815,13 @@ views:
       - entity: group.eugenio
       - entity: group.carmen
     - type: glance
-      column_width: 'calc(100% / 3)'
+      columns: 3
       entities:
       - device_tracker.iphone_bt
       - device_tracker.iphone
       - device_tracker.homeadmin_iphone
     - type: glance
-      column_width: 'calc(100% / 4)'
+      columns: 4
       entities:
       - device_tracker.iphone_de_carmen_bt
       - device_tracker.iphone_se
@@ -818,7 +855,7 @@ views:
       type: glance
       title: Offline
       show_state: false
-      column_width: 'calc(100% / 3)'
+      columns: 3
     entities:
   #    - group.dt_imac
   #    - group.dt_mbp
@@ -925,7 +962,7 @@ views:
   - type: glance
 #  - type: entities
     title: Speedtest
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     - entity: sensor.speedtest_ping
       name: Ping
@@ -1018,7 +1055,7 @@ views:
 #
   - type: glance
     title: Dispositivos
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     - group.dt_imac
     - group.dt_mbp
@@ -1081,7 +1118,7 @@ views:
     - device_tracker.kindle_2
   - type: glance
     title: Dev boards
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     # wrover_kit
     - device_tracker.wrover_kit
@@ -1126,7 +1163,7 @@ views:
 
   - type: glance
     title: Wifi appliances
-    column_width: 'calc(100% / 3)'
+    columns: 3
     entities:
     # Sonoff
     - device_tracker.6001948433c2
@@ -1145,7 +1182,7 @@ views:
     - type: glance
       title: iPhone X
       show_name: false
-      column_width: 'calc(100% / 2)'
+      columns: 2
       entities:
       - entity: sensor.iphone_battery_state
         name: State
@@ -1155,7 +1192,7 @@ views:
     - type: glance
       title: iPhone SE
       show_name: false
-      column_width: 'calc(100% / 2)'
+      columns: 2
       entities:
       - entity: sensor.iphone_de_maria_del_carmen_battery_state
       - entity: sensor.iphone_de_maria_del_carmen_battery_level
@@ -1163,7 +1200,7 @@ views:
     - type: glance
       title: "iPad"
       show_name: false
-      column_width: 'calc(100% / 2)'
+      columns: 2
       entities:
       - entity: sensor.ipad_de_eugenio_battery_state
       - entity: sensor.ipad_de_eugenio_battery_level
@@ -1191,14 +1228,40 @@ views:
     card:
       type: glance
       show_state: false
-      column_width: 'calc(100% / 3)'
+      columns: 3
       title: Vecinos cercanos
 
-- icon: mdi:developer-board
+- id: esp32
+  icon: mdi:developer-board
   title: ESP32 devices
   cards:
-  - type: entities
+  - type: history-graph
     title: 'ESP # samples'
+    refresh_interval: 60
+    hours_to_show: 6
+    entities:
+    - entity: sensor.sensor_livingroom__snum
+      name: Salón
+    - entity: sensor.sensor_covers__snum
+      name: Persianas
+    - entity: sensor.sensor_kitchen__snum
+      name: Cocina
+    - entity: sensor.sensor_hall__snum
+      name: Hall
+    - entity: sensor.sensor_study__snum
+      name: Estudio
+    - entity: sensor.sensor_office__snum
+      name: Office
+    - entity: sensor.sensor_bedroom__snum
+      name: Dormitorio
+    - entity: sensor.sensor_bathroom_ac__snum
+      name: Baño
+    - entity: sensor.sensor_terraza__snum
+      name: Terraza
+    - entity: sensor.sensor_galeria__snum
+      name: Galería
+
+  - type: entities
     entities:
     - entity: sensor.sensor_livingroom__snum
       name: Salón
@@ -1318,38 +1381,33 @@ views:
 #esp32_conectivity:
   - type: glance
     title: Conectivity
-    column_width: 'calc(100% / 4)'
+    columns: 4
     show_state: false
     entities:
-    - binary_sensor.esp32_ener_online
-    - binary_sensor.sensor_livingroom_online
-    - binary_sensor.sensor_kitchen_online
-    - binary_sensor.sensor_hall_online
-    - binary_sensor.sensor_study_online
-    - binary_sensor.sensor_office_online
-    - binary_sensor.sensor_bedroom_online
-    - binary_sensor.sensor_bathroom_ac_online
-    - binary_sensor.sensor_terraza_online
-    - binary_sensor.sensor_galeria_online
-    - binary_sensor.sensor_covers_online
-    - binary_sensor.sensor_wine_online
-
-
-
-#esp32_samples:
-#  name: Samples
-#  entities:
-#    - sensor.sensor_livingroom__snum
-#    - sensor.sensor_kitchen__snum
-#    - sensor.sensor_hall__snum
-#    - sensor.sensor_study__snum
-#    - sensor.sensor_office__snum
-#    - sensor.sensor_bedroom__snum
-#    - sensor.sensor_bathroom_ac__snum
-#    - sensor.sensor_terraza__snum
-#    - sensor.sensor_galeria__snum
-#    - sensor.sensor_covers__snum
-#
+    - entity: binary_sensor.esp32_ener_online
+      name: Cuadro
+    - entity: binary_sensor.sensor_livingroom_online
+      name: Salón
+    - entity: binary_sensor.sensor_kitchen_online
+      name: Cocina
+    - entity: binary_sensor.sensor_hall_online
+      name: Hall
+    - entity: binary_sensor.sensor_study_online
+      name: Estudio
+    - entity: binary_sensor.sensor_office_online
+      name: Office
+    - entity: binary_sensor.sensor_bedroom_online
+      name: Dormitorio
+    - entity: binary_sensor.sensor_bathroom_ac_online
+      name: Baño
+    - entity: binary_sensor.sensor_terraza_online
+      name: Terraza
+    - entity: binary_sensor.sensor_galeria_online
+      name: Galería
+    - entity: binary_sensor.sensor_covers_online
+      name: Persianas
+    - entity: binary_sensor.sensor_wine_online
+      name: Cava
 
   - type: entity-filter
 #    title: Tracking
@@ -1414,8 +1472,8 @@ views:
     - sensor.sensor_galeria__time_drift
     - sensor.sensor_covers__time_drift
 
-
-- icon: mdi:settings
+- id: settings
+  icon: mdi:settings
   title: Master configuration
   cards:
   - type: entity-filter
@@ -1449,7 +1507,7 @@ views:
   - type: vertical-stack
     cards:
     - type: glance
-      column_width: 'calc(100% / 3)'
+      columns: 3
       entities:
       - binary_sensor.workday_sensor
       - sensor.season
@@ -1490,7 +1548,7 @@ views:
       type: glance
 #      type: entities
       title: All scripts
-      column_width: 'calc(100% / 4)'
+      columns: 4
       show_header_toggle: false
     filter:
       include:
@@ -1506,7 +1564,7 @@ views:
     card:
       type: glance
       show_state: false
-      column_width: 'calc(100% / 3)'
+      columns: 3
       title: Scenes
     filter:
       include:
@@ -1589,18 +1647,13 @@ views:
     card:
       type: glance
       show_state: false
-      column_width: 'calc(100% / 4)'
+      columns: 4
       title: Enabled automations
 
-
-- title: DEBUG
+- id: debug
+  title: DEBUG
   tab_icon: mdi:settings
   cards:
-  - type: iframe
-#    title: Temperaturas
-    url: https://domus.damnserver.com/grafana/dashboard-solo/db/ambiente-en-casa?refresh=1m&orgId=1&panelId=1&from=1530980470499&to=1531066870499
-    aspect_ratio: 100%
-
   - type: map
     aspect_ratio: 100%
     entities:
@@ -1697,15 +1750,3 @@ views:
         style:
           top: 91%
           left: 63%
-
-
-
-
-    # " width="450" height="200" frameborder="0"></iframe>
-
-#  - card_config:
-#      title: All Entities
-#    filter:
-#    - {}
-#    type: entity-filter
-
