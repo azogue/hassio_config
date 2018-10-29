@@ -645,6 +645,53 @@
         target: !secret telegram_bot_chat_id_admin
         message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha fallado*. Revísalo!"
 
+- alias: Aviso de sensor MQTT online
+  id: 'mqtt_sensor_go_online_notify'
+  trigger:
+    - platform: state
+      entity_id: sensor.esp32_ener__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_bedroom__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_livingroom__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_covers__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_study__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_office__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_kitchen__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_hall__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_terraza__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_galeria__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_bathroom_ac__snum
+      from: 'unknown'
+    - platform: state
+      entity_id: sensor.sensor_wine__snum
+      from: 'unknown'
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*Sensor online*'
+        target: !secret telegram_bot_chat_id_admin
+        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha revivido*: `{{ trigger.to_state.attributes }}`. Estaba desaparecido desde {{ trigger.from_state.last_changed }}."
+        disable_notification: true
+
 - alias: Sync Tira TV con Tira sofá
   id: 'sync_light_strips'
   trigger:
