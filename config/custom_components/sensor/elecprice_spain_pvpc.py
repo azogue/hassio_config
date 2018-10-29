@@ -185,7 +185,7 @@ class ElecPriceSensor(Entity):
 
             if self._today_prices is not None:
                 self._state = _get_current_value(self._today_prices, now.hour)
-                # self._attributes[ATTR_TODAY_PRICES] = self._today_prices
+                self._attributes = {}  # reset attrs
                 for i, p in enumerate(self._today_prices):
                     key = ATTR_PRICE + ' {:02d}h'.format(i)
                     self._attributes[key] = p
