@@ -1,5 +1,6 @@
 Ambiente:
   - climate.termostato_ac
+  - climate.calefaccion
 #  - sensor.temperatura_interior
   - sensor.temperatura_stats_mean
 #  - sensor.humedad_interior
@@ -22,6 +23,7 @@ ambiente_simple:
   control: hidden
   entities:
   - climate.termostato_ac
+  - climate.calefaccion
   - scene.golpe_de_frio
   - automation.apagado_de_ac
   - input_select.salon_light_scene
@@ -64,6 +66,7 @@ control_salon:
     - cover.sonoff_cover_puerta_terraza
     - light.terraza
     - climate.termostato_ac
+    - climate.calefaccion
 
 control_estudio:
   name: Luces estudio

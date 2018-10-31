@@ -29,16 +29,28 @@ views:
       type: media-control
       entity: media_player.kodi
 
-  - type: thermostat
-    entity: climate.termostato_ac
+  - type: conditional
+    conditions:
+      - entity: sensor.season
+        state_not: "summer"
+    card:
+      type: thermostat
+      entity: climate.calefaccion
+
+  - type: conditional
+    conditions:
+      - entity: sensor.season
+        state: "summer"
+    card:
+      type: thermostat
+      entity: climate.termostato_ac
 
   - type: entities
     title: Control
     show_header_toggle: false
     entities:
-    - entity: climate.termostato_ac
-      secondary_info: 'last-changed'
-    - input_select.salon_light_scene
+#    - entity: climate.termostato_ac
+#      secondary_info: 'last-changed'
     - entity: script.play_kodi_pvr
       secondary_info: 'last-changed'
     - entity: cover.sonoff_cover_ventanal
