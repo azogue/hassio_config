@@ -87,7 +87,7 @@
       message: 'Encendido de TV automático en Kodi PLAY'
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+        - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 #
 - alias: Apagado de TV si encendida y KODI en idle > 10 min
@@ -108,14 +108,14 @@
       message: 'Apagado de TV automático (Kodi en `idle` > 10 min)'
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi, ◼︎:/service_call media_player.media_stop media_player.kodi
+        - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 
 - alias: Apagado de CAM salón en Kodi PLAY nocturno
   id: 'cam_off_if_kodi_night'
   trigger:
     platform: state
-    entity_id: media_player.kodi
+    entity_id: media_player.kodi_tv
 #    from: 'idle'
     to: 'playing'
   condition:
