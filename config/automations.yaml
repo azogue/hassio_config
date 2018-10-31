@@ -333,69 +333,60 @@
           badge: 1
           category: "confirm"
 
-## Flush MySQL database if not ok & notify:
-#- alias: Database flush
-#  id: 'database_flush'
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.database_ok
-#    to: 'off'
-#    for:
-#      minutes: 2
-#  action:
-#    - service: telegram_bot.send_message
-#      data:
-#        title: '*MySQL flush*'
-#        target: !secret telegram_bot_chat_id_admin
-#        message: !secret msg_recorder_flush
-#        disable_notification: false
-#        disable_web_page_preview: true
-#    - delay:
-#        seconds: 5
-#    - service: shell_command.cmd_recorder_flush_hosts
+- alias: Turn ON TV with lights (hue switch)
+  id: 'turn_on_tv_dimmer_switch_action'
+  trigger:
+    platform: state
+    entity_id: sensor.hue_dimmer_switch
+    to: '1_hold'
+  action:
+    - service: python_script.start_kodi_play_tv
+    - event: flash_light
+      event_data:
+        color: orange
+        persistence: 2
+        flashes: 3
 
-#- alias: Turn ON TV with lights (hue switch)
-#  id: 'turn_on_tv_dimmer_switch_action'
-#  trigger:
-#    platform: state
-#    entity_id: sensor.hue_dimmer_switch
-#    to: '1_hold'
-#  action:
-#    - service: python_script.start_kodi_play_tv
-#    - event: flash_light
-#      event_data:
-#        color: orange
-#        persistence: 2
-#        flashes: 3
-#
-#- alias: Turn OFF all (hue switch)
-#  id: 'turn_off_all_dimmer_switch_action'
-#  trigger:
-#    platform: state
-#    entity_id: sensor.hue_dimmer_switch
-#    to: '4_hold'
-#  action:
-#    - service: media_player.turn_off
-#      entity_id: media_player.kodi
-#    - event: flash_light
-#      event_data:
-#        color: red
-#        persistence: 1
-#        flashes: 2
-#    - delay:
-#        seconds: 5
-#    - service: homeassistant.turn_off
-#      entity_id: group.all_lights,switch.cocina,switch.estudio_light_relay
-#    - service: telegram_bot.send_message
-#      data_template:
-#        title: '*All Off*'
-#        message: "Apagando TV y luces al mantener pulsado OFF en mando hue"
-#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-#        disable_notification: true
-#        inline_keyboard:
-#          - TV OFF:/service_call media_player.turn_off media_player.kodi, TV ON:/service_call media_player.turn_on media_player.kodi
-#          - Aura habitación:/service_call light.toggle light.aura_habitacion
-#
+- alias: Turn OFF all (hue switch)
+  id: 'turn_off_all_dimmer_switch_action'
+  trigger:
+    platform: state
+    entity_id: sensor.hue_dimmer_switch
+    to: '4_hold'
+  action:
+    - service: media_player.turn_off
+      entity_id: media_player.kodi_tv
+    - event: flash_light
+      event_data:
+        color: red
+        persistence: 1
+        flashes: 2
+    - delay:
+        seconds: 5
+    - service: homeassistant.turn_off
+      entity_id: group.all_lights
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*All Off*'
+        message: "Apagando TV y luces al mantener pulsado OFF en mando hue"
+        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        disable_notification: true
+        inline_keyboard:
+          - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv
+          - Aura habitación:/service_call light.toggle light.aura_habitacion
+
+- alias: Turn TV Night scene (hue switch)
+  id: 'turn_tv_night_scene_dimmer_switch_action'
+  trigger:
+    platform: state
+    entity_id: sensor.hue_dimmer_switch
+    to: '3_hold'  # '-' button
+  action:
+    - service: input_select.select_option
+      entity_id: input_select.salon_light_scene
+      data:
+        option: "TV Night"
+
 #- alias: Turn Cinema mode ON (hue switch)
 #  id: 'turn_on_cinema_mode_dimmer_switch_action'
 #  trigger:

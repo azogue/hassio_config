@@ -3,6 +3,11 @@ Sensor for checking the status of Hue sensors.
 
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.hue/
+
+COPIED FROM https://github.com/robmarkcole/Hue-sensors-HASS
+and only added a few changes for:
+ - Filter only desired sensors (just the remote buttons, in my case)
+ - Increase ∆T to decrease number of log entries like 'Updating hue_dimmer sensor took longer than the scheduled update interval 0:00:00.100000'
 """
 import logging
 from datetime import timedelta
@@ -20,11 +25,13 @@ __version__ = '0.7'
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=0.1)
+SCAN_INTERVAL = timedelta(seconds=2)
+CONF_DEVICES = 'devices'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_IP_ADDRESS): cv.string,
     vol.Required(CONF_TOKEN): cv.string,
+    vol.Optional(CONF_DEVICES, default=[]): cv.ensure_list,
 })
 
 
@@ -157,13 +164,19 @@ def parse_geofence(response):
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the Hue sensors."""
+    device_filter = config.get(CONF_DEVICES)
     try:
         data = HueSensorData(parse_hue_api_response, config)
         data.update()
         sensors = []
         for key in data.data.keys():
-            sensors.append(HueSensor(key, data))
-        add_devices(sensors, True)
+            if not device_filter or any([x in data.data[key]['model']
+                                         for x in device_filter]):
+                sensors.append(HueSensor(key, data))
+        if sensors:
+            add_devices(sensors, True)
+        else:
+            _LOGGER.error("NO DEVICES FOUND")
     except:
         _LOGGER.warning("Cannot setup Hue sensors, check your config")
 
