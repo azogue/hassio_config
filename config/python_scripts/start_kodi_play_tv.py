@@ -4,19 +4,72 @@ en directo de un canal con noticias, o bien reproducir la última grabación.
 
 # Lista canales MovistarTV en tvheadend:
 
-		80, 'La 1 HD',
-		71, 'La 2 HD',
-		91, 'Antena 3 HD',
-		72, 'Cuatro HD',
-		120, 'Telecinco HD',
-		106, 'La Sexta HD',
-		84, '#0 HD',
-		25, 'TV3 HD ',
-		118, 'TV3 HD ',
-		42, 'FDF',
-		117, 'Atreseries HD',
-		92, '24 Horas',
-		19, 'Movistar+ HD',
+		33, 'La 1 HD',
+		50, 'La 1',
+		8, 'La 2 HD',
+		35, 'La 2',
+		46, 'Antena 3',
+		26, 'Antena 3 HD',
+		2, 'Cuatro',
+		9, 'Cuatro HD',
+		25, 'Telecinco',
+		63, 'Telecinco HD',
+		18, 'La Sexta',
+		41, 'La Sexta HD',
+		61, '#0',
+		66, '#0 HD',
+		31, '#Vamos',
+		11, '#Vamos HD',
+		57, 'À Punt',
+		5, 'Canal Sur 1 HD',
+		24, 'TV3 HD',
+		58, 'TV Mediterráneo',
+		53, 'Castilla la Mancha TV',
+		56, '7 TV Región Murcia',
+		1, 'FDF',
+		20, 'Neox',
+		37, 'Atreseries',
+		64, 'Atreseries HD',
+		19, 'Energy',
+		42, '13 TV',
+		55, 'Ten',
+		17, 'Paramount Network',
+		29, 'DEPORTES',
+		30, 'DEPORTES HD',
+		16, 'M. eSports HD',
+		4, 'M. eSports',
+		27, 'GOL',
+		62, 'GOL HD',
+		60, 'Teledeporte',
+		6, 'Teledeporte HD',
+		14, 'Real Madrid TV',
+		39, 'Real Madrid TV HD',
+		48, 'Discovery Max',
+		36, 'DKISS',
+		47, 'Divinity',
+		34, 'Nova',
+		15, 'MEGA',
+		28, 'BeMad',
+		10, 'BeMad HD',
+		49, 'Disney Channel',
+		23, 'Disney Channel HD',
+		59, 'Boing',
+		32, 'Clan TVE',
+		45, 'Clan TVE HD',
+		51, 'Canal 24 Horas',
+		65, 'Intereconomía TV',
+		13, 'Libertad Digital',
+		12, 'Canal Sur Andalucía',
+		40, 'Galicia TV Europa',
+		7, 'Canal Extremadura SAT',
+		22, 'TV3CAT',
+		21, 'ETB Sat',
+		44, 'Aragón TV Int',
+		38, 'Betevé',
+		54, 'LaLiga 123 TV Multi 1',
+		43, 'La Tienda en Casa',
+		52, 'beIN LaLiga 4K DRM',
+		3, 'LaLiga TV Bar HD',
 
 """
 
@@ -30,25 +83,25 @@ TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 now = datetime.datetime.now()
 play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
-    content_id = 106
+    content_id = 41
     media_dest = 'La Sexta HD'
 elif now.hour < 16:
-    content_id = 91
+    content_id = 26
     media_dest = 'Antena 3 HD'
 elif now.hour < 20:
-    content_id = 92
-    media_dest = '24 Horas'
+    content_id = 51
+    media_dest = 'Canal 24 Horas'
     # Last record?
     play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
-    content_id = 106
+    content_id = 41
     media_dest = 'La Sexta HD'
 elif (now.hour == 20) or ((now.hour == 21) and (now.minute < 15)):
-    content_id = 91
+    content_id = 26
     media_dest = 'Antena 3 HD'
 else:
     media_dest = '#0 HD'
-    content_id = 84
+    content_id = 66
     # Last record?
     play_live_tv = False
 
