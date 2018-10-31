@@ -108,7 +108,7 @@ sensor:
     name: sensor_livingroom__snum
     qos: !secret mqtt_default_qos
     force_update: true
-    expire_after: !secret mqtt_default_expiration
+    expire_after: !secret mqtt_default_expiration_long
 
 #  - platform: mqtt
 #    state_topic: !secret mqtt_topic_esp_livingroom_status

@@ -215,6 +215,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
       unit_of_measurement: "s"
       friendly_name: Time sync Current meter
+      entity_id: sensor.esp32ener_power
     sensor_bathroom_ac__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_bathroom_ac__snum.last_updated)
@@ -222,6 +223,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Baño
+      entity_id: sensor.sensor_bathroom_ac__snum
     sensor_covers__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_covers__snum.last_updated)
@@ -229,6 +231,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Persianas
+      entity_id: sensor.sensor_covers__snum
     sensor_bedroom__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_bedroom__snum.last_updated)
@@ -236,6 +239,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Dormitorio
+      entity_id: sensor.sensor_bedroom__snum
     sensor_galeria__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_galeria__snum.last_updated)
@@ -243,6 +247,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Galería
+      entity_id: sensor.sensor_galeria__snum
     sensor_hall__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_hall__snum.last_updated)
@@ -250,6 +255,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Hall
+      entity_id: sensor.sensor_hall__snum
     sensor_study__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_study__snum.last_updated)
@@ -257,6 +263,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Estudio
+      entity_id: sensor.sensor_study__snum
     sensor_office__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_office__snum.last_updated)
@@ -264,6 +271,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Office
+      entity_id: sensor.sensor_office__snum
     sensor_livingroom__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_livingroom__snum.last_updated)
@@ -271,6 +279,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Salón
+      entity_id: sensor.sensor_livingroom__snum
     sensor_kitchen__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_kitchen__snum.last_updated)
@@ -278,6 +287,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Cocina
+      entity_id: sensor.sensor_kitchen__snum
     sensor_terraza__time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_terraza__snum.last_updated)
@@ -285,6 +295,7 @@ sensor:
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Terraza
+      entity_id: sensor.sensor_terraza__snum
 
 #- platform: speedtest
 #  minute:
@@ -301,7 +312,7 @@ shell_command:
 
 device_tracker:
 - platform: nmap_tracker
-  hosts: 192.168.1.1-230
+  hosts: 192.168.1.1-240
   exclude:
     - !secret local_ip
     - '127.0.0.1'

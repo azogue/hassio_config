@@ -113,7 +113,7 @@ sensor:
     name: sensor_bedroom__snum
     qos: !secret mqtt_default_qos
     force_update: true
-    expire_after: !secret mqtt_default_expiration
+    expire_after: !secret mqtt_default_expiration_long
 
 
 #
