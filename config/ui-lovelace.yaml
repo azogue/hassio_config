@@ -45,6 +45,11 @@ views:
       type: thermostat
       entity: climate.termostato_ac
 
+  - type: picture-entity
+    entity: camera.psychrometric_chart
+    show_name: false
+    show_state: false
+
   - type: entities
     title: Control
     show_header_toggle: false
@@ -57,83 +62,326 @@ views:
       secondary_info: 'last-changed'
     - entity: cover.sonoff_cover_puerta_terraza
       secondary_info: 'last-changed'
-    - entity: vacuum.robot_aspirador
-      secondary_info: 'last-changed'
-#    - type: "custom:entity-attributes-card"
-#      entity: vacuum.robot_aspirador
-#      attributes:
-#        - status
-#        - battery_level
-    - input_select.vacuum_clean_combination
+
+  - type: iframe
+    title: Floorplan
+    url: /floorplan
+    aspect_ratio: '160%'
 
   - type: vertical-stack
     cards:
     - type: entities
+      title: Luces
       entities:
+      - input_select.salon_light_scene
       - input_number.light_main_slider_salon
       - entity: input_number.light_temp_slider_salon
         name: 'Tª Color'
-    - type: glance
-      show_state: false
-      columns: 3
-      entities:
-      - entity: light.salon
-        tap_action: 'toggle'
-      - entity: light.dormitorio
-        tap_action: 'toggle'
-      - entity: light.estudio
-        tap_action: 'toggle'
-      - entity: light.hall_light
-        tap_action: 'toggle'
-      - entity: light.terraza
-        tap_action: 'toggle'
-
-#  - type: media-control
-#    entity: media_player.kodi_tv
+#    - type: glance
+#      show_state: false
+#      columns: 3
+#      entities:
+#      - entity: light.salon
+#        tap_action: 'toggle'
+#      - entity: light.dormitorio
+#        tap_action: 'toggle'
+#      - entity: light.estudio
+#        tap_action: 'toggle'
+#      - entity: light.hall_light
+#        tap_action: 'toggle'
+#      - entity: light.terraza
+#        tap_action: 'toggle'
+#    - type: vertical-stack
+#      cards:
+    - type: horizontal-stack
+      cards:
+      - type: entity-button
+        name: Salón
+        entity: light.salon
+        service: light.toggle
+        tap_action: call-service
+#            theme: darkorange
+      - type: entity-button
+        name: Dormitorio
+        entity: light.dormitorio
+        service: light.toggle
+        tap_action: call-service
+#            theme: darkorange
+    - type: horizontal-stack
+      cards:
+      - type: entity-button
+        name: Estudio
+        entity: light.estudio
+        service: light.toggle
+        tap_action: call-service
+#            theme: darkorange
+      - type: entity-button
+        name: Hall
+        entity: light.hall_light
+        service: light.toggle
+        tap_action: call-service
+#            theme: darkorange
+      - type: entity-button
+        name: Terraza
+        entity: light.terraza
+        service: light.toggle
+        tap_action: call-service
+#            theme: darkorange
 
 #  - type: vertical-stack
 #    title: Luces
 #    cards:
-    - type: glance
-#      title: Salón
-      columns: 4
-      show_state: false
-      entities:
-      - entity: light.bola_grande
-        name: Bola
-      - light.central
-      - light.pie_tv
-      - light.pie_sofa
-      - type: divider
-      - light.cuenco
-      - light.lamparita
-      - light.tira
-      - light.yeelight_strip_7811dca21ecf
-    - type: glance
-#      title: Dormitorio
-      columns: 2
-      show_state: false
-      entities:
-      - entity: light.hue_habitacion
-        name: Dormitorio
-      - entity: light.aura_habitacion
-        name: Mesilla noche
-    - type: glance
-      show_state: false
-      columns: 2
-#      title: Estudio
-      entities:
-      - entity: light.flexo
-        name: Techo estudio
-      - entity: light.go
-        name: Go Mesa estudio
-
-#    - type: entities
-##      title: Floorplan
+#    - type: glance
+##      title: Salón
+#      columns: 4
+#      show_state: false
 #      entities:
-#  #    - binary_sensor.floorplan
-#      - weblink.grafana
-#      - weblink.consumo_electrico
+#      - entity: light.bola_grande
+#        name: Bola
+#        tap_action: 'toggle'
+#      - entity: light.central
+#        tap_action: 'toggle'
+#      - entity: light.pie_tv
+#        tap_action: 'toggle'
+#      - entity: light.pie_sofa
+#        tap_action: 'toggle'
+##      - type: divider
+#      - entity: light.cuenco
+#        tap_action: 'toggle'
+#      - entity: light.lamparita
+#        tap_action: 'toggle'
+#      - entity: light.tira
+#        tap_action: 'toggle'
+#      - entity: light.yeelight_strip_7811dca21ecf
+#        tap_action: 'toggle'
+
+#    - type: glance
+##      title: Dormitorio
+#      columns: 2
+#      show_state: false
+#      entities:
+#      - entity: light.hue_habitacion
+#        name: Dormitorio
+#        tap_action: 'toggle'
+#      - entity: light.aura_habitacion
+#        name: Mesilla noche
+#        tap_action: 'toggle'
+#    - type: glance
+#      show_state: false
+#      columns: 2
+##      title: Estudio
+#      entities:
+#      - entity: light.flexo
+#        name: Techo estudio
+#        tap_action: 'toggle'
+#      - entity: light.go
+#        name: Mesa estudio
+#        tap_action: 'toggle'
+
+    - type: horizontal-stack
+      cards:
+      - type: picture-entity
+        entity: light.central
+        tap_action: toggle
+        hold_action: more-info
+        name: Central
+        show_state: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_central_on.jpeg
+          "off": /local/pictures/salon_central_off.jpeg
+      - type: picture-entity
+        entity: light.bola_grande
+        name: Bola
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_bola_on.jpeg
+          "off": /local/pictures/salon_bola_off.jpeg
+      - type: picture-entity
+        entity: light.tira
+        name: Tira
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_tira_on.jpeg
+          "off": /local/pictures/salon_tira_off.jpeg
+      - type: picture-entity
+        entity: light.yeelight_strip_7811dca21ecf
+        name: Tira TV
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_tira_tv_on.jpeg
+          "off": /local/pictures/salon_tira_tv_off.jpeg
+
+    - type: horizontal-stack
+      cards:
+      - type: picture-entity
+        entity: light.cuenco
+        tap_action: toggle
+        hold_action: more-info
+        name: Cuenco
+        show_state: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_cuenco_on.jpeg
+          "off": /local/pictures/salon_cuenco_off.jpeg
+      - type: picture-entity
+        entity: light.lamparita
+        name: Lamparita
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_lamparita_on.jpeg
+          "off": /local/pictures/salon_lamparita_off.jpeg
+      - type: picture-entity
+        entity: light.pie_sofa
+        name: Pie sofá
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_pie_sofa_on.jpeg
+          "off": /local/pictures/salon_pie_sofa_off.jpeg
+      - type: picture-entity
+        entity: light.pie_tv
+        name: Pie TV
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/salon_pie_tv_on.jpeg
+          "off": /local/pictures/salon_pie_tv_off.jpeg
+
+    - type: horizontal-stack
+      cards:
+      - type: picture-entity
+        entity: light.hue_habitacion
+        tap_action: toggle
+        hold_action: more-info
+        name: Techo
+        show_state: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/dormitorio_techo_on.jpeg
+          "off": /local/pictures/dormitorio_techo_off.jpeg
+      - type: picture-entity
+        entity: light.aura_habitacion
+        name: Mesilla
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/dormitorio_aura_on.jpeg
+          "off": /local/pictures/dormitorio_aura_off.jpeg
+
+    - type: horizontal-stack
+      cards:
+      - type: picture-entity
+        entity: light.flexo
+        name: Techo
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/estudio_techo_on.jpeg
+          "off": /local/pictures/estudio_techo_off.jpeg
+      - type: picture-entity
+        name: Mesa
+        show_state: false
+        entity: light.go
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/estudio_go_on.jpeg
+          "off": /local/pictures/estudio_go_off.jpeg
+
+    - type: horizontal-stack
+      cards:
+      - type: picture-entity
+        entity: light.hall
+        tap_action: toggle
+        hold_action: more-info
+        name: Hall
+        show_state: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/hall_on.jpeg
+          "off": /local/pictures/hall_off.jpeg
+      - type: picture-entity
+        entity: light.terraza
+        name: Terraza
+        show_state: false
+        tap_action: toggle
+        hold_action: more-info
+#          show_name: false
+        aspect_ratio: 1.
+        state_image:
+          "on": /local/pictures/kodi_on.jpeg
+          "off": /local/pictures/kodi_off.jpeg
+
+#  - type: horizontal-stack
+  - type: vertical-stack
+    cards:
+#    - type: vertical-stack
+#      cards:
+    - type: entities
+      show_header_toggle: false
+      entities:
+      - entity: vacuum.robot_aspirador
+        secondary_info: 'last-changed'
+  #    - type: "custom:entity-attributes-card"
+  #      entity: vacuum.robot_aspirador
+  #      attributes:
+  #        - status
+  #        - battery_level
+      - input_select.vacuum_clean_combination
+    - type: picture-entity
+      entity: vacuum.robot_aspirador
+  #    tap_action: toggle
+#      hold_action: toggle
+      hold_action: call-service
+      service: vacuum.toggle
+      show_name: false
+      aspect_ratio: 1.
+      state_image:
+        "cleaning": /local/pictures/small_vacuum_out.jpeg
+        "returning": /local/pictures/small_vacuum_return.jpeg
+        "docked": /local/pictures/small_vacuum_docked.jpeg
+        "error": /local/pictures/small_vacuum_error.jpeg
+        # TODO make more images
+  #      STATE_CODE_TO_STATE = {
+  #          2: STATE_IDLE,
+  #          5: STATE_CLEANING,
+  #          6: STATE_RETURNING,
+  #          8: STATE_DOCKED,
+  #          9: STATE_ERROR,
+  #          10: STATE_PAUSED,
+        "idle": /local/pictures/small_vacuum_docked.jpeg
+        "paused": /local/pictures/small_vacuum_docked.jpeg
 
   - type: entities
     title: Enchufes
@@ -174,11 +422,6 @@ views:
 #    card:
 #      title: Lights
 
-  - type: picture-entity
-    entity: camera.psychrometric_chart
-    show_name: false
-    show_state: false
-
 - id: kodi
   icon: mdi:kodi
   title: Kodi
@@ -186,21 +429,33 @@ views:
   - type: media-control
     entity: media_player.kodi_tv
 
-  - type: entities
+  - type: horizontal-stack
     title: Media select
-    show_header_toggle: false
-    entities:
-    - type: call-service
-      icon: mdi:tv
+    cards:
+    - type: entity-button
+      name: TVShows
+      entity: script.recent_episodes
+      service: script.turn_on
+      tap_action: call-service
+    - type: entity-button
+      entity: script.recent_movies
+      name: Pelis
+      service: script.turn_on
+      tap_action: call-service
+    - type: entity-button
       name: TV
-      action_name: Encender
-      service: script.play_kodi_pvr
-#      service_data:
-#        entity_id: light.bed_light
-    - script.recent_episodes
-    - script.recent_movies
-    - script.pvr_channels
-    - script.pvr_recordings
+      entity: script.pvr_channels
+      service: script.turn_on
+      tap_action: call-service
+    - type: entity-button
+      name: Recorded
+      entity: script.pvr_recordings
+      service: script.turn_on
+      tap_action: call-service
+
+  - type: entities
+#    show_header_toggle: false
+    entities:
     - input_select.kodi_results
     - sensor.horas_de_tv
 
@@ -453,15 +708,15 @@ views:
 #      - sensor.elecprice_range
 #  #    - sensor.esp32ener_consumption_day
 
-  - type: picture-entity
-    entity: camera.consumo_7d
-    show_name: false
-    show_state: false
+  - type: iframe
+    title: Consumo
+    url: /grafana/dashboard-solo/db/para-ha-elec24h?refresh=1m&panelId=5&orgId=1&fullscreen
+    aspect_ratio: 1.
 
-  - type: picture-entity
-    entity: camera.electricidad_24h
-    show_name: false
-    show_state: false
+  - type: iframe
+    title: Coste
+    url: /grafana/dashboard-solo/db/enerpi?refresh=1m&panelId=5&orgId=1&fullscreen
+    aspect_ratio: '100%'
 
 - id: alarm
   icon: mdi:shield-outline
@@ -509,13 +764,6 @@ views:
   #    - binary_sensor.sensor_terraza_mov1
 
 #    - weblink.motioneye
-#  - type: markdown
-#    content: >
-#      ## Lovelace
-#
-#      Starting with Home Assistant 0.72, we're experimenting with a new way of defining your interface. We're calling it the **Lovelace UI**.
-#
-#      This is a test: _{{ states.sun.sun.state }}_
 
   - type: picture-glance
     camera_image: camera.sricam_360
@@ -633,13 +881,14 @@ views:
 
   - type: glance
     title: Salón
-    columns: 4
+    columns: 3
+#    columns: 4
     show_name: false
     entities:
     - entity: sensor.sensor_livingroom_temperature
     - entity: sensor.sensor_livingroom_humidity
     - entity: sensor.sensor_livingroom_pressure
-    - entity: sensor.sensor_livingroom_illumination
+#    - entity: sensor.sensor_livingroom_illumination
 
   - type: glance
     title: Dormitorio
@@ -1182,7 +1431,7 @@ views:
     - device_tracker.6001948433c2
     - device_tracker.5ccf7faf2f3f
     - device_tracker.5ccf7f9237c1
-    - device_tracker.5ccf7f2aa1fe
+#    - device_tracker.5ccf7f2aa1fe
 
     # Wifi plug (bomba acs) (192.168.1.37)
     - device_tracker.dc4f22293a7f
@@ -1201,7 +1450,7 @@ views:
         name: State
       - entity: sensor.iphone_battery_level
         name: Level
-      - sensor.bateria_iphone_x
+#      - sensor.bateria_iphone_x
     - type: glance
       title: iPhone SE
       show_name: false
@@ -1209,7 +1458,7 @@ views:
       entities:
       - entity: sensor.iphone_de_maria_del_carmen_battery_state
       - entity: sensor.iphone_de_maria_del_carmen_battery_level
-      - sensor.bateria_iphone_se
+#      - sensor.bateria_iphone_se
     - type: glance
       title: "iPad"
       show_name: false
