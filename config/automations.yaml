@@ -579,63 +579,63 @@
   id: 'mqtt_sensor_go_offline_notify'
   trigger:
     - platform: state
-      entity_id: binary_sensor.esp32_ener_online
-      to: 'off'
+      entity_id: binary_sensor.esp32_ener__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bedroom_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_bedroom__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_livingroom_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_livingroom__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_covers_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_covers__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_study_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_study__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_office_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_office__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_kitchen_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_kitchen__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_hall_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_hall__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_terraza_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_terraza__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_galeria_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_galeria__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bathroom_ac_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_bathroom_ac__snum
+      to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_wine_online
-      to: 'off'
+      entity_id: binary_sensor.sensor_wine__snum
+      to: 'unknown'
       for:
         minutes: 10
   action:
