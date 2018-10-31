@@ -539,12 +539,12 @@
       event: leave #enter  # or "leave"
 #      for:
 #        minutes: 5
-#    - platform: zone
-#      entity_id: device_tracker.iphonese
-#      zone: zone.hospital
-#      event: leave #enter  # or "leave"
-##      for:
-##        minutes: 5
+    - platform: zone
+      entity_id: device_tracker.iphonese
+      zone: zone.hospital
+      event: leave #enter  # or "leave"
+#      for:
+#        minutes: 5
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -555,18 +555,18 @@
 - alias: Carmen llega al hospital
   id: 'dev_tracker_carmen_in_hospital'
   trigger:
-    - platform: zone
-      entity_id: device_tracker.homeadmin_iphonese
-      zone: zone.hospital
-      event: enter  # or "leave"
-#      for:
-#        minutes: 5
 #    - platform: zone
-#      entity_id: device_tracker.iphonese
+#      entity_id: device_tracker.homeadmin_iphonese
 #      zone: zone.hospital
 #      event: enter  # or "leave"
 ##      for:
 ##        minutes: 5
+    - platform: zone
+      entity_id: device_tracker.iphonese
+      zone: zone.hospital
+      event: enter  # or "leave"
+#      for:
+#        minutes: 5
   action:
     - service: telegram_bot.send_message
       data_template:
