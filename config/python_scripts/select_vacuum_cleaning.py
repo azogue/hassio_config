@@ -62,7 +62,7 @@ elif room_selection == 'Ir al distribuidor':
     call_kwargs["command"] = "app_goto_target"
     call_kwargs["params"] = [29800, 29100]
 elif room_selection == 'Nada':
-    logger.info("No Cleaning of zone %s", room_selection)
+    # logger.info("No Cleaning of zone %s", room_selection)
     make_the_call = False
 else:
     logger.error("ROOM not recognized: %s", room_selection)
@@ -70,5 +70,5 @@ else:
 
 if make_the_call:
     hass.services.call('vacuum', 'send_command', call_kwargs)
-    logger.info("Cleaning ZONE %s: %s", room_selection,
-                str(call_kwargs['params']))
+    logger.warning("Cleaning ZONE %s: %s", room_selection,
+                   str(call_kwargs['params']))
