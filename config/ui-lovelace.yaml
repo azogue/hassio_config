@@ -617,6 +617,7 @@ views:
   #  - sensor.humedad_interior
     - sensor.humedad_stats_mean
     - sensor.temperatura_exterior
+    - sensor.temperatura_minima
     - sensor.humedad_exterior
 
   - type: glance

@@ -16,6 +16,11 @@ homeassistant:
       icon: mdi:thermometer
       homebridge_hidden: true
 
+    sensor.temperatura_minima:
+      friendly_name: Mínima diaria
+      icon: mdi:thermometer
+      homebridge_hidden: true
+
     sensor.humedad_interior:
       icon: mdi:water-percent
       homebridge_hidden: true
@@ -111,3 +116,22 @@ sensor:
     entity_id: sensor.humedad_interior
     max_age:
       minutes: 15
+
+#  - sensor.temperatura_minima
+  - platform: influxdb
+    host: !secret influxdb_host
+    port: !secret influxdb_port
+    username: !secret influxdb_user
+    password: !secret influxdb_pass
+    # ssl: true
+    # verify_ssl: true
+    default_measurement: state
+    queries:
+      - name: "Temperatura mínima"
+        database: !secret influxdb_db
+        unit_of_measurement: °C
+        value_template: '{{ value | round(1) }}'
+        field: value #select
+        group_function: min
+        measurement: '"°C"' #from
+        where: '"entity_id" = ''temperatura_exterior'' and time > now() - 24h' #where

@@ -7,6 +7,7 @@ Ambiente:
   - sensor.humedad_stats_mean
   - sensor.temperatura_exterior
   - sensor.humedad_exterior
+  - sensor.temperatura_minima
   - weblink.grafana
 
 ambiente_floorplan_psychrometric:
