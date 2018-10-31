@@ -83,14 +83,16 @@ homeassistant:
 
 hue:
   bridges:
-    - host: 192.168.1.45
+    - host: !secret hue_bridge_host
       allow_unreachable: true
 
 ## sensor.hue_dimmer_switch
-#sensor:
-#- platform: hue
-#  devices:
-#   - RWL
+sensor:
+- platform: hue_dimmer
+  ip_address: !secret hue_bridge_host
+  token: !secret hue_bridge_token
+  devices:
+   - RWL
 ##   - GEO
 
 
