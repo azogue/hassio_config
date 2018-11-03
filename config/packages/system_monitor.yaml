@@ -158,6 +158,14 @@ binary_sensor:
     pull_mode: "UP"
   #  invert_logic: true
 
+variable:
+  speedtest_data:
+    value: 0
+    attributes:
+      icon: mdi:speedometer
+      homebridge_hidden: true
+#    restore: true
+
 sensor:
 - platform: htu21d
   name: local_htu21d
