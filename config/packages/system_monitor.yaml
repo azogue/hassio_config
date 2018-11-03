@@ -172,9 +172,31 @@ variable:
 #    restore: true
 
 sensor:
-- platform: htu21d
-  name: local_htu21d
-  scan_interval: 45
+#  Removed because of hassio OS incompatibility:
+#2018-11-03 11:45:37 ERROR (MainThread) [homeassistant.components.sensor] Error while setting up platform htu21d
+#Traceback (most recent call last):
+#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 81, in open
+#    self._fd = os.open(path, os.O_RDWR, 0)
+#FileNotFoundError: [Errno 2] No such file or directory: '/dev/i2c-1'
+#
+#During handling of the above exception, another exception occurred:
+#
+#Traceback (most recent call last):
+#  File "/usr/local/lib/python3.6/site-packages/homeassistant/helpers/entity_platform.py", line 128, in _async_setup_platform
+#    SLOW_SETUP_MAX_WAIT, loop=hass.loop)
+#  File "/usr/local/lib/python3.6/asyncio/tasks.py", line 358, in wait_for
+#    return fut.result()
+#  File "/usr/local/lib/python3.6/site-packages/homeassistant/components/sensor/htu21d.py", line 51, in async_setup_platform
+#    bus = smbus.SMBus(config.get(CONF_I2C_BUS))
+#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 56, in __init__
+#    self.open(bus)
+#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 83, in open
+#    raise IOError(e.errno)
+#OSError: 2
+
+#- platform: htu21d
+#  name: local_htu21d
+#  scan_interval: 45
 
 - platform: command_line
   name: HASS CPU Temperature
