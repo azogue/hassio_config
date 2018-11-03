@@ -118,6 +118,7 @@ homeassistant:
       homebridge_hidden: True
     "sensor.speedtest*":
       homebridge_hidden: True
+      icon: mdi:speedometer
 
 map:
 
@@ -208,6 +209,28 @@ sensor:
 
 - platform: template
   sensors:
+#    {{states.variable.speedtest_data.attributes.ping.state}}
+#    {{states.variable.speedtest_data.attributes.ping.attributes}}
+#    {{states.variable.speedtest_data.attributes.download.state}}
+#    {{states.variable.speedtest_data.attributes.download.attributes}}
+#    {{states.variable.speedtest_data.attributes.upload.state}}
+#    {{states.variable.speedtest_data.attributes.upload.attributes}}
+    speedtest_ping:
+      friendly_name: "Speedtest Ping"
+      unit_of_measurement: 'ms'
+      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.ping.state}}{% else %}unknown{% endif %}'
+      entity_id: variable.speedtest_data
+    speedtest_upload:
+      friendly_name: "Speedtest Upload"
+      unit_of_measurement: 'Mbit/s'
+      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.upload.state}}{% else %}unknown{% endif %}'
+      entity_id: variable.speedtest_data
+    speedtest_download:
+      unit_of_measurement: 'Mbit/s'
+      friendly_name: "Speedtest Download"
+      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.download.state}}{% else %}unknown{% endif %}'
+      entity_id: variable.speedtest_data
+
     sensor_power__time_drift:
       value_template: >
         {% if states.sensor.esp32ener_power.attributes.ts %}{{(as_timestamp(states.sensor.esp32ener_power.last_updated)
