@@ -3,55 +3,41 @@ homeassistant:
     sensor.sensor_office_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_name: Temperatura estudio
-#      homebridge_hidden: true
     sensor.sensor_office_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_hidden: true
-      homebridge_name: Humedad estudio
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.sensor_office_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
     sensor.sensor_office_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-      homebridge_hidden: true
 
     sensor.sensor_office__snum:
       friendly_name: 'Sample # (office)'
-      homebridge_hidden: true
-      
+
     sensor.sensor_office_adc1:
       friendly_name: 'Sensor de humos 1'
       icon: mdi:biohazard
-      homebridge_hidden: true
     sensor.sensor_office_adc2:
       friendly_name: 'Sensor de humos 2'
       icon: mdi:biohazard
-      homebridge_hidden: true
-    
+
 #    light.sensor_office__rgblight:
 #      friendly_name: 'LED RGB Light'
 #      icon: mdi:led-on
-#      homebridge_hidden: true
 #    #switch.sensor_office__switch_led:
 #    light.sensor_office__switch_led:
 #      friendly_name: 'LED en uso'
 #      icon: mdi:led-outline
-#      homebridge_hidden: true
-    
+
     binary_sensor.sensor_office_mov1:
       friendly_name: 'Movimiento (office)'
-      homebridge_hidden: true
 #    binary_sensor.sensor_office_mov2:
 #      friendly_name: 'Movimiento 2'
-#      homebridge_hidden: true
     binary_sensor.sensor_office_online:
       friendly_name: Office Online
-      homebridge_hidden: true
 
 
 binary_sensor:

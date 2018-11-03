@@ -3,38 +3,26 @@ homeassistant:
     sensor.sensor_kitchen_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_name: Temperatura Cocina
-#      homebridge_hidden: true
     sensor.sensor_kitchen_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_hidden: true
-      homebridge_name: Humedad cocina
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.sensor_kitchen_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
     sensor.sensor_kitchen_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-#      homebridge_name: Ilum. Galería
-#      homebridge_sensor_type: light
-      homebridge_hidden: true
 
     sensor.sensor_kitchen__snum:
       friendly_name: 'Sample # (cocina)'
-      homebridge_hidden: true
-    
+
     binary_sensor.sensor_kitchen_mov1:
       friendly_name: 'Movimiento (cocina)'
-      homebridge_hidden: true
 #    binary_sensor.sensor_kitchen_mov2:
 #      friendly_name: 'Movimiento 2'
-#      homebridge_hidden: true
     binary_sensor.sensor_kitchen_online:
       friendly_name: Cocina Online
-      homebridge_hidden: true
 
 binary_sensor:
   - platform: mqtt

@@ -3,17 +3,13 @@ homeassistant:
     sensor.sensor_wine_temperature:
       friendly_name: Temperatura Vinoteca
       icon: mdi:thermometer
-      homebridge_hidden: true
     sensor.sensor_wine_humidity:
       friendly_name: Humedad Vinoteca
       icon: mdi:water-percent
-      homebridge_hidden: true
     sensor.sensor_wine__snum:
       friendly_name: 'Sample # (vinoteca)'
-      homebridge_hidden: true
     binary_sensor.sensor_wine_online:
       friendly_name: Vinoteca Online
-      homebridge_hidden: true
 
 binary_sensor:
   - platform: mqtt

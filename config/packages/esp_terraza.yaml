@@ -3,44 +3,31 @@ homeassistant:
     sensor.sensor_terraza_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_name: Temperatura terraza
-#      homebridge_hidden: true
     sensor.sensor_terraza_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_hidden: true
-      homebridge_name: Humedad terraza
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.sensor_terraza_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
     sensor.sensor_terraza_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-#      homebridge_name: Ilum. Galería
-#      homebridge_sensor_type: light
-      homebridge_hidden: true
 
     sensor.sensor_terraza__snum:
       friendly_name: 'Sample # (terraza)'
-      homebridge_hidden: true
-      
+
 #    sensor.sensor_terraza__adc1:
 #      friendly_name: 'ADC 1'
 #      icon: mdi:biohazard
-#      homebridge_hidden: true
 #    sensor.sensor_terraza__adc2:
 #      friendly_name: 'ADC 2'
 #      icon: mdi:biohazard
-#      homebridge_hidden: true
-    
+
     binary_sensor.sensor_terraza_mov1:
       friendly_name: 'Movimiento (terraza)'
-      homebridge_hidden: true
     binary_sensor.sensor_terraza_online:
       friendly_name: Terraza Online
-      homebridge_hidden: true
 
 
 binary_sensor:

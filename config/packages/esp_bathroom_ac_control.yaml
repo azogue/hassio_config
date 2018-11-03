@@ -3,40 +3,27 @@ homeassistant:
     sensor.sensor_bathroom_ac_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-#      homebridge_name: Temperatura aseo
-      homebridge_hidden: true
     sensor.sensor_bathroom_ac_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: Humedad aseo
-#      homebridge_sensor_type: humidity
+      device_class: humidity
 #    sensor.sensor_bathroom_ac_pressure:
 #      friendly_name: Presión
 #      icon: mdi:weather-cloudy
-#      homebridge_hidden: true
     sensor.sensor_bathroom_ac_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-      homebridge_hidden: true
 
-    sensor.horas_de_ac:
-      homebridge_hidden: true
     sensor.sensor_bathroom_ac__snum:
       friendly_name: 'Sample # (aseo)'
-      homebridge_hidden: true
 
 #    binary_sensor.sensor_bathroom_ac_mov1:
 #      friendly_name: 'Movimiento (aseo)'
-#      homebridge_hidden: true
     binary_sensor.sensor_bathroom_ac_online:
       friendly_name: Aseo Online
-      homebridge_hidden: true
     switch.ac_dry_contact:
       friendly_name: "Aire acondicionado"
       icon: mdi:air-conditioner
-#      homebridge_hidden: true
-      homebridge_name: Aire acondicionado
 
 binary_sensor:
   - platform: mqtt

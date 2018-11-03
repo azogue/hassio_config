@@ -4,32 +4,24 @@ homeassistant:
     binary_sensor.pir_dormitorio_rpi2mpd:
       friendly_name: Movimiento (dormitorio)
       device_class: motion
-      homebridge_hidden: true
-
     sensor.hass_cpu_temperature_rpi2mpd:
       friendly_name: HASS CPU Temperature
-      homebridge_hidden: true
     sensor.cpu_used_rpi2mpd:
       icon: mdi:memory
       friendly_name: CPU Use
-      homebridge_hidden: true
     sensor.ram_available_rpi2mpd:
       icon: mdi:memory
       friendly_name: RAM available
-      homebridge_hidden: true
     sensor.last_boot_rpi2mpd:
       icon: mdi:clock
       friendly_name: Last boot
-      homebridge_hidden: true
     sensor.disk_used__rpi2mpd:
       icon: mdi:harddisk
       friendly_name: Disk used /
-      homebridge_hidden: true
 
 #    sensor.dormitorio_light_level_rpi2mpd:
 #      friendly_name: Iluminación Dormitorio
-##      homebridge_sensor_type: light
-#      homebridge_hidden: true
+##      device_class: light
 #      icon: mdi:lightbulb
 #      device_class: light
 #
@@ -41,7 +33,7 @@ homeassistant:
 #      icon: mdi:water-percent
 #      friendly_name: Humedad
 #      homebridge_name: Humedad Dormitorio
-#      homebridge_sensor_type: humidity
+#      device_class: humidity
 #    sensor.dormitorio_pressure_rpi2mpd:
 #      friendly_name: Presión
 #      icon: mdi:weather-cloudy
@@ -55,12 +47,8 @@ homeassistant:
 #      homebridge_hidden: True
 #      friendly_name: Humedad
 ##      homebridge_name: Humedad Dormitorio
-##      homebridge_sensor_type: humidity
+##      device_class: humidity
 #      icon: mdi:water-percent
-
-    media_player.dormitorio_mopidy:
-      homebridge_hidden: True
-
 
 #binary_sensor:
 #  - platform: mqtt

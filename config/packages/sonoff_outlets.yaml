@@ -11,12 +11,9 @@ homeassistant:
     switch.calentador:
       icon: mdi:radiator
       friendly_name: Calentador eléctrico
-      homebridge_name: Calentador
-      homebridge_switch_type: outlet
     switch.sonoff_simple_1:
       icon: mdi:power-plug
       friendly_name: Sonoff
-      homebridge_hidden: true
 #    switch.circuito_termo:
 #      icon: mdi:radiator
 #      friendly_name: Circuito de Termo
@@ -33,13 +30,9 @@ homeassistant:
     sensor.sonoff_pow_1:
       icon: mdi:radiator
       friendly_name: Consumo en termo
-      homebridge_hidden: true
 
     input_boolean.use_heater:
       icon: mdi:toggle-switch
-      homebridge_hidden: true
-    sensor.horas_de_termo:
-      homebridge_hidden: true
 
 input_boolean:
   use_heater:

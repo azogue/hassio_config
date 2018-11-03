@@ -6,10 +6,8 @@ homeassistant:
 #    light.tira_tv:
     light.yeelight_strip_7811dca21ecf:
       icon: mdi:dots-horizontal
-      homebridge_name: Tira TV
       friendly_name: Tira TV
     light.yeelight_strip_7811dca21ecf_2:
-      homebridge_hidden: true
       hidden: true
 
 light:

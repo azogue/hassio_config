@@ -9,77 +9,32 @@ homeassistant:
       icon: mdi:temperature-kelvin
     automation.brillo_salon_sync:
       icon: mdi:brightness-auto
-      homebridge_hidden: true
       friendly_name: Sync brillo bola grande
 
     light.bola_grande:
       icon: mdi:ceiling-light
-      homebridge_hidden: True
     light.terraza:
       icon: mdi:lightbulb-outline
-      homebridge_hidden: True
     light.hue_habitacion:
       icon: mdi:ceiling-light
-      homebridge_hidden: True
     light.aura_habitacion:
       icon: mdi:lava-lamp
-      homebridge_hidden: True
     light.pie_tv:
       icon: mdi:lamp
-      homebridge_hidden: True
     light.pie_sofa:
       icon: mdi:lamp
-      homebridge_hidden: True
     light.cuenco:
       icon: mdi:lava-lamp
-      homebridge_hidden: True
     light.lamparita:
       icon: mdi:lava-lamp
-      homebridge_hidden: True
     light.flexo:
       icon: mdi:lightbulb-outline
-      homebridge_hidden: True
     light.central:
       icon: mdi:ceiling-light
-      homebridge_hidden: True
     light.go:
       icon: mdi:lava-lamp
-      homebridge_hidden: True
     light.tira:
       icon: mdi:dots-horizontal
-      homebridge_hidden: True
-
-    light.piso:
-#      hidden: True
-      homebridge_hidden: True
-    light.bano:
-#      hidden: True
-      homebridge_hidden: True
-    light.salon:
-#      hidden: True
-      homebridge_hidden: True
-    light.estudio:
-#      hidden: True
-      homebridge_hidden: True
-    light.cocina:
-#      hidden: True
-      homebridge_hidden: True
-    light.dormitorio:
-#      hidden: True
-      homebridge_hidden: True
-    light.galeria:
-#      hidden: True
-      homebridge_hidden: True
-    light.exterior:
-#      hidden: True
-      homebridge_hidden: True
-
-#light:
-#  - platform: hue
-#    host: 192.168.1.45
-#    allow_unreachable: true
-#    homebridge_hidden: true
-#    scan_interval: 12
 
 hue:
   bridges:

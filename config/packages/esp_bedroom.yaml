@@ -4,28 +4,21 @@ homeassistant:
 #    sensor.sensor_bedroom_temperature:
 #      friendly_name: Temperatura
 #      icon: mdi:thermometer
-#      homebridge_name: Temperatura bedroom
-##      homebridge_hidden: true
 #    sensor.sensor_bedroom_humidity:
 #      friendly_name: Humedad
 #      icon: mdi:water-percent
-##      homebridge_hidden: true
-#      homebridge_name: Humedad bedroom
-#      homebridge_sensor_type: humidity
+#      device_class: humidity
 #    sensor.sensor_bedroom_pressure:
 #      friendly_name: Presión
 #      icon: mdi:weather-cloudy
-#      homebridge_hidden: true
 
     sensor.dormitorio_temperature_rpi2mpd:
       icon: mdi:thermometer
       friendly_name: Temperatura
-      homebridge_name: Temperatura Dormitorio
     sensor.dormitorio_humidity_rpi2mpd:
       icon: mdi:water-percent
       friendly_name: Humedad
-      homebridge_name: Humedad Dormitorio
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.dormitorio_pressure_rpi2mpd:
       friendly_name: Presión
       icon: mdi:weather-cloudy

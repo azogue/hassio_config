@@ -26,11 +26,9 @@ homeassistant:
       friendly_name: !secret weather_svg_cam_name
 
     binary_sensor.workday_sensor:
-      homebridge_hidden: True
       friendly_name: Día laborable
 
     sensor.season:
-      homebridge_hidden: True
       icon: mdi:tree
       friendly_name: Estación
 
@@ -39,10 +37,6 @@ homeassistant:
 
   # Customize entities matching a pattern
   customize_glob:
-    "sensor.yw_day*":
-      homebridge_hidden: True
-    "sensor.dark_sky_*":
-      homebridge_hidden: True
     "sensor.dark_sky_hum*":
       friendly_name: Humedad
     "sensor.dark_sky_press*":

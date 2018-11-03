@@ -5,8 +5,6 @@ homeassistant:
   customize:
     switch.bomba_circ_acs:
       icon: mdi:water-pump
-      homebridge_name: Bomba ACS
-      homebridge_switch_type: outlet
 
 switch:
   - platform: tuyawifiplug

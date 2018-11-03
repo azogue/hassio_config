@@ -5,25 +5,18 @@ homeassistant:
   customize:
     sensor.nashome_status:
       friendly_name: QNAP Status
-      homebridge_hidden: true
     sensor.nashome_cpu_usage:
       friendly_name: QNAP CPU Usage
-      homebridge_hidden: true
     sensor.nashome_memory_usage:
       friendly_name: QNAP Memory Usage
-      homebridge_hidden: true
     sensor.nashome_system_temperature:
       friendly_name: QNAP Temperature
-      homebridge_hidden: true
     sensor.nashome_network_down_eth0:
       friendly_name: QNAP Download
-      homebridge_hidden: true
     sensor.nashome_network_up_eth0:
       friendly_name: QNAP Upload
-      homebridge_hidden: true
     sensor.nashome_volume_used_datavol1:
       friendly_name: Disk used
-      homebridge_hidden: true
 
 sensor:
   - platform: qnap

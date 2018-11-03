@@ -3,14 +3,11 @@ homeassistant:
   customize:
     camera.psychrometric_chart:
       friendly_name: Diagrama psicrométrico
-#      custom_ui_state_card: camera_nocaption
     sensor.psychrometric_evolution:
       hidden: True
-      homebridge_hidden: True
   customize_glob:
     sensor.temp_change_*:
       icon: mdi:delta
-      homebridge_hidden: True
 
 camera:
   - platform: generic

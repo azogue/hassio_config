@@ -2,7 +2,6 @@ homeassistant:
   customize:
     alarm_control_panel.alarma:
       friendly_name: Alarma del hogar
-      homebridge_name: Alarma
       icon: mdi:security-home
 
 

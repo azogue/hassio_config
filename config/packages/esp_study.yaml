@@ -3,33 +3,24 @@ homeassistant:
     sensor.sensor_study_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_name: Temperatura estudio
-#      homebridge_hidden: true
     sensor.sensor_study_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_hidden: true
-      homebridge_name: Humedad estudio
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.sensor_study_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
     sensor.sensor_study_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-      homebridge_hidden: true
 
     sensor.sensor_study__snum:
       friendly_name: 'Sample # (estudio)'
-      homebridge_hidden: true
-      
+
     binary_sensor.sensor_study_mov1:
       friendly_name: 'Movimiento (estudio)'
-      homebridge_hidden: true
     binary_sensor.sensor_study_online:
       friendly_name: Estudio Online
-      homebridge_hidden: true
 
 binary_sensor:
   - platform: mqtt

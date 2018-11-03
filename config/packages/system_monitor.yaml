@@ -3,45 +3,19 @@ homeassistant:
     binary_sensor.local_pir:
       friendly_name: Movimiento (cuadro)
       device_class: motion
-      homebridge_hidden: true
 
     sensor.local_htu21d_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_hidden: True
     sensor.local_htu21d_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_sensor_type: humidity
-      homebridge_hidden: True
+      device_class: humidity
 
     sensor.local_light_level:
       friendly_name: Iluminación
       icon: mdi:lightbulb
       device_class: light
-#      homebridge_sensor_type: light
-      homebridge_hidden: True
-
-    sensor.hass_cpu_temperature:
-      homebridge_hidden: True
-    sensor.kodi_cpu_temperature:
-      homebridge_hidden: True
-    sensor.rpi3dev1_cpu_temperature:
-      homebridge_hidden: True
-    sensor.rpi3dev2_cpu_temperature:
-      homebridge_hidden: True
-    sensor.rpi3dev3_cpu_temperature:
-      homebridge_hidden: True
-    sensor.enerpi_cpu_temperature:
-      homebridge_hidden: True
-    sensor.memory_free:
-      homebridge_hidden: True
-    sensor.processor_use:
-      homebridge_hidden: True
-    sensor.disk_use_percent_:
-      homebridge_hidden: True
-    sensor.last_boot:
-      homebridge_hidden: True
 
     sensor.pihole_ads_blocked_today:
       friendly_name: Ads blocked today
@@ -56,7 +30,6 @@ homeassistant:
 
     sensor.connected_clients:
       friendly_name: Clientes API
-      homebridge_hidden: True
       icon: mdi:account-multiple
 
     input_boolean.eu_presence:
@@ -66,63 +39,48 @@ homeassistant:
 
     sensor.iphone_battery_state:
       friendly_name: iPhone X (Batt state)
-      homebridge_hidden: True
     sensor.iphone_battery_level:
       friendly_name: iPhone X (Battery)
-      homebridge_hidden: True
     sensor.iphone_de_maria_del_carmen_battery_state:
       friendly_name: iPhone SE (Batt state)
-      homebridge_hidden: True
     sensor.iphone_de_maria_del_carmen_battery_level:
       friendly_name: iPhone SE (Battery)
-      homebridge_hidden: True
     sensor.ipad_de_eugenio_battery_state:
       friendly_name: iPad (Batt state)
-      homebridge_hidden: True
     sensor.ipad_de_eugenio_battery_level:
       friendly_name: iPad (Battery)
-      homebridge_hidden: True
 
     sensor.sensor_power__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_bathroom_ac__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_bedroom__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_covers__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_galeria__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_hall__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_study__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_office__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_livingroom__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_kitchen__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
     sensor.sensor_terraza__time_drift:
-      homebridge_hidden: true
       icon: mdi:timer-sand
+
+    input_select.esp_command:
+      icon: mdi:developer-board
+    input_select.esp_modules:
+      icon: mdi:developer-board
 
   # Customize entities matching a pattern
   customize_glob:
-    "sensor.pihole*":
-      homebridge_hidden: True
     "sensor.speedtest*":
-      homebridge_hidden: True
       icon: mdi:speedometer
 
 map:
@@ -168,8 +126,28 @@ variable:
     value: 0
     attributes:
       icon: mdi:speedometer
-      homebridge_hidden: true
 #    restore: true
+
+input_select:
+  esp_command:
+    name: Comandos
+    options:
+     - Restart
+     - Wifi_scan
+  esp_modules:
+    name: Módulos
+    options:
+     - Terraza
+     - Persianas
+     - Salón
+     - Dormitorio
+     - Baño
+     - Office
+     - Estudio
+     - Hall
+     - Cocina
+     - Galería
+     - Cuadro
 
 sensor:
 #  Removed because of hassio OS incompatibility:

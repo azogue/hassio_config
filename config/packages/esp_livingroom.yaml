@@ -3,44 +3,32 @@ homeassistant:
     sensor.sensor_livingroom_temperature:
       friendly_name: Temperatura
       icon: mdi:thermometer
-      homebridge_name: Temperatura salón
-#      homebridge_hidden: true
     sensor.sensor_livingroom_humidity:
       friendly_name: Humedad
       icon: mdi:water-percent
-#      homebridge_hidden: true
-      homebridge_name: Humedad salón
-      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.sensor_livingroom_pressure:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
     sensor.sensor_livingroom_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-      homebridge_hidden: true
     sensor.sensor_livingroom__snum:
       friendly_name: 'Sample # (salón)'
-      homebridge_hidden: true
-      
+
 #    sensor.sensor_livingroom_adc1:
 #      friendly_name: 'Sensor de humos 1'
 #      icon: mdi:biohazard
-#      homebridge_hidden: true
 #    sensor.sensor_livingroom_adc2:
 #      friendly_name: 'Sensor de humos 2'
 #      icon: mdi:biohazard
-#      homebridge_hidden: true
-    
+
     binary_sensor.sensor_livingroom_mov1:
       friendly_name: 'Movimiento (salón)'
-      homebridge_hidden: true
 #    binary_sensor.sensor_livingroom_mov2:
 #      friendly_name: 'Movimiento 2'
-#      homebridge_hidden: true
     binary_sensor.sensor_livingroom_online:
       friendly_name: Salón Online
-      homebridge_hidden: true
 
 binary_sensor:
   - platform: mqtt

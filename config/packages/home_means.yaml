@@ -2,59 +2,44 @@ homeassistant:
   customize:
     sensor.temperatura_interior:
       icon: mdi:thermometer
-      homebridge_hidden: true
       hidden: true
     sensor.temperatura_stats_mean:
       friendly_name: Temperatura interior (rm)
       icon: mdi:thermometer
-      homebridge_hidden: true
     sensor.temperatura_ac:
       icon: mdi:thermometer
-      homebridge_hidden: true
       hidden: true
     sensor.temperatura_exterior:
       icon: mdi:thermometer
-      homebridge_hidden: true
 
     sensor.temperatura_minima:
       friendly_name: Mínima diaria
       icon: mdi:thermometer
-      homebridge_hidden: true
 
     sensor.humedad_interior:
       icon: mdi:water-percent
-      homebridge_hidden: true
       hidden: true
-#      homebridge_name: Humedad galería
-#      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.humedad_stats_mean:
       friendly_name: Humedad interior (rm)
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: Humedad galería
-#      homebridge_sensor_type: humidity
+      device_class: humidity
     sensor.humedad_exterior:
       icon: mdi:water-percent
-      homebridge_hidden: true
-#      homebridge_name: Humedad galería
-#      homebridge_sensor_type: humidity
+      device_class: humidity
 
     input_boolean.ac_target_include_livingroom:
       friendly_name: AC Salón
       icon: mdi:toggle-switch
-      homebridge_hidden: true
     input_boolean.ac_target_include_study:
       friendly_name: AC Estudio
       icon: mdi:toggle-switch
-      homebridge_hidden: true
     input_boolean.ac_target_include_office:
       friendly_name: AC Office
       icon: mdi:toggle-switch
-      homebridge_hidden: true
     input_boolean.ac_target_include_bedroom:
       friendly_name: AC Dormitorio
       icon: mdi:toggle-switch
-      homebridge_hidden: true
 
 sensor:
 

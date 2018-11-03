@@ -9,15 +9,12 @@ homeassistant:
 
     switch.motion_detection_sricam_360:
       friendly_name: VideoMov. Salón
-      homebridge_hidden: True
       icon: mdi:video
     switch.motion_detection_iegeek_hd:
       friendly_name: VideoMov. Estudio
-      homebridge_hidden: True
       icon: mdi:video
     switch.motion_detection_kmoon_ipcam100:
       friendly_name: VideoMov. Terraza
-      homebridge_hidden: True
       icon: mdi:video
 
 #switch:

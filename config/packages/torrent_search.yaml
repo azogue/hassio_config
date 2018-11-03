@@ -3,11 +3,9 @@
 homeassistant:
   customize:
     script.torrent_search:
-      homebridge_hidden: true
       friendly_name: Email torrents
       icon: mdi:email
     input_text.q_torrents:
-      homebridge_hidden: true
       icon: mdi:search-web
     weblink.buscador_de_torrents:
       icon: mdi:magnet-on

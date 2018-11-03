@@ -3,49 +3,34 @@
 ###############################################################################
 homeassistant:
   customize:
-    sensor.pvpc:
-      homebridge_hidden: true
-#      icon: mdi:cash
     sensor.elecprice_range:
-      homebridge_hidden: true
       icon: mdi:currency-eur
     sensor.esp32ener_consumption_day:
       icon: mdi:flash-outline
-      homebridge_hidden: true
     sensor.esp32ener_power:
       icon: mdi:flash
       friendly_name: Consumo medido
-      homebridge_hidden: true
     sensor.esp32ener_real_power:
       icon: mdi:flash
       friendly_name: Consumo real
-      homebridge_hidden: true
     sensor.esp32ener_ch1:
       icon: mdi:power-plug
       friendly_name: Circuito 1 (general)
-      homebridge_hidden: true
     sensor.esp32ener_ch2:
       icon: mdi:flash-circle
       friendly_name: Circuito 2 (termo,AC,domótica)
-      homebridge_hidden: true
     sensor.esp32ener_ch3:
       icon: mdi:stove
       friendly_name: Cocina y horno
-      homebridge_hidden: true
 
-    binary_sensor.electricity_high_cost_interval:
-      homebridge_hidden: true
     binary_sensor.esp32_ener_online:
       friendly_name: Current Meter Online
-      homebridge_hidden: true
     input_number.enerpi_max_power:
       friendly_name: Max (kW)
       icon: mdi:flash-red-eye
-      homebridge_hidden: true
     input_number.enerpi_max_power_reset:
       friendly_name: Reset at (kW)
       icon: mdi:flash-off
-      homebridge_hidden: true
 
 input_number:
   # enerPI alarm config

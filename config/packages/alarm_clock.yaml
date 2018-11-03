@@ -2,7 +2,6 @@
 homeassistant:
   customize:
     input_boolean.alarm_clock_status:
-      homebridge_hidden: true
       hidden: true
     switch.alarm_clock_status:
       homebridge_name: Despertador LaCafetera
@@ -16,7 +15,6 @@ homeassistant:
       icon: mdi:alarm
     input_boolean.manual_trigger_lacafetera:
       icon: mdi:play-circle
-      homebridge_hidden: true
 
 #Programación despertador:
 #    - input_datetime.alarm_clock_time
