@@ -54,6 +54,11 @@ homeassistant:
     sensor.pihole_dns_unique_domains:
       friendly_name: DNS unique domains
 
+    sensor.connected_clients:
+      friendly_name: Clientes API
+      homebridge_hidden: True
+      icon: mdi:account-multiple
+
     input_boolean.eu_presence:
       icon: mdi:human-male
     input_boolean.carmen_presence:
@@ -214,6 +219,9 @@ sensor:
     - type: processor_use
     - type: last_boot
   scan_interval: 30
+
+  # sensor.connected_clients
+- platform: api_streams
 
 - platform: template
   sensors:

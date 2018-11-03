@@ -433,6 +433,7 @@ Conectivity:
 #  - binary_sensor.ios_online
 #  - binary_sensor.kodi_online
   - sensor.uptime
+  - sensor.connected_clients
   - sensor.ssl_certificate_expiry
 #  - sensor.error_counter_notifiers
 #  - sensor.core_error_counter
