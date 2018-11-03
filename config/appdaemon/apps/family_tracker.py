@@ -49,7 +49,12 @@ class FamilyTracker(hass.Hass):
 
         # Get devices to track:
         _devs_track = self.get_state(
-            home_group, attribute='attributes')['entity_id']
+            home_group, attribute='attributes')
+        if _devs_track is not None:
+            _devs_track = _devs_track['entity_id']
+        else:
+            self.error('CANT GET ENTITIES TO TRACK!!')
+            _devs_track = []
 
         # Get tracking states:
         self._tracking_state = {}
