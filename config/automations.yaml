@@ -338,7 +338,7 @@
   trigger:
     platform: state
     entity_id: sensor.hue_dimmer_switch
-    to: '1_hold'
+    to: '1_hold_up'
   action:
     - service: python_script.start_kodi_play_tv
     - event: flash_light
@@ -352,7 +352,7 @@
   trigger:
     platform: state
     entity_id: sensor.hue_dimmer_switch
-    to: '4_hold'
+    to: '4_hold_up'
   action:
     - service: media_player.turn_off
       entity_id: media_player.kodi_tv
@@ -380,7 +380,7 @@
   trigger:
     platform: state
     entity_id: sensor.hue_dimmer_switch
-    to: '3_hold'  # '-' button
+    to: '3_hold_up'  # '-' button
   action:
     - service: input_select.select_option
       entity_id: input_select.salon_light_scene
@@ -392,7 +392,7 @@
 #  trigger:
 #    platform: state
 #    entity_id: sensor.hue_dimmer_switch
-#    to: '3_hold'
+#    to: '3_hold_up'
 #  action:
 #    - service: media_player.turn_on
 #      entity_id: media_player.kodi
@@ -414,6 +414,35 @@
 #        disable_notification: true
 #        inline_keyboard:
 #          - Ambilight:/service_call switch.toggle switch.toggle_kodi_ambilight, Luces:/service_call light.toggle light.salon
+
+- alias: Morning Turn OFF (hue switch)
+  id: 'morning_turn_off_dimmer_switch_action'
+  trigger:
+    platform: state
+    entity_id: sensor.interruptor_dormitorio
+    to: '4_hold_up'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.bomba_circ_acs,switch.altavoz
+#    - event: flash_light
+#      event_data:
+#        color: red
+#        persistence: 1
+#        flashes: 2
+#    - delay:
+#        seconds: 5
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*All Off*'
+        message: "Apagando Despertador y termo al mantener pulsado OFF en mando hue"
+        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        disable_notification: true
+        inline_keyboard:
+          - Aura habitación:/service_call light.toggle light.aura_habitacion
+    - service: media_player.turn_off
+      entity_id: media_player.dormitorio_mopidy
+
+
 
 - alias: Encendido luces dormitorio
   id: 'ligths_on_bedroom'
@@ -878,6 +907,12 @@
       to: 'idle'
       for:
         seconds: 30
+    - platform: state
+      entity_id: climate.calefaccion
+      from: 'heat'
+      to: 'idle'
+      for:
+        seconds: 30
   action:
     - service: telegram_bot.send_message
       data_template:
@@ -887,10 +922,15 @@
         message: "Apagado de {{ trigger.to_state.attributes.friendly_name }} [Tª: {{ trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature }} °C] (en `{{ trigger.from_state.state }}` desde {{ trigger.from_state.last_changed | timestamp_local }})"
         disable_notification: true
         inline_keyboard:
-          - Deshacer:/service_call climate.set_operation_mode termostato_ac cool
+          - Deshacer COOL:/service_call climate.set_operation_mode termostato_ac cool
+          - Deshacer HOT:/service_call climate.set_operation_mode calefaccion heat
     - service: climate.set_operation_mode
       data:
         entity_id: climate.termostato_ac
+        operation_mode: 'off'
+    - service: climate.set_operation_mode
+      data:
+        entity_id: climate.calefaccion
         operation_mode: 'off'
     # Assure 1 trigger only
     - service: automation.turn_off

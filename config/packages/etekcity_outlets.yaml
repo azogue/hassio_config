@@ -102,11 +102,11 @@ switch:
         code_on: 4478403
         code_off: 4478412
         signal_repetitions: 80
-#      new_switch_3:
-#        pulselength: 186
-#        code_on: 4478723
-#        code_off: 4478732
-#        signal_repetitions: 60
+      new_switch_3:
+        pulselength: 186
+        code_on: 4478723
+        code_off: 4478732
+        signal_repetitions: 80
   #    new_switch_4:  # no switch, only remote button
   #      pulselength: 186
   #      code_on: 4480259

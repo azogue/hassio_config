@@ -15,6 +15,9 @@ homeassistant:
     sensor.temperatura_minima:
       friendly_name: Mínima diaria
       icon: mdi:thermometer
+    sensor.temp_acs_max:
+      friendly_name: ACS Máx Ret Solar
+      icon: mdi:temperature-celsius
 
     sensor.humedad_interior:
       icon: mdi:water-percent
@@ -120,3 +123,21 @@ sensor:
         group_function: min
         measurement: '"°C"' #from
         where: '"entity_id" = ''temperatura_exterior'' and time > now() - 24h' #where
+
+  - platform: influxdb
+    host: !secret influxdb_host
+    port: !secret influxdb_port
+    username: !secret influxdb_user
+    password: !secret influxdb_pass
+    # ssl: true
+    # verify_ssl: true
+    default_measurement: state
+    queries:
+      - name: temp_acs_max
+        database: !secret influxdb_db
+        unit_of_measurement: °C
+        value_template: '{{ value | round(1) }}'
+        field: value #select
+        group_function: max
+        measurement: '"°C"' #from
+        where: '"entity_id" = ''sensor_acs_probe_5'' and time > now() - 24h' #where

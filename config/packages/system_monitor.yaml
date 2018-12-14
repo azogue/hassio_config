@@ -111,15 +111,15 @@ input_boolean:
   carmen_presence:
     name: Carmen en casa
 
-binary_sensor:
-  - platform: rpi_gpio
-    name: Movimiento
-    device_class: motion
-    ports:
-      18: local_pir
-    bouncetime: 50
-    pull_mode: "UP"
-  #  invert_logic: true
+#binary_sensor:
+#  - platform: rpi_gpio
+#    name: Movimiento
+#    device_class: motion
+#    ports:
+#      18: local_pir
+#    bouncetime: 50
+#    pull_mode: "UP"
+#  #  invert_logic: true
 
 variable:
   speedtest_data:

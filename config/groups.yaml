@@ -24,9 +24,6 @@ ambiente_simple:
   control: hidden
   entities:
   - climate.calefaccion
-  - climate.termostato_ac
-  - scene.golpe_de_frio
-  - automation.apagado_de_ac
   - input_select.salon_light_scene
   - input_number.light_main_slider_salon
   - input_number.light_temp_slider_salon
@@ -40,6 +37,10 @@ ambiente_simple:
   - light.estudio
   - light.hall_light
   - light.terraza
+  - climate.termostato_ac
+  - scene.golpe_de_frio
+  - scene.golpe_de_calor
+  - automation.apagado_de_ac
 
 salon:
   name: Luces salón
@@ -124,19 +125,6 @@ enchufes_simple:
     - switch.bomba_circ_acs
     - switch.calentador
     - switch.ac_dry_contact
-    - switch.altavoz
-    # Antimosquitos
-    - switch.office_floor
-    # Antimosquitos 2
-    - switch.test_switch_2
-
-Enchufes:
-  name: Más enchufes
-  control: hidden
-  entities:
-    - switch.bomba_circ_acs
-    - switch.calentador
-    - switch.ac_dry_contact
     - switch.tv_power
     - switch.camara
     - switch.altavoz
@@ -144,13 +132,30 @@ Enchufes:
     - switch.office_floor
     # Antimosquitos 2
     - switch.test_switch_2
-
+    - switch.new_switch_3
     - switch.vinoteca
 
-    - switch.cocina
-    - switch.new_switch_2
-    - switch.new_switch_3
-    - switch.sonoff_simple_1
+#Enchufes:
+#  name: Más enchufes
+#  control: hidden
+#  entities:
+#    - switch.bomba_circ_acs
+#    - switch.calentador
+#    - switch.ac_dry_contact
+#    - switch.tv_power
+#    - switch.camara
+#    - switch.altavoz
+#    # Antimosquitos
+#    - switch.office_floor
+#    # Antimosquitos 2
+#    - switch.test_switch_2
+#
+#    - switch.vinoteca
+#
+#    - switch.cocina
+#    - switch.new_switch_2
+#    - switch.new_switch_3
+#    - switch.sonoff_simple_1
 
 elec_power_complete:
   name: Consumo eléctrico
@@ -365,6 +370,7 @@ Termo:
   name: Termo ACS
 #  control: hidden
   entities:
+    - sensor.temp_acs_max
     - switch.calentador
     - switch.bomba_circ_acs
     - sensor.sensor_acs_probe_1
@@ -470,6 +476,14 @@ esp32_samples:
     - sensor.sensor_covers__snum
     - sensor.sensor_wine__snum
 
+esp32_commands:
+  control: hidden
+  name: ESP Commander
+  entities:
+    - input_select.esp_modules
+    - input_select.esp_command
+    - script.run_esp_command
+
 esp32_tracking:
   control: hidden
   name: Tracking
@@ -533,6 +547,8 @@ general_config:
     - sensor.season
     - sun.sun
     - sensor.hue_dimmer_switch
+    - sensor.interruptor_estudio
+    - sensor.interruptor_dormitorio
     - input_boolean.switch_motion_lights
     - input_number.light_duration_after_motion
     - input_boolean.switch_control_enerpi_max_power
@@ -898,6 +914,7 @@ current_meter_control:
     - camera.electricidad_24h
     - group.big_consumers
 
+
 Alarm Panel:
   name: Alarm configuration
   icon: mdi:shield-outline
@@ -914,8 +931,10 @@ Status:
   icon: mdi:castle
   view: yes
   entities:
-    - group.elec_power_simple
     - group.ambiente
+    - group.termo
+    - group.esp_hall
+    - group.elec_power_simple
     - group.esp_livingroom
     - group.sensors_dormitorio
     - group.esp_estudio
@@ -924,23 +943,21 @@ Status:
     - group.esp_bathroom_1
     - group.esp_terraza
     - group.esp_galeria
-    - group.vinoteca
-    - group.termo
-    - group.esp_hall
-    - group.local
+#    - group.local
+#    - group.vinoteca
 
 
-Control:
-  name: Home Control
-  icon: mdi:auto-fix
-  view: yes
-  entities:
-    - group.control_salon
-    - group.salon
-    - group.control_dormitorio
-    - group.control_estudio
-    - group.vacuum_cleaner
-    - group.enchufes
+#Control:
+#  name: Home Control
+#  icon: mdi:auto-fix
+#  view: yes
+#  entities:
+#    - group.control_salon
+#    - group.salon
+#    - group.control_dormitorio
+#    - group.control_estudio
+#    - group.vacuum_cleaner
+#    - group.enchufes
 
 
 alarm_clock:
@@ -950,7 +967,6 @@ alarm_clock:
   entities:
     - group.despertador
     - media_player.dormitorio_mopidy
-    - media_player.kodi_tv
 
 
 Home Network:
@@ -969,16 +985,6 @@ Home Network:
     - group.pi_hole
     - group.speedtest
     - group.vecinos_cercanos
-
-esp32_devs:
-  name: ESP32 devices
-  view: yes
-  icon: mdi:developer-board
-  entities:
-    - group.esp32_samples
-    - group.esp32_conectivity
-    - group.esp32_tracking
-    - group.esp32_time_sync
 
 Master conf:
   name: Master configuration
@@ -1002,3 +1008,15 @@ Master conf:
     - group.resto_de_automatizaciones
     - group.all_scripts
     - group.escenas
+
+esp32_devs:
+  name: ESP32 devices
+  view: yes
+  icon: mdi:developer-board
+  entities:
+    - group.esp32_commands
+    - group.esp32_samples
+    - group.esp32_conectivity
+    - group.esp32_tracking
+    - group.esp32_time_sync
+

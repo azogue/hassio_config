@@ -32,7 +32,7 @@ sensor:
       - Galería
       - Previsto
     scan_interval: 60
-    value_template: '{{ value_json.num_points | int }}'
+    value_template: '{% if "num_points" in value_json %}{{ value_json.num_points | int }}{% endif %}'
 
   - platform: template
     sensors:

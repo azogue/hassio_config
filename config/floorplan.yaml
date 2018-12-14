@@ -255,7 +255,7 @@
             - binary_sensor.sensor_terraza_mov1
             - binary_sensor.sensor_livingroom_mov1
 #            - binary_sensor.motioncam_salon
-            - binary_sensor.local_pir
+#            - binary_sensor.local_pir
           states:
             - state: 'off'
               class: 'info-no-movement'
