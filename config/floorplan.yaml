@@ -201,7 +201,7 @@
 #             - switch.sonoff_simple_1
              - switch.calentador
              - switch.bomba_circ_acs
-             - switch.altavoz
+#             - switch.altavoz
              - switch.ac_dry_contact
           states:
             - state: 'on'

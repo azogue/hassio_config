@@ -24,8 +24,8 @@ entities:
     url: !secret weblink_pihole
 #  - name: HASSIO IDE
 #    url: !secret weblink_hassio_ide
-  - name: Mopidy
-    url: !secret mopidy_url
+#  - name: Mopidy
+#    url: !secret mopidy_url
   - name: TV Headend
     url: !secret weblink_tv_headend
   - name: Kodi web interface
@@ -33,8 +33,8 @@ entities:
 
 #  - name: Slave HASS
 #    url: http://192.168.1.46:8123/
-  - name: Slave HASS MPD
-    url: http://192.168.1.52:8123/
+#  - name: Slave HASS MPD
+#    url: http://192.168.1.52:8123/
   - name: MotionEye
     url: !secret motioneye_url
 

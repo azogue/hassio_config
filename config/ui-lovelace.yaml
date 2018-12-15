@@ -394,8 +394,8 @@ views:
       secondary_info: 'last-changed'
     - entity: switch.ac_dry_contact
       secondary_info: 'last-changed'
-    - entity: switch.altavoz
-      secondary_info: 'last-changed'
+#    - entity: switch.altavoz
+#      secondary_info: 'last-changed'
     - type: divider
     - entity: switch.office_floor
       secondary_info: 'last-changed'
@@ -1057,10 +1057,10 @@ views:
     - input_datetime.next_special_wake_up
     - input_select.room_altavoces
     # From rf outlets:
-    - switch.altavoz
+#    - switch.altavoz
     - input_boolean.manual_trigger_lacafetera
   - type: media-control
-    entity: media_player.dormitorio_mopidy
+    entity: media_player.dormitorio
   - type: media-control
     entity: media_player.kodi_tv
 
@@ -1100,12 +1100,10 @@ views:
 #    - weblink.hassio_lan
 #    - weblink.hassio_pihole
 #    - weblink.slave_hass
-#    - weblink.slave_hass_mpd
 #    - weblink.enerpi
 #    - weblink.motioneye
 #    - weblink.kodi_web_interface
 #    - weblink.tv_headend
-#    - weblink.mopidy
 #    - weblink.router_movistar
 #    - weblink.wifi_repeater
 
@@ -1281,12 +1279,6 @@ views:
     - type: entities
       title: Otras RPI
       entities:
-      - sensor.hass_cpu_temperature_rpi2mpd
-      - sensor.cpu_used_rpi2mpd
-      - sensor.ram_available_rpi2mpd
-      - sensor.disk_used__rpi2mpd
-      - sensor.last_boot_rpi2mpd
-      - type: divider
       - sensor.kodi_cpu_temperature
       - type: divider
       - sensor.rpi3dev1_cpu_temperature

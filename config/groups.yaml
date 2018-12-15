@@ -108,7 +108,7 @@ Despertador:
     - input_datetime.next_special_wake_up
     - input_select.room_altavoces
     # From rf outlets:
-    - switch.altavoz
+#    - switch.altavoz
     - input_boolean.manual_trigger_lacafetera
 
 vacuum_cleaner:
@@ -127,7 +127,7 @@ enchufes_simple:
     - switch.ac_dry_contact
     - switch.tv_power
     - switch.camara
-    - switch.altavoz
+#    - switch.altavoz
     # Antimosquitos
     - switch.office_floor
     # Antimosquitos 2
@@ -198,6 +198,7 @@ elec_power_simple:
 kodi_mp:
   - media_player.kodi_tv
   - media_player.home_cinema
+  - media_player.dormitorio
   - media_player.htse5500_hte5500
 
 Media select:
@@ -262,11 +263,6 @@ QNAP NAS:
     - sensor.nashome_volume_used_datavol1
 
 Otras RPI:
-  - sensor.hass_cpu_temperature_rpi2mpd
-  - sensor.cpu_used_rpi2mpd
-  - sensor.ram_available_rpi2mpd
-  - sensor.disk_used__rpi2mpd
-  - sensor.last_boot_rpi2mpd
 #Resto de hosts:
 #  - sensor.enerpi_cpu_temperature
   - sensor.kodi_cpu_temperature
@@ -429,7 +425,6 @@ Conectivity:
   - binary_sensor.internet_online
   - sensor.ip_externa
   - binary_sensor.router_on
-  - binary_sensor.dormitorio_online
 
 #  - binary_sensor.database_ok
   - binary_sensor.nas_online
@@ -793,12 +788,10 @@ Links:
   - weblink.hassio_lan
 #  - weblink.hassio_pihole
 #  - weblink.slave_hass
-  - weblink.slave_hass_mpd
   - weblink.pihole
   - weblink.motioneye
   - weblink.kodi_web_interface
   - weblink.tv_headend
-  - weblink.mopidy
   - weblink.router_movistar
 #  - weblink.wifi_repeater
 
@@ -966,7 +959,7 @@ alarm_clock:
   icon: mdi:alarm
   entities:
     - group.despertador
-    - media_player.dormitorio_mopidy
+    - media_player.dormitorio
 
 
 Home Network:

@@ -4,8 +4,6 @@ good_night:
   sequence:
     - alias: Apagado de TV, Ambilight, Cocina, Estudio, Calefactor e impresora
       service: switch.turn_off
-#      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.caldera,switch.altavoz,switch.cocina,switch.calefactor,switch.estudio_light_relay,switch.impresora
-#      entity_id: switch.kodi_tv_salon,switch.toggle_kodi_ambilight,switch.cocina
       entity_id: switch.kodi_tv_salon,switch.tv_power,switch.bomba_circ_acs,switch.calentador
 
 #    - alias: Bajada de persianas

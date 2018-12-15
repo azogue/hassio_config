@@ -90,14 +90,12 @@ MorningAlarmClock:
   input_boolean_alarm_on: input_boolean.alarm_clock_status
   sunrise_duration: 300
   duration_volume_ramp_sec: 240
-  max_volume: 25
+  max_volume: 30
   warm_up_time_delta_s: 9000
   postponer_minutos: 7
   room_select: input_select.room_altavoces
   lights_alarm: group.control_dormitorio
   manual_trigger: input_boolean.manual_trigger_lacafetera
-  mopidy_ip: !secret mopidy_ip
-  mopidy_port: !secret mopidy_port
 
 #MotionLightsSalon:
 #  class: MotionLights

@@ -25,19 +25,23 @@ input_boolean:
   alarm_clock_status:
     initial: on
   manual_trigger_lacafetera:
-    name: Reproduce LaCafetera de Radiocable
+    name: Activa despertador matutino
     initial: off
 
 input_select:
   room_altavoces:
-    name: Selección de altavoces
+    name: Selección de audio
     options:
-     - Dormitorio (Mopidy)
-     - Salón (KODI)
-    initial: Dormitorio (Mopidy)
+     - La Cafetera de Radiocable
+     - Kiss FM 89.2 (Pop Latino)
+     - Los 40 91.7 (Pop-Cartelera)
+     - STAR 80 (80's)
+     - Europa FM (Pop-Cartelera)
+    initial: La Cafetera de Radiocable
     icon: mdi:speaker
 
 input_datetime:
+  # TODO LINK WITH SONOS SERVICE
   alarm_clock_time:
     name: Hora de alarma
     has_date: false

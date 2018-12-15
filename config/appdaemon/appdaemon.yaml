@@ -19,7 +19,6 @@ appdaemon:
   bot_notifier: telegram_bot.send_message
 
   media_player: media_player.kodi
-  media_player_mopidy: media_player.dormitorio_mopidy
 
   plugins:
     HASS:

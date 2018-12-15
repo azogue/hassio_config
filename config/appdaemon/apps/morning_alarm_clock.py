@@ -17,7 +17,6 @@ through its JSONRPC API, which has to run a specific Kodi Add-On:
 import appdaemon.plugins.hass.hassapi as hass
 import datetime as dt
 from dateutil.parser import parse
-import json
 import pytz
 import requests
 
@@ -25,6 +24,8 @@ import requests
 LOG_LEVEL = 'INFO'
 
 # Defaults para La Cafetera Alarm Clock:
+MEDIA_PLAYER = 'media_player.dormitorio'
+DEFAULT_SOURCE = 'La Cafetera de Radiocable'
 MIN_VOLUME = 1
 DEFAULT_MAX_VOLUME_MOPIDY = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
@@ -37,12 +38,9 @@ STEP_RETRYING_SEC = 20
 DEFAULT_WARM_UP_TIME_DELTA = 25  # s
 MIN_INTERVAL_BETWEEN_EPS = dt.timedelta(hours=8)
 MASK_URL_STREAM_MOPIDY = "http://api.spreaker.com/listen/episode/{}/http"
-# TELEGRAM_KEYBOARD_ALARMCLOCK = ['/ducha', '/posponer',
-#                                 '/despertadoroff', '/hasswiz, /init']
 TELEGRAM_INLINE_KEYBOARD_ALARMCLOCK = [
-    [('A la ducha!', '/ducha'),
-     ('Calefactor', '/service_call switch.toggle switch.calefactor')],
-    [('Un poquito +', '/posponer'), ('OFF', '/despertadoroff')]]
+    [('A la ducha!', '/ducha'), ('Un poquito +', '/posponer'),
+     ('OFF', '/despertadoroff')]]
 WEEKDAYS_DICT = {'mon': 0, 'tue': 1, 'wed': 2,
                  'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6}
 
@@ -119,29 +117,6 @@ def _make_notification_episode(ep_info):
     return title, message, img_url
 
 
-def _make_ios_notification_episode(ep_info):
-    """Crea los datos para la notificación de alarma para iOS."""
-    title, message, img_url = _make_notification_episode(ep_info)
-    return {"title": title, "message": message,
-            "data": {"push": {"badge": 0,
-                              "sound": "US-EN-Morgan-Freeman-Good-Morning.wav",
-                              "category": "alarmclock"},
-                     "attachment": {"url": img_url}}}
-
-
-def _make_telegram_notification_episode(ep_info):
-    """Crea los datos para la notificación de alarma para telegram."""
-    title, message, img_url = _make_notification_episode(ep_info)
-    title = '*{}*'.format(title)
-    if img_url is not None:
-        message += "\n{}\n".format(img_url)
-    data_msg = {"title": title, "message": message,
-                # "keyboard": TELEGRAM_KEYBOARD_ALARMCLOCK,
-                "inline_keyboard": TELEGRAM_INLINE_KEYBOARD_ALARMCLOCK,
-                "disable_notification": False}
-    return data_msg
-
-
 def _weekday(str_wday):
     str_wday = str_wday.lower().rstrip().lstrip()
     if str_wday in WEEKDAYS_DICT:
@@ -180,10 +155,7 @@ class AlarmClock(hass.Hass):
     _selected_player = None
     _target_sensor = None
 
-    _media_player_kodi = None
-    _media_player_mopidy = None
-    _mopidy_ip = None
-    _mopidy_port = None
+    _media_player_sonos = None
 
     _next_alarm = None
     _next_warm_up = None
@@ -228,17 +200,14 @@ class AlarmClock(hass.Hass):
         self.listen_state(self.special_alarm_time_change,
                           self._special_alarm_input)
 
-        # Room selection:
-        self._selected_player = 'KODI'
+        # Audio Source selection:
+        self._selected_player = DEFAULT_SOURCE
         self._room_select = self.args.get('room_select', None)
         if self._room_select is not None:
             self._selected_player = self.get_state(self._room_select)
             self.listen_state(self.change_player, self._room_select)
 
-        self._media_player_kodi = self.config['media_player']
-        self._media_player_mopidy = self.config['media_player_mopidy']
-        self._mopidy_ip = self.args.get('mopidy_ip')
-        self._mopidy_port = int(self.args.get('mopidy_port'))
+        self._media_player_sonos = MEDIA_PLAYER
         self._target_sensor = self.config['chatid_sensor']
 
         # Trigger for last episode and boolean for play status
@@ -267,11 +236,6 @@ class AlarmClock(hass.Hass):
                              self._next_special_alarm, self._selected_player),
                      LOG_LEVEL)
 
-    @property
-    def play_in_kodi(self):
-        """Boolean for select each player (Kodi / Mopidy)."""
-        return 'KODI' in self._selected_player.upper()
-
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
         self.call_service('switch/turn_on',
@@ -280,20 +244,54 @@ class AlarmClock(hass.Hass):
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])
 
-    def turn_on_bedroom_speakers(self, kwargs):
-        """Turn ON the speaker."""
-        if kwargs and 'off' in kwargs:
-            self.call_service('switch/turn_off', entity_id="switch.altavoz")
+    def _make_ios_notification_episode(self, ep_info, use_ep_info):
+        """Crea los datos para la notificación de alarma para iOS."""
+        if use_ep_info:
+            title, message, img_url = _make_notification_episode(ep_info)
+            return {"title": title, "message": message,
+                    "data": {
+                        "push": {
+                            "badge": 0,
+                            "sound": "US-EN-Morgan-Freeman-Good-Morning.wav",
+                            "category": "alarmclock"
+                        },
+                        "attachment": {"url": img_url}}}
         else:
-            self.call_service('switch/turn_on', entity_id="switch.altavoz")
+            return {"title": "Comienza el día en positivo",
+                    "message": "Reproduciendo {}".format(
+                        self._selected_player),
+                    "data": {"push": {
+                        "badge": 0,
+                        "sound": "US-EN-Morgan-Freeman-Good-Morning.wav",
+                        "category": "alarmclock"}
+                    }}
 
-    def notify_alarmclock(self, ep_info):
+    def _make_telegram_notification_episode(self, ep_info, use_ep_info):
+        """Crea los datos para la notificación de alarma para telegram."""
+        if use_ep_info:
+            title, message, img_url = _make_notification_episode(ep_info)
+        else:
+            title = "Comienza el día en positivo"
+            message = "Reproduciendo {}".format(self._selected_player)
+            img_url = None
+        title = '*{}*'.format(title)
+        if img_url is not None:
+            message += "\n{}\n".format(img_url)
+        data_msg = {"title": title, "message": message,
+                    # "keyboard": TELEGRAM_KEYBOARD_ALARMCLOCK,
+                    "inline_keyboard": TELEGRAM_INLINE_KEYBOARD_ALARMCLOCK,
+                    "disable_notification": False}
+        return data_msg
+
+    def notify_alarmclock(self, ep_info, use_ep_info):
         """Send notification with episode info."""
-        self.call_service('telegram_bot/send_message',
-                          target=int(self.get_state(self._target_sensor)),
-                          **_make_telegram_notification_episode(ep_info))
-        self.call_service(self._notifier.replace('.', '/'),
-                          **_make_ios_notification_episode(ep_info))
+        self.call_service(
+            'telegram_bot/send_message',
+            target=int(self.get_state(self._target_sensor)),
+            **self._make_telegram_notification_episode(ep_info, use_ep_info))
+        self.call_service(
+            self._notifier.replace('.', '/'),
+            **self._make_ios_notification_episode(ep_info, use_ep_info))
 
     # noinspection PyUnusedLocal
     def change_player(self, entity, attribute, old, new, kwargs):
@@ -306,23 +304,14 @@ class AlarmClock(hass.Hass):
     def turn_off_alarm_clock(self, *args):
         """Stop current play when turning off the input_boolean."""
         if self._in_alarm_mode:
-            if self.play_in_kodi and (
-                        self.get_state(self._media_player_kodi) == 'playing'):
+            if self.get_state(self._media_player_sonos) == 'playing':
                 self.call_service('media_player/turn_off',
-                                  entity_id=self._media_player_kodi)
-                if self._manual_trigger is not None:
-                    self._last_trigger = None
-                    self.set_state(self._manual_trigger, state='off')
-                self.log('TURN_OFF KODI')
-            elif not self.play_in_kodi:
-                if self.get_state(self._media_player_mopidy) == 'playing':
-                    self.call_service('media_player/turn_off',
-                                      entity_id=self._media_player_mopidy)
-                self.turn_on_bedroom_speakers({'off': True})
-                if self._manual_trigger is not None:
-                    self._last_trigger = None
-                    self.set_state(self._manual_trigger, state='off')
-                self.log('TURN_OFF MOPIDY')
+                                  entity_id=self._media_player_sonos)
+            # self.turn_on_bedroom_speakers({'off': True})
+            if self._manual_trigger is not None:
+                self._last_trigger = None
+                self.set_state(self._manual_trigger, state='off')
+            self.log('TURN_OFF SONOS')
         else:
             self.log('TURN_OFF ALARM CLOCK, BUT ALREADY OFF?')
         if self._handler_turnoff is not None:
@@ -347,14 +336,9 @@ class AlarmClock(hass.Hass):
                               or ((dt.datetime.now() - self._last_trigger)
                                   .total_seconds() > 30)):
             _ready, ep_info = is_last_episode_ready_for_play(self.datetime())
-            self.log('TRIGGER_START with ep_ready, ep_info --> {}, {}'
-                     .format(_ready, ep_info))
-            if self.play_in_kodi:
-                ok = self.run_kodi_addon_lacafetera()
-            else:
-                ok = self.run_mopidy_stream_lacafetera(ep_info)
+            use_ep_info = self.run_in_sonos(ep_info)
             # Notification:
-            self.notify_alarmclock(ep_info)
+            self.notify_alarmclock(ep_info, use_ep_info)
         # Manual stop after at least 10 sec
         elif ((new == 'off') and (old == 'on')
               and (self._last_trigger is not None) and
@@ -479,50 +463,10 @@ class AlarmClock(hass.Hass):
                         transition=self._transit_time, brightness=brightness)
             run_in += self._transit_time + 1
 
-    def run_kodi_addon_lacafetera(self, mode="playlast"):
-        """Run Kodi add-on with parameters vith JSONRPC API."""
-        self.log('RUN_KODI_ADDON_LACAFETERA with mode={}'
-                 .format(mode), LOG_LEVEL)
-        data = {"method": "Addons.ExecuteAddon",
-                "params": {"mode": mode},
-                "addonid": "plugin.audio.lacafetera"}
-        self.call_service("media_player/kodi_call_method",
-                          entity_id=self._media_player_kodi, **data)
-        self._in_alarm_mode = True
-        self._last_trigger = dt.datetime.now()
-        return True
-
-    def run_command_mopidy(self, command='core.tracklist.get_tl_tracks',
-                           params=None, check_result=True):
-        """Play stream in mopidy."""
-        url_base = 'http://{}:{}/mopidy/rpc'.format(
-            self._mopidy_ip, self._mopidy_port)
-        headers = {'Content-Type': 'application/json'}
-        payload = {"method": command, "jsonrpc": "2.0", "id": 1}
-        if params is not None:
-            payload['params'] = params
-        try:
-            r = requests.post(url_base, headers=headers,
-                              data=json.dumps(payload))
-        except requests.exceptions.ConnectionError:
-            self.log("ERROR MPD CONNECT to {}, data: {}"
-                     .format(url_base, payload))
-            return None
-        if r.ok:
-            try:
-                res = json.loads(r.content.decode())
-            except json.decoder.JSONDecodeError:
-                self.log("ERROR PARSING MPD RESULT: {}".format(r.content))
-                return None
-            if check_result and not res['result']:
-                self.error('RUN MOPIDY {} COMMAND BAD RESPONSE? -> {}'
-                           .format(command.upper(), r.content.decode()))
-            return res
-        return None
-
     # noinspection PyUnusedLocal
     def increase_volume(self, *args):
         """Recursive method to increase the playback volume until max."""
+        self.log("INCREASE VOLUME GRADUALLY")
         repeat = True
         if self._in_alarm_mode and self._last_trigger is not None:
             delta_sec = (dt.datetime.now()
@@ -531,55 +475,46 @@ class AlarmClock(hass.Hass):
                 volume_set = self._max_volume
                 repeat = False
             else:
-                volume_set = int(max(MIN_VOLUME,
-                                     (delta_sec / self._volume_ramp_sec)
-                                     * self._max_volume))
-            self.run_command_mopidy('core.mixer.set_volume',
-                                    params=dict(volume=volume_set))
+                volume_set = int(max(
+                    MIN_VOLUME,
+                    (delta_sec / self._volume_ramp_sec)
+                    * self._max_volume)) / 100.
+            self.call_service('media_player/volume_set',
+                              entity_id=self._media_player_sonos,
+                              volume_level=volume_set)
         else:
             repeat = False
         if repeat:
             self.run_in(self.increase_volume, 10)
 
-    def run_mopidy_stream_lacafetera(self, ep_info):
-        """Play stream in mopidy."""
-        # self.log('DEBUG MPD: {}'.format(ep_info))
-        self.turn_on_bedroom_speakers({})
-        
-        self.run_command_mopidy('core.tracklist.clear', check_result=False)
-        params = {"tracks": [{"__model__": "Track",
-                              "uri": MASK_URL_STREAM_MOPIDY.format(
-                                  ep_info['episode']['episode_id']),
-                              "name": ep_info['episode']['title'],
-                              # "artist": "Fernando Berlín",
-                              # "album": "La Cafetera",
-                              "date": "{:%Y-%m-%d}".format(
-                                  ep_info['published'])}]}
+    def run_in_sonos(self, ep_info):
+        """Play stream in Sonos."""
+        use_ep_info = False
+        self.call_service('media_player/volume_set',
+                          entity_id=self._media_player_sonos,
+                          volume_level=0)
+        if self._selected_player == DEFAULT_SOURCE:
+            self.call_service(
+                'media_player/play_media',
+                entity_id=self._media_player_sonos,
+                media_content_type='music',
+                media_content_id='http://api.spreaker.com/listen/'
+                                 'show/1060718/episode/latest/shoutcast.mp3')
+            self.log('TRIGGER_START with ep_info --> {}'.format(ep_info))
+            use_ep_info = True
+        else:
+            self.call_service('media_player/select_source',
+                              entity_id=self._media_player_sonos,
+                              source=self._selected_player)
 
-        # Retry:
-        self.run_in(self.turn_on_bedroom_speakers, 3)
+        self.call_service('media_player/volume_set',
+                          entity_id=self._media_player_sonos,
+                          volume_level=.01)
 
-        json_res = self.run_command_mopidy('core.tracklist.add', params=params)
-        if json_res is not None:
-            # self.log('Added track OK --> {}'.format(json_res))
-            if ("result" in json_res) and (len(json_res["result"]) > 0):
-                track_info = json_res["result"][0]
-                self.run_command_mopidy(
-                    'core.mixer.set_volume', params=dict(volume=5))
-                # Retry:
-                self.run_in(self.turn_on_bedroom_speakers, 10)
-
-                res_play = self.run_command_mopidy(
-                    'core.playback.play',
-                    params={"tl_track": track_info}, check_result=False)
-                if res_play is not None:
-                    self._in_alarm_mode = True
-                    self._last_trigger = dt.datetime.now()
-                    self.run_in(self.increase_volume, 5)
-                    return True
-        self.error('MOPIDY NOT PRESENT??, mopidy json_res={}'
-                   .format(json_res), 'ERROR')
-        return False
+        self._in_alarm_mode = True
+        self._last_trigger = dt.datetime.now()
+        self.run_in(self.increase_volume, 5)
+        return use_ep_info
 
     # noinspection PyUnusedLocal
     def trigger_service_in_alarm(self, *args):
@@ -592,13 +527,10 @@ class AlarmClock(hass.Hass):
                 self.datetime())
             if alarm_ready:
                 # self.turn_on_morning_services(dict(delta_to_repeat=30))
-                if self.play_in_kodi:
-                    ok = self.run_kodi_addon_lacafetera()
-                else:
-                    ok = self.run_mopidy_stream_lacafetera(alarm_info)
+                use_ep_info = self.run_in_sonos(alarm_info)
                 self.turn_on_lights_as_sunrise()
                 # Notification:
-                self.notify_alarmclock(alarm_info)
+                self.notify_alarmclock(alarm_info, use_ep_info)
                 self.set_state(self._manual_trigger, state='on')
                 if alarm_info['duration'] is not None:
                     duration = alarm_info['duration'].total_seconds() + 20
@@ -606,9 +538,9 @@ class AlarmClock(hass.Hass):
                         self.turn_off_alarm_clock, int(duration))
                     self.log('ALARM RUNNING NOW. AUTO STANDBY PROGRAMMED '
                              'IN {:.0f} SECONDS'.format(duration), LOG_LEVEL)
-                elif not self.play_in_kodi:
+                else:
                     self._handler_turnoff = self.listen_state(
-                        self.turn_off_alarm_clock, self._media_player_mopidy,
+                        self.turn_off_alarm_clock, self._media_player_sonos,
                         new="off", duration=20)
             else:
                 self.log('POSTPONE ALARM', LOG_LEVEL)

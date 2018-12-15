@@ -423,7 +423,7 @@
     to: '4_hold_up'
   action:
     - service: homeassistant.turn_off
-      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.bomba_circ_acs,switch.altavoz
+      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.bomba_circ_acs
 #    - event: flash_light
 #      event_data:
 #        color: red
@@ -440,7 +440,7 @@
         inline_keyboard:
           - Aura habitación:/service_call light.toggle light.aura_habitacion
     - service: media_player.turn_off
-      entity_id: media_player.dormitorio_mopidy
+      entity_id: media_player.dormitorio
 
 
 
@@ -847,11 +847,11 @@
       to: 'on'
       for:
         seconds: 30
-    - platform: state
-      entity_id: switch.altavoz
-      to: 'on'
-      for:
-        seconds: 20
+#    - platform: state
+#      entity_id: switch.altavoz
+#      to: 'on'
+#      for:
+#        seconds: 20
     - platform: state
       entity_id: switch.test_switch_2
       to: 'on'
@@ -872,11 +872,11 @@
       to: 'off'
       for:
         seconds: 30
-    - platform: state
-      entity_id: switch.altavoz
-      to: 'off'
-      for:
-        seconds: 20
+#    - platform: state
+#      entity_id: switch.altavoz
+#      to: 'off'
+#      for:
+#        seconds: 20
     - platform: state
       entity_id: switch.test_switch_2
       to: 'off'

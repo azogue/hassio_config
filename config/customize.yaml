@@ -28,8 +28,8 @@ weblink.wifi_repeater:
   icon: mdi:router-wireless
 weblink.enerpi:
   icon: mdi:flash
-weblink.mopidy:
-  icon: mdi:music-box-outline
+#weblink.mopidy:
+#  icon: mdi:music-box-outline
 weblink.nas_qnap:
   icon: mdi:server-network
 weblink.nas_synology:
