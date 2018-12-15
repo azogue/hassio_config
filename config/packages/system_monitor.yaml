@@ -220,9 +220,6 @@ sensor:
     - type: last_boot
   scan_interval: 30
 
-  # sensor.connected_clients
-- platform: api_streams
-
 - platform: template
   sensors:
 #    {{states.variable.speedtest_data.attributes.ping.state}}
