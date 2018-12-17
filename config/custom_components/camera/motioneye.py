@@ -33,6 +33,7 @@ except ImportError:
     from homeassistant.util.async import run_coroutine_threadsafe
 
 CONF_CONTROL_PORT = 'control_port'
+CONF_CONTROL_CAM_ID = 'camera_id'
 CONF_SNAPSHOT_URL = 'snapshot_url'
 CONF_WITH_MOTION_CONTROL = 'with_motion_control'
 
@@ -42,7 +43,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_SNAPSHOT_URL): cv.url,
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Optional(CONF_WITH_MOTION_CONTROL, default=False): cv.boolean,
-    vol.Optional(CONF_CONTROL_PORT, default=7999): cv.positive_int
+    vol.Optional(CONF_CONTROL_PORT, default=7999): cv.positive_int,
+    vol.Optional(CONF_CONTROL_CAM_ID, default=1): cv.positive_int
 })
 
 RG_STATUS = re.compile('> Detection status (\w+)\n')
@@ -73,9 +75,10 @@ class MotionEyeCamera(Camera):
             # ParseResult(scheme, netloc, url, params, query, fragment)
             url_p = urlparse(self._snapshot_url)
             control_port = device_info[CONF_CONTROL_PORT]
+            cam_id = device_info[CONF_CONTROL_CAM_ID]
             self._control_url = (
                 f"{url_p.scheme}://{url_p.netloc.split(':')[0]}"
-                f":{control_port}/{url_p.path.split('/')[2]}/detection/")
+                f":{control_port}/{cam_id}/detection/")
             # await self.async_get_camera_motion_status(command='status')
 
         self._last_image = None

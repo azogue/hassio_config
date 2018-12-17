@@ -466,7 +466,7 @@ class AlarmClock(hass.Hass):
     # noinspection PyUnusedLocal
     def increase_volume(self, *args):
         """Recursive method to increase the playback volume until max."""
-        self.log("INCREASE VOLUME GRADUALLY")
+        # self.log("INCREASE VOLUME GRADUALLY")
         repeat = True
         if self._in_alarm_mode and self._last_trigger is not None:
             delta_sec = (dt.datetime.now()

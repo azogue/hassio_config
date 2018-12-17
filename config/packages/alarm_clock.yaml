@@ -4,7 +4,7 @@ homeassistant:
     input_boolean.alarm_clock_status:
       hidden: true
     switch.alarm_clock_status:
-      homebridge_name: Despertador LaCafetera
+      homebridge_name: Despertador
       icon: mdi:toggle-switch
     input_datetime.alarm_clock_time:
       icon: mdi:alarm

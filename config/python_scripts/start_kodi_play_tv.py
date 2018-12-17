@@ -92,7 +92,7 @@ elif now.hour < 20:
     content_id = 51
     media_dest = 'Canal 24 Horas'
     # Last record?
-    play_live_tv = False
+    # play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
     content_id = 41
     media_dest = 'La Sexta HD'
@@ -103,7 +103,7 @@ else:
     media_dest = '#0 HD'
     content_id = 66
     # Last record?
-    play_live_tv = False
+    # play_live_tv = False
 
 state_power = hass.states.get(POWER_SWITCH)
 if state_power.state == 'off':

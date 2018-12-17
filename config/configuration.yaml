@@ -70,9 +70,11 @@ logger:
 #    custom_components.telegram_bot: debug
 
 mqtt:
-  discovery: true
-  discovery_prefix: homeassistant
-  broker: core-mosquitto
+##  discovery: true
+##  discovery_prefix: homeassistant
+##  broker: core-mosquitto
+#  broker: 192.168.1.30
+  broker: 192.168.1.10
   client_id: !secret mqtt_client_id
   keepalive: 60
   username: !secret mqtt_username

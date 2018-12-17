@@ -41,8 +41,6 @@ homeassistant:
       friendly_name: Humedad
     "sensor.dark_sky_press*":
       friendly_name: Presión
-    "sensor.dark_sky_dew_point*":
-      friendly_name: Tª de rocío
     "sensor.dark_sky_apparent_temp*":
       friendly_name: Temperatura aparente
     "sensor.dark_sky_daily_high_apparent_temp*":
@@ -88,13 +86,10 @@ sensor:
       - temperature_high
       - temperature_low
       - apparent_temperature
-  #    - apparent_temperature_max
-  #    - dew_point
       - humidity
       - pressure
     update_interval: "0:20:00"
     scan_interval: 1200
-  #    minutes: 20
 
 ###############################################################################
 # SVG CAMERAS

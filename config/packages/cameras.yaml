@@ -17,29 +17,6 @@ homeassistant:
       friendly_name: VideoMov. Terraza
       icon: mdi:video
 
-#switch:
-#- platform: command_line
-#  scan_interval: 120
-#  switches:
-#    motion_detection_sricam_360:
-#      command_on: !secret sricam_motioneye_command_mov_on
-#      command_off: !secret sricam_motioneye_command_mov_off
-#      command_state: !secret sricam_motioneye_command_status
-#      value_template: '{{ value_json == 1 }}'
-#      friendly_name: VideoMov. Salón
-#    motion_detection_iegeek_hd:
-#      command_on: !secret iegeek_motioneye_command_mov_on
-#      command_off: !secret iegeek_motioneye_command_mov_off
-#      command_state: !secret iegeek_motioneye_command_status
-#      value_template: '{{ value_json == 1 }}'
-#      friendly_name: VideoMov. Estudio
-#    motion_detection_kmoon_ipcam100:
-#      command_on: !secret kmoon_motioneye_command_mov_on
-#      command_off: !secret kmoon_motioneye_command_mov_off
-#      command_state: !secret kmoon_motioneye_command_status
-#      friendly_name: VideoMov. Terraza
-#      value_template: '{{ value_json == 1 }}'
-
 switch:
 - platform: template
 #  scan_interval: 60
@@ -88,6 +65,7 @@ camera:
     name: SriCAM 360
     with_motion_control: true
     control_port: 7999
+    camera_id: 2
 
   # Exterior camera
   - platform: motioneye
@@ -95,6 +73,7 @@ camera:
     name: kMoon IPCAM100
     with_motion_control: true
     control_port: 7999
+    camera_id: 1
 
   # Office camera
   - platform: motioneye
@@ -102,6 +81,7 @@ camera:
     name: ieGeek HD
     with_motion_control: true
     control_port: 7999
+    camera_id: 3
 
 #  - platform: ffmpeg
 #    input: !secret sricam_full_rstp

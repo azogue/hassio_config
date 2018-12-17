@@ -35,13 +35,13 @@ homeassistant:
 input_number:
   # enerPI alarm config
   enerpi_max_power:
-#    initial: 4.75
+    initial: 5.0
     min: 2.0
     max: 6.0
     step: 0.25
 
   enerpi_max_power_reset:
-#    initial: 2.5
+    initial: 2.5
     min: 2.0
     max: 6.0
     step: 0.25

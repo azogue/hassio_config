@@ -1,8 +1,8 @@
 homeassistant:
   customize:
-    binary_sensor.local_pir:
-      friendly_name: Movimiento (cuadro)
-      device_class: motion
+#    binary_sensor.local_pir:
+#      friendly_name: Movimiento (cuadro)
+#      device_class: motion
 
     sensor.local_htu21d_temperature:
       friendly_name: Temperatura
@@ -364,6 +364,6 @@ device_tracker:
 
 - platform: bluetooth_tracker
 
-- platform: owntracks
-  max_gps_accuracy: 200
-  waypoints: True
+#- platform: owntracks
+#  max_gps_accuracy: 200
+#  waypoints: True

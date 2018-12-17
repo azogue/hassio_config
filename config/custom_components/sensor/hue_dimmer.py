@@ -25,7 +25,7 @@ __version__ = '0.7'
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=2)
+SCAN_INTERVAL = timedelta(seconds=5)
 CONF_DEVICES = 'devices'
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({

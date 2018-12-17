@@ -22,7 +22,7 @@ cover:
     name: sonoff_cover_ventanal
     command_topic: !secret mqtt_topic_esp_covers_command_cover1
     set_position_topic: !secret mqtt_topic_esp_covers_command_cover1
-    state_topic: !secret mqtt_topic_esp_covers_status
+    position_topic: !secret mqtt_topic_esp_covers_status
     availability_topic: !secret mqtt_topic_esp_covers_lwt
 
     value_template: '{{ value_json.cover1_position }}'
@@ -42,7 +42,7 @@ cover:
     name: sonoff_cover_puerta_terraza
     command_topic: !secret mqtt_topic_esp_covers_command_cover2
     set_position_topic: !secret mqtt_topic_esp_covers_command_cover2
-    state_topic: !secret mqtt_topic_esp_covers_status
+    position_topic: !secret mqtt_topic_esp_covers_status
     availability_topic: !secret mqtt_topic_esp_covers_lwt
 
     value_template: '{{ value_json.cover2_position }}'
