@@ -55,6 +55,14 @@ play_kodi_pvr:
 #  id: play_kodi_pvr
   alias: Enciende la caja tonta
   sequence:
+    service: vacuum.turn_on
+    data:
+      entity_id: vacuum.robot_aspirador
+
+play_kodi_pvr:
+#  id: play_kodi_pvr
+  alias: Enciende la caja tonta
+  sequence:
       service: python_script.start_kodi_play_tv
 
 start_tvshows_mode:
