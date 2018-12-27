@@ -7,10 +7,10 @@ homeassistant:
       hidden: true
     input_boolean.kodi_tv_state:
       hidden: true
-    media_player.htse5500_hte5500:
-      hidden: true
-    media_player.home_cinema:
-      hidden: true
+#    media_player.htse5500_hte5500:
+#      hidden: true
+#    media_player.home_cinema:
+#      hidden: true
     media_player.kodi_tv:
       friendly_name: Kodi LibreElec
     switch.toggle_kodi_ambilight:
@@ -115,7 +115,7 @@ media_player:
 #  media_player.htse5500_hte5500
 - platform: samsungtv
   name: Home cinema
-  host: 192.168.1.31
+  host: 192.168.1.97
   mac: A8:54:B2:3F:39:05
   scan_interval: 180
 

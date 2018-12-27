@@ -190,7 +190,7 @@ elec_power_simple:
 kodi_mp:
   - media_player.kodi_tv
   - media_player.fire_tv
-#  - media_player.home_cinema
+  - media_player.home_cinema
 #  - media_player.dormitorio
   - media_player.htse5500_hte5500
 
