@@ -355,7 +355,7 @@
     to: '4_hold_up'
   action:
     - service: media_player.turn_off
-      entity_id: media_player.kodi_tv
+      entity_id: media_player.kodi_tv,media_player.fire_tv,media_player.salon
     - event: flash_light
       event_data:
         color: red
@@ -441,7 +441,6 @@
           - Aura habitación:/service_call light.toggle light.aura_habitacion
     - service: media_player.turn_off
       entity_id: media_player.dormitorio
-
 
 
 - alias: Encendido luces dormitorio

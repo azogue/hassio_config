@@ -191,7 +191,7 @@ kodi_mp:
   - media_player.kodi_tv
   - media_player.fire_tv
   - media_player.home_cinema
-#  - media_player.dormitorio
+  - media_player.salon
   - media_player.htse5500_hte5500
 
 Media select:
@@ -606,6 +606,7 @@ Dispositivos:
     - device_tracker.xiaomi_router
     - device_tracker.amazon53d58f837
     - device_tracker.sonoszp
+    - device_tracker.sonoszp_2
 
 #    - device_tracker.airport_extreme
 #    - device_tracker.airport_extreme_w
@@ -935,6 +936,7 @@ alarm_clock:
   entities:
     - group.despertador
     - media_player.dormitorio
+    - media_player.salon
 
 
 Home Network:
