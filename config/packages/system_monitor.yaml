@@ -50,29 +50,6 @@ homeassistant:
     sensor.ipad_de_eugenio_battery_level:
       friendly_name: iPad (Battery)
 
-    sensor.sensor_power__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_bathroom_ac__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_bedroom__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_covers__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_galeria__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_hall__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_study__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_office__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_livingroom__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_kitchen__time_drift:
-      icon: mdi:timer-sand
-    sensor.sensor_terraza__time_drift:
-      icon: mdi:timer-sand
-
     input_select.esp_command:
       icon: mdi:developer-board
     input_select.esp_modules:
@@ -82,6 +59,8 @@ homeassistant:
   customize_glob:
     "sensor.speedtest*":
       icon: mdi:speedometer
+    "sensor.sensor_*_time_drift":
+      icon: mdi:timer-sand
 
 map:
 
@@ -244,7 +223,7 @@ sensor:
       value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.download.state}}{% else %}unknown{% endif %}'
       entity_id: variable.speedtest_data
 
-    sensor_power__time_drift:
+    sensor_power_time_drift:
       value_template: >
         {% if states.sensor.esp32ener_power.attributes.ts %}{{(as_timestamp(states.sensor.esp32ener_power.last_updated)
         - as_timestamp(strptime(states.sensor.esp32ener_power.attributes.ts,
@@ -252,86 +231,86 @@ sensor:
       unit_of_measurement: "s"
       friendly_name: Time sync Current meter
       entity_id: sensor.esp32ener_power
-    sensor_bathroom_ac__time_drift:
+    sensor_bathroom_ac_time_drift:
       value_template: >
         {{(as_timestamp(states.sensor.sensor_bathroom_ac__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_bathroom_ac__snum.attributes.ts,
+        - as_timestamp(strptime(states.sensor.sensor_bathroom_ac_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Baño
-      entity_id: sensor.sensor_bathroom_ac__snum
-    sensor_covers__time_drift:
+      entity_id: sensor.sensor_bathroom_ac_snum
+    sensor_covers_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_covers__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_covers__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_covers_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_covers_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Persianas
-      entity_id: sensor.sensor_covers__snum
-    sensor_bedroom__time_drift:
+      entity_id: sensor.sensor_covers_snum
+    sensor_bedroom_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_bedroom__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_bedroom__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_bedroom_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_bedroom_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Dormitorio
-      entity_id: sensor.sensor_bedroom__snum
-    sensor_galeria__time_drift:
+      entity_id: sensor.sensor_bedroom_snum
+    sensor_galeria_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_galeria__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_galeria__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_galeria_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_galeria_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Galería
-      entity_id: sensor.sensor_galeria__snum
-    sensor_hall__time_drift:
+      entity_id: sensor.sensor_galeria_snum
+    sensor_hall_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_hall__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_hall__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_hall_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_hall_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Hall
-      entity_id: sensor.sensor_hall__snum
-    sensor_study__time_drift:
+      entity_id: sensor.sensor_hall_snum
+    sensor_study_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_study__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_study__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_study_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_study_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Estudio
-      entity_id: sensor.sensor_study__snum
-    sensor_office__time_drift:
+      entity_id: sensor.sensor_study_snum
+    sensor_office_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_office__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_office__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_office_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_office_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Office
-      entity_id: sensor.sensor_office__snum
-    sensor_livingroom__time_drift:
+      entity_id: sensor.sensor_office_snum
+    sensor_livingroom_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_livingroom__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_livingroom__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_livingroom_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_livingroom_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Salón
-      entity_id: sensor.sensor_livingroom__snum
-    sensor_kitchen__time_drift:
+      entity_id: sensor.sensor_livingroom_snum
+    sensor_kitchen_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_kitchen__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_kitchen__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_kitchen_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_kitchen_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Cocina
-      entity_id: sensor.sensor_kitchen__snum
-    sensor_terraza__time_drift:
+      entity_id: sensor.sensor_kitchen_snum
+    sensor_terraza_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_terraza__snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_terraza__snum.attributes.ts,
+        {{(as_timestamp(states.sensor.sensor_terraza_snum.last_updated)
+        - as_timestamp(strptime(states.sensor.sensor_terraza_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"
       friendly_name: Time sync Terraza
-      entity_id: sensor.sensor_terraza__snum
+      entity_id: sensor.sensor_terraza_snum
 
 #- platform: speedtest
 #  minute:

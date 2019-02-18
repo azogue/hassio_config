@@ -235,27 +235,27 @@ Hassio:
   - sensor.hass_cpu_temperature
   - sensor.processor_use
   - sensor.memory_free
-  - sensor.disk_use_percent_
+  - sensor.disk_use_percent
   - sensor.last_boot
 
 QNAP NAS:
   control: hidden
   entities:
-    - sensor.nashome_status
-    - sensor.nashome_cpu_usage
-    - sensor.nashome_memory_usage
-    - sensor.nashome_system_temperature
-#    - sensor.nashome_temperature_drive_02
-#    - sensor.nashome_temperature_drive_03
-#    - sensor.nashome_temperature_drive_04
-#    - sensor.nashome_smart_status_drive_02
-#    - sensor.nashome_smart_status_drive_03
-#    - sensor.nashome_smart_status_drive_04
-    - sensor.nashome_network_down_eth0
-    - sensor.nashome_network_up_eth0
-#    - sensor.nashome_network_down_eth1
-#    - sensor.nashome_network_up_eth1
-    - sensor.nashome_volume_used_datavol1
+    - sensor.nas_home_status
+    - sensor.nas_home_cpu_usage
+    - sensor.nas_home_memory_usage
+    - sensor.nas_home_system_temperature
+#    - sensor.nas_home_temperature_drive_02
+#    - sensor.nas_home_temperature_drive_03
+#    - sensor.nas_home_temperature_drive_04
+#    - sensor.nas_home_smart_status_drive_02
+#    - sensor.nas_home_smart_status_drive_03
+#    - sensor.nas_home_smart_status_drive_04
+    - sensor.nas_home_network_down_eth0
+    - sensor.nas_home_network_up_eth0
+#    - sensor.nas_home_network_down_eth1
+#    - sensor.nas_home_network_up_eth1
+    - sensor.nas_home_volume_used_datavol1
 
 Otras RPI:
     # Resto de hosts:
@@ -370,7 +370,7 @@ Termo:
 Vinoteca:
   - sensor.sensor_wine_temperature
   - sensor.sensor_wine_humidity
-  - sensor.sensor_wine__snum
+#  - sensor.sensor_wine_snum
   - binary_sensor.sensor_wine_online
   - switch.vinoteca
 
@@ -436,17 +436,17 @@ esp32_conectivity:
 esp32_samples:
   name: Samples
   entities:
-    - sensor.sensor_livingroom__snum
-    - sensor.sensor_kitchen__snum
-    - sensor.sensor_hall__snum
-    - sensor.sensor_study__snum
-    - sensor.sensor_office__snum
-    - sensor.sensor_bedroom__snum
-    - sensor.sensor_bathroom_ac__snum
-    - sensor.sensor_terraza__snum
-    - sensor.sensor_galeria__snum
-    - sensor.sensor_covers__snum
-    - sensor.sensor_wine__snum
+    - sensor.sensor_livingroom_snum
+    - sensor.sensor_kitchen_snum
+    - sensor.sensor_hall_snum
+    - sensor.sensor_study_snum
+    - sensor.sensor_office_snum
+    - sensor.sensor_bedroom_snum
+    - sensor.sensor_bathroom_ac_snum
+    - sensor.sensor_terraza_snum
+    - sensor.sensor_galeria_snum
+    - sensor.sensor_covers_snum
+    - sensor.sensor_wine_snum
 
 esp32_commands:
   control: hidden
@@ -499,17 +499,17 @@ esp32_tracking:
 esp32_time_sync:
   name: Time drift
   entities:
-    - sensor.sensor_power__time_drift
-    - sensor.sensor_livingroom__time_drift
-    - sensor.sensor_kitchen__time_drift
-    - sensor.sensor_hall__time_drift
-    - sensor.sensor_study__time_drift
-    - sensor.sensor_office__time_drift
-    - sensor.sensor_bedroom__time_drift
-    - sensor.sensor_bathroom_ac__time_drift
-    - sensor.sensor_terraza__time_drift
-    - sensor.sensor_galeria__time_drift
-    - sensor.sensor_covers__time_drift
+    - sensor.sensor_power_time_drift
+    - sensor.sensor_livingroom_time_drift
+    - sensor.sensor_kitchen_time_drift
+    - sensor.sensor_hall_time_drift
+    - sensor.sensor_study_time_drift
+    - sensor.sensor_office_time_drift
+    - sensor.sensor_bedroom_time_drift
+    - sensor.sensor_bathroom_ac_time_drift
+    - sensor.sensor_terraza_time_drift
+    - sensor.sensor_galeria_time_drift
+    - sensor.sensor_covers_time_drift
 
 general_config:
   name: General
@@ -603,9 +603,8 @@ Dispositivos:
     - device_tracker.home_cinema_2
     - device_tracker.rpi3b_libreelec
     - device_tracker.xiaomi_vacuum
-    - device_tracker.xiaomi_router
     - device_tracker.amazon53d58f837
-    - device_tracker.sonoszp
+    - device_tracker.sonoszp_1
     - device_tracker.sonoszp_2
 
 #    - device_tracker.airport_extreme
@@ -616,7 +615,7 @@ Dispositivos:
     - device_tracker.printer_brother_hl3140cw
     - device_tracker.qnap_ubuntu
     - device_tracker.router_movistar
-    - device_tracker.switch_salon
+#    - device_tracker.switch_salon
     - device_tracker.velop_1
     - device_tracker.velop_2
     - device_tracker.velop_3
@@ -630,7 +629,7 @@ Dispositivos:
 #    - device_tracker.rpi3dev1_wifi
     - device_tracker.rpi3dev2
 #    - device_tracker.rpi3dev2_wifi
-    - device_tracker.b827ebbb6a6e
+    - device_tracker.rpi3dev3
 #    - device_tracker.rpi3_osmc
     - device_tracker.jo01
     - device_tracker.kindle_1
@@ -680,7 +679,7 @@ Vecinos cercanos:
   - device_tracker.artes
   - device_tracker.huawei_p10
   - device_tracker.mi6
-  - device_tracker.elena_
+  - device_tracker.elena
   - device_tracker.desktop4rp450i
   - device_tracker.galaxy_j5
   - device_tracker.discostar
@@ -728,32 +727,32 @@ weather_dark_sky_tomorrow:
   name: Mañana
   entities:
     - sensor.dark_sky_daily_summary
-    - sensor.dark_sky_temperature_1
+    - sensor.dark_sky_summary_1
+    - sensor.dark_sky_daytime_high_temperature_1
+    - sensor.dark_sky_overnight_low_temperature_1
     - sensor.dark_sky_humidity_1
     - sensor.dark_sky_pressure_1
 
-    - sensor.dark_sky_daytime_high_temperature_1
-    - sensor.dark_sky_overnight_low_temperature_1
 
 weather_dark_sky_aftertomorrow:
   name: Pasado mañana
   entities:
-    - sensor.dark_sky_temperature_2
+    - sensor.dark_sky_summary_2
+    - sensor.dark_sky_daytime_high_temperature_2
+    - sensor.dark_sky_overnight_low_temperature_2
     - sensor.dark_sky_humidity_2
     - sensor.dark_sky_pressure_2
 
-    - sensor.dark_sky_daytime_high_temperature_2
-    - sensor.dark_sky_overnight_low_temperature_2
 
 weather_dark_sky_afterthree:
   name: En tres dias
   entities:
-    - sensor.dark_sky_temperature_3
+    - sensor.dark_sky_summary_3
+    - sensor.dark_sky_daytime_high_temperature_3
+    - sensor.dark_sky_overnight_low_temperature_3
     - sensor.dark_sky_humidity_3
     - sensor.dark_sky_pressure_3
 
-    - sensor.dark_sky_daytime_high_temperature_3
-    - sensor.dark_sky_overnight_low_temperature_3
 
 Links:
   - weblink.grafana
@@ -763,7 +762,7 @@ Links:
   - weblink.hassio_lan
 #  - weblink.hassio_pihole
 #  - weblink.slave_hass
-  - weblink.pihole
+#  - weblink.pi_hole
   - weblink.motioneye
   - weblink.kodi_web_interface
   - weblink.tv_headend
@@ -786,9 +785,13 @@ Automatizaciones de luz y medios:
     - automation.brillo_salon
     - automation.tono_salon
     - automation.encendido_de_tv_si_apagada_y_kodi_play
-    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle__10_min
+    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle_10_min
     - automation.encendido_automatico_de_cam_salon
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
+    - automation.turn_on_tv_with_lights_hue_switch
+    - automation.turn_tv_night_scene_hue_switch
+    - automation.morning_turn_off_hue_switch
+    - automation.turn_off_all_hue_switch
 
 Automatizaciones de notificación:
   control: hidden
@@ -798,6 +801,7 @@ Automatizaciones de notificación:
     - automation.update_notifications
     - automation.notificacion_de_cambio_de_ip
     - automation.aviso_de_sensor_mqtt_offline
+    - automation.aviso_de_sensor_mqtt_online
     - automation.new_bt_device_notifier
     - automation.carmen_sale_del_hospital
     - automation.carmen_llega_al_hospital

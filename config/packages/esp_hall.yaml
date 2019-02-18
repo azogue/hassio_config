@@ -20,7 +20,7 @@ homeassistant:
       icon: mdi:lightbulb-on
       homebridge_hidden: true
 
-    sensor.sensor_hall__snum:
+    sensor.sensor_hall_snum:
       friendly_name: 'Sample # (hall)'
       homebridge_hidden: true
     
@@ -121,8 +121,9 @@ sensor:
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
 #    json_attributes: 'status.version,status.wake,status.wake_reason,status.error,status.c_error'
-    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
-    name: sensor_hall__snum
+#    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
+    json_attributes_topic: !secret mqtt_topic_esp_hall_status
+    name: sensor_hall_snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
@@ -153,4 +154,4 @@ light:
 ##    - sensor.sensor_hall_humidity
 #    - sensor.sensor_hall_illumination
 #    - binary_sensor.sensor_hall_online
-#    - sensor.sensor_hall__snum
+#    - sensor.sensor_hall_snum

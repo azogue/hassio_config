@@ -29,7 +29,7 @@ homeassistant:
 #      icon: mdi:lightbulb-on
 #      homebridge_hidden: true
 
-    sensor.sensor_bedroom__snum:
+    sensor.sensor_bedroom_snum:
       friendly_name: 'Sample # (dormitorio)'
       homebridge_hidden: true
     
@@ -102,8 +102,9 @@ sensor:
     state_topic: !secret mqtt_topic_esp_bedroom_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
-    name: sensor_bedroom__snum
+#    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
+    json_attributes_topic: !secret mqtt_topic_esp_bedroom_status
+    name: sensor_bedroom_snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration_long
@@ -120,4 +121,4 @@ sensor:
 ##    - sensor.sensor_bedroom_humidity
 #    - sensor.sensor_bedroom_illumination
 #    - binary_sensor.sensor_bedroom_online
-#    - sensor.sensor_bedroom__snum
+#    - sensor.sensor_bedroom_snum

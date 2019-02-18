@@ -13,7 +13,7 @@ homeassistant:
     sensor.sensor_livingroom_illumination:
       friendly_name: Iluminación
       icon: mdi:lightbulb-on
-    sensor.sensor_livingroom__snum:
+    sensor.sensor_livingroom_snum:
       friendly_name: 'Sample # (salón)'
 
 #    sensor.sensor_livingroom_adc1:
@@ -92,8 +92,9 @@ sensor:
     state_topic: !secret mqtt_topic_esp_livingroom_status
     value_template: "{{ value_json.sample.snum}}"
     unit_of_measurement: "sample"
-    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
-    name: sensor_livingroom__snum
+#    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
+    json_attributes_topic: !secret mqtt_topic_esp_livingroom_status
+    name: sensor_livingroom_snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration_long

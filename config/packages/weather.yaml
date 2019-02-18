@@ -13,8 +13,6 @@ homeassistant:
     sensor.yw_day2_temperature_max:
       friendly_name: Máxima pasado mañana
 
-    sensor.dark_sky_summary:
-      friendly_name: Resumen
     sensor.dark_sky_hourly_summary:
       friendly_name: Resumen horario
     sensor.dark_sky_daily_summary:
@@ -37,6 +35,8 @@ homeassistant:
 
   # Customize entities matching a pattern
   customize_glob:
+    "sensor.dark_sky_summ*":
+      friendly_name: Resumen
     "sensor.dark_sky_hum*":
       friendly_name: Humedad
     "sensor.dark_sky_press*":

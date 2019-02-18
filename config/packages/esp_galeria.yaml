@@ -33,7 +33,7 @@ homeassistant:
       friendly_name: Impulsión Intercambiador solar
       icon: mdi:temperature-celsius
 
-    sensor.sensor_galeria__snum:
+    sensor.sensor_galeria_snum:
       friendly_name: 'Sample # (galería)'
 
 #    binary_sensor.sensor_galeria_mov1:
@@ -95,7 +95,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[0] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[0] < 80) %}{{ value_json.sample.ds_temps[0] | round(1) }}{% endif %}"
     name: sensor_acs_probe_1
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -103,7 +103,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[1] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[1] < 80) %}{{ value_json.sample.ds_temps[1] | round(1) }}{% endif %}"
     name: sensor_acs_probe_2
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -111,7 +111,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[2] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[2] < 80) %}{{ value_json.sample.ds_temps[2] | round(1) }}{% endif %}"
     name: sensor_acs_probe_3
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -119,7 +119,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[3] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[3] < 80) %}{{ value_json.sample.ds_temps[3] | round(1) }}{% endif %}"
     name: sensor_acs_probe_4
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -127,7 +127,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[4] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[4] < 80) %}{{ value_json.sample.ds_temps[4] | round(1) }}{% endif %}"
     name: sensor_acs_probe_5
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -135,7 +135,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.ds_temps[5] | round(1) }}"
+    value_template: "{% if (value_json.sample.ds_temps[5] < 80) %}{{ value_json.sample.ds_temps[5] | round(1) }}{% endif %}"
     name: sensor_acs_probe_6
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -144,10 +144,11 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{{ value_json.sample.snum}}"
+    value_template: "{{ value_json.sample.snum }}"
     unit_of_measurement: "sample"
-    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
-    name: sensor_galeria__snum
+#    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
+    json_attributes_topic: !secret mqtt_topic_esp_acs_status
+    name: sensor_galeria_snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration

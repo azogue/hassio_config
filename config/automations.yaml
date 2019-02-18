@@ -1,9 +1,8 @@
 - alias: Buenas noches
   id: 'buenas_noches'
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: '/5'
-    seconds: 00
   condition:
     # At night
     - condition: time
@@ -90,7 +89,7 @@
         - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 #
-- alias: Apagado de TV si encendida y KODI en idle > 10 min
+- alias: Apagado de TV si encendida y KODI en idle>10 min
   id: 'tv_off_if_kodi_idle'
   trigger:
     platform: state
@@ -598,62 +597,62 @@
   id: 'mqtt_sensor_go_offline_notify'
   trigger:
     - platform: state
-      entity_id: binary_sensor.esp32_ener__snum
+      entity_id: binary_sensor.esp32_ener_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bedroom__snum
+      entity_id: binary_sensor.sensor_bedroom_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_livingroom__snum
+      entity_id: binary_sensor.sensor_livingroom_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_covers__snum
+      entity_id: binary_sensor.sensor_covers_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_study__snum
+      entity_id: binary_sensor.sensor_study_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_office__snum
+      entity_id: binary_sensor.sensor_office_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_kitchen__snum
+      entity_id: binary_sensor.sensor_kitchen_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_hall__snum
+      entity_id: binary_sensor.sensor_hall_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_terraza__snum
+      entity_id: binary_sensor.sensor_terraza_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_galeria__snum
+      entity_id: binary_sensor.sensor_galeria_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bathroom_ac__snum
+      entity_id: binary_sensor.sensor_bathroom_ac_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_wine__snum
+      entity_id: binary_sensor.sensor_wine_snum
       to: 'unknown'
       for:
         minutes: 10
@@ -668,40 +667,40 @@
   id: 'mqtt_sensor_go_online_notify'
   trigger:
     - platform: state
-      entity_id: sensor.esp32_ener__snum
+      entity_id: sensor.esp32_ener_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_bedroom__snum
+      entity_id: sensor.sensor_bedroom_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_livingroom__snum
+      entity_id: sensor.sensor_livingroom_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_covers__snum
+      entity_id: sensor.sensor_covers_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_study__snum
+      entity_id: sensor.sensor_study_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_office__snum
+      entity_id: sensor.sensor_office_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_kitchen__snum
+      entity_id: sensor.sensor_kitchen_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_hall__snum
+      entity_id: sensor.sensor_hall_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_terraza__snum
+      entity_id: sensor.sensor_terraza_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_galeria__snum
+      entity_id: sensor.sensor_galeria_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_bathroom_ac__snum
+      entity_id: sensor.sensor_bathroom_ac_snum
       from: 'unknown'
     - platform: state
-      entity_id: sensor.sensor_wine__snum
+      entity_id: sensor.sensor_wine_snum
       from: 'unknown'
   action:
     - service: telegram_bot.send_message
@@ -791,9 +790,8 @@
 - alias: Botvac reset select command
   id: 'botvac_reset_select_command'
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: '/5'
-    seconds: 00
 #  trigger:
 #    platform: state
 #    entity_id: vacuum.robot_aspirador

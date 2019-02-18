@@ -1,6 +1,6 @@
 homeassistant:
   customize:
-    sensor.sensor_covers__snum:
+    sensor.sensor_covers_snum:
       friendly_name: 'Sample # (persianas)'
       homebridge_hidden: true
     
@@ -72,9 +72,10 @@ sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_covers_status
     value_template: "{{ value_json.sample.snum}}"
-    unit_of_measurement: "sample"
-    json_attributes: 'cover1_state,cover2_state,cover1_position,cover2_position,ip,bssid,rssi,wifi_ap,clientid,status,network,ts'
-    name: sensor_covers__snum
+#    unit_of_measurement: "sample"
+#    json_attributes: 'cover1_state,cover2_state,cover1_position,cover2_position,ip,bssid,rssi,wifi_ap,clientid,status,network,ts'
+    json_attributes_topic: !secret mqtt_topic_esp_covers_status
+    name: sensor_covers_snum
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration

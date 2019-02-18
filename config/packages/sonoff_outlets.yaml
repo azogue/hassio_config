@@ -122,7 +122,8 @@ sensor:
     value_template: "{{ value_json.Power }}"
     name: sonoff_pow_1
     unit_of_measurement: "W"
-    json_attributes: 'Voltage'
+#    json_attributes: 'Voltage'
+    json_attributes_topic: "sonoff/pow/1/power"
     qos: 1
     expire_after: 60
 

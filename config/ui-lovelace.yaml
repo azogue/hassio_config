@@ -1261,21 +1261,21 @@ views:
     - type: entities
       title: QNAP
       entities:
-      - sensor.nashome_status
-      - sensor.nashome_cpu_usage
-      - sensor.nashome_memory_usage
-      - sensor.nashome_system_temperature
-  #    - sensor.nashome_temperature_drive_02
-  #    - sensor.nashome_temperature_drive_03
-  #    - sensor.nashome_temperature_drive_04
-  #    - sensor.nashome_smart_status_drive_02
-  #    - sensor.nashome_smart_status_drive_03
-  #    - sensor.nashome_smart_status_drive_04
-      - sensor.nashome_network_down_eth0
-      - sensor.nashome_network_up_eth0
-  #    - sensor.nashome_network_down_eth1
-  #    - sensor.nashome_network_up_eth1
-      - sensor.nashome_volume_used_datavol1
+      - sensor.nas_home_status
+      - sensor.nas_home_cpu_usage
+      - sensor.nas_home_memory_usage
+      - sensor.nas_home_system_temperature
+  #    - sensor.nas_home_temperature_drive_02
+  #    - sensor.nas_home_temperature_drive_03
+  #    - sensor.nas_home_temperature_drive_04
+  #    - sensor.nas_home_smart_status_drive_02
+  #    - sensor.nas_home_smart_status_drive_03
+  #    - sensor.nas_home_smart_status_drive_04
+      - sensor.nas_home_network_down_eth0
+      - sensor.nas_home_network_up_eth0
+  #    - sensor.nas_home_network_down_eth1
+  #    - sensor.nas_home_network_up_eth1
+      - sensor.nas_home_volume_used_datavol1
     - type: entities
       title: Otras RPI
       entities:
@@ -1494,138 +1494,138 @@ views:
     refresh_interval: 60
     hours_to_show: 6
     entities:
-    - entity: sensor.sensor_livingroom__snum
+    - entity: sensor.sensor_livingroom_snum
       name: Salón
-    - entity: sensor.sensor_covers__snum
+    - entity: sensor.sensor_covers_snum
       name: Persianas
-    - entity: sensor.sensor_kitchen__snum
+    - entity: sensor.sensor_kitchen_snum
       name: Cocina
-    - entity: sensor.sensor_hall__snum
+    - entity: sensor.sensor_hall_snum
       name: Hall
-    - entity: sensor.sensor_study__snum
+    - entity: sensor.sensor_study_snum
       name: Estudio
-    - entity: sensor.sensor_office__snum
+    - entity: sensor.sensor_office_snum
       name: Office
-    - entity: sensor.sensor_bedroom__snum
+    - entity: sensor.sensor_bedroom_snum
       name: Dormitorio
-    - entity: sensor.sensor_bathroom_ac__snum
+    - entity: sensor.sensor_bathroom_ac_snum
       name: Baño
-    - entity: sensor.sensor_terraza__snum
+    - entity: sensor.sensor_terraza_snum
       name: Terraza
-    - entity: sensor.sensor_galeria__snum
+    - entity: sensor.sensor_galeria_snum
       name: Galería
 
   - type: entities
     entities:
-    - entity: sensor.sensor_livingroom__snum
+    - entity: sensor.sensor_livingroom_snum
       name: Salón
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_livingroom__snum
+      entity: sensor.sensor_livingroom_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_covers__snum
+    - entity: sensor.sensor_covers_snum
       name: Persianas
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_covers__snum
+      entity: sensor.sensor_covers_snum
       attributes:
         - cover1_position
         - cover2_position
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_kitchen__snum
+    - entity: sensor.sensor_kitchen_snum
       name: Cocina
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_kitchen__snum
+      entity: sensor.sensor_kitchen_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_hall__snum
+    - entity: sensor.sensor_hall_snum
       name: Hall
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_hall__snum
+      entity: sensor.sensor_hall_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_study__snum
+    - entity: sensor.sensor_study_snum
       name: Estudio
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_study__snum
+      entity: sensor.sensor_study_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_office__snum
+    - entity: sensor.sensor_office_snum
       name: Office
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_office__snum
+      entity: sensor.sensor_office_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_bedroom__snum
+    - entity: sensor.sensor_bedroom_snum
       name: Dormitorio
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_bedroom__snum
+      entity: sensor.sensor_bedroom_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_bathroom_ac__snum
+    - entity: sensor.sensor_bathroom_ac_snum
       name: Baño
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_bathroom_ac__snum
+      entity: sensor.sensor_bathroom_ac_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_wine__snum
+    - entity: sensor.sensor_wine_snum
       name: Vinoteca
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_wine__snum
+      entity: sensor.sensor_wine_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
 #    - type: divider
-    - entity: sensor.sensor_terraza__snum
+    - entity: sensor.sensor_terraza_snum
       name: Terraza
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_terraza__snum
+      entity: sensor.sensor_terraza_snum
       attributes:
         - wifi_ap
         - rssi
         - ip
-    - entity: sensor.sensor_galeria__snum
+    - entity: sensor.sensor_galeria_snum
       name: Galería
       icon: mdi:developer-board
       secondary_info: 'last-changed'
     - type: "custom:entity-attributes-card"
-      entity: sensor.sensor_galeria__snum
+      entity: sensor.sensor_galeria_snum
       attributes:
         - wifi_ap
         - rssi
@@ -1714,17 +1714,17 @@ views:
   - type: entities
     title: Time drift
     entities:
-    - sensor.sensor_power__time_drift
-    - sensor.sensor_livingroom__time_drift
-    - sensor.sensor_kitchen__time_drift
-    - sensor.sensor_hall__time_drift
-    - sensor.sensor_study__time_drift
-    - sensor.sensor_office__time_drift
-    - sensor.sensor_bedroom__time_drift
-    - sensor.sensor_bathroom_ac__time_drift
-    - sensor.sensor_terraza__time_drift
-    - sensor.sensor_galeria__time_drift
-    - sensor.sensor_covers__time_drift
+    - sensor.sensor_power_time_drift
+    - sensor.sensor_livingroom_time_drift
+    - sensor.sensor_kitchen_time_drift
+    - sensor.sensor_hall_time_drift
+    - sensor.sensor_study_time_drift
+    - sensor.sensor_office_time_drift
+    - sensor.sensor_bedroom_time_drift
+    - sensor.sensor_bathroom_ac_time_drift
+    - sensor.sensor_terraza_time_drift
+    - sensor.sensor_galeria_time_drift
+    - sensor.sensor_covers_time_drift
 
 - id: settings
   icon: mdi:settings
@@ -1834,7 +1834,7 @@ views:
     - automation.brillo_salon
     - automation.tono_salon
     - automation.encendido_de_tv_si_apagada_y_kodi_play
-    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle__10_min
+    - automation.apagado_de_tv_si_encendida_y_kodi_en_idle_10_min
     - automation.encendido_automatico_de_cam_salon
     - automation.apagado_de_cam_salon_en_kodi_play_nocturno
 

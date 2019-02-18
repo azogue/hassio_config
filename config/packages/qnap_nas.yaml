@@ -3,19 +3,19 @@
 ###############################################################################
 homeassistant:
   customize:
-    sensor.nashome_status:
+    sensor.nas_home_status:
       friendly_name: QNAP Status
-    sensor.nashome_cpu_usage:
+    sensor.nas_home_cpu_usage:
       friendly_name: QNAP CPU Usage
-    sensor.nashome_memory_usage:
+    sensor.nas_home_memory_usage:
       friendly_name: QNAP Memory Usage
-    sensor.nashome_system_temperature:
+    sensor.nas_home_system_temperature:
       friendly_name: QNAP Temperature
-    sensor.nashome_network_down_eth0:
+    sensor.nas_home_network_down_eth0:
       friendly_name: QNAP Download
-    sensor.nashome_network_up_eth0:
+    sensor.nas_home_network_up_eth0:
       friendly_name: QNAP Upload
-    sensor.nashome_volume_used_datavol1:
+    sensor.nas_home_volume_used_datavol1:
       friendly_name: Disk used
 
 sensor:
