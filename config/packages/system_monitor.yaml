@@ -1,37 +1,5 @@
 homeassistant:
   customize:
-#    binary_sensor.local_pir:
-#      friendly_name: Movimiento (cuadro)
-#      device_class: motion
-
-    sensor.local_htu21d_temperature:
-      friendly_name: Temperatura
-      icon: mdi:thermometer
-    sensor.local_htu21d_humidity:
-      friendly_name: Humedad
-      icon: mdi:water-percent
-      device_class: humidity
-
-    sensor.local_light_level:
-      friendly_name: Iluminación
-      icon: mdi:lightbulb
-      device_class: light
-
-    sensor.pihole_ads_blocked_today:
-      friendly_name: Ads blocked today
-    sensor.pihole_ads_percentage_blocked_today:
-      friendly_name: Ads (%) blocked today
-    sensor.pihole_dns_unique_clients:
-      friendly_name: DNS unique clients
-    sensor.pihole_dns_queries_today:
-      friendly_name: DNS queries today
-    sensor.pihole_dns_unique_domains:
-      friendly_name: DNS unique domains
-
-    sensor.connected_clients:
-      friendly_name: Clientes API
-      icon: mdi:account-multiple
-
     input_boolean.eu_presence:
       icon: mdi:human-male
     input_boolean.carmen_presence:
@@ -233,7 +201,7 @@ sensor:
       entity_id: sensor.esp32ener_power
     sensor_bathroom_ac_time_drift:
       value_template: >
-        {{(as_timestamp(states.sensor.sensor_bathroom_ac__snum.last_updated)
+        {{(as_timestamp(states.sensor.sensor_bathroom_ac_snum.last_updated)
         - as_timestamp(strptime(states.sensor.sensor_bathroom_ac_snum.attributes.ts,
               "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}
       unit_of_measurement: "s"

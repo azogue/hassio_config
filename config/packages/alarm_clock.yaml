@@ -37,7 +37,6 @@ input_select:
      - Los 40 91.7 (Pop-Cartelera)
      - STAR 80 (80's)
      - Europa FM (Pop-Cartelera)
-    initial: La Cafetera de Radiocable
     icon: mdi:speaker
 
 input_datetime:

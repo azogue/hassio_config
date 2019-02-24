@@ -57,7 +57,6 @@ homeassistant:
 switch:
   - platform: rpi_rf
     gpio: 17
-    name: Etekcity outlets
     switches:
 #      cocina:
 #        pulselength: 185
@@ -97,11 +96,11 @@ switch:
         code_on: 4478259
         code_off: 4478268
         signal_repetitions: 80
-      altavoz:
-        pulselength: 186
-        code_on: 4478403
-        code_off: 4478412
-        signal_repetitions: 80
+#      altavoz:
+#        pulselength: 186
+#        code_on: 4478403
+#        code_off: 4478412
+#        signal_repetitions: 80
       new_switch_3:
         pulselength: 186
         code_on: 4478723

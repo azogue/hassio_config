@@ -113,7 +113,6 @@ sensor:
     password: !secret influxdb_pass
     # ssl: true
     # verify_ssl: true
-    default_measurement: state
     queries:
       - name: "Temperatura mínima"
         database: !secret influxdb_db
@@ -123,16 +122,6 @@ sensor:
         group_function: min
         measurement: '"°C"' #from
         where: '"entity_id" = ''temperatura_exterior'' and time > now() - 24h' #where
-
-  - platform: influxdb
-    host: !secret influxdb_host
-    port: !secret influxdb_port
-    username: !secret influxdb_user
-    password: !secret influxdb_pass
-    # ssl: true
-    # verify_ssl: true
-    default_measurement: state
-    queries:
       - name: temp_acs_max
         database: !secret influxdb_db
         unit_of_measurement: °C

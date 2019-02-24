@@ -83,7 +83,7 @@ media_player:
   password: !secret kodi_pw
   enable_websocket: true
   timeout: 10
-  use_off_mode: true
+#  use_off_mode: true
   turn_on_action:
   - service: switch.turn_on
     entity_id: switch.tv_power

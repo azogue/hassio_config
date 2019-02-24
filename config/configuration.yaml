@@ -49,25 +49,24 @@ logger:
   default: warn
   logs:
     aiohttp.server: critical
-    homeassistant.bootstrap: info
-    homeassistant.setup: warning
-    homeassistant.core: error
-    homeassistant.components.light.yeelight: critical
-    homeassistant.components.recorder: info
-    homeassistant.components.history: info
-    homeassistant.components.script: info
-    homeassistant.components.http.auth: error
-    homeassistant.components.floorplan: debug
-    homeassistant.components.automation: info
-    homeassistant.components.vacuum.xiaomi_miio: critical
     custom_components.switch.tuyawifiplug: error
     miio: critical
+    homeassistant.bootstrap: info
+    homeassistant.core: error
+    homeassistant.setup: warning
+    homeassistant.components.automation: info
+    homeassistant.components.floorplan: debug
+    homeassistant.components.history: info
+    homeassistant.components.http.auth: error
     homeassistant.components.media_player: info
-    homeassistant.components.tts: debug
-    homeassistant.helpers.entity: error
+    homeassistant.components.light.yeelight: critical
     homeassistant.components.python_script: warning
-#    homeassistant.components.telegram_bot: debug
-#    custom_components.telegram_bot: debug
+    homeassistant.components.recorder: info
+    homeassistant.components.script: info
+    homeassistant.components.sensor.influxdb: error
+    homeassistant.components.tts: debug
+    homeassistant.components.vacuum.xiaomi_miio: critical
+    homeassistant.helpers.entity: error
 
 mqtt:
 ##  discovery: true

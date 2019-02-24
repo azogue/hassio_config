@@ -8,22 +8,6 @@ homeassistant:
       friendly_name: ¿Hay conexión a internet?
 
 binary_sensor:
-  - platform: mqtt
-    state_topic: "hass/status_bedroom"
-    name: Dormitorio Online (RPI2)
-    device_class: connectivity
-    payload_on: "on"
-    payload_off: "off"
-    qos: 2
-
-#  - platform: mqtt
-#    state_topic: "hass/status_office"
-#    name: Estudio Online
-#    device_class: connectivity
-#    payload_on: "on"
-#    payload_off: "off"
-#    qos: 2
-
   - platform: command_line
     name: Internet Online
     command: ping -W 1 -c 1 8.8.8.8 > /dev/null 2>&1 && echo success || echo fail
@@ -39,54 +23,6 @@ binary_sensor:
     payload_on: "success"
     payload_off: "fail"
     scan_interval: 300
-
-#  - platform: command_line
-#    name: Pushbullet Online
-#    command: "bash /config/shell/check_notifiers.sh pushbullet"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 240
-
-#  - platform: command_line
-#    name: Email Online
-#    command: "bash /config/shell/check_notifiers.sh richsmtp"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 240
-
-#  - platform: command_line
-#    name: Telegram Online
-#    command: "bash /config/shell/check_notifiers.sh telegram"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 240
-#
-#  - platform: command_line
-#    name: iOS Online
-#    command: "bash /config/shell/check_notifiers.sh ios"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 240
-
-#  - platform: command_line
-#    name: Kodi Online
-#    command: "bash /config/shell/check_notifiers.sh kodi"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 240
-
-#  - platform: command_line
-#    name: Database OK
-#    command: "bash /config/shell/check_notifiers.sh recorder"
-#    device_class: connectivity
-#    payload_on: "success"
-#    payload_off: "fail"
-#    scan_interval: 180
 
   - platform: template
     sensors:
@@ -105,21 +41,6 @@ binary_sensor:
           - sensor.ip_externa
 
 sensor:
-#- platform: command_line
-#  name: CORE Error counter
-#  command: "bash /config/shell/check_notifiers.sh"
-#
-#- platform: command_line
-#  name: Error counter (notifiers)
-#  command: "bash /config/shell/check_notifiers.sh"
-#
-#- platform: command_line
-#  name: Warning counter (core)
-#  command: "bash /config/shell/check_notifiers.sh core_warning"
-
-#- platform: command_line
-#  name: IP externa
-#  command: "cat /config/external_ip.txt"
 - platform: rest
   resource: http://ip.jsontest.com
   name: IP Externa
