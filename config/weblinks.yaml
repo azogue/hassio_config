@@ -20,8 +20,8 @@ entities:
 
   - name: HASSIO LAN
     url: !secret weblink_hassio_lan
-  - name: PI-Hole
-    url: !secret weblink_pihole
+#  - name: PI-Hole
+#    url: !secret weblink_pihole
 #  - name: HASSIO IDE
 #    url: !secret weblink_hassio_ide
 #  - name: Mopidy
