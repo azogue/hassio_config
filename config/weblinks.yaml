@@ -14,6 +14,8 @@ entities:
 #     url: !secret motioneye_url
   - name: Router Movistar
     url: http://192.168.1.1
+  - name: Bridge Hue
+    url: !secret weblink_hue_bridge
 
 #  - name: Wifi repeater
 #    url: http://192.168.1.54
@@ -26,8 +28,8 @@ entities:
 #    url: !secret weblink_hassio_ide
 #  - name: Mopidy
 #    url: !secret mopidy_url
-  - name: TV Headend
-    url: !secret weblink_tv_headend
+#  - name: TV Headend
+#    url: !secret weblink_tv_headend
   - name: Kodi web interface
     url: !secret weblink_kodi_web
 

@@ -607,10 +607,6 @@ Dispositivos:
     - device_tracker.sonoszp_1
     - device_tracker.sonoszp_2
 
-#    - device_tracker.airport_extreme
-#    - device_tracker.airport_extreme_w
-#    - device_tracker.airport_express_a
-#    - device_tracker.airport_express_b
     - device_tracker.ethernet_adapter
     - device_tracker.printer_brother_hl3140cw
     - device_tracker.qnap_ubuntu
@@ -619,7 +615,6 @@ Dispositivos:
     - device_tracker.velop_1
     - device_tracker.velop_2
     - device_tracker.velop_3
-#    - device_tracker.wifi_sta_salon
     - device_tracker.deco_movistar
     - device_tracker.camera_sricam360
     - device_tracker.camera_kmoon
@@ -635,7 +630,6 @@ Dispositivos:
     - device_tracker.kindle_1
     - device_tracker.kindle_2
 
-#    - device_tracker.rpi2_bedroom
 #    - device_tracker.b827ebee3f3b
     # RPI Zero Ethernet
 #    - device_tracker.00e04c534458
@@ -668,9 +662,6 @@ Baterías:
 #  - sensor.bateria_iphone_se
   - sensor.ipad_de_eugenio_battery_state
   - sensor.ipad_de_eugenio_battery_level
-
-Smarty:
-  - device_tracker.30aea443c180
 
 Vecinos cercanos:
   - device_tracker.iphone6s_de_carlos_ortega
@@ -765,9 +756,9 @@ Links:
 #  - weblink.pi_hole
   - weblink.motioneye
   - weblink.kodi_web_interface
-  - weblink.tv_headend
+#  - weblink.tv_headend
   - weblink.router_movistar
-#  - weblink.wifi_repeater
+  - weblink.bridge_hue
 
 Speedtest:
   - sensor.speedtest_ping
@@ -870,11 +861,6 @@ Weather:
     - group.weather_dark_sky_tomorrow
     - group.weather_dark_sky_aftertomorrow
     - group.weather_dark_sky_afterthree
-#    - group.weather_forecast
-    - camera.webcam_playa_1
-    - camera.webcam_playa_2
-    - camera.webcam_playa_3
-    - camera.worldtime
 
 
 current_meter_control:
@@ -920,19 +906,6 @@ Status:
 #    - group.vinoteca
 
 
-#Control:
-#  name: Home Control
-#  icon: mdi:auto-fix
-#  view: yes
-#  entities:
-#    - group.control_salon
-#    - group.salon
-#    - group.control_dormitorio
-#    - group.control_estudio
-#    - group.vacuum_cleaner
-#    - group.enchufes
-
-
 alarm_clock:
   name: Despertador
   view: yes
@@ -955,7 +928,6 @@ Home Network:
     - group.otras_rpi
     - group.dispositivos
     - group.baterias
-    - group.smarty
 #    - group.pi_hole
     - group.speedtest
     - group.vecinos_cercanos

@@ -113,7 +113,7 @@ camera:
     content_type: 'image/svg+xml'
     scan_interval: 1800
 
-  - platform: generic
-    name: worldtime
-    still_image_url: https://imgs.xkcd.com/comics/now.png
-    scan_interval: 1800
+#  - platform: generic
+#    name: worldtime
+#    still_image_url: https://imgs.xkcd.com/comics/now.png
+#    scan_interval: 1800

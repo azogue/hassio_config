@@ -19,18 +19,12 @@ from homeassistant.components.camera import (
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers import config_validation as cv
 from homeassistant.util.dt import utcnow
-
+from homeassistant.util.async_ import run_coroutine_threadsafe
 
 # TODO http://192.168.1.30:7999/3/config/set?emulate_motion=on/off
 # TODO implement ffmpeg_output_movies control: curl http://192.168.1.30:7999/3/config/set?ffmpeg_output_movies=off
 
 _LOGGER = logging.getLogger(__name__)
-
-try:
-    from homeassistant.util.async_ import run_coroutine_threadsafe
-except ImportError:
-    _LOGGER.warning("Using run_coroutine_threadsafe from homeassistant.util.async")
-    from homeassistant.util.async import run_coroutine_threadsafe
 
 CONF_CONTROL_PORT = 'control_port'
 CONF_CONTROL_CAM_ID = 'camera_id'
@@ -53,9 +47,9 @@ RG_CONTROL = re.compile('> Detection (\w+)\n')
 
 # pylint: disable=unused-argument
 async def async_setup_platform(hass, config,
-                               async_add_devices, discovery_info=None):
+                               async_add_entities, discovery_info=None):
     """Set up a generic IP Camera."""
-    async_add_devices([MotionEyeCamera(hass, config)])
+    async_add_entities([MotionEyeCamera(hass, config)])
 
 
 class MotionEyeCamera(Camera):
