@@ -97,6 +97,13 @@ input_select:
      - Cuadro
 
 sensor:
+- platform: time_date
+  display_options:
+#  - 'time'
+#  - 'date'
+  - 'date_time'
+
+
 #  Removed because of hassio OS incompatibility:
 #2018-11-03 11:45:37 ERROR (MainThread) [homeassistant.components.sensor] Error while setting up platform htu21d
 #Traceback (most recent call last):

@@ -62,6 +62,9 @@ binary_sensor:
         device_class: power
         value_template: >-
           {{ (utcnow().hour >= 11) and (utcnow().hour < 21) }}
+        entity_id:
+          - sensor.date_time
+
 
 sensor:
 #  - platform: mqtt
