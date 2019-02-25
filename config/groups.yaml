@@ -278,6 +278,8 @@ Carmen:
 Family:
   - group.eugenio
   - group.carmen
+  - person.eugenio
+  - person.carmen
 
 esp_livingroom:
   name: Salón
