@@ -14,6 +14,8 @@ resources:
   type: svg
 - url: /local/custom_ui/wired-card.js?v=2
   type: module
+- url: /local/kiosk.js
+  type: js
 
 views:
 - id: home
