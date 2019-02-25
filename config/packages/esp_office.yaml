@@ -100,7 +100,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{{ value_json.sample.snum}}"
+    value_template: "{{ value_json.sample.snum | int }}"
     unit_of_measurement: "sample"
 #    json_attributes: 'ip,bssid,rssi,wifi_ap,clientid,status,network,ts,sample'
     json_attributes_topic: !secret mqtt_topic_esp_office_status
