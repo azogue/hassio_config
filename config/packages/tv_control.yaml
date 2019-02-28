@@ -85,8 +85,8 @@ media_player:
   timeout: 10
 #  use_off_mode: true
   turn_on_action:
-  - service: switch.turn_on
-    entity_id: switch.tv_power
+#  - service: switch.turn_on
+#    entity_id: switch.tv_power
   - service: input_boolean.turn_on
     data:
       entity_id: input_boolean.kodi_tv_state

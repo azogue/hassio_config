@@ -121,15 +121,15 @@ enchufes_simple:
     - switch.bomba_circ_acs
     - switch.calentador
     - switch.ac_dry_contact
-    - switch.tv_power
-    - switch.camara
+#    - switch.tv_power
+#    - switch.camara
 #    - switch.altavoz
     # Antimosquitos
-    - switch.office_floor
+#    - switch.office_floor
     # Antimosquitos 2
-    - switch.test_switch_2
-    - switch.new_switch_3
-    - switch.vinoteca
+#    - switch.test_switch_2
+#    - switch.new_switch_3
+#    - switch.vinoteca
 
 #Enchufes:
 #  name: Más enchufes
@@ -217,7 +217,7 @@ Kodi:
 #    - switch.toggle_config_kodi_ambilight
     - script.cec_tv_on
     - script.cec_tv_off
-    - switch.tv_power
+#    - switch.tv_power
     - script.play_kodi_pvr
     - script.stop_kodi
     - script.update_library
@@ -406,7 +406,7 @@ Cámaras:
     - camera.sricam_360
     - camera.iegeek_hd
     - camera.kmoon_ipcam100
-    - switch.camara
+#    - switch.camara
     - switch.motion_detection_sricam_360
     - switch.motion_detection_iegeek_hd
     - switch.motion_detection_kmoon_ipcam100

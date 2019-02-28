@@ -2,17 +2,17 @@ good_night:
   alias: Buenas noches
 #  id: good_night
   sequence:
-    - alias: Apagado de TV, Ambilight, Cocina, Estudio, Calefactor e impresora
+    - alias: Apagado de TV
       service: switch.turn_off
-      entity_id: switch.kodi_tv_salon,switch.tv_power,switch.bomba_circ_acs,switch.calentador
+      entity_id: switch.bomba_circ_acs,switch.hall_light
 
 #    - alias: Bajada de persianas
 #      service: cover.close_cover
 #      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
 
-    - alias: Encendido de CAM Salón
-      service: switch.turn_on
-      entity_id: switch.camara
+#    - alias: Encendido de CAM Salón
+#      service: switch.turn_on
+#      entity_id: switch.camara
     - alias: Notificación de buenas noches
       service: telegram_bot.send_message
       data_template:
@@ -24,9 +24,9 @@ good_night:
       service: light.turn_off
     - delay:
         seconds: 10
-    - alias: Apagado total de TV y Home cinema
-      service: switch.turn_off
-      entity_id: switch.tv_power,switch.hall_light
+#    - alias: Apagado total de TV y Home cinema
+#      service: switch.turn_off
+#      entity_id: switch.tv_power,switch.hall_light
 
 good_morning:
   alias: Buenos días

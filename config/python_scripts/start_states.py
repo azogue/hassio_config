@@ -10,10 +10,10 @@ This unifies various automations and HA scripts in a simpler one.
 family_home = hass.states.get('group.family').state == 'home'
 
 # Turn on default outlets
-if family_home:
-    hass.services.call(
-        'switch', 'turn_on',
-        {"entity_id": "switch.tv_power,switch.camara,switch.vinoteca"})
+# if family_home:
+#     hass.services.call(
+#         'switch', 'turn_on',
+#         {"entity_id": "switch.tv_power,switch.camara,switch.vinoteca"})
         # {"entity_id": "switch.calentador,switch.bomba_circ_acs"})
 
 # Create motioneye binary_sensors

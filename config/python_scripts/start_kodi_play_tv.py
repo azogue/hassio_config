@@ -75,7 +75,7 @@ en directo de un canal con noticias, o bien reproducir la última grabación.
 
 # Participant entities
 MEDIA_PLAYER = 'media_player.kodi'
-POWER_SWITCH = 'switch.tv_power'
+# POWER_SWITCH = 'switch.tv_power'
 INPUT_SELECT_OPTS = 'input_select.kodi_results'
 TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 
@@ -105,11 +105,11 @@ else:
     # Last record?
     # play_live_tv = False
 
-state_power = hass.states.get(POWER_SWITCH)
-if state_power.state == 'off':
-    # Need to power up TV system (and wait for it)
-    hass.services.call('switch', 'turn_on', {"entity_id": POWER_SWITCH})
-    time.sleep(5)
+# state_power = hass.states.get(POWER_SWITCH)
+# if state_power.state == 'off':
+#     # Need to power up TV system (and wait for it)
+#     hass.services.call('switch', 'turn_on', {"entity_id": POWER_SWITCH})
+#     time.sleep(5)
 
 # Turn on Kodi with CEC
 hass.services.call(

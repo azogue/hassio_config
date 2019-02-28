@@ -194,10 +194,10 @@
 
         - name: Switches
           entities:
-             - switch.office_floor
-             - switch.test_switch_2
-             - switch.tv_power
-             - switch.camara
+#             - switch.office_floor
+#             - switch.test_switch_2
+#             - switch.tv_power
+#             - switch.camara
 #             - switch.sonoff_simple_1
              - switch.calentador
              - switch.bomba_circ_acs
