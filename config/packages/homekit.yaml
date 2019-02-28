@@ -15,7 +15,7 @@ homekit:
       - switch.calentador
       - switch.bomba_circ_acs
 
-      - binary_sensor.electricity_high_cost_interval
+#      - binary_sensor.electricity_high_cost_interval
 
       - sensor.sensor_galeria_humidity
       - sensor.sensor_galeria_temperature

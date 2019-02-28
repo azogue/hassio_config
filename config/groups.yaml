@@ -156,7 +156,7 @@ enchufes_simple:
 elec_power_complete:
   name: Consumo eléctrico
   entities:
-    - sensor.esp32ener_real_power
+#    - sensor.esp32ener_real_power
     - sensor.esp32ener_power
     - sensor.esp32ener_ch1
     - sensor.esp32ener_ch2
