@@ -8,7 +8,7 @@ good_night:
 
 #    - alias: Bajada de persianas
 #      service: cover.close_cover
-#      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
+#      entity_id: all
 
 #    - alias: Encendido de CAM Salón
 #      service: switch.turn_on
@@ -22,6 +22,7 @@ good_night:
         disable_notification: true
     - alias: Apagado de luces
       service: light.turn_off
+      entity_id: all
     - delay:
         seconds: 10
 #    - alias: Apagado total de TV y Home cinema
@@ -34,7 +35,7 @@ good_morning:
   sequence:
     - alias: Subida de persianas
       service: cover.open_cover
-      entity_id: cover.sonoff_cover_ventanal,cover.sonoff_cover_puerta_terraza
+      entity_id: all
 
     - alias: Notificación de buenos días
       service: telegram_bot.send_message
