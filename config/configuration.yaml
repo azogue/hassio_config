@@ -129,7 +129,7 @@ influxdb:
 recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
-#  db_url: !secret recorder_db_url
+  db_url: !secret recorder_db_url
 
 system_health:
 
