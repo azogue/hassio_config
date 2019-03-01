@@ -611,57 +611,57 @@
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bedroom_snum
+      entity_id: sensor.sensor_bedroom_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_livingroom_snum
+      entity_id: sensor.sensor_livingroom_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_covers_snum
+      entity_id: sensor.sensor_covers_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_study_snum
+      entity_id: sensor.sensor_study_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_office_snum
+      entity_id: sensor.sensor_office_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_kitchen_snum
+      entity_id: sensor.sensor_kitchen_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_hall_snum
+      entity_id: sensor.sensor_hall_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_terraza_snum
+      entity_id: sensor.sensor_terraza_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_galeria_snum
+      entity_id: sensor.sensor_galeria_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_bathroom_ac_snum
+      entity_id: sensor.sensor_bathroom_ac_snum
       to: 'unknown'
       for:
         minutes: 2
     - platform: state
-      entity_id: binary_sensor.sensor_wine_snum
+      entity_id: sensor.sensor_wine_snum
       to: 'unknown'
       for:
         minutes: 10
