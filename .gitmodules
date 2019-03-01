@@ -1,0 +1,3 @@
+[submodule "config/themes/home-assistant-community-themes"]
+	path = config/themes/home-assistant-community-themes
+	url = https://github.com/maartenpaauw/home-assistant-community-themes.git
