@@ -29,7 +29,7 @@ DEFAULT_SOURCE = 'La Cafetera de Radiocable'
 MIN_VOLUME = 1
 DEFAULT_MAX_VOLUME = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
-DEFAULT_DURATION = 1.2  # h
+DEFAULT_DURATION = 1.5  # h
 DEFAULT_EMISION_TIME = "08:30:00"
 TZ = 'CET'
 DEFAULT_MIN_POSPONER = 9
@@ -45,13 +45,14 @@ WEEKDAYS_DICT = {'mon': 0, 'tue': 1, 'wed': 2,
                  'thu': 3, 'fri': 4, 'sat': 5, 'sun': 6}
 
 SUNRISE_PHASES = [
-    {'brightness': 4, 'xy_color': [0.6051, 0.282], 'rgb_color': (62, 16, 17)},
+    {'brightness': 1, 'xy_color': [0.6051, 0.282], 'rgb_color': (62, 16, 17)},
     {'brightness': 30, 'xy_color': [0.672, 0.327], 'rgb_color': (183, 66, 0)},
     {'brightness': 60, 'xy_color': [0.629, 0.353], 'rgb_color': (224, 105, 19)},
     {'brightness': 147, 'xy_color': [0.533, 0.421], 'rgb_color': (255, 175, 53)},
     {'brightness': 196, 'xy_color': [0.4872, 0.4201], 'rgb_color': (255, 191, 92)},
     {'brightness': 222, 'xy_color': [0.4587, 0.4103], 'rgb_color': (255, 199, 117)},
-    {'brightness': 254, 'xy_color': [0.449, 0.4078], 'rgb_color': (255, 203, 124)}]
+    {'brightness': 254, 'xy_color': [0.449, 0.4078], 'rgb_color': (255, 203, 124)},
+]
 
 
 def get_info_last_ep(limit=1):
@@ -334,16 +335,17 @@ class AlarmClock(hass.Hass):
         # Manual triggering
         if (new == 'on') and ((self._last_trigger is None)
                               or ((dt.datetime.now() - self._last_trigger)
-                                  .total_seconds() > 30)):
+                                          .total_seconds() > 30)):
             _ready, ep_info = is_last_episode_ready_for_play(self.datetime())
             use_ep_info = self.run_in_sonos(ep_info)
             # Notification:
+            self.turn_on_lights_as_sunrise()
             self.notify_alarmclock(ep_info, use_ep_info)
         # Manual stop after at least 10 sec
         elif ((new == 'off') and (old == 'on')
               and (self._last_trigger is not None) and
-                  ((dt.datetime.now() - self._last_trigger)
-                   .total_seconds() > 10)):
+              ((dt.datetime.now() - self._last_trigger)
+                       .total_seconds() > 10)):
             # Stop if it's playing
             self.log('TRIGGER_STOP (last trigger at {})'
                      .format(self._last_trigger))
@@ -437,9 +439,9 @@ class AlarmClock(hass.Hass):
             self._handle_special_alarm = None
 
     def _set_sunrise_phase(self, *args_runin):
-        self.log('SET_SUNRISE_PHASE: XY={xy_color}, '
-                 'BRIGHT={brightness}, TRANSITION={transition}'
-                 .format(**args_runin[0]), 'DEBUG')
+        # self.log('SET_SUNRISE_PHASE: XY={xy_color}, '
+        #          'BRIGHT={brightness}, TRANSITION={transition}'
+        #          .format(**args_runin[0]), 'DEBUG')
         if self._in_alarm_mode:
             self.call_service('light/turn_on', **args_runin[0])
 
@@ -448,20 +450,20 @@ class AlarmClock(hass.Hass):
         """Turn on the lights with a sunrise simulation.
 
          (done with multiple slow transitions)"""
-        # self.log('RUN_SUNRISE')
+        # self.call_service(
+        #     'light/turn_off', entity_id=self._lights_alarm, transition=0)
         self.call_service(
-            'light/turn_off', entity_id=self._lights_alarm, transition=0)
-        self.call_service(
-            'light/turn_on', entity_id=self._lights_alarm, transition=1,
-            xy_color=self._phases_sunrise[0]['xy_color'], brightness=1)
-        run_in = 2
-        for phase in self._phases_sunrise:
+            'light/turn_on', entity_id=self._lights_alarm, transition=0,
+            xy_color=self._phases_sunrise[0]['xy_color'], brightness=3)
+        run_in = 5
+        for i, phase in enumerate(self._phases_sunrise):
             # noinspection PyTypeChecker
             xy_color, brightness = phase['xy_color'], phase['brightness']
             self.run_in(self._set_sunrise_phase, run_in,
                         entity_id=self._lights_alarm, xy_color=xy_color,
                         transition=self._transit_time, brightness=brightness)
             run_in += self._transit_time + 1
+            # self.log(f"sunrise phase {i} -> next runin {run_in}")
 
     # noinspection PyUnusedLocal
     def increase_volume(self, *args):
@@ -472,7 +474,7 @@ class AlarmClock(hass.Hass):
             delta_sec = (dt.datetime.now()
                          - self._last_trigger).total_seconds()
             if delta_sec > self._volume_ramp_sec:
-                volume_set = self._max_volume
+                volume_set = self._max_volume / 100.
                 repeat = False
             else:
                 volume_set = int(max(

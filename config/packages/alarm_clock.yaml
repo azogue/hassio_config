@@ -60,7 +60,7 @@ switch:
   - platform: template
     switches:
       alarm_clock_status:
-        friendly_name: Despertador LaCafetera
+        friendly_name: Despertador
         entity_id: input_boolean.alarm_clock_status
         value_template: "{{ states.input_boolean.alarm_clock_status.state == 'on' }}"
         turn_on:

@@ -84,7 +84,6 @@ MorningAlarmClock:
   warm_up_time: input_datetime.water_boiler_start_time
   warm_up_boolean: input_boolean.use_heater
   special_alarm_datetime: input_datetime.next_special_wake_up
-#  alarmdays: mon,tue,wed,thu,fri,sat
   alarmdays: mon,tue,wed,thu,fri
   alarmdays_condition: binary_sensor.workday_sensor
   input_boolean_alarm_on: input_boolean.alarm_clock_status
@@ -95,7 +94,7 @@ MorningAlarmClock:
   # TODO Implement receive postponer action if player stops or pauses!! (manual trigger!)
   postponer_minutos: 7
   room_select: input_select.room_altavoces
-  lights_alarm: group.control_dormitorio
+  lights_alarm: light.dormitorio
   manual_trigger: input_boolean.manual_trigger_lacafetera
 
 #MotionLightsSalon:
