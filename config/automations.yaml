@@ -110,52 +110,61 @@
         - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 
-- alias: Apagado de CAM salón en Kodi PLAY nocturno
-  id: 'cam_off_if_kodi_night'
-  trigger:
-    platform: state
-    entity_id: media_player.kodi_tv
-#    from: 'idle'
-    to: 'playing'
-  condition:
-    - condition: or
-      conditions:
-        - condition: sun
-          after: sunset
-          after_offset: "-0:30:00"
-        - condition: numeric_state
-          entity_id: sensor.sensor_livingroom_illumination
-          below: 25
-    - condition: state
-      entity_id: switch.camara
-      state: 'on'
-  action:
-  - service: switch.turn_off
-    entity_id: switch.camara
-  - service: telegram_bot.send_message
-    data_template:
-      title: '*CAM Salón OFF*'
-      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-      message: 'Apagado de cámara de Salón en Kodi PLAY nocturno.'
-      disable_notification: true
-      inline_keyboard:
-        - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
-
-- alias: Encendido automático de CAM salón
-  id: 'cam_auto_on'
-  trigger:
-    platform: state
-    entity_id: media_player.kodi_tv
-    to: 'off'
-    for:
-      minutes: 5
-  condition:
-    - condition: state
-      entity_id: switch.camara
-      state: 'off'
-  action:
-  - service: switch.turn_on
-    entity_id: switch.camara
+#- alias: Apagado de CAM salón en Kodi PLAY nocturno
+#  id: 'cam_off_if_kodi_night'
+#  trigger:
+#  - platform: state
+#    entity_id: media_player.kodi_tv
+##    from: 'idle'
+#    to: 'playing'
+#  - platform: state
+#    entity_id: media_player.fire_tv
+##    from: 'idle'
+#    to: 'playing'
+#  condition:
+#    - condition: or
+#      conditions:
+#        - condition: sun
+#          after: sunset
+#          after_offset: "-0:30:00"
+#        - condition: numeric_state
+#          entity_id: sensor.sensor_livingroom_illumination
+#          below: 25
+#    - condition: state
+#      entity_id: switch.camara
+#      state: 'on'
+#  action:
+#  - service: switch.turn_off
+#    entity_id: switch.camara
+#  - service: telegram_bot.send_message
+#    data_template:
+#      title: '*CAM Salón OFF*'
+#      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+#      message: 'Apagado de cámara de Salón en Kodi PLAY nocturno.'
+#      disable_notification: true
+#      inline_keyboard:
+#        - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
+#
+#- alias: Encendido automático de CAM salón
+#  id: 'cam_auto_on'
+#  trigger:
+#  - platform: state
+#    entity_id: media_player.kodi_tv
+#    to: 'off'
+#    for:
+#      minutes: 5
+#  - platform: state
+#    entity_id: media_player.fire_tv
+#    to: 'off'
+#    for:
+#      minutes: 5
+#  condition:
+#    - condition: state
+#      entity_id: switch.camara
+#      state: 'off'
+#  action:
+#  - service: switch.turn_on
+#    entity_id: switch.camara
 
 # LAN/BT discover --> event device_tracker_new_device
 - alias: New BT device notifier
@@ -507,25 +516,25 @@
       data_template:
         scene: 'Estudio'
 
-- alias: Luz hall abriendo cuadro
-  id: 'luz_hall_abriendo_cuadro'
-  trigger:
-    platform: state
-    entity_id: binary_sensor.local_pir
-    to: 'on'
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.sensor_hall_illumination
-      below: 50
-    - condition: state
-      entity_id: light.hall_light
-      state: 'off'
-      for:
-        seconds: 10
-  action:
-    - service: light.turn_on
-      data:
-        entity_id: light.hall_light
+#- alias: Luz hall abriendo cuadro
+#  id: 'luz_hall_abriendo_cuadro'
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.local_pir
+#    to: 'on'
+#  condition:
+#    - condition: numeric_state
+#      entity_id: sensor.sensor_hall_illumination
+#      below: 50
+#    - condition: state
+#      entity_id: light.hall_light
+#      state: 'off'
+#      for:
+#        seconds: 10
+#  action:
+#    - service: light.turn_on
+#      data:
+#        entity_id: light.hall_light
 
 - alias: Botvac error notification
   id: 'botvac_error_notify'
@@ -740,8 +749,8 @@
     below: 300
     # If given, will trigger when condition has been for X time.
     for:
-      minutes: 1
-      seconds: 30
+      minutes: 2
+#      seconds: 30
   condition:
     - condition: state
       entity_id: switch.calentador
@@ -805,95 +814,95 @@
     data:
       option: "Nada"
 
-- alias: Apagado automático de enchufes a las 6h
-  id: 'switches_auto_off_after_8hours'
-  trigger:
-    - platform: state
-      entity_id: switch.test_switch_2
-      to: 'on'
-      for:
-        hours: 6
-    - platform: state
-      entity_id: switch.office_floor
-      to: 'on'
-      for:
-        hours: 6
-  action:
-    - service: switch.turn_off
-      entity_id: switch.test_switch_2,switch.office_floor
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
-        target: !secret telegram_bot_chat_id_admin
-        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ trigger.to_state.last_changed | timestamp_local }})"
-        disable_notification: true
-        inline_keyboard:
-          - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
-          - Antimosquitos Salón ON:/service_call switch.turn_on switch.office_floor, Antimosquitos Salón OFF:/service_call switch.turn_off switch.office_floor
-
-- alias: Retry etekcity commands
-  id: 'retry_etekcity_commands'
-  trigger:
-    - platform: state
-      entity_id: switch.vinoteca
-      to: 'on'
-      for:
-        seconds: 10
-    - platform: state
-      entity_id: switch.camara
-      to: 'on'
-      for:
-        seconds: 30
+#- alias: Apagado automático de enchufes a las 6h
+#  id: 'switches_auto_off_after_8hours'
+#  trigger:
 #    - platform: state
-#      entity_id: switch.altavoz
+#      entity_id: switch.test_switch_2
+#      to: 'on'
+#      for:
+#        hours: 6
+#    - platform: state
+#      entity_id: switch.office_floor
+#      to: 'on'
+#      for:
+#        hours: 6
+#  action:
+#    - service: switch.turn_off
+#      entity_id: switch.test_switch_2,switch.office_floor
+#    - service: telegram_bot.send_message
+#      data_template:
+#        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
+#        target: !secret telegram_bot_chat_id_admin
+#        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ trigger.to_state.last_changed | timestamp_local }})"
+#        disable_notification: true
+#        inline_keyboard:
+#          - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
+#          - Antimosquitos Salón ON:/service_call switch.turn_on switch.office_floor, Antimosquitos Salón OFF:/service_call switch.turn_off switch.office_floor
+
+#- alias: Retry etekcity commands
+#  id: 'retry_etekcity_commands'
+#  trigger:
+#    - platform: state
+#      entity_id: switch.vinoteca
+#      to: 'on'
+#      for:
+#        seconds: 10
+#    - platform: state
+#      entity_id: switch.camara
+#      to: 'on'
+#      for:
+#        seconds: 30
+##    - platform: state
+##      entity_id: switch.altavoz
+##      to: 'on'
+##      for:
+##        seconds: 20
+#    - platform: state
+#      entity_id: switch.test_switch_2
 #      to: 'on'
 #      for:
 #        seconds: 20
-    - platform: state
-      entity_id: switch.test_switch_2
-      to: 'on'
-      for:
-        seconds: 20
-    - platform: state
-      entity_id: switch.office_floor
-      to: 'on'
-      for:
-        seconds: 20
-    - platform: state
-      entity_id: switch.vinoteca
-      to: 'off'
-      for:
-        seconds: 10
-    - platform: state
-      entity_id: switch.camara
-      to: 'off'
-      for:
-        seconds: 30
 #    - platform: state
-#      entity_id: switch.altavoz
+#      entity_id: switch.office_floor
+#      to: 'on'
+#      for:
+#        seconds: 20
+#    - platform: state
+#      entity_id: switch.vinoteca
+#      to: 'off'
+#      for:
+#        seconds: 10
+#    - platform: state
+#      entity_id: switch.camara
+#      to: 'off'
+#      for:
+#        seconds: 30
+##    - platform: state
+##      entity_id: switch.altavoz
+##      to: 'off'
+##      for:
+##        seconds: 20
+#    - platform: state
+#      entity_id: switch.test_switch_2
 #      to: 'off'
 #      for:
 #        seconds: 20
-    - platform: state
-      entity_id: switch.test_switch_2
-      to: 'off'
-      for:
-        seconds: 20
-    - platform: state
-      entity_id: switch.office_floor
-      to: 'off'
-      for:
-        seconds: 20
-  action:
-    - service_template: 'switch.{% if trigger.to_state.state == "off" %}turn_off{% else %}turn_on{% endif %}'
-      data_template:
-        entity_id: '{{ trigger.entity_id }}'
-#    - service: telegram_bot.send_message
+#    - platform: state
+#      entity_id: switch.office_floor
+#      to: 'off'
+#      for:
+#        seconds: 20
+#  action:
+#    - service_template: 'switch.{% if trigger.to_state.state == "off" %}turn_off{% else %}turn_on{% endif %}'
 #      data_template:
-#        title: '*Auto-Retry* de {{ trigger.to_state.attributes.friendly_name }}'
-#        target: !secret telegram_bot_chat_id_admin
-#        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ trigger.to_state.last_changed | timestamp_local }})"
-#        disable_notification: true
+#        entity_id: '{{ trigger.entity_id }}'
+##    - service: telegram_bot.send_message
+##      data_template:
+##        title: '*Auto-Retry* de {{ trigger.to_state.attributes.friendly_name }}'
+##        target: !secret telegram_bot_chat_id_admin
+##        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ trigger.to_state.last_changed | timestamp_local }})"
+##        disable_notification: true
 
 - alias: Apagado de AC
   id: 'auto_turnoff_ac'
