@@ -52,11 +52,11 @@ quick_cool_session:
     - alias: Set cool mode con python script
       service: python_script.set_cool_ac_session
 
-play_kodi_pvr:
-#  id: play_kodi_pvr
-  alias: Enciende la caja tonta
+start_vacuum:
+#  id: start_vacuum
+  alias: Aspiradora
   sequence:
-    service: vacuum.turn_on
+    service: vacuum.start
     data:
       entity_id: vacuum.robot_aspirador
 
@@ -167,6 +167,42 @@ pvr_channels:
         entity_id: media_player.kodi
         method: PVR.GetChannels
         channelgroupid: 1
+
+run_esp_command:
+  alias: Run command
+  #  id: run_esp_command
+  sequence:
+    - service: python_script.pub_esp_command
+      data_template:
+        esp_name: '{{ states.input_select.esp_modules.state  | lower }}'
+        command: '{{ states.input_select.esp_command.state | lower}}'
+
+cec_tv_on:
+  alias: TV ON
+  #  id: cec_tv_on
+  sequence:
+    - service: media_player.kodi_call_method
+      data:
+        entity_id: media_player.kodi
+        method: Addons.ExecuteAddon
+        addonid: script.json-cec
+        params:
+          command: activate
+
+cec_tv_off:
+  alias: TV OFF
+  #  id: cec_tv_off
+  sequence:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.kodi_tv_state
+    - service: media_player.kodi_call_method
+      data:
+        entity_id: media_player.kodi
+        method: Addons.ExecuteAddon
+        addonid: script.json-cec
+        params:
+          command: standby
 
 step_up_cover_1:
   alias: Ventanal Up
