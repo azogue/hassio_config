@@ -27,7 +27,7 @@ LOG_LEVEL = 'INFO'
 MEDIA_PLAYER = 'media_player.dormitorio'
 DEFAULT_SOURCE = 'La Cafetera de Radiocable'
 MIN_VOLUME = 1
-DEFAULT_MAX_VOLUME_MOPIDY = 60
+DEFAULT_MAX_VOLUME = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
 DEFAULT_DURATION = 1.2  # h
 DEFAULT_EMISION_TIME = "08:30:00"
@@ -183,7 +183,7 @@ class AlarmClock(hass.Hass):
         self._delta_time_postponer_sec = int(
             self.args.get('postponer_minutos', DEFAULT_MIN_POSPONER)) * 60
         self._max_volume = int(
-            self.args.get('max_volume', DEFAULT_MAX_VOLUME_MOPIDY))
+            self.args.get('max_volume', DEFAULT_MAX_VOLUME))
         self._volume_ramp_sec = int(
             self.args.get('duration_volume_ramp_sec',
                           DEFAULT_DURATION_VOLUME_RAMP))
