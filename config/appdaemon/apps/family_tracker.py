@@ -17,6 +17,7 @@ import appdaemon.plugins.hass.hassapi as hass
 DELAY_TO_SET_DEFAULT_TARGET = 120  # sec
 TZ = 'Europe/Madrid'
 
+
 # noinspection PyClassHasNoInit
 class FamilyTracker(hass.Hass):
     """Family Tracker."""
@@ -30,63 +31,47 @@ class FamilyTracker(hass.Hass):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        self.log(f"bot_chatids: {self.args.get('bot_chatids')}, "
-                 f"notifier: {self.config.get('notifier')}")
+        # self.log(f"bot_chatids: {self.args.get('bot_chatids')}, "
+        #          f"notifier: {self.config.get('notifier')}")
         _chatids = [int(x) for x in self.args.get('bot_chatids').split(',')]
         self._notifier = self.config.get('notifier').replace('.', '/')
         self._base_url = self.args.get('base_url').replace('.', '/')
         self._anybody_home = False
-
-        # Get home group
-        home_group = self.args.get('home_group', 'group.family')
 
         # Get default chat_id for home
         default_chat_id = self.args.get('bot_group_target')
         self._telegram_targets = {"default": ('Casa', default_chat_id)}
 
         people_track = self.args.get('people', {})
-        # self.log("people_track: {}".format(people_track))
 
         # Get devices to track:
-        _devs_track = self.get_state(
-            home_group, attribute='attributes')
-        if _devs_track is not None:
-            _devs_track = _devs_track['entity_id']
-        else:
-            self.error('CANT GET ENTITIES TO TRACK!!')
-            _devs_track = []
+        _devs_track = list(people_track.keys())
 
         # Get tracking states:
         self._tracking_state = {}
         for dev in _devs_track:
             target = None
             name = self.friendly_name(dev)
-            tracking_st = [self.get_state(dev),
-                           parse(self.get_state(dev, attribute='last_changed')).replace(
-                tzinfo=pytz.UTC).astimezone(
-                pytz.timezone(TZ)).replace(tzinfo=None)]
+            tracking_st = [
+                self.get_state(dev),
+                parse(
+                    self.get_state(dev, attribute='last_changed')
+                ).replace(tzinfo=pytz.UTC).astimezone(
+                    pytz.timezone(TZ)
+                ).replace(tzinfo=None)
+            ]
             self._tracking_state[dev] = tracking_st
 
             # Listen for state changes:
             self.listen_state(self.track_zone_ch, dev, old="home", duration=60)
-            self.listen_state(self.track_zone_ch, dev, new="home", duration=2)
+            self.listen_state(self.track_zone_ch, dev, new="home", duration=1)
 
             # Get details for each device/group:
             if dev in people_track:
                 # Get telegram target
                 if 'chat_id_idx' in people_track[dev]:
                     target = _chatids[people_track[dev]['chat_id_idx']]
-                # Listen for extra devices (input_booleans):
-                if 'extra_tracker' in people_track[dev]:
-                    dev_extra = people_track[dev]['extra_tracker']
-                    extra_tracking_st = [
-                        self.get_state(dev_extra),
-                        parse(self.get_state(dev, attribute='last_changed')).replace(
-                tzinfo=pytz.UTC).astimezone(
-                pytz.timezone(TZ)).replace(tzinfo=None)]
-                    self._telegram_targets[dev_extra] = (name, target)
-                    self._tracking_state[dev_extra] = extra_tracking_st
-                    self.listen_state(self.track_zone_ch, dev_extra)
+
             self._telegram_targets[dev] = (name, target)
 
         # Process (and write globals) who is at home

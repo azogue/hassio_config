@@ -280,8 +280,8 @@
 
         - name: Trackers
           entities:
-            - group.eugenio
-            - group.carmen
+            - person.eugenio
+            - person.carmen
           states:
             - state: 'home'
               class: 'at-home'

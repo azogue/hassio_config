@@ -34,17 +34,14 @@ Alarma:
 FamilyTracker:
   class: FamilyTracker
   module: family_tracker
-  home_group: group.family
   bot_chatids: !secret bot_chatids
   bot_group_target: !secret bot_group_target
   base_url: !secret base_url
-  people:  # Content of home_group: chat_id and optional extra_tracker
-    group.eugenio:
+  people:  # Content of home_group: chat_id
+    person.eugenio:
       chat_id_idx: 0
-      extra_tracker: input_boolean.eu_presence
-    group.mary:
+    person.carmen:
       chat_id_idx: 1
-      extra_tracker: input_boolean.carmen_presence
 
 EnerpiPeakNotifier:
   class: EnerpiPeakNotifier

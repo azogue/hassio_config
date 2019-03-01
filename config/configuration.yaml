@@ -117,6 +117,18 @@ history:
       - switch
       - vacuum
 logbook:
+  include:
+    domains:
+      - sun
+      - automation
+      - light
+      - switch
+      - media_player
+      - vacuum
+      - script
+      - python_script
+      - input_boolean
+
 influxdb:
   host: !secret influxdb_host
   port: !secret influxdb_port
@@ -148,7 +160,7 @@ panel_iframe:
 #    url: !secret psychrocam_svgchart_url
 #    icon: mdi:gradient
 
-group: !include groups.yaml
+#group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 weblink: !include weblinks.yaml
@@ -162,6 +174,7 @@ person:
       - device_tracker.iphone_bt
       - device_tracker.iphone
       - device_tracker.homeadmin_iphone
+      - device_tracker.applewatch
 
   - name: Carmen
     id: !secret person_id_carmen
@@ -171,3 +184,4 @@ person:
       - device_tracker.iphone_se
       - device_tracker.iphonese
       - device_tracker.homeadmin_iphonese
+      - device_tracker.applewatch_carmen

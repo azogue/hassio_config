@@ -124,7 +124,7 @@ climate:
       minutes: 10
     keep_alive:
       minutes: 5
-    initial_operation_mode: "off"
+#    initial_operation_mode: "off"
 #    away_temp: 28
 
   # TODO integrate both climate comps in one cold/heat one
@@ -142,5 +142,5 @@ climate:
       minutes: 10
     keep_alive:
       minutes: 5
-    initial_operation_mode: "off"
+#    initial_operation_mode: "off"
     away_temp: 16

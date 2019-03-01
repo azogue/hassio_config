@@ -1,9 +1,9 @@
 homeassistant:
   customize:
-    input_boolean.eu_presence:
-      icon: mdi:human-male
-    input_boolean.carmen_presence:
-      icon: mdi:human-female
+#    input_boolean.eu_presence:
+#      icon: mdi:human-male
+#    input_boolean.carmen_presence:
+#      icon: mdi:human-female
 
     sensor.iphone_battery_state:
       friendly_name: iPhone X (Batt state)
@@ -52,11 +52,11 @@ zone:
   radius: !secret z2_radius
   icon: !secret z2_icon
 
-input_boolean:
-  eu_presence:
-    name: Eu en casa
-  carmen_presence:
-    name: Carmen en casa
+#input_boolean:
+#  eu_presence:
+#    name: Eu en casa
+#  carmen_presence:
+#    name: Carmen en casa
 
 #binary_sensor:
 #  - platform: rpi_gpio
