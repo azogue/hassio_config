@@ -49,11 +49,9 @@ FamilyTracker:
 EnerpiPeakNotifier:
   class: EnerpiPeakNotifier
   module: enerpi_alarm
-  camera: camera.electricidad_24h
-#  constrain_input_boolean: input_boolean.switch_control_enerpi_max_power
   control: sensor.esp32ener_power
-  max_power_kw: input_number.enerpi_max_power
-  max_power_kw_reset: input_number.enerpi_max_power_reset
+  max_power_kw: 5.0
+  max_power_kw_reset: 2.5
   min_time_high: 15
   min_time_low: 60
 

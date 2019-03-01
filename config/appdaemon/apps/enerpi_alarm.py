@@ -33,7 +33,6 @@ class EnerpiPeakNotifier(hass.Hass):
     _main_power = None
     _notifier = None
     _target_sensor = None
-    _camera = None
     _slider_upper_limit = None
     _slider_lower_limit = None
 
@@ -46,7 +45,6 @@ class EnerpiPeakNotifier(hass.Hass):
         self._main_power = self.args.get('control')
         self._notifier = self.config.get('notifier').replace('.', '/')
         self._target_sensor = self.config.get('chatid_sensor')
-        self._camera = self.args.get('camera')
         self._min_time_upper = int(self.args.get('min_time_high', DEFAULT_MIN_TIME_UPPER_SEC))
         self._min_time_lower = int(self.args.get('min_time_low', DEFAULT_MIN_TIME_LOWER_SEC))
 
@@ -94,14 +92,14 @@ class EnerpiPeakNotifier(hass.Hass):
     def _make_ios_message(self, reset_alarm=False):
         data_msg = self._get_notif_data(reset_alarm)
         if reset_alarm:
-            data_msg["data"] = {"push": {"category": "camera", "badge": 0},
-                                "entity_id": self._camera}
+            data_msg["data"] = {"push": {"category": "confirm", "badge": 0}}
         else:
             data_msg["data"] = {
                 "push": {
-                    "category": "camera", "badge": 1,
-                    "sound": "US-EN-Morgan-Freeman-Vacate-The-Premises.wav"},
-                "entity_id": self._camera}
+                    "category": "confirm", "badge": 1,
+                    "sound": "US-EN-Morgan-Freeman-Vacate-The-Premises.wav"
+                }
+            }
         return data_msg
 
     def _make_telegram_message(self, reset_alarm=False):
