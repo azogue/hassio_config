@@ -1,0 +1,50 @@
+###############################################################################
+# TP-LINK OUTLETS
+###############################################################################
+
+homeassistant:
+  customize:
+    switch.tplink1:
+      icon: mdi:power-plug
+      friendly_name: Enchufe TP
+
+    sensor.tplink1_watts:
+      icon: mdi:flash
+      friendly_name: Consumo en TP
+#    sensor.tplink1_volts:
+#      icon: mdi:power-plug
+#      friendly_name: Voltaje en TP
+#    sensor.tplink1_today_kwh:
+#      icon: mdi:flash-outline
+#      friendly_name: Consumo día
+
+switch:
+  - platform: tplink
+    name: tplink1
+    enable_leds: true
+    host: 192.168.1.196
+
+# POW voltage and power sensors
+sensor:
+  - platform: template
+    sensors:
+#      tplink1_amps:
+#        friendly_name_template: "{{ states.switch.tplink1.name}} Current"
+#        value_template: '{{ states.switch.tplink1.attributes["current_a"] | float }}'
+#        unit_of_measurement: 'A'
+      tplink1_watts:
+        friendly_name_template: "{{ states.switch.tplink1.name}} Current Consumption"
+        value_template: '{{ states.switch.tplink1.attributes["current_power_w"] | float }}'
+        unit_of_measurement: 'W'
+#      tplink1_total_kwh:
+#        friendly_name_template: "{{ states.switch.tplink1.name}} Total Consumption"
+#        value_template: '{{ states.switch.tplink1.attributes["total_energy_kwh"] | float }}'
+#        unit_of_measurement: 'kWh'
+#      tplink1_volts:
+#        friendly_name_template: "{{ states.switch.tplink1.name}} Voltage"
+#        value_template: '{{ states.switch.tplink1.attributes["voltage"] | float }}'
+#        unit_of_measurement: 'V'
+#      tplink1_today_kwh:
+#        friendly_name_template: "{{ states.switch.tplink1.name}} Today's Consumption"
+#        value_template: '{{ states.switch.my_tp_switch.attributes["today_energy_kwh"] | float }}'
+#        unit_of_measurement: 'kWh'

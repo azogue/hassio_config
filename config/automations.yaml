@@ -110,61 +110,63 @@
         - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 
-#- alias: Apagado de CAM salón en Kodi PLAY nocturno
-#  id: 'cam_off_if_kodi_night'
-#  trigger:
-#  - platform: state
-#    entity_id: media_player.kodi_tv
-##    from: 'idle'
-#    to: 'playing'
-#  - platform: state
-#    entity_id: media_player.fire_tv
-##    from: 'idle'
-#    to: 'playing'
-#  condition:
-#    - condition: or
-#      conditions:
-#        - condition: sun
-#          after: sunset
-#          after_offset: "-0:30:00"
-#        - condition: numeric_state
-#          entity_id: sensor.sensor_livingroom_illumination
-#          below: 25
-#    - condition: state
+- alias: Apagado de CAM salón en Kodi PLAY nocturno
+  id: 'cam_off_if_kodi_night'
+  trigger:
+  - platform: state
+    entity_id: media_player.kodi_tv
+#    from: 'idle'
+    to: 'playing'
+  - platform: state
+    entity_id: media_player.fire_tv
+#    from: 'idle'
+    to: 'playing'
+  condition:
+    - condition: or
+      conditions:
+        - condition: sun
+          after: sunset
+          after_offset: "-0:30:00"
+        - condition: numeric_state
+          entity_id: sensor.sensor_livingroom_illumination
+          below: 25
+    - condition: state
 #      entity_id: switch.camara
-#      state: 'on'
-#  action:
-#  - service: switch.turn_off
+      entity_id: switch.tplink1
+      state: 'on'
+  action:
+  - service: switch.turn_off
 #    entity_id: switch.camara
-#  - service: telegram_bot.send_message
-#    data_template:
-#      title: '*CAM Salón OFF*'
-#      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-#      message: 'Apagado de cámara de Salón en Kodi PLAY nocturno.'
-#      disable_notification: true
-#      inline_keyboard:
-#        - CAM OFF:/service_call switch.turn_off switch.camara, CAM ON:/service_call switch.turn_on switch.camara, +:/init
-#
-#- alias: Encendido automático de CAM salón
-#  id: 'cam_auto_on'
-#  trigger:
-#  - platform: state
-#    entity_id: media_player.kodi_tv
-#    to: 'off'
-#    for:
-#      minutes: 5
-#  - platform: state
-#    entity_id: media_player.fire_tv
-#    to: 'off'
-#    for:
-#      minutes: 5
-#  condition:
-#    - condition: state
-#      entity_id: switch.camara
-#      state: 'off'
-#  action:
-#  - service: switch.turn_on
-#    entity_id: switch.camara
+    entity_id: switch.tplink1
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*CAM Salón OFF*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Apagado de cámara de Salón en Kodi PLAY nocturno.'
+      disable_notification: true
+      inline_keyboard:
+        - CAM OFF:/service_call switch.turn_off switch.tplink1, CAM ON:/service_call switch.turn_on switch.tplink1, +:/init
+
+- alias: Encendido automático de CAM salón
+  id: 'cam_auto_on'
+  trigger:
+  - platform: state
+    entity_id: media_player.kodi_tv
+    to: 'off'
+    for:
+      minutes: 5
+  - platform: state
+    entity_id: media_player.fire_tv
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    - condition: state
+      entity_id: switch.tplink1
+      state: 'off'
+  action:
+  - service: switch.turn_on
+    entity_id: switch.tplink1
 
 # LAN/BT discover --> event device_tracker_new_device
 - alias: New BT device notifier

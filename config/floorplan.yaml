@@ -199,6 +199,7 @@
 #             - switch.tv_power
 #             - switch.camara
 #             - switch.sonoff_simple_1
+             - switch.tplink1
              - switch.calentador
              - switch.bomba_circ_acs
 #             - switch.altavoz
