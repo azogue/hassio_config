@@ -166,6 +166,8 @@ script: !include scripts.yaml
 weblink: !include weblinks.yaml
 scene: !include scenes.yaml
 
+custom_updater:
+
 person:
   - name: Eugenio
     id: !secret person_id_eu
