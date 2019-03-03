@@ -201,7 +201,8 @@
 #             - switch.sonoff_simple_1
              - switch.tplink1
              - switch.calentador
-             - switch.bomba_circ_acs
+               # bomba_circ_acs
+             - switch.03200296dc4f22293a7f
 #             - switch.altavoz
              - switch.ac_dry_contact
           states:

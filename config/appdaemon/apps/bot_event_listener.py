@@ -1290,7 +1290,7 @@ class EventListener(hass.Hass):
         self.turn_off("media_player.kodi_tv")
         # self.turn_off("switch.estudio_light_relay")
         # self.turn_off("switch.new_switch_2")
-        self.turn_off("switch.bomba_circ_acs")
+        self.turn_off("switch.03200296dc4f22293a7f")
         if turn_off_heater:
             self.turn_off("switch.calentador")
 

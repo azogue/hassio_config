@@ -240,7 +240,7 @@ class AlarmClock(hass.Hass):
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
         self.call_service('switch/turn_on',
-                          entity_id="switch.calentador,switch.bomba_circ_acs")
+                          entity_id="switch.calentador,switch.03200296dc4f22293a7f")
         if 'delta_to_repeat' in kwargs:
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])

@@ -433,7 +433,7 @@
     to: '4_hold_up'
   action:
     - service: homeassistant.turn_off
-      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.bomba_circ_acs
+      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.03200296dc4f22293a7f
 #    - event: flash_light
 #      event_data:
 #        color: red
@@ -768,9 +768,9 @@
         disable_notification: true
         inline_keyboard:
           - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
-          - Encender bomba ACS:/service_call switch.turn_on switch.bomba_circ_acs, Apagar bomba ACS:/service_call switch.turn_off switch.bomba_circ_acs
+          - Encender bomba ACS:/service_call switch.turn_on switch.03200296dc4f22293a7f, Apagar bomba ACS:/service_call switch.turn_off switch.03200296dc4f22293a7f
     - service: switch.turn_off
-      entity_id: switch.calentador,switch.bomba_circ_acs
+      entity_id: switch.calentador,switch.03200296dc4f22293a7f
 
 - alias: Notificación de cambio de IP
   id: 'notif_cambio_ip'

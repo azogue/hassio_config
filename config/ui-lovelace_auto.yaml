@@ -129,7 +129,7 @@ views:
         title: Luces estudio
         type: entities
       - entities:
-          - switch.bomba_circ_acs
+          - switch.03200296dc4f22293a7f
           - switch.calentador
           - switch.ac_dry_contact
         show_header_toggle: false
@@ -481,7 +481,7 @@ views:
           - type: divider
           - entity: switch.calentador
             secondary_info: last-changed
-          - entity: switch.bomba_circ_acs
+          - entity: switch.03200296dc4f22293a7f
             secondary_info: last-changed
           - input_datetime.water_boiler_start_time
           - input_boolean.use_heater

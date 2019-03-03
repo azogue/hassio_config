@@ -3,15 +3,35 @@
 ###############################################################################
 homeassistant:
   customize:
-    switch.bomba_circ_acs:
+    # maxcio smart plug en bomba ACS
+    switch.03200296dc4f22293a7f:
+      friendly_name: Bomba circulación ACS
       icon: mdi:water-pump
+    # Smart wifi plug 2 in 1
+    switch.15556050840d8ea15efb_1:
+      friendly_name: Enchufe doble (1)
+      icon: mdi:power-socket-eu
+    switch.15556050840d8ea15efb_2:
+      friendly_name: Enchufe doble (2)
+      icon: mdi:power-socket-eu
 
-switch:
-  - platform: tuyawifiplug
-    scan_interval: 120
-    switches:
-      bomba_circ_acs:
-        host: !secret maxcio_wifi_plug_1_host
-        device_id: !secret maxcio_wifi_plug_1_device_id
-        local_key: !secret maxcio_wifi_plug_1_local_key
-        name: Bomba circulación ACS
+
+#switch:
+#  - platform: tuyawifiplug
+#    scan_interval: 120
+#    switches:
+#      bomba_circ_acs:
+#        host: !secret maxcio_wifi_plug_1_host
+#        device_id: !secret maxcio_wifi_plug_1_device_id
+#        local_key: !secret maxcio_wifi_plug_1_local_key
+#        name: Bomba circulación ACS
+##      doble_enchufe:
+##        host: 192.168.1.195
+##        local_key: !secret maxcio_wifi_plug_1_local_key
+##        name: Doble enchufe
+
+tuya:
+  username: !secret tuya_app_user
+  password: !secret tuya_app_pwd
+  country_code: 34
+  platform: smart_life
