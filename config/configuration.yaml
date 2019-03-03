@@ -176,8 +176,8 @@ person:
     id: !secret person_id_eu
     user_id: !secret user_id_eu
     device_trackers:
-      - device_tracker.iphone_bt
       - device_tracker.iphone
+      - device_tracker.iphone_bt
       - device_tracker.homeadmin_iphone
       - device_tracker.applewatch
 
@@ -185,8 +185,8 @@ person:
     id: !secret person_id_carmen
     user_id: !secret user_id_carmen
     device_trackers:
-      - device_tracker.iphone_de_carmen_bt
-      - device_tracker.iphone_se
       - device_tracker.iphonese
+      - device_tracker.iphone_se
+      - device_tracker.iphone_de_carmen_bt
       - device_tracker.homeadmin_iphonese
       - device_tracker.applewatch_carmen
