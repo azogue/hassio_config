@@ -163,7 +163,6 @@ panel_iframe:
 #    url: !secret psychrocam_svgchart_url
 #    icon: mdi:gradient
 
-#group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 weblink: !include weblinks.yaml

@@ -12,24 +12,14 @@ scene.golpe_de_calor:
   icon: mdi:arrow-up-bold
 automation.apagado_de_ac:
   icon: mdi:fan-off
-
 camera.weather_svg:
-  friendly_name: !secret weather_svg_cam_name
-#camera.webcam_playa_1:
-#  friendly_name: !secret webcam_playa_1
-#camera.webcam_playa_2:
-#  friendly_name: !secret webcam_playa_2_name
-#camera.webcam_playa_3:
-#  friendly_name: !secret webcam_playa_3_name
-
+  friendly_name: Alicante
 weblink.router_movistar:
   icon: mdi:router-wireless
 weblink.wifi_repeater:
   icon: mdi:router-wireless
 weblink.enerpi:
   icon: mdi:flash
-#weblink.mopidy:
-#  icon: mdi:music-box-outline
 weblink.nas_qnap:
   icon: mdi:server-network
 weblink.nas_synology:
@@ -54,17 +44,6 @@ weblink.grafana:
   icon: mdi:chart-areaspline
 weblink.contabilidad:
   icon: mdi:bank
-group.dt_ipad:
-  icon: mdi:tablet-ipad
-group.dt_imac:
-  icon: mdi:desktop-mac
-group.dt_mbp:
-  icon: mdi:laptop-mac
-
-group.eugenio:
-  icon: mdi:human-male
-group.carmen:
-  icon: mdi:human-female
 person.eugenio:
   icon: mdi:human-male
 person.carmen:
