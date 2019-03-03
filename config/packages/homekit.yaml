@@ -13,9 +13,13 @@ homekit:
       - light.hall_light
 
       - switch.calentador
-      - switch.bomba_circ_acs
+      - switch.03200296dc4f22293a7f
+      - switch.15556050840d8ea15efb_1
+      - switch.15556050840d8ea15efb_2
+      - switch.tplink1
 
-#      - binary_sensor.electricity_high_cost_interval
+
+      - input_boolean.mirror_eve_main_door
 
       - sensor.sensor_galeria_humidity
       - sensor.sensor_galeria_temperature
@@ -47,9 +51,16 @@ homekit:
         - feature: on_off
 #        - feature: play_pause
 #        - feature: play_stop
-    switch.bomba_circ_acs:
+    switch.03200296dc4f22293a7f:
       type: valve
       name: Bomba ACS
+    # Smart wifi plug 2 in 1
+    switch.15556050840d8ea15efb_1:
+      type: outlet
+      name: Ladrón baño 1
+    switch.15556050840d8ea15efb_2:
+      type: outlet
+      name: Ladrón baño 2
     switch.calentador:
       type: shower
       name: Calentador

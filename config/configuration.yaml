@@ -128,6 +128,9 @@ logbook:
       - script
       - python_script
       - input_boolean
+    entities:
+      - binary_sensor.mirror_eve_main_door
+      - binary_sensor.services_notok
 
 influxdb:
   host: !secret influxdb_host

@@ -13,6 +13,20 @@ homeassistant:
 ###############################################################################
 # ALARM PANEL
 ###############################################################################
+input_boolean:
+  mirror_eve_main_door:
+    initial: off
+
+binary_sensor:
+  - platform: template
+    sensors:
+      mirror_eve_main_door:
+        friendly_name: Puerta principal
+        device_class: door
+        value_template: '{{ states.input_boolean.mirror_eve_main_door.state }}'
+        entity_id:
+        - input_boolean.mirror_eve_main_door
+
 alarm_control_panel:
   - platform: manual
     name: Alarma
