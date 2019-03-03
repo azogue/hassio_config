@@ -70,16 +70,16 @@ switch:
 #    payload_off: "2off"
 #    retain: true
 
-# Sonoff Simple outlet
-  - platform: mqtt
-    name: sonoff_simple_1
-#    name: bomba_circ_acs
-    state_topic: "sonoff/simple1/stat"
-    command_topic: "sonoff/simple1"
-    qos: 1
-    payload_on: "on"
-    payload_off: "off"
-    retain: true
+## Sonoff Simple outlet
+#  - platform: mqtt
+#    name: sonoff_simple_1
+##    name: bomba_circ_acs
+#    state_topic: "sonoff/simple1/stat"
+#    command_topic: "sonoff/simple1"
+#    qos: 1
+#    payload_on: "on"
+#    payload_off: "off"
+#    retain: true
 
 # Sonoff 4ch as 2 custom covers
 #cover:

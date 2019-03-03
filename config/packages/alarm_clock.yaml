@@ -2,9 +2,6 @@
 homeassistant:
   customize:
     input_boolean.alarm_clock_status:
-      hidden: true
-    switch.alarm_clock_status:
-      homebridge_name: Despertador
       icon: mdi:toggle-switch
     input_datetime.alarm_clock_time:
       icon: mdi:alarm
@@ -24,6 +21,7 @@ homeassistant:
 input_boolean:
   alarm_clock_status:
     initial: on
+    name: Despertador
   manual_trigger_lacafetera:
     name: Activa despertador matutino
     initial: off
@@ -55,17 +53,3 @@ input_datetime:
     name: Siguiente pase de planta
     has_date: true
     has_time: true
-
-switch:
-  - platform: template
-    switches:
-      alarm_clock_status:
-        friendly_name: Despertador
-        entity_id: input_boolean.alarm_clock_status
-        value_template: "{{ states.input_boolean.alarm_clock_status.state == 'on' }}"
-        turn_on:
-          service: input_boolean.turn_on
-          entity_id: input_boolean.alarm_clock_status
-        turn_off:
-          service: input_boolean.turn_off
-          entity_id: input_boolean.alarm_clock_status
