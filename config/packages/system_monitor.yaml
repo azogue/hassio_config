@@ -1,23 +1,5 @@
 homeassistant:
   customize:
-#    input_boolean.eu_presence:
-#      icon: mdi:human-male
-#    input_boolean.carmen_presence:
-#      icon: mdi:human-female
-
-    sensor.iphone_battery_state:
-      friendly_name: iPhone X (Batt state)
-    sensor.iphone_battery_level:
-      friendly_name: iPhone X (Battery)
-    sensor.iphone_de_maria_del_carmen_battery_state:
-      friendly_name: iPhone SE (Batt state)
-    sensor.iphone_de_maria_del_carmen_battery_level:
-      friendly_name: iPhone SE (Battery)
-    sensor.ipad_de_eugenio_battery_state:
-      friendly_name: iPad (Batt state)
-    sensor.ipad_de_eugenio_battery_level:
-      friendly_name: iPad (Battery)
-
     input_select.esp_command:
       icon: mdi:developer-board
     input_select.esp_modules:
@@ -30,33 +12,6 @@ homeassistant:
     "sensor.sensor_*_time_drift":
       icon: mdi:timer-sand
 
-map:
-
-# This will override the default home zone
-zone:
-- name: Home
-  latitude: !secret latitude
-  longitude: !secret longitude
-  radius: 125
-  icon: mdi:castle
-
-- name: !secret z1_name
-  latitude: !secret z1_latitude
-  longitude: !secret z1_longitude
-  radius: !secret z1_radius
-  icon: !secret z1_icon
-
-- name: !secret z2_name
-  latitude: !secret z2_latitude
-  longitude: !secret z2_longitude
-  radius: !secret z2_radius
-  icon: !secret z2_icon
-
-#input_boolean:
-#  eu_presence:
-#    name: Eu en casa
-#  carmen_presence:
-#    name: Carmen en casa
 
 #binary_sensor:
 #  - platform: rpi_gpio
@@ -299,25 +254,3 @@ sensor:
 shell_command:
   # Init SSH keys
   cmd_init_ssh_identity: '/config/shell/start_ssh_keys.sh'
-
-device_tracker:
-- platform: nmap_tracker
-  hosts: 192.168.1.1-240
-  exclude:
-    - !secret local_ip
-    - '127.0.0.1'
-  home_interval: 30
-# # If new discovered devices are tracked by default (default: yes)
-#   track_new_devices: no
-#   # Seconds between each scan for new devices (default: 12)
-  interval_seconds: 60
-#   # Seconds to wait till marking someone as not home after not being seen
-#   # (default: 180)
-  consider_home: 300
-  track_new_devices: yes
-
-- platform: bluetooth_tracker
-
-#- platform: owntracks
-#  max_gps_accuracy: 200
-#  waypoints: True

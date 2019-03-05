@@ -44,7 +44,3 @@ weblink.grafana:
   icon: mdi:chart-areaspline
 weblink.contabilidad:
   icon: mdi:bank
-person.eugenio:
-  icon: mdi:human-male
-person.carmen:
-  icon: mdi:human-female

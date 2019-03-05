@@ -1,0 +1,149 @@
+homeassistant:
+  customize:
+    sensor.iphone_battery_state:
+      friendly_name: iPhone X (Batt state)
+    sensor.iphone_battery_level:
+      friendly_name: iPhone X (Battery)
+    sensor.iphone_de_maria_del_carmen_battery_state:
+      friendly_name: iPhone SE (Batt state)
+    sensor.iphone_de_maria_del_carmen_battery_level:
+      friendly_name: iPhone SE (Battery)
+    sensor.ipad_de_eugenio_battery_state:
+      friendly_name: iPad (Batt state)
+    sensor.ipad_de_eugenio_battery_level:
+      friendly_name: iPad (Battery)
+
+    person.eugenio:
+      icon: mdi:human-male
+    person.carmen:
+      icon: mdi:human-female
+    binary_sensor.eugenio_en_casa:
+      icon: mdi:human-male
+      device_class: occupancy
+    binary_sensor.carmen_en_casa:
+      icon: mdi:human-female
+      device_class: presence
+
+# Activate map component
+map:
+
+# This will override the default home zone
+zone:
+- name: Home
+  latitude: !secret latitude
+  longitude: !secret longitude
+  radius: 125
+  icon: mdi:castle
+
+- name: !secret z1_name
+  latitude: !secret z1_latitude
+  longitude: !secret z1_longitude
+  radius: !secret z1_radius
+  icon: !secret z1_icon
+
+- name: !secret z2_name
+  latitude: !secret z2_latitude
+  longitude: !secret z2_longitude
+  radius: !secret z2_radius
+  icon: !secret z2_icon
+
+#person:
+#  - name: Eugenio
+#    id: !secret person_id_eu
+#    user_id: !secret user_id_eu
+#    device_trackers:
+#      - device_tracker.iphone
+#      - device_tracker.iphone_bt
+#      - device_tracker.homeadmin_iphone
+#      - device_tracker.applewatch
+#
+#  - name: Carmen
+#    id: !secret person_id_carmen
+#    user_id: !secret user_id_carmen
+#    device_trackers:
+#      - device_tracker.iphonese
+#      - device_tracker.iphone_se
+#      - device_tracker.iphone_de_carmen_bt
+#      - device_tracker.homeadmin_iphonese
+#      - device_tracker.applewatch_carmen
+
+binary_sensor:
+  - platform: 'bayesian'
+    prior: 0.95
+    name: 'Eugenio en casa'
+    probability_threshold: 0.95
+    observations:
+      - entity_id: 'device_tracker.iphone'
+        prob_given_true: 0.95
+        prob_given_false: 0.15
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.iphone_bt'
+        prob_given_true: 0.99
+        prob_given_false: 0.25
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.homeadmin_iphone'
+        prob_given_true: 0.99
+        prob_given_false: 0.25
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.applewatch'
+        prob_given_true: 0.99
+        prob_given_false: 0.25
+        platform: 'state'
+        to_state: 'home'
+
+  - platform: 'bayesian'
+    prior: 0.6
+    name: 'Carmen en casa'
+    probability_threshold: 0.75
+    observations:
+      - entity_id: 'device_tracker.iphonese'
+        prob_given_true: 0.95
+        prob_given_false: 0.15
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.iphone_se'
+        prob_given_true: 0.9
+        prob_given_false: 0.25
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.iphone_de_carmen_bt'
+        prob_given_true: 0.99
+        prob_given_false: 0.33
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.homeadmin_iphonese'
+        prob_given_true: 0.99
+        prob_given_false: 0.33
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.applewatch_carmen'
+        prob_given_true: 0.99
+        prob_given_false: 0.5
+        platform: 'state'
+        to_state: 'home'
+
+
+device_tracker:
+- platform: nmap_tracker
+  hosts: 192.168.1.1-240
+  exclude:
+    - !secret local_ip
+    - '127.0.0.1'
+  home_interval: 30
+# # If new discovered devices are tracked by default (default: yes)
+#   track_new_devices: no
+#   # Seconds between each scan for new devices (default: 12)
+  interval_seconds: 60
+#   # Seconds to wait till marking someone as not home after not being seen
+#   # (default: 180)
+  consider_home: 300
+  track_new_devices: yes
+
+- platform: bluetooth_tracker
+
+- platform: owntracks
+  max_gps_accuracy: 200
+  waypoints: True
