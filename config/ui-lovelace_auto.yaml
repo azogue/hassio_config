@@ -1,5 +1,9 @@
 resources:
   - type: module
+    url: /customcards/github/custom-cards/button-card.js?track=true
+  - type: module
+    url: /customcards/github/custom-cards/tracker-card.js?track=true
+  - type: module
     url: /local/mini-media-player-bundle.js?v=1.0.2
   - type: module
     url: /local/mini-graph-card-bundle.js?v=0.3.0
@@ -54,22 +58,25 @@ views:
             type: conditional
         type: vertical-stack
       - entities:
-          - input_select.salon_light_scene
-          - input_number.light_main_slider_salon
-          - input_number.light_temp_slider_salon
-          - script.play_kodi_pvr
-          - cover.sonoff_cover_ventanal
-          - cover.sonoff_cover_puerta_terraza
-          - vacuum.robot_aspirador
-          - input_select.vacuum_clean_combination
-          - light.salon
-          - light.dormitorio
-          - light.estudio
-          - light.hall_light
-          - light.terraza
-          - scene.golpe_de_frio
-          - scene.golpe_de_calor
-          - automation.apagado_de_ac
+          - entity: input_select.salon_light_scene
+          - entity: input_number.light_main_slider_salon
+          - entity: input_number.light_temp_slider_salon
+          - entity: script.play_kodi_pvr
+          - entity: cover.sonoff_cover_ventanal
+            secondary_info: last-changed
+          - entity: cover.sonoff_cover_puerta_terraza
+            secondary_info: last-changed
+          - entity: vacuum.robot_aspirador
+            secondary_info: last-changed
+          - entity: input_select.vacuum_clean_combination
+          - entity: light.hall_light
+            secondary_info: last-changed
+          - entity: light.terraza
+            secondary_info: last-changed
+          - entity: scene.golpe_de_frio
+          - entity: scene.golpe_de_calor
+          - entity: automation.apagado_de_ac
+            secondary_info: last-changed
         show_header_toggle: false
         title: Control
         type: entities
@@ -87,35 +94,40 @@ views:
           - entity: sensor.season
             state_not: winter
         type: conditional
-      - entities:
-          - icon: 'mdi:chart-areaspline'
-            name: Grafana
-            type: weblink
-            url: >-
-              https://domus.damnserver.com/grafana/dashboard/db/ambiente-en-casa?refresh=1m&orgId=1&from=now-24h&to=now&theme=light
-          - icon: 'mdi:chart-areaspline'
-            name: Consumo eléctrico
-            type: weblink
-            url: >-
-              https://domus.damnserver.com/grafana/dashboard/db/enerpi?refresh=1m&orgId=1&from=now-7d&to=now
-        show_header_toggle: false
-        type: entities
       - entity: camera.psychrometric_chart
         show_name: false
         show_state: false
         type: picture-entity
-      - entities:
-          - light.bola_grande
-          - light.central
-          - light.pie_tv
-          - light.pie_sofa
-          - light.cuenco
-          - light.lamparita
-          - light.tira
-          - light.yeelight_strip_7811dca21ecf
-        show_header_toggle: true
+      - columns: 4
+        entities:
+          - entity: light.bola_grande
+            name: Bola
+            tap_action:
+              action: toggle
+          - entity: light.central
+            tap_action:
+              action: toggle
+          - entity: light.pie_tv
+            tap_action:
+              action: toggle
+          - entity: light.pie_sofa
+            tap_action:
+              action: toggle
+          - entity: light.cuenco
+            tap_action:
+              action: toggle
+          - entity: light.lamparita
+            tap_action:
+              action: toggle
+          - entity: light.tira
+            tap_action:
+              action: toggle
+          - entity: light.yeelight_strip_7811dca21ecf
+            tap_action:
+              action: toggle
+        show_state: false
         title: Luces salón
-        type: entities
+        type: glance
       - entities:
           - light.aura_habitacion
           - light.hue_habitacion
@@ -129,15 +141,15 @@ views:
         title: Luces estudio
         type: entities
       - entities:
-          - switch.03200296dc4f22293a7f
-          - switch.calentador
-          - switch.ac_dry_contact
+          - entity: switch.calentador
+          - entity: switch.03200296dc4f22293a7f
+          - entity: switch.tplink1
+          - entity: switch.15556050840d8ea15efb_1
+          - entity: switch.15556050840d8ea15efb_2
+          - entity: switch.ac_dry_contact
         show_header_toggle: false
         title: Enchufes
         type: entities
-      - entity: light.dormitorio
-        theme: teal
-        type: light
       - cards:
           - cards:
               - entity: light.salon
@@ -148,15 +160,18 @@ views:
           - cards:
               - entity: light.estudio
                 type: light
-              - entity: light.hall_light
-                type: light
               - entity: light.exterior
                 name: Terraza
                 type: light
             type: horizontal-stack
         type: vertical-stack
+      - color: 'rgb(28, 128, 199)'
+        entity: scene.golpe_de_frio
+        icon: 'mdi:air-conditioner'
+        type: 'custom:button-card'
     icon: 'mdi:home'
     path: default_view
+    theme: material_dark_green
     title: Quick Status
   - badges: []
     cards:
@@ -169,49 +184,49 @@ views:
                   volume: true
                 icon: 'mdi:kodi'
                 name: KODI
+                shortcuts:
+                  buttons:
+                    - icon: 'mdi:television'
+                      id: script.cec_tv_on
+                      name: 'ON'
+                      type: script
+                    - icon: 'mdi:television-off'
+                      id: script.cec_tv_off
+                      name: 'OFF'
+                      type: script
+                    - icon: 'mdi:television-guide'
+                      id: script.play_kodi_pvr
+                      name: TV
+                      type: script
+                    - icon: 'mdi:play-circle'
+                      id: script.recent_episodes
+                      name: Series
+                      type: script
+                    - icon: 'mdi:movie'
+                      id: script.recent_movies
+                      name: Pelis
+                      type: script
+                    - icon: 'mdi:play-box-outline'
+                      id: script.pvr_channels
+                      name: CHs
+                      type: script
+                    - icon: 'mdi:television-classic'
+                      id: script.pvr_recordings
+                      name: Recs
+                      type: script
+                    - icon: 'mdi:stop'
+                      id: script.stop_kodi
+                      name: Stop
+                      type: script
+                    - icon: 'mdi:refresh'
+                      id: script.update_library
+                      name: Upd
+                      type: script
+                  columns: 3
                 type: 'custom:mini-media-player'
                 volume_stateless: true
                 when_idle: true
                 when_standby: true
-                shortcuts:
-                  columns: 3
-                  buttons:
-                    - type: script
-                      name: 'ON'
-                      icon: 'mdi:television'
-                      id: script.cec_tv_on
-                    - type: script
-                      name: 'OFF'
-                      icon: 'mdi:television-off'
-                      id: script.cec_tv_off
-                    - type: script
-                      icon: 'mdi:television-guide'
-                      name: TV
-                      id: script.play_kodi_pvr
-                    - type: script
-                      icon: 'mdi:play-circle'
-                      name: Series
-                      id: script.recent_episodes
-                    - type: script
-                      icon: 'mdi:movie'
-                      name: Pelis
-                      id: script.recent_movies
-                    - type: script
-                      icon: 'mdi:play-box-outline'
-                      name: CHs
-                      id: script.pvr_channels
-                    - type: script
-                      icon: 'mdi:television-classic'
-                      id: script.pvr_recordings
-                      name: Recs
-                    - type: script
-                      icon: 'mdi:stop'
-                      id: script.stop_kodi
-                      name: Stop
-                    - type: script
-                      icon: 'mdi:refresh'
-                      name: Upd
-                      id: script.update_library
               - input_select.kodi_results
               - entity: media_player.fire_tv
                 group: true
@@ -229,10 +244,10 @@ views:
                 type: 'custom:mini-media-player'
                 volume_stateless: true
               - entity: media_player.salon
+                group: true
                 hide:
                   icon: true
                   power: true
-                group: true
                 sonos:
                   entities:
                     - entity_id: media_player.salon
@@ -242,130 +257,32 @@ views:
                   show_group_count: true
                 source: true
                 type: 'custom:mini-media-player'
-              - sensor.horas_de_tv
+              - entities:
+                  - entity: sensor.horas_de_tv
+                group: true
+                hours_to_show: 12
+                points_per_hour: 2
+                show:
+                  icon: false
+                type: 'custom:mini-graph-card'
             show_header_toggle: false
             type: entities
         type: vertical-stack
-      - cards:
-          - cards:
-              - entity: script.recent_episodes
-                name: TVShows
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.recent_episodes
-                type: entity-button
-              - entity: script.recent_movies
-                name: Pelis
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.recent_movies
-                type: entity-button
-              - entity: script.pvr_channels
-                name: TV
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.pvr_channels
-                type: entity-button
-              - entity: script.pvr_recordings
-                name: Recorded
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.pvr_recordings
-                type: entity-button
-            name: Media select
-            type: horizontal-stack
-          - entities:
-              - input_select.kodi_results
-              - sensor.horas_de_tv
-            show_header_toggle: false
-            type: entities
-          - cards:
-              - entity: script.cec_tv_on
-                name: 'ON'
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.cec_tv_on
-                type: entity-button
-              - entity: script.cec_tv_off
-                name: 'OFF'
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.cec_tv_off
-                type: entity-button
-              - entity: script.play_kodi_pvr
-                name: PLAY
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.play_kodi_pvr
-                type: entity-button
-            type: horizontal-stack
-          - cards:
-              - entity: script.stop_kodi
-                name: STOP
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.stop_kodi
-                type: entity-button
-              - entity: script.update_library
-                name: UPD
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.update_library
-                type: entity-button
-              - entity: script.quit_kodi
-                name: QUIT
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.quit_kodi
-                type: entity-button
-              - entity: script.restart_kodi_osmc
-                name: RESET
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.restart_kodi_osmc
-                type: entity-button
-            type: horizontal-stack
-        type: vertical-stack
-      - cards:
-          - entities:
-              - input_text.q_youtube
-              - input_select.youtube_videos
-            show_header_toggle: false
-            title: Media search
-            type: entities
-          - entities:
-              - input_text.q_torrents
-              - script.torrent_search
-              - icon: 'mdi:magnet-on'
-                name: Buscador de torrents
-                type: weblink
-                url: 'http://192.168.1.65:5000/domus/search'
-            show_header_toggle: false
-            title: Torrents
-            type: entities
-        type: vertical-stack
+      - entities:
+          - input_text.q_youtube
+          - input_select.youtube_videos
+          - type: divider
+          - input_text.q_torrents
+          - script.torrent_search
+          - icon: 'mdi:magnet-on'
+            name: Buscador de torrents
+            type: weblink
+            url: 'http://192.168.1.65:5000/domus/search'
+          - type: divider
+          - script.quit_kodi
+          - script.restart_kodi_osmc
+        show_header_toggle: false
+        type: entities
     icon: 'mdi:kodi'
     path: kodi_control
     title: Kodi
@@ -444,21 +361,22 @@ views:
   - badges: []
     cards:
       - entity: sensor.esp32ener_power
-        max: 5000
-        min: 250
-        scale: 60px
+        max: 4700
+        min: 0
+        name: Potencia (W)
         severity:
-          green: 300
-          red: 4000
+          green: 0
           yellow: 2500
-        title: Potencia (W)
+          red: 4000
+        theme: Backend-selected
         type: gauge
-        unit_of_measurement: ' '
+        unit: ' '
       - entities:
           - sensor.esp32ener_power
           - sensor.esp32ener_ch1
           - sensor.esp32ener_ch2
           - sensor.sonoff_pow_1
+          - sensor.tplink1_watts
           - binary_sensor.electricity_high_cost_interval
           - sensor.pvpc
           - sensor.elecprice_range
@@ -491,6 +409,15 @@ views:
         show_header_toggle: false
         title: ACS y AC
         type: entities
+      - entities:
+          - entity: switch.calentador
+            name: Agua
+          - entity: switch.03200296dc4f22293a7f
+            name: Bomba
+          - entity: switch.ac_dry_contact
+            name: AC
+        hours_to_show: 12
+        type: history-graph
       - aspect_ratio: 100%
         title: Coste
         type: iframe
@@ -505,7 +432,13 @@ views:
           - entity: alarm_control_panel.alarma
             type: alarm-panel
           - entities:
+              - entity: binary_sensor.mirror_eve_main_door
+                secondary_info: last-changed
               - entity: sensor.current_alarm_level
+                secondary_info: last-changed
+              - entity: binary_sensor.eugenio_en_casa
+                secondary_info: last-changed
+              - entity: binary_sensor.carmen_en_casa
                 secondary_info: last-changed
               - icon: 'mdi:video'
                 name: MotionEye
@@ -514,6 +447,18 @@ views:
             show_header_toggle: false
             title: Alarma
             type: entities
+        type: vertical-stack
+      - cards:
+          - columns: 3
+            entities:
+              - entity: binary_sensor.sensor_kitchen_mov1
+                name: Cocina
+              - entity: binary_sensor.sensor_study_mov1
+                name: Estudio
+              - entity: binary_sensor.sensor_bedroom_mov1
+                name: Dormitorio
+            show_state: false
+            type: glance
           - camera_image: camera.sricam_360
             entities:
               - binary_sensor.motioncam_salon
@@ -535,23 +480,37 @@ views:
               - switch.motion_detection_kmoon_ipcam100
             title: Terraza
             type: picture-glance
-          - columns: 3
-            entities:
-              - entity: binary_sensor.sensor_kitchen_mov1
-                name: Cocina
-              - entity: binary_sensor.sensor_study_mov1
-                name: Estudio
-              - entity: binary_sensor.sensor_bedroom_mov1
-                name: Dormitorio
-            show_state: false
-            type: glance
         type: vertical-stack
     icon: 'mdi:shield-outline'
-    panel: true
+    panel: false
     path: alarm_panel
+    theme: material_dark_red
     title: Alarm configuration
   - badges: []
     cards:
+      - cards:
+          - entities:
+              - entity: sensor.temperatura_stats_mean
+                name: Int
+              - entity: sensor.temperatura_exterior
+                name: Ext
+            type: history-graph
+          - color_thresholds:
+              - color: '#f39c12'
+                value: 18
+              - color: '#d35400'
+                value: 21
+              - color: '#c0392b'
+                value: 26.5
+            entities:
+              - sensor.temperatura_stats_mean
+            more_info: false
+            name: Interior
+            points_per_hour: 2
+            show:
+              labels: true
+            type: 'custom:mini-graph-card'
+        type: vertical-stack
       - entities:
           - sensor.temperatura_stats_mean
           - sensor.humedad_stats_mean
@@ -566,12 +525,6 @@ views:
         show_header_toggle: false
         title: Ambiente
         type: entities
-      - entities:
-          - entity: sensor.temperatura_stats_mean
-            name: Int
-          - entity: sensor.temperatura_exterior
-            name: Ext
-        type: history-graph
       - entities:
           - entity: sensor.humedad_stats_mean
             name: Int
@@ -710,11 +663,11 @@ views:
   - badges: []
     cards:
       - entities:
-          - switch.alarm_clock_status
-          - input_datetime.alarm_clock_time
-          - input_datetime.next_special_wake_up
-          - input_select.room_altavoces
-          - input_boolean.manual_trigger_lacafetera
+          - entity: input_boolean.alarm_clock_status
+          - entity: input_datetime.alarm_clock_time
+          - entity: input_datetime.next_special_wake_up
+          - entity: input_select.room_altavoces
+          - entity: input_boolean.manual_trigger_lacafetera
         show_header_toggle: false
         title: Despertador
         type: entities
@@ -821,100 +774,137 @@ views:
         show_header_toggle: false
         title: QNAP NAS
         type: entities
-      - entities:
-          - sensor.kodi_cpu_temperature
-          - sensor.rpi3dev1_cpu_temperature
-          - sensor.rpi3dev2_cpu_temperature
+      - columns: 3
+        entities:
+          - entity: device_tracker.applewatch
+          - entity: device_tracker.applewaeeugenio
+          - entity: device_tracker.airpods_de_eugenio
+          - entity: device_tracker.applewatch_carmen
+          - entity: device_tracker.nas_qnap
+          - entity: device_tracker.nas_syno
+          - entity: device_tracker.hue_bridge
+          - entity: device_tracker.yeelight_strip
+          - entity: device_tracker.tv_toshiba
+          - entity: device_tracker.home_cinema
+          - entity: device_tracker.home_cinema_2
+          - entity: device_tracker.rpi3b_libreelec
+          - entity: device_tracker.xiaomi_vacuum
+          - entity: device_tracker.amazon53d58f837
+          - entity: device_tracker.sonoszp_1
+          - entity: device_tracker.sonoszp_2
+          - entity: device_tracker.printer_brother_hl3140cw
+          - entity: device_tracker.router_movistar
+          - entity: device_tracker.velop_1
+          - entity: device_tracker.velop_2
+          - entity: device_tracker.velop_3
+          - entity: device_tracker.switch_salon
+          - entity: device_tracker.deco_movistar
+          - entity: device_tracker.camera_sricam360
+          - entity: device_tracker.camera_escam
+          - entity: device_tracker.camera_iegeek
+          - entity: device_tracker.rpi3dev1
+          - entity: device_tracker.rpi3dev2
+          - entity: device_tracker.5ccf7f9237c1
+          - entity: device_tracker.dc4f22293a7f
+          - entity: device_tracker.enchufe_tp
+          - entity: device_tracker.double_outlet
+          - entity: device_tracker.6001944ed7c4
         show_header_toggle: false
-        title: Otras RPI
-        type: entities
-      - entities:
-          - group.dt_imac
-          - group.dt_mbp
-          - group.dt_ipad
-          - device_tracker.applewatch
-          - device_tracker.applewatch_carmen
-          - input_boolean.eu_presence
-          - input_boolean.carmen_presence
-          - device_tracker.nas_qnap
-          - device_tracker.nas_syno
-          - device_tracker.hue_bridge
-          - device_tracker.yeelight_strip
-          - device_tracker.tv_toshiba
-          - device_tracker.home_cinema
-          - device_tracker.home_cinema_2
-          - device_tracker.rpi3b_libreelec
-          - device_tracker.xiaomi_vacuum
-          - device_tracker.amazon53d58f837
-          - device_tracker.sonoszp_1
-          - device_tracker.sonoszp_2
-          - device_tracker.ethernet_adapter
-          - device_tracker.printer_brother_hl3140cw
-          - device_tracker.qnap_ubuntu
-          - device_tracker.router_movistar
-          - device_tracker.velop_1
-          - device_tracker.velop_2
-          - device_tracker.velop_3
-          - device_tracker.deco_movistar
-          - device_tracker.camera_sricam360
-          - device_tracker.camera_kmoon
-          - device_tracker.camera_iegeek
-          - device_tracker.rpi3dev1
-          - device_tracker.rpi3dev2
-          - device_tracker.rpi3dev3
-          - device_tracker.jo01
-          - device_tracker.kindle_1
-          - device_tracker.kindle_2
-          - device_tracker.6001944ed7c4
-          - device_tracker.5ccf7f9237c1
-          - device_tracker.dc4f22293a7f
-        show_header_toggle: false
+        theme: Backend-selected
         title: Dispositivos
-        type: entities
-      - entities:
-          - device_tracker.imac
-          - device_tracker.imac_wifi
-          - device_tracker.imac_bt
-        show_header_toggle: false
-        title: iMac
-        type: entities
-      - entities:
-          - device_tracker.macbook_pro
-          - device_tracker.macbook_pro_bt
-        show_header_toggle: false
-        title: MacBook Pro
-        type: entities
-      - entities:
-          - device_tracker.ipad
-          - device_tracker.ipad_wifi
-        show_header_toggle: false
-        title: iPad
-        type: entities
+        type: glance
       - cards:
-          - columns: 2
-            entities:
-              - entity: sensor.iphone_battery_state
-                name: State
-              - entity: sensor.iphone_battery_level
-                name: Level
-            show_name: false
-            title: iPhone X
-            type: glance
-          - columns: 2
-            entities:
-              - entity: sensor.iphone_de_maria_del_carmen_battery_state
-              - entity: sensor.iphone_de_maria_del_carmen_battery_level
-            show_name: false
-            title: iPhone SE
-            type: glance
-          - columns: 2
-            entities:
-              - entity: sensor.ipad_de_eugenio_battery_state
-              - entity: sensor.ipad_de_eugenio_battery_level
-            show_name: false
-            title: iPad
-            type: glance
+          - cards:
+              - decimals: 0
+                entities:
+                  - entity: sensor.hass_cpu_temperature
+                    name: Hassio
+                  - entity: sensor.kodi_cpu_temperature
+                    name: Kodi
+                group: true
+                name: CPU temps
+                state: false
+                type: 'custom:mini-graph-card'
+              - decimals: 0
+                entities:
+                  - entity: sensor.rpi3dev1_cpu_temperature
+                    name: RPI-1
+                  - entity: sensor.rpi3dev2_cpu_temperature
+                    name: RPI-2
+                group: true
+                name: CPU temps
+                state: false
+                type: 'custom:mini-graph-card'
+              - decimals: 0
+                entities:
+                  - sensor.nas_home_system_temperature
+                group: true
+                name: QNAP temp
+                state: false
+                type: 'custom:mini-graph-card'
+            type: horizontal-stack
         type: vertical-stack
+      - cards:
+          - align_state: center
+            color: var(--accent-color)
+            decimals: 0
+            entities:
+              - entity: sensor.iphone_battery_level
+            lower_bound: 0
+            name: iPhone X
+            points_per_hour: 1
+            show:
+              graph: bar
+            type: 'custom:mini-graph-card'
+            upper_bound: 100
+          - align_state: center
+            color: var(--accent-color)
+            decimals: 0
+            entities:
+              - entity: sensor.iphone_de_maria_del_carmen_battery_level
+            lower_bound: 0
+            name: iPhone SE
+            points_per_hour: 1
+            show:
+              graph: bar
+            type: 'custom:mini-graph-card'
+            upper_bound: 100
+          - align_state: center
+            color: var(--accent-color)
+            decimals: 0
+            entities:
+              - entity: sensor.ipad_de_eugenio_battery_level
+            lower_bound: 0
+            name: iPad
+            points_per_hour: 1
+            show:
+              graph: bar
+            type: 'custom:mini-graph-card'
+            upper_bound: 100
+        type: vertical-stack
+      - entities:
+          - entity: device_tracker.imac
+            name: Eth
+          - entity: device_tracker.imac_wifi
+            name: Wifi
+          - entity: device_tracker.imac_bt
+            name: BT
+        title: iMac
+        type: glance
+      - entities:
+          - entity: device_tracker.macbook_pro
+            name: Wifi
+          - entity: device_tracker.macbook_pro_bt
+            name: BT
+        title: MacBook Pro
+        type: glance
+      - entities:
+          - entity: device_tracker.ipad
+            name: iOS app
+          - entity: device_tracker.ipad_wifi
+            name: Wifi
+        title: iPad
+        type: glance
       - columns: 3
         entities:
           - entity: sensor.speedtest_ping
@@ -951,8 +941,7 @@ views:
     icon: 'mdi:sitemap'
     path: home_network
     title: Red local
-  - badges: []
-    cards:
+  - cards:
       - card:
           secondary_info: last-changed
           show_name: false
@@ -994,67 +983,122 @@ views:
         title: Conectivity
         type: entities
       - entities:
-          - binary_sensor.workday_sensor
-          - sensor.season
-          - sun.sun
-          - sensor.hue_dimmer_switch
-          - sensor.interruptor_estudio
-          - sensor.interruptor_dormitorio
-          - input_number.enerpi_max_power
-          - input_number.enerpi_max_power_reset
-          - sensor.telegram_default_chatid
-          - script.good_night
-          - script.good_morning
-          - script.start_status_sonoff_outlets
-          - script.set_mid_position_cover_1
-          - script.set_mid_position_cover_2
-          - script.step_up_cover_1
-          - script.step_down_cover_1
-          - script.step_up_cover_2
-          - script.step_down_cover_2
+          - entity: binary_sensor.workday_sensor
+          - entity: sensor.season
+          - entity: sun.sun
+          - entity: sensor.hue_dimmer_switch
+          - entity: sensor.interruptor_estudio
+          - entity: sensor.interruptor_dormitorio
+          - entity: sensor.telegram_default_chatid
+          - entity: script.good_night
+          - entity: script.good_morning
+          - entity: script.start_status_sonoff_outlets
         show_header_toggle: false
         title: General
         type: entities
       - entities:
-          - automation.encendido_luces_estudio
-          - automation.encendido_luces_dormitorio
-          - automation.luz_hall_abriendo_cuadro
-          - automation.sync_tira_tv_con_tira_sofa
-          - automation.salon_select_scene
-          - automation.brillo_salon
-          - automation.tono_salon
-          - automation.encendido_de_tv_si_apagada_y_kodi_play
-          - automation.apagado_de_tv_si_encendida_y_kodi_en_idle_10_min
-          - automation.encendido_automatico_de_cam_salon
-          - automation.apagado_de_cam_salon_en_kodi_play_nocturno
-          - automation.turn_on_tv_with_lights_hue_switch
-          - automation.turn_tv_night_scene_hue_switch
-          - automation.morning_turn_off_hue_switch
-          - automation.turn_off_all_hue_switch
+          - entity: automation.encendido_luces_estudio
+          - entity: automation.encendido_luces_dormitorio
+          - entity: automation.sync_tira_tv_con_tira_sofa
+          - entity: automation.salon_select_scene
+          - entity: automation.brillo_salon
+          - entity: automation.tono_salon
+          - entity: automation.encendido_de_tv_si_apagada_y_kodi_play
+          - entity: automation.apagado_de_tv_si_encendida_y_kodi_en_idle_10_min
+          - entity: automation.encendido_automatico_de_cam_salon
+          - entity: automation.apagado_de_cam_salon_en_kodi_play_nocturno
+          - entity: automation.turn_on_tv_with_lights_hue_switch
+          - entity: automation.turn_tv_night_scene_hue_switch
+          - entity: automation.morning_turn_off_hue_switch
+          - entity: automation.turn_off_all_hue_switch
         show_header_toggle: false
         title: Automatizaciones de luz y medios
         type: entities
+      - cards:
+          - cards:
+              - color_type: label-card
+                name: Ventanal
+                type: 'custom:button-card'
+              - action: service
+                color_type: card
+                icon: 'mdi:chevron-double-up'
+                name: Up
+                service:
+                  action: turn_on
+                  data:
+                    entity_id: script.step_up_cover_1
+                  domain: script
+                type: 'custom:button-card'
+              - action: more_info
+                color_type: card
+                entity: script.set_mid_position_cover_1
+                icon: 'mdi:format-align-middle'
+                name: At 50%
+                type: 'custom:button-card'
+              - action: service
+                color_type: card
+                icon: 'mdi:chevron-double-down'
+                name: Down
+                service:
+                  action: turn_on
+                  data:
+                    entity_id: script.step_down_cover_1
+                  domain: script
+                type: 'custom:button-card'
+            type: horizontal-stack
+          - cards:
+              - color_type: label-card
+                name: Puerta
+                type: 'custom:button-card'
+              - action: service
+                color_type: card
+                icon: 'mdi:chevron-double-up'
+                name: Up
+                service:
+                  action: turn_on
+                  data:
+                    entity_id: script.step_up_cover_2
+                  domain: script
+                type: 'custom:button-card'
+              - action: more-info
+                color_type: card
+                entity: script.set_mid_position_cover_2
+                icon: 'mdi:format-align-middle'
+                name: At 50%
+                type: 'custom:button-card'
+              - action: service
+                color_type: card
+                icon: 'mdi:chevron-double-down'
+                name: Down
+                service:
+                  action: turn_on
+                  data:
+                    entity_id: script.step_down_cover_2
+                  domain: script
+                type: 'custom:button-card'
+            type: horizontal-stack
+        type: vertical-stack
       - entities:
-          - automation.start_homeassistant
-          - automation.notify_sunset
-          - automation.update_notifications
-          - automation.notificacion_de_cambio_de_ip
-          - automation.aviso_de_sensor_mqtt_offline
-          - automation.aviso_de_sensor_mqtt_online
-          - automation.new_bt_device_notifier
-          - automation.carmen_sale_del_hospital
-          - automation.carmen_llega_al_hospital
+          - entity: automation.start_homeassistant
+          - entity: automation.notify_sunset
+          - entity: automation.update_notifications
+          - entity: automation.notificacion_de_cambio_de_ip
+          - entity: automation.aviso_de_sensor_mqtt_offline
+          - entity: automation.aviso_de_sensor_mqtt_online
+          - entity: automation.new_bt_device_notifier
+          - entity: automation.carmen_sale_del_hospital
+          - entity: automation.carmen_llega_al_hospital
+          - entity: automation.alerta_de_puerta_de_entrada
+          - entity: automation.alerta_de_bateria_baja
         show_header_toggle: false
         title: Automatizaciones de notificación
         type: entities
       - entities:
-          - automation.buenas_noches
-          - automation.apagado_automatico_de_termo_acs
-          - automation.apagado_automatico_de_enchufes_a_las_6h
-          - automation.retry_etekcity_commands
-          - automation.vacuum_select_rooms_to_clean
-          - automation.botvac_error_notification
-          - automation.botvac_reset_select_command
+          - entity: automation.buenas_noches
+          - entity: automation.apagado_automatico_de_termo_acs
+          - entity: automation.vacuum_select_rooms_to_clean
+          - entity: automation.botvac_error_notification
+          - entity: automation.botvac_reset_select_command
         show_header_toggle: false
         title: Resto de Automatizaciones
         type: entities
@@ -1064,9 +1108,12 @@ views:
         show_header_toggle: false
         title: Escenas
         type: entities
+      - type: 'custom:tracker-card'
+    badges: []
     icon: 'mdi:settings'
     path: master_conf
     title: Master configuration
+    theme: solarized_light
   - badges: []
     cards:
       - entities:
@@ -1154,16 +1201,17 @@ views:
         entities:
           - device_tracker.30aea41607a8
           - device_tracker.30aea4060680
-          - device_tracker.240ac40a6288
-          - device_tracker.esp32_evb_1_wifi
           - device_tracker.30aea4001d1c
           - device_tracker.30aea4132c40
           - device_tracker.30aea4155644
           - device_tracker.30aea41960dc
-          - device_tracker.240ac48124a4
-          - device_tracker.240ac4057954
+          - device_tracker.30aea4208170
+          - device_tracker.esp32_evb_1_wifi
           - device_tracker.esp_covers
           - device_tracker.240ac40a6288
+          - device_tracker.240ac4057954
+          - device_tracker.240ac40a6288
+          - device_tracker.240ac48124a4
           - device_tracker.240ac481661c
           - device_tracker.240ac48163f8
           - device_tracker.240ac4817724
