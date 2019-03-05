@@ -44,11 +44,6 @@ hue:
 ## sensor.hue_dimmer_switch
 sensor:
 - platform: hue_dimmer
-  ip_address: !secret hue_bridge_host
-  token: !secret hue_bridge_token
-  devices:
-   - RWL
-##   - GEO
 
 
 input_number:
