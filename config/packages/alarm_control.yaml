@@ -3,6 +3,9 @@ homeassistant:
     alarm_control_panel.alarma:
       friendly_name: Alarma del hogar
       icon: mdi:security-home
+    input_boolean.mirror_eve_main_door:
+      friendly_name: Puerta principal
+      icon: mdi:door-closed
 
 
 #{{ states.alarm_control_panel.alarma.state }}
@@ -23,7 +26,8 @@ binary_sensor:
       mirror_eve_main_door:
         friendly_name: Puerta principal
         device_class: door
-        value_template: '{{ states.input_boolean.mirror_eve_main_door.state }}'
+        value_template: >-
+          {{ is_state('input_boolean.mirror_eve_main_door', 'on') }}
         entity_id:
         - input_boolean.mirror_eve_main_door
 

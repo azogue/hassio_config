@@ -718,7 +718,7 @@
       data_template:
         title: '*Sensor online*'
         target: !secret telegram_bot_chat_id_admin
-#        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha revivido*: `{{ trigger.to_state.attributes }}`. Estaba desaparecido desde {{ trigger.from_state.last_changed | timestamp_local }}."
+#        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha revivido*: `{{ trigger.to_state.attributes }}`. Estaba desaparecido desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }}."
         message: "El micro ESP `{{ trigger.to_state.attributes.friendly_name[9:]}}` parece que ha **revivido**: Wake_{{ trigger.to_state.attributes.status.wake }}(WR:{{ trigger.to_state.attributes.status.wake_reason }},ERR:{{ trigger.to_state.attributes.status.c_error }}); Wifi -> {{ trigger.to_state.attributes.wifi_ap }} [CH {{ trigger.to_state.attributes.network.CH }}, RSSI: {{ trigger.to_state.attributes.rssi }}, IP_{{ trigger.to_state.attributes.ip[10:] }}]. Estaba desaparecido desde hace {{ ((now() - trigger.from_state.last_changed).total_seconds() / 60) | round(1) }} min."
         disable_notification: true
 
@@ -836,7 +836,7 @@
 #      data_template:
 #        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
 #        target: !secret telegram_bot_chat_id_admin
-#        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ trigger.to_state.last_changed | timestamp_local }})"
+#        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ as_timestamp(trigger.to_state.last_changed) | timestamp_local }})"
 #        disable_notification: true
 #        inline_keyboard:
 #          - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
@@ -903,7 +903,7 @@
 ##      data_template:
 ##        title: '*Auto-Retry* de {{ trigger.to_state.attributes.friendly_name }}'
 ##        target: !secret telegram_bot_chat_id_admin
-##        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ trigger.to_state.last_changed | timestamp_local }})"
+##        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ as_timestamp(trigger.to_state.last_changed) | timestamp_local }})"
 ##        disable_notification: true
 
 - alias: Apagado de AC
@@ -927,7 +927,7 @@
         title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
 #        target: !secret telegram_bot_chat_id_admin
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: "Apagado de {{ trigger.to_state.attributes.friendly_name }} [Tª: {{ trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature }} °C] (en `{{ trigger.from_state.state }}` desde {{ trigger.from_state.last_changed | timestamp_local }})"
+        message: "Apagado de {{ trigger.to_state.attributes.friendly_name }} (Tª: {{ trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature }} °C) (en `{{ trigger.from_state.state }}` desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }})"
         disable_notification: true
         inline_keyboard:
           - Deshacer COOL:/service_call climate.set_operation_mode termostato_ac cool
@@ -945,19 +945,19 @@
       entity_id: automation.apagado_de_ac
 
 - alias: Alerta de puerta de entrada
-  id: main_door_open
+  id: 'main_door_open'
   trigger:
     - platform: state
-      entity_id: binary_sensor.mirror_eve_main_door
+      entity_id: input_boolean.mirror_eve_main_door
       to: 'on'
   action:
     - service: telegram_bot.send_message
       data_template:
-        title: '*Puerta abierta'
+        title: '*Puerta abierta*'
         target: !secret telegram_bot_chat_id_admin
-#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: "Detección de {{ trigger.to_state.attributes.friendly_name }} [cerrada (`{{ trigger.from_state.state }}`) desde {{ trigger.from_state.last_changed | timestamp_local }}]"
+        #        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        message: "Detección de {{ trigger.to_state.attributes.friendly_name }}. Cerrada (`{{ trigger.from_state.state }}`) desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }}"
         disable_notification: false
-#        inline_keyboard:
-#        - Deshacer COOL:/service_call climate.set_operation_mode termostato_ac cool
-#        - Deshacer HOT:/service_call climate.set_operation_mode calefaccion heat
+    - service: python_script.main_door_opening
+      data_template:
+        last_state_ts: '{{ trigger.from_state.last_changed }}'
