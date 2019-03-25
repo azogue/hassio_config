@@ -969,13 +969,14 @@ class EventListener(hass.Hass):
                 if st == 'on':
                     try:
                         self.call_service('light/turn_on', entity_id=light,
-                                          transition=1, xy_color=attrs['xy_color'],
-                                          brightness=attrs['brightness'])
+                                          transition=1,
+                                          xy_color=attrs['attributes']['xy_color'],
+                                          brightness=attrs['attributes']['brightness'])
                     except KeyError as exc:
                         self.log("BAD LIGHT[{}] RESTORE ATTRS: {}"
                                  .format(light, attrs))
                         self.call_service('light/turn_on', entity_id=light,
-                                          transition=1, **attrs)
+                                          transition=1, **attrs['attributes'])
                 else:
                     self.call_service('light/turn_off', entity_id=light,
                                       transition=1)

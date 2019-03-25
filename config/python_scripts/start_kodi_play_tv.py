@@ -4,72 +4,51 @@ en directo de un canal con noticias, o bien reproducir la última grabación.
 
 # Lista canales MovistarTV en tvheadend:
 
-		33, 'La 1 HD',
-		50, 'La 1',
-		8, 'La 2 HD',
-		35, 'La 2',
-		46, 'Antena 3',
-		26, 'Antena 3 HD',
-		2, 'Cuatro',
-		9, 'Cuatro HD',
-		25, 'Telecinco',
-		63, 'Telecinco HD',
-		18, 'La Sexta',
-		41, 'La Sexta HD',
-		61, '#0',
-		66, '#0 HD',
-		31, '#Vamos',
-		11, '#Vamos HD',
-		57, 'À Punt',
-		5, 'Canal Sur 1 HD',
-		24, 'TV3 HD',
-		58, 'TV Mediterráneo',
-		53, 'Castilla la Mancha TV',
-		56, '7 TV Región Murcia',
-		1, 'FDF',
-		20, 'Neox',
-		37, 'Atreseries',
-		64, 'Atreseries HD',
-		19, 'Energy',
-		42, '13 TV',
-		55, 'Ten',
-		17, 'Paramount Network',
-		29, 'DEPORTES',
-		30, 'DEPORTES HD',
-		16, 'M. eSports HD',
-		4, 'M. eSports',
-		27, 'GOL',
-		62, 'GOL HD',
-		60, 'Teledeporte',
-		6, 'Teledeporte HD',
-		14, 'Real Madrid TV',
-		39, 'Real Madrid TV HD',
-		48, 'Discovery Max',
-		36, 'DKISS',
-		47, 'Divinity',
-		34, 'Nova',
-		15, 'MEGA',
-		28, 'BeMad',
-		10, 'BeMad HD',
-		49, 'Disney Channel',
-		23, 'Disney Channel HD',
-		59, 'Boing',
-		32, 'Clan TVE',
-		45, 'Clan TVE HD',
-		51, 'Canal 24 Horas',
-		65, 'Intereconomía TV',
-		13, 'Libertad Digital',
-		12, 'Canal Sur Andalucía',
-		40, 'Galicia TV Europa',
-		7, 'Canal Extremadura SAT',
-		22, 'TV3CAT',
-		21, 'ETB Sat',
-		44, 'Aragón TV Int',
-		38, 'Betevé',
-		54, 'LaLiga 123 TV Multi 1',
-		43, 'La Tienda en Casa',
-		52, 'beIN LaLiga 4K DRM',
-		3, 'LaLiga TV Bar HD',
+        50, 'La 1 HD'
+        66, 'La 2 HD'
+        48, 'Antena 3 HD'
+        42, 'Cuatro HD'
+        43, 'Tele 5 HD'
+        49, 'laSexta HD'
+        55, '#0 HD'
+        70, '#Vamos HD'
+        69, 'À Punt'
+        52, 'La Ocho Mediterráneo'
+        67, 'M. FAMA 24H HD'
+        37, 'FDF'
+        72, 'Neox HD'
+        59, 'Atreseries HD'
+        39, 'Energy'
+        38, 'TRECE'
+        60, 'Ten'
+        41, 'Paramount Network'
+        53, 'DEPORTES'
+        71, '#Vamos HD'
+        63, 'GOL HD'
+        51, 'Teledeporte HD'
+        56, 'Real Madrid TV HD'
+        34, 'DMAX'
+        61, 'DKISS'
+        35, 'Divinity'
+        74, 'Nova HD'
+        73, 'MEGA HD'
+        58, 'BeMad HD'
+        31, 'Disney Ch.'
+        32, 'Boing'
+        68, 'Clan TVE HD'
+        36, 'Canal 24 H.'
+        33, 'Intereconomía'
+        62, 'Libertad Digital'
+        47, 'Canal Sur Andalucía'
+        46, 'Galicia TV Europa'
+        64, 'Canal Extremadura SAT'
+        45, 'TV3CAT'
+        44, 'ETB Sat.'
+        54, 'Aragón TV Int'
+        40, 'LTC'
+        65, 'Canal 24 H.'
+        57, 'Movistar+'
+        30, 'V.O.D'
 
 """
 
@@ -83,25 +62,25 @@ TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 now = datetime.datetime.now()
 play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
-    content_id = 41
+    content_id = 49
     media_dest = 'La Sexta HD'
 elif now.hour < 16:
-    content_id = 26
+    content_id = 48
     media_dest = 'Antena 3 HD'
 elif now.hour < 20:
-    content_id = 51
+    content_id = 36
     media_dest = 'Canal 24 Horas'
     # Last record?
     # play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
-    content_id = 41
+    content_id = 49
     media_dest = 'La Sexta HD'
 elif (now.hour == 20) or ((now.hour == 21) and (now.minute < 15)):
-    content_id = 26
+    content_id = 48
     media_dest = 'Antena 3 HD'
 else:
     media_dest = '#0 HD'
-    content_id = 66
+    content_id = 55
     # Last record?
     # play_live_tv = False
 
