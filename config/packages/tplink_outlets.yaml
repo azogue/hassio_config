@@ -18,11 +18,10 @@ homeassistant:
 #      icon: mdi:flash-outline
 #      friendly_name: Consumo día
 
-switch:
-  - platform: tplink
-    name: tplink1
-    enable_leds: true
-    host: 192.168.1.196
+tplink:
+  discovery: false
+  switch:
+    - host: 192.168.1.196
 
 # POW voltage and power sensors
 sensor:
