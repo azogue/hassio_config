@@ -944,6 +944,26 @@
     - service: automation.turn_off
       entity_id: automation.apagado_de_ac
 
+- alias: Alerta de batería baja
+  id: 'battery_is_near_dead'
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.ipad_de_eugenio_battery_level
+      below: 35
+  condition:
+    - condition: state
+      entity_id: sensor.ipad_de_eugenio_battery_state
+      state: 'Unplugged'
+      for:
+        hours: 1
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        title: '*Batería baja en {{ trigger.to_state.attributes.friendly_name }}*'
+        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+        message: "Pon a cargar el {{ trigger.to_state.attributes['Device Type'] }} (Batería: {{ trigger.to_state.state }} %)"
+        disable_notification: false
+
 - alias: Alerta de puerta de entrada
   id: 'main_door_open'
   trigger:
