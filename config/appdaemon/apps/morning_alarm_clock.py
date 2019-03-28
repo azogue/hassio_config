@@ -25,11 +25,11 @@ LOG_LEVEL = 'INFO'
 
 # Defaults para La Cafetera Alarm Clock:
 MEDIA_PLAYER = 'media_player.dormitorio'
-DEFAULT_SOURCE = 'La Cafetera de Radiocable'
+SPECIAL_SOURCE = 'La Cafetera de Radiocable'
 MIN_VOLUME = 1
 DEFAULT_MAX_VOLUME = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
-DEFAULT_DURATION = 1.5  # h
+DEFAULT_DURATION_HOURS = 1.5  # h
 DEFAULT_EMISION_TIME = "08:30:00"
 TZ = 'CET'
 DEFAULT_MIN_POSPONER = 9
@@ -37,7 +37,6 @@ MAX_WAIT_TIME = dt.timedelta(minutes=10)
 STEP_RETRYING_SEC = 20
 DEFAULT_WARM_UP_TIME_DELTA = 25  # s
 MIN_INTERVAL_BETWEEN_EPS = dt.timedelta(hours=8)
-MASK_URL_STREAM_MOPIDY = "http://api.spreaker.com/listen/episode/{}/http"
 TELEGRAM_INLINE_KEYBOARD_ALARMCLOCK = [
     [('A la ducha!', '/ducha'), ('Un poquito +', '/posponer'),
      ('OFF', '/despertadoroff')]]
@@ -89,8 +88,10 @@ def is_last_episode_ready_for_play(now):
     :return: (play_now, info_last_episode)
     :rtype: tuple(bool, dict)
     """
-    est_today = dt.datetime.combine(now.date(),
-                                    parse(DEFAULT_EMISION_TIME).time())
+
+    est_today = dt.datetime.combine(
+        now.date(), parse(DEFAULT_EMISION_TIME).time()
+    )
     ok, info = get_info_last_ep()
     if ok:
         if (info['is_live'] or
@@ -202,7 +203,7 @@ class AlarmClock(hass.Hass):
                           self._special_alarm_input)
 
         # Audio Source selection:
-        self._selected_player = DEFAULT_SOURCE
+        self._selected_player = SPECIAL_SOURCE
         self._room_select = self.args.get('room_select', None)
         if self._room_select is not None:
             self._selected_player = self.get_state(self._room_select)
@@ -239,15 +240,17 @@ class AlarmClock(hass.Hass):
 
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
-        self.call_service('switch/turn_on',
-                          entity_id="switch.calentador,switch.03200296dc4f22293a7f")
+        self.call_service(
+            'switch/turn_on',
+            entity_id="switch.calentador,switch.03200296dc4f22293a7f"
+        )
         if 'delta_to_repeat' in kwargs:
             self.run_in(self.turn_on_morning_services,
                         kwargs['delta_to_repeat'])
 
-    def _make_ios_notification_episode(self, ep_info, use_ep_info):
+    def _make_ios_notification_episode(self, ep_info):
         """Crea los datos para la notificación de alarma para iOS."""
-        if use_ep_info:
+        if self._is_special_source():
             title, message, img_url = _make_notification_episode(ep_info)
             return {"title": title, "message": message,
                     "data": {
@@ -267,9 +270,9 @@ class AlarmClock(hass.Hass):
                         "category": "alarmclock"}
                     }}
 
-    def _make_telegram_notification_episode(self, ep_info, use_ep_info):
+    def _make_telegram_notification_episode(self, ep_info):
         """Crea los datos para la notificación de alarma para telegram."""
-        if use_ep_info:
+        if self._is_special_source():
             title, message, img_url = _make_notification_episode(ep_info)
         else:
             title = "Comienza el día en positivo"
@@ -284,15 +287,15 @@ class AlarmClock(hass.Hass):
                     "disable_notification": False}
         return data_msg
 
-    def notify_alarmclock(self, ep_info, use_ep_info):
+    def notify_alarmclock(self, ep_info):
         """Send notification with episode info."""
         self.call_service(
             'telegram_bot/send_message',
             target=int(self.get_state(self._target_sensor)),
-            **self._make_telegram_notification_episode(ep_info, use_ep_info))
+            **self._make_telegram_notification_episode(ep_info))
         self.call_service(
             self._notifier.replace('.', '/'),
-            **self._make_ios_notification_episode(ep_info, use_ep_info))
+            **self._make_ios_notification_episode(ep_info))
 
     # noinspection PyUnusedLocal
     def change_player(self, entity, attribute, old, new, kwargs):
@@ -333,19 +336,28 @@ class AlarmClock(hass.Hass):
         self.log('MANUAL_TRIGGERING BOOLEAN CHANGED from {} to {}'
                  .format(old, new))
         # Manual triggering
-        if (new == 'on') and ((self._last_trigger is None)
-                              or ((dt.datetime.now() - self._last_trigger)
-                                          .total_seconds() > 30)):
-            _ready, ep_info = is_last_episode_ready_for_play(self.datetime())
-            use_ep_info = self.run_in_sonos(ep_info)
+        if (new == 'on') and (
+                (self._last_trigger is None)
+                or ((dt.datetime.now() - self._last_trigger)
+                    .total_seconds() > 30)
+        ):
+            if self._is_special_source():
+                _, alarm_info = is_last_episode_ready_for_play(self.datetime())
+            else:
+                alarm_info = {
+                    "duration": dt.timedelta(hours=DEFAULT_DURATION_HOURS)
+                }
+            self.run_in_sonos()
             # Notification:
             self.turn_on_lights_as_sunrise()
-            self.notify_alarmclock(ep_info, use_ep_info)
+            self.notify_alarmclock(alarm_info)
         # Manual stop after at least 10 sec
-        elif ((new == 'off') and (old == 'on')
-              and (self._last_trigger is not None) and
-              ((dt.datetime.now() - self._last_trigger)
-                       .total_seconds() > 10)):
+        elif (
+            (new == 'off') and (old == 'on')
+            and (self._last_trigger is not None) and
+            ((dt.datetime.now() - self._last_trigger)
+             .total_seconds() > 10)
+        ):
             # Stop if it's playing
             self.log('TRIGGER_STOP (last trigger at {})'
                      .format(self._last_trigger))
@@ -477,10 +489,10 @@ class AlarmClock(hass.Hass):
                 volume_set = self._max_volume / 100.
                 repeat = False
             else:
-                volume_set = int(max(
-                    MIN_VOLUME,
-                    (delta_sec / self._volume_ramp_sec)
-                    * self._max_volume)) / 100.
+                volume_set = int(
+                    max(MIN_VOLUME,
+                        (delta_sec / self._volume_ramp_sec) * self._max_volume)
+                ) / 100.
             self.call_service('media_player/volume_set',
                               entity_id=self._media_player_sonos,
                               volume_level=volume_set)
@@ -489,13 +501,15 @@ class AlarmClock(hass.Hass):
         if repeat:
             self.run_in(self.increase_volume, 10)
 
-    def run_in_sonos(self, ep_info):
+    def _is_special_source(self):
+        return self._selected_player == SPECIAL_SOURCE
+
+    def run_in_sonos(self):
         """Play stream in Sonos."""
-        use_ep_info = False
         self.call_service('media_player/volume_set',
                           entity_id=self._media_player_sonos,
                           volume_level=0)
-        if self._selected_player == DEFAULT_SOURCE:
+        if self._is_special_source():
             self.call_service(
                 'media_player/play_media',
                 entity_id=self._media_player_sonos,
@@ -503,7 +517,6 @@ class AlarmClock(hass.Hass):
                 media_content_id='http://api.spreaker.com/listen/'
                                  'show/1060718/episode/latest/shoutcast.mp3')
             self.log('TRIGGER_START with ep_info --> {}'.format(ep_info))
-            use_ep_info = True
         else:
             self.call_service('media_player/select_source',
                               entity_id=self._media_player_sonos,
@@ -516,7 +529,6 @@ class AlarmClock(hass.Hass):
         self._in_alarm_mode = True
         self._last_trigger = dt.datetime.now()
         self.run_in(self.increase_volume, 5)
-        return use_ep_info
 
     # noinspection PyUnusedLocal
     def trigger_service_in_alarm(self, *args):
@@ -525,14 +537,19 @@ class AlarmClock(hass.Hass):
         Launch if ready, or set itself to retry in the short future."""
         # Check if alarm is ready to launch
         if self._alarm_on and not self._in_alarm_mode:
-            alarm_ready, alarm_info = is_last_episode_ready_for_play(
-                self.datetime())
+            if self._is_special_source():
+                alarm_ready, alarm_info = is_last_episode_ready_for_play(
+                    self.datetime())
+            else:
+                alarm_ready = True
+                alarm_info = {
+                    "duration": dt.timedelta(hours=DEFAULT_DURATION_HOURS)
+                }
             if alarm_ready:
                 # self.turn_on_morning_services(dict(delta_to_repeat=30))
-                use_ep_info = self.run_in_sonos(alarm_info)
+                self.run_in_sonos()
                 self.turn_on_lights_as_sunrise()
                 # Notification:
-                self.notify_alarmclock(alarm_info, use_ep_info)
                 self.set_state(self._manual_trigger, state='on')
                 if alarm_info['duration'] is not None:
                     duration = alarm_info['duration'].total_seconds() + 20
@@ -544,6 +561,7 @@ class AlarmClock(hass.Hass):
                     self._handler_turnoff = self.listen_state(
                         self.turn_off_alarm_clock, self._media_player_sonos,
                         new="off", duration=20)
+                self.notify_alarmclock(alarm_info)
             else:
                 self.log('POSTPONE ALARM', LOG_LEVEL)
                 self.run_in(self.trigger_service_in_alarm, STEP_RETRYING_SEC)
