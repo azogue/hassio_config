@@ -72,14 +72,19 @@ class MotionEyeCamera(Camera):
             cam_id = device_info[CONF_CONTROL_CAM_ID]
             self._control_url = (
                 f"{url_p.scheme}://{url_p.netloc.split(':')[0]}"
-                f":{control_port}/{cam_id}/detection/")
-            # await self.async_get_camera_motion_status(command='status')
+                f":{control_port}/{cam_id}/detection/"
+            )
 
         self._last_image = None
         self._last_status = None
         self._motion_detection_active = False
         self.is_streaming = False
         # self._motion_detected = False
+
+    async def async_added_to_hass(self):
+        """Handle all entity which are about to be added."""
+        # TODO add some periodic status pull as well! (scan_interval = 120)
+        await self.async_get_camera_motion_status(command='status')
 
     @property
     def is_recording(self):
@@ -107,14 +112,12 @@ class MotionEyeCamera(Camera):
         self.is_streaming = True
         await self.async_get_camera_motion_status(command='start')
         self.async_schedule_update_ha_state()
-        # self.async_schedule_update_ha_state()
 
     async def async_disable_motion_detection(self):
         """Disable motion detection in camera."""
         self.is_streaming = False
         await self.async_get_camera_motion_status(command='pause')
         self.async_schedule_update_ha_state()
-        # self.async_schedule_update_ha_state()
 
     def camera_image(self):
         """Return bytes of camera image."""
@@ -134,26 +137,6 @@ class MotionEyeCamera(Camera):
                 return self._last_image
 
             await self.async_get_camera_motion_status(command='status')
-            # url = self._control_url + 'status'
-            # reg_expr = RG_STATUS
-            # with async_timeout.timeout(5, loop=self.hass.loop):
-            #     response = await websession.get(url)
-            # raw = await response.read()
-            # if not raw:
-            #     _LOGGER.error(f"No control response in {url}")
-            #     return self._last_image
-            #
-            # status_found = reg_expr.findall(raw.decode())
-            # if not status_found:
-            #     _LOGGER.error(f"Bad control response from {url}: "
-            #                   f"{raw}, no pattern found")
-            #     return self._last_image
-            #
-            # self._last_status = utcnow()
-            # if status_found[0] in ['ACTIVE', 'resumed']:
-            #     self._motion_detection_active = True
-            # else:
-            #     self._motion_detection_active = False
         except asyncio.TimeoutError:
             _LOGGER.warning("Timeout getting camera image")
             return self._last_image
@@ -195,10 +178,6 @@ class MotionEyeCamera(Camera):
         except aiohttp.ClientError as err:
             _LOGGER.error(f"Error in motion detection control at {url}: "
                           f"{str(err)}")
-            # return
-
-        # self.async_schedule_update_ha_state()
-        # return
 
     @property
     def name(self):
