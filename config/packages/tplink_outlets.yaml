@@ -33,7 +33,7 @@ sensor:
 #        unit_of_measurement: 'A'
       tplink1_watts:
         friendly_name_template: "{{ states.switch.tplink1.name}} Current Consumption"
-        value_template: '{{ states.switch.tplink1.attributes["current_power_w"] | float }}'
+        value_template: '{% if states("switch.tplink1") != "unknown" %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
         unit_of_measurement: 'W'
 #      tplink1_total_kwh:
 #        friendly_name_template: "{{ states.switch.tplink1.name}} Total Consumption"

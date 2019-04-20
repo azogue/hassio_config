@@ -13,9 +13,9 @@ notify:
     username: !secret kodi_user
     password: !secret kodi_pw
 
-  - platform: html5
-    gcm_api_key: !secret gcm_api_key
-    gcm_sender_id: !secret gcm_sender_id
+#  - platform: html5
+#    gcm_api_key: !secret gcm_api_key
+#    gcm_sender_id: !secret gcm_sender_id
 
   - platform: smtp
     name: gmail

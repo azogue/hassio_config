@@ -3,21 +3,16 @@
 ###############################################################################
 homeassistant:
   customize:
-#    light.tira_tv:
     light.yeelight_strip_7811dca21ecf:
       icon: mdi:dots-horizontal
       friendly_name: Tira TV
-    light.yeelight_strip_7811dca21ecf_2:
-      hidden: true
 
-light:
-  - platform: yeelight
-    scan_interval: 60
-    devices:
-      192.168.1.46:
-#        name: Tira TV
-        name: yeelight_strip_7811dca21ecf
-        transition: 600
+yeelight:
+  scan_interval: 60
+  devices:
+    192.168.1.46:
+      name: yeelight_strip_7811dca21ecf
+      transition: 600
 #        use_music_mode: True #(defaults to False)
 #        save_on_change: False #(defaults to True)
 

@@ -5,6 +5,13 @@ homeassistant:
   elevation: !secret elevation
   unit_system: metric
   time_zone: !secret time_zone
+  auth_providers:
+    - type: legacy_api_password
+      api_password: !secret hass_pw
+    - type: trusted_networks
+      trusted_networks:
+      - 192.168.1.0/24
+  #      - 127.0.0.1
   packages:  !include_dir_named packages
   customize: !include customize.yaml
   whitelist_external_dirs:
@@ -23,18 +30,17 @@ frontend:
     - /local/custom_ui/floorplan/ha-floorplan.htmll
   themes: !include_dir_merge_named themes
 
-
 config:
 http:
   base_url: !secret base_url
-  api_password: !secret hass_pw
+#  api_password: !secret hass_pw
   ip_ban_enabled: True
   login_attempts_threshold: 5
-  trusted_networks:
-    - 127.0.0.1
-    - 192.168.1.0/24
-    - 172.30.33.2
-    - 172.30.32.2
+#  trusted_networks:
+#    - 127.0.0.1
+#    - 192.168.1.0/24
+#    - 172.30.33.2
+#    - 172.30.32.2
 #  use_x_forwarded_for: True
 #    trusted_proxies:
 #      - 127.0.0.1
@@ -93,7 +99,10 @@ updater:
   include_used_components: true
 
 hassio:
+stream:
 discovery:
+  ignore:
+    - yeelight
 #  enable:
 #    - homekit
 
@@ -148,7 +157,7 @@ recorder:
   db_url: !secret recorder_db_url
 
 system_health:
-
+mobile_app:
 panel_iframe:
   contab_access:
     title: Contabilidad
