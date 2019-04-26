@@ -42,12 +42,12 @@
      showgrid="false"
      showguides="false"
      inkscape:zoom="1.5965771"
-     inkscape:cx="222.65314"
-     inkscape:cy="384.25955"
+     inkscape:cx="121.81241"
+     inkscape:cy="379.87517"
      inkscape:window-x="34"
      inkscape:window-y="22"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer_menu"
+     inkscape:current-layer="layer_sensors"
      inkscape:snap-intersection-paths="false"
      inkscape:snap-object-midpoints="true"
      inkscape:object-nodes="false"
@@ -7913,10 +7913,10 @@
     </rect>
     <path
        d="m 213.95827,427.67759 c -0.24468,0 -0.50102,0.14117 -0.7224,0.39783 -0.99038,1.09081 -1.96912,2.16879 -2.94785,3.24677 -0.25633,0.28232 -0.32624,0.43632 -0.58258,0.69298 -0.33789,0.308 -0.48937,0.68015 -0.47771,1.15498 0.035,1.65546 0.035,3.28526 0.035,4.94073 0,1.7068 0,3.4521 0,5.17173 0,0.12833 0,0.23099 0.035,0.35932 0.0932,0.39783 0.32624,0.48766 0.58258,0.1925 1.39819,-1.53997 2.6449,-2.93877 4.04309,-4.49158 1.58462,-1.74529 3.18089,-3.49059 4.7655,-5.24872 0.47772,-0.51332 0.47772,-1.09081 0,-1.60413 -1.33993,-1.47581 -2.70316,-2.92594 -4.03145,-4.41458 -0.23303,-0.25666 -0.45441,-0.39783 -0.69909,-0.39783 m 7.725,8.54683 c -0.24468,0 -0.47771,0.1155 -0.6991,0.35932 -1.33993,1.48864 -2.69151,2.95161 -4.04309,4.45308 -0.45442,0.50049 -0.45442,1.05231 0,1.56563 1.33993,1.47581 2.66821,2.96444 4.00814,4.44025 0.46606,0.52615 0.95543,0.52615 1.42149,0 1.29333,-1.39881 2.62161,-2.84895 3.89163,-4.28625 0.19808,-0.21816 0.39616,-0.42349 0.47772,-0.71865 l 0,-0.39783 c -0.0816,-0.30799 -0.27964,-0.48765 -0.47772,-0.73148 -1.30497,-1.4373 -2.58665,-2.88744 -3.89163,-4.32475 -0.22138,-0.24382 -0.45441,-0.35932 -0.68744,-0.35932 m -16.1724,0.55182 c -0.15147,-0.0642 -0.23303,0.0642 -0.32624,0.16683 -1.33994,1.50147 -2.51675,2.83611 -3.85668,4.32474 -0.30294,0.3465 -0.30294,0.83415 0,1.16781 0.7224,0.80849 1.45645,1.60414 2.17885,2.41262 0.62918,0.69299 1.09525,1.21914 1.74774,1.92496 0.18642,0.1925 0.34954,0.154 0.44276,-0.0898 0.0699,-0.12833 0.0699,-0.29516 0.0699,-0.43632 0,-1.51431 0,-2.69495 0,-4.20925 0,-1.52714 0,-3.05427 0,-4.56857 0,-0.10267 0,-0.231 -0.035,-0.32083 -0.0233,-0.16683 -0.0816,-0.30799 -0.22138,-0.37216 m 8.51731,7.90517 c -0.23303,0 -0.50102,0.1155 -0.7224,0.35933 -1.33993,1.48863 -2.66821,3.00294 -4.00814,4.49157 -0.46607,0.51332 -0.46607,1.05231 0,1.56564 1.29332,1.4373 2.5983,2.84894 3.90328,4.28624 0.18642,0.21816 0.3845,0.43633 0.65249,0.52616 l 0.32624,0 c 0.25633,-0.077 0.46606,-0.2695 0.65249,-0.47483 1.30498,-1.45013 2.6216,-2.88744 3.93823,-4.33757 0.45442,-0.51333 0.39616,-1.09081 -0.035,-1.60414 -1.35158,-1.48863 -2.66821,-2.96444 -4.00815,-4.45307 -0.22138,-0.24383 -0.45441,-0.35933 -0.69909,-0.35933 z"
-       id="media_player.kodi"
+       id="media_player.kodi_app"
        inkscape:connector-curvature="0"
        style="display:inline;fill:#0000ed;fill-opacity:1"
-       inkscape:label="#media_player.kodi">
+       inkscape:label="#media_player.kodi_app">
       <title
          id="title32378">Kodi</title>
     </path>
@@ -10374,8 +10374,7 @@
      id="layer_sensors"
      inkscape:label="HASS_sensors"
      style="display:inline"
-     transform="translate(-2.1825442,18.747119)"
-     sodipodi:insensitive="true">
+     transform="translate(-2.1825442,18.747119)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.89648438px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -10406,7 +10405,7 @@
          sodipodi:role="line">HR ext</tspan></text>
     <path
        d="m 112.12106,487.41168 -1.64108,-3.10557 a 0.93212671,1.0266456 0 0 0 -1.27448,-0.37089 l -9.667371,6.19708 a 0.93212671,1.0266456 0 0 0 -0.33673,1.40373 l 4.688781,8.87303 a 0.93212671,1.0266456 0 0 0 1.27449,0.37089 l 9.66737,-6.19708 a 0.93212671,1.0266456 0 0 0 0.33673,-1.40373 l -1.64107,-3.10556 5.09796,1.48352 -5.15765,-9.76034 -1.34695,5.61492 z"
-       id="camera.sricam_360"
+       id="camera.pi_zero_cam_1"
        inkscape:connector-curvature="0"
        style="fill:#fa00c6;fill-opacity:0.95812809">
       <title
@@ -10632,6 +10631,14 @@
          x="347.54291"
          y="238.81325"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33757305px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">HR aseo</tspan></text>
+    <path
+       style="fill:#fa00c6;fill-opacity:0.95812809"
+       inkscape:connector-curvature="0"
+       id="camera.pi_zero_cam_2"
+       d="m 144.66311,160.58831 1.64108,3.10557 a 0.93212671,1.0266456 0 0 0 1.27448,0.37089 l 9.66737,-6.19708 a 0.93212671,1.0266456 0 0 0 0.33673,-1.40373 l -4.68878,-8.87303 a 0.93212671,1.0266456 0 0 0 -1.27449,-0.37089 l -9.66737,6.19708 a 0.93212671,1.0266456 0 0 0 -0.33673,1.40373 l 1.64107,3.10556 -5.09796,-1.48352 5.15765,9.76034 1.34695,-5.61492 z">
+      <title
+         id="title6169">Cámara Cocina</title>
+    </path>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10746,7 +10753,7 @@
      transform="translate(-2.1825442,18.747119)"
      sodipodi:insensitive="true">
     <g
-       id="media_player.kodi_tv"
+       id="media_player.tele"
        transform="translate(12.8,3.2)">
       <title
          id="title37862">Kodi</title>

@@ -216,7 +216,7 @@
 
         - name: Kodi
           entities:
-             - media_player.kodi_tv
+             - media_player.tele
           states:
             - state: 'off'
               class: 'squeezebox-off'
@@ -271,7 +271,8 @@
 
         - name: Cameras
           entities:
-            - camera.sricam_360
+            - camera.pi_zero_cam_1
+            - camera.pi_zero_cam_2
             - camera.kmoon_ipcam100
             - camera.iegeek_hd
           states:
