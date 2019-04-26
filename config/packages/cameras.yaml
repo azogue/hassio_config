@@ -1,5 +1,9 @@
 homeassistant:
   customize:
+    camera.pi_zero_cam_1:
+      friendly_name: Salón
+    camera.pi_zero_cam_2:
+      friendly_name: Cocina
     camera.sricam_360:
       friendly_name: Salón
     camera.iegeek_hd:
@@ -16,22 +20,50 @@ homeassistant:
     switch.motion_detection_kmoon_ipcam100:
       friendly_name: VideoMov. Terraza
       icon: mdi:video
+    switch.motion_detection_pizerocam1:
+      friendly_name: VideoMov. Salón
+      icon: mdi:video
+    switch.motion_detection_pizerocam2:
+      friendly_name: VideoMov. Cocina
+      icon: mdi:video
 
 switch:
 - platform: template
 #  scan_interval: 60
   switches:
-    motion_detection_sricam_360:
-      value_template: "{{ is_state('camera.sricam_360', 'recording') }}"
-      entity_id: camera.sricam_360
+    motion_detection_pizerocam1:
+      value_template: "{{ is_state('camera.pi_zero_cam_1', 'recording') }}"
+      entity_id: camera.pi_zero_cam_1
       turn_on:
         service: camera.enable_motion_detection
         data:
-          entity_id: camera.sricam_360
+          entity_id: camera.pi_zero_cam_1
       turn_off:
         service: camera.disable_motion_detection
         data:
-          entity_id: camera.sricam_360
+          entity_id: camera.pi_zero_cam_1
+    motion_detection_pizerocam2:
+      value_template: "{{ is_state('camera.pi_zero_cam_2', 'recording') }}"
+      entity_id: camera.pi_zero_cam_2
+      turn_on:
+        service: camera.enable_motion_detection
+        data:
+          entity_id: camera.pi_zero_cam_2
+      turn_off:
+        service: camera.disable_motion_detection
+        data:
+          entity_id: camera.pi_zero_cam_2
+#    motion_detection_sricam_360:
+#      value_template: "{{ is_state('camera.sricam_360', 'recording') }}"
+#      entity_id: camera.sricam_360
+#      turn_on:
+#        service: camera.enable_motion_detection
+#        data:
+#          entity_id: camera.sricam_360
+#      turn_off:
+#        service: camera.disable_motion_detection
+#        data:
+#          entity_id: camera.sricam_360
     motion_detection_iegeek_hd:
       value_template: "{{ is_state('camera.iegeek_hd', 'recording') }}"
       entity_id: camera.iegeek_hd
@@ -59,14 +91,30 @@ switch:
 # IP CAMERAS (from Motioneye
 ###############################################################################
 camera:
-  # Living room camera
+  # Kitchen camera
   - platform: motioneye
-    snapshot_url: !secret sricam_motioneye_local_snapshot
-    name: SriCAM 360
+    snapshot_url: !secret motioneye_rpizero2_snapshot_url
+    name: Pi Zero Cam 2
     with_motion_control: true
     control_port: 7999
-    camera_id: 2
+    camera_id: 1
 
+  # Living room camera
+  - platform: motioneye
+    snapshot_url: !secret motioneye_rpizero_snapshot_url
+    name: Pi Zero Cam 1
+    with_motion_control: true
+    control_port: 7999
+    camera_id: 1
+
+#  # Living room camera
+#  - platform: motioneye
+#    snapshot_url: !secret sricam_motioneye_local_snapshot
+#    name: SriCAM 360
+#    with_motion_control: true
+#    control_port: 7999
+#    camera_id: 2
+#
   # Exterior camera
   - platform: motioneye
     snapshot_url: !secret kmoon_motioneye_local_snapshot
