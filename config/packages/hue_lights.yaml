@@ -35,15 +35,44 @@ homeassistant:
       icon: mdi:lava-lamp
     light.tira:
       icon: mdi:dots-horizontal
+    light.ambilight:
+      icon: mdi:monitor-star
+    switch.ambilight_plus_hue:
+      friendly_name: Hue + Ambilight
+      icon: mdi:theme-light-dark
 
-hue:
-  bridges:
-    - host: !secret hue_bridge_host
-      allow_unreachable: true
+    sensor.hue_dimmer_switch:
+      icon: mdi:light-switch
+      friendly_name: Interruptor salón
+    sensor.interruptor_dormitorio:
+      icon: mdi:light-switch
+    sensor.interruptor_estudio:
+      icon: mdi:light-switch
+
+#hue:
+#  bridges:
+#    - host: !secret hue_bridge_host
+#      allow_unreachable: true
 
 ## sensor.hue_dimmer_switch
 sensor:
 - platform: hue_dimmer
+
+# Philips TV Ambilight support with custom component
+light:
+- platform: ambilights
+  name: Ambilight
+  host: !secret philips_tv_host
+  username: !secret philips_tv_api_username
+  password: !secret philips_tv_api_password
+
+switch:
+- platform: ambilights
+  name: ambilight_plus_hue
+  host: !secret philips_tv_host
+  username: !secret philips_tv_api_username
+  password: !secret philips_tv_api_password
+  scan_interval: 15
 
 
 input_number:
