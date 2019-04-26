@@ -93,13 +93,6 @@ sensor:
   scan_interval: 60
 
 - platform: command_line
-  name: KODI CPU Temperature
-  command: !secret ssh_cmd_rpi_temp_kodi
-  unit_of_measurement: "°C"
-  value_template: '{{ value | multiply(0.001) | round(1) }}'
-  scan_interval: 180
-
-- platform: command_line
   name: RPI3Dev1 CPU Temperature
   command: !secret ssh_cmd_rpi_temp_rpi3dev1
   unit_of_measurement: "°C"

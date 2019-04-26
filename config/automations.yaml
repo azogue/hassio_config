@@ -248,6 +248,17 @@
       data_template:
         scene: '{{ trigger.to_state.state }}'
 
+# Set a TV source with a python_script
+- alias: TV Source Select
+  id: 'select_tv_source'
+  trigger:
+    platform: state
+    entity_id: input_select.tv_source
+  action:
+    - service: python_script.select_tv_source
+      data_template:
+        scene: '{{ trigger.to_state.state }}'
+
 - alias: Tono Salón
   id: 'set_color_temp_in_living_room'
   trigger:

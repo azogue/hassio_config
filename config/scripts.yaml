@@ -83,41 +83,6 @@ start_tvshows_mode:
   sequence:
       service: python_script.start_tvshows_mode
 
-restart_kodi_osmc:
-#  id: restart_kodi
-  alias: Restart KODI
-  sequence:
-    - service: notify.ios_iphone
-      data:
-        title: 'Reiniciando KODI OSMC'
-        message: "KODI debería 'morir' y 'resucitar' en unos segundos"
-        data:
-          push:
-            category: "CONFIRM"
-    - service: telegram_bot.send_message
-      data_template:
-        title: 'Reiniciando KODI OSMC'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: "KODI debería 'morir' y 'resucitar' en unos segundos"
-        disable_notification: true
-    - service: shell_command.cmd_kill_kodi
-
-stop_kodi:
-#  id: stop_kodi
-  alias: Stop playback in Kodi
-  sequence:
-      service: media_player.media_stop
-      data:
-        entity_id: media_player.kodi
-
-quit_kodi:
-#  id: quit_kodi
-  alias: Quit Kodi
-  sequence:
-    service: media_player.kodi_call_method
-    data:
-      method: Application.Quit
-
 update_library:
   alias: Update Kodi Library
   sequence:
