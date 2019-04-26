@@ -186,6 +186,7 @@ person:
     device_trackers:
       - device_tracker.iphone
       - device_tracker.iphone_bt
+      - device_tracker.a68f412dc8734ee6a695974a9494c4c5
       - device_tracker.homeadmin_iphone
       - device_tracker.applewatch
 

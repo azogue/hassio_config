@@ -24,6 +24,10 @@ homeassistant:
       icon: mdi:human-female
       device_class: presence
 
+    sensor.iphone_wifi_ap:
+      friendly_name: iPhone Wifi AP
+      icon: mdi:router-wireless
+
 # Activate map component
 map:
 
@@ -47,33 +51,13 @@ zone:
   radius: !secret z2_radius
   icon: !secret z2_icon
 
-#person:
-#  - name: Eugenio
-#    id: !secret person_id_eu
-#    user_id: !secret user_id_eu
-#    device_trackers:
-#      - device_tracker.iphone
-#      - device_tracker.iphone_bt
-#      - device_tracker.homeadmin_iphone
-#      - device_tracker.applewatch
-#
-#  - name: Carmen
-#    id: !secret person_id_carmen
-#    user_id: !secret user_id_carmen
-#    device_trackers:
-#      - device_tracker.iphonese
-#      - device_tracker.iphone_se
-#      - device_tracker.iphone_de_carmen_bt
-#      - device_tracker.homeadmin_iphonese
-#      - device_tracker.applewatch_carmen
-
 binary_sensor:
   - platform: 'bayesian'
-    prior: 0.95
+    prior: 0.75
     name: 'Eugenio en casa'
     probability_threshold: 0.95
     observations:
-      - entity_id: 'device_tracker.iphone'
+      - entity_id: 'device_tracker.iphone_beta'
         prob_given_true: 0.95
         prob_given_false: 0.15
         platform: 'state'
@@ -124,6 +108,30 @@ binary_sensor:
         prob_given_false: 0.5
         platform: 'state'
         to_state: 'home'
+
+# device_tracker.a68f412dc8734ee6a695974a9494c4c5
+# sensor.bssid
+# sensor.ssid
+sensor:
+  - platform: template
+    sensors:
+      iphone_wifi_ap:
+        friendly_name: "Wifi iPhone"
+        value_template: >
+          {% if states.sensor.ssid.state == "Domus" %}
+          {% set bssid = states.sensor.bssid.state %}
+          {% if "58:ef:68:41:65" in bssid %}
+          Wifi Salón
+          {% elif "58:ef:68:41:67" in bssid %}
+          Wifi Office
+          {% elif "58:ef:68:41:68" in bssid %}
+          Wifi Cocina
+          {% else %}
+          {{ bssid }}??
+          {%endif%}
+          {% else %}
+          {{ states.sensor.connection_type.state }}
+          {%endif%}
 
 
 device_tracker:

@@ -13,7 +13,7 @@ appdaemon:
   path_base_data: /config
   path_ha_conf: /config
 
-  notifier: notify.ios_iphone
+  notifier: notify.ios_iphone_beta
   chatid_sensor: sensor.telegram_default_chatid
   bot_group: notify.telegram_group
   bot_notifier: telegram_bot.send_message

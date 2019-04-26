@@ -175,7 +175,7 @@
     platform: event
     event_type: device_tracker_new_device
   action:
-  - service: notify.ios_iphone
+  - service: notify.ios_iphone_beta
     alias: Notify new BT device
     data_template:
       title: "Nuevo dispositivo detectado"
@@ -191,7 +191,7 @@
   - service: notify.gmail
     data_template:
       title: "HASS - Nuevo dispositivo detectado"
-      message: "entity_id: {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }} [EVENT: {{ trigger.event.as_dict()['event_type'] }}]\n\nRAW: {{ trigger.event.as_dict() }}"
+      message: "entity_id: {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }} [EVENT: {{ trigger.event.as_dict()['event_type'] }}]\n\nRAW: {{ trigger.event.as_dict() }}\n\nDEV TRACKER ATTRS: {{ states.device_tracker[trigger.event.as_dict()['data']['entity_id'].split('.')[1]].attributes }}"
 
 # Sun notifications
 #- alias: Notify sunrise
