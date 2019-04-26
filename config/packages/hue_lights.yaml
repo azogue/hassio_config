@@ -39,7 +39,7 @@ homeassistant:
       icon: mdi:monitor-star
     switch.ambilight_plus_hue:
       friendly_name: Hue + Ambilight
-      icon: mdi:theme-light-dark
+      icon: mdi:traffic-light
 
     sensor.hue_dimmer_switch:
       icon: mdi:light-switch

@@ -2,7 +2,7 @@ AutoFeedback:
   class: EventListener
   module: bot_event_listener
   ha_key: !secret ha_key
-  lights_notif: light.cuenco
+  lights_notif: light.cuenco,light.lamparita
   bot_chatids: !secret bot_chatids
   bot_name: !secret bot_name
   bot_nicknames: !secret bot_nicknames
@@ -12,7 +12,7 @@ Alarma:
   class: AlarmControl
   module: alarm_control
   ha_key: !secret ha_key
-  lights_notif: light.cuenco
+  lights_notif: light.cuenco,light.lamparita
   bot_name: !secret bot_name
   base_url: !secret base_url
   bot_target: !secret bot_admin_target
@@ -67,9 +67,10 @@ KodiYoutube:
 KodiNotifier:
   class: KodiAssistant
   module: kodi_ambient_lights
-  lights_dim_off: light.bola_grande,light.pie_sofa,light.lamparita,light.cuenco,light.pie_tv,light.tira_tv
-  lights_dim_on: light.pie_sofa
-  lights_off: light.central
+  lights_dim_off: light.bola_grande,light.cuenco
+  lights_dim_on: light.pie_sofa,light.pie_tv
+  lights_off: light.central,light.tira,light.yeelight_strip_7811dca21ecf
+  automations_off: automation.sync_tira_tv_con_tira_sofa
 #  switch_dim_lights_use: switch.toggle_kodi_ambilight
 
 MorningAlarmClock:
