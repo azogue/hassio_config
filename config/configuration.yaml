@@ -174,7 +174,7 @@ panel_iframe:
 
 automation: !include automations.yaml
 script: !include scripts.yaml
-weblink: !include weblinks.yaml
+#weblink: !include weblinks.yaml
 scene: !include scenes.yaml
 
 custom_updater:
