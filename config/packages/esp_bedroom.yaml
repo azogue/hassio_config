@@ -22,23 +22,18 @@ homeassistant:
     sensor.dormitorio_pressure_rpi2mpd:
       friendly_name: Presión
       icon: mdi:weather-cloudy
-      homebridge_hidden: true
 
 #    sensor.sensor_bedroom_illumination:
 #      friendly_name: Iluminación (bedroom)
 #      icon: mdi:lightbulb-on
-#      homebridge_hidden: true
 
     sensor.sensor_bedroom_snum:
       friendly_name: 'Sample # (dormitorio)'
-      homebridge_hidden: true
     
     binary_sensor.sensor_bedroom_mov1:
       friendly_name: 'Movimiento (dormitorio)'
-      homebridge_hidden: true
     binary_sensor.sensor_bedroom_online:
       friendly_name: Dormitorio Online
-      homebridge_hidden: true
 
 binary_sensor:
   - platform: mqtt

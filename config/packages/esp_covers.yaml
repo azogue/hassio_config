@@ -2,20 +2,12 @@ homeassistant:
   customize:
     sensor.sensor_covers_snum:
       friendly_name: 'Sample # (persianas)'
-      homebridge_hidden: true
-    
     binary_sensor.sensor_covers_online:
       friendly_name: Persianas Online
-      homebridge_hidden: true
-
     cover.sonoff_cover_ventanal:
       friendly_name: Ventanal
-      homebridge_name: Ventanal
-      homebridge_cover_type: rollershutter
     cover.sonoff_cover_puerta_terraza:
-      homebridge_name: Puerta terraza
       friendly_name: Puerta terraza
-      homebridge_cover_type: rollershutter
 
 cover:
   - platform: mqtt

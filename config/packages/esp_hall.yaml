@@ -3,44 +3,28 @@ homeassistant:
 #    sensor.sensor_hall_temperature:
 #      friendly_name: Temperatura
 #      icon: mdi:thermometer
-#      homebridge_name: Temperatura hall
-##      homebridge_hidden: true
 #    sensor.sensor_hall_humidity:
 #      friendly_name: Humedad
 #      icon: mdi:water-percent
-##      homebridge_hidden: true
-#      homebridge_name: Humedad hall
-#      homebridge_sensor_type: humidity
 ##    sensor.sensor_hall_pressure:
 ##      friendly_name: Presión
 ##      icon: mdi:weather-cloudy
-##      homebridge_hidden: true
     sensor.sensor_hall_illumination:
       friendly_name: Iluminación (hall)
       icon: mdi:lightbulb-on
-      homebridge_hidden: true
-
     sensor.sensor_hall_snum:
       friendly_name: 'Sample # (hall)'
-      homebridge_hidden: true
-    
     binary_sensor.sensor_hall_light_switch:
       friendly_name: 'Interruptor (hall)'
-      homebridge_hidden: true
     binary_sensor.sensor_hall_relay_1:
       friendly_name: 'Relay 1'
-      homebridge_hidden: true
     binary_sensor.sensor_hall_relay_2:
       friendly_name: 'Relay 2'
-      homebridge_hidden: true
     binary_sensor.sensor_hall_online:
       friendly_name: Hall Online
-      homebridge_hidden: true
-
     light.hall_light:
       friendly_name: "Luz hall"
       icon: mdi:lightbulb-outline
-      homebridge_name: Entrada
 
 binary_sensor:
   - platform: mqtt

@@ -7,7 +7,6 @@ homeassistant:
 #    switch.bomba_circ_acs:
 #      icon: mdi:radiator
 #      friendly_name: Bomba circulación ACS
-#      homebridge_switch_type: outlet
     switch.calentador:
       icon: mdi:radiator
       friendly_name: Calentador eléctrico
@@ -17,16 +16,6 @@ homeassistant:
 #    switch.circuito_termo:
 #      icon: mdi:radiator
 #      friendly_name: Circuito de Termo
-#      homebridge_name: Circuito de Termo
-#      homebridge_switch_type: outlet
-#    cover.sonoff_cover_ventanal:
-#      friendly_name: Ventanal
-#      homebridge_name: Ventanal
-#      homebridge_cover_type: rollershutter
-#    cover.sonoff_cover_puerta_terraza:
-#      homebridge_name: Puerta terraza
-#      friendly_name: Puerta terraza
-#      homebridge_cover_type: rollershutter
     sensor.sonoff_pow_1:
       icon: mdi:radiator
       friendly_name: Consumo en termo
