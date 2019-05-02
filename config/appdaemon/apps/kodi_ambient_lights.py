@@ -64,17 +64,21 @@ class KodiAssistant(hass.Hass):
         _lights_dim_on = self.args.get('lights_dim_on', '').split(',')
         _lights_dim_off = self.args.get('lights_dim_off', '').split(',')
         _lights_off = self.args.get('lights_off', '').split(',')
+        _automations_off = self.args.get('automations_off', '').split(',')
         _switch_dim_group = self.args.get('switch_dim_lights_use')
         if _switch_dim_group is not None:
             self._lights = {"dim": {"on": _lights_dim_on,
                                     "off": _lights_dim_off},
                             "off": _lights_off,
+                            "auto_off": _automations_off,
                             "state": self.get_state(_switch_dim_group)}
             # Listen for ambilight changes to change light dim group:
             self.listen_state(self.ch_dim_lights_group, _switch_dim_group)
         else:
             self._lights = {
-                "dim": {"on": _lights_dim_on, "off": _lights_dim_off},
+                "dim": {"on": _lights_dim_on,
+                        "off": _lights_dim_off},
+                "auto_off": _automations_off,
                 "off": _lights_off,
                 "state": 'off'}
 
@@ -187,7 +191,7 @@ class KodiAssistant(hass.Hass):
         if (img_url is not None) and img_url.startswith('http'):
             return True
         if img_url is not None:
-            self.error('BAD IMAGE URL: {}'.format(img_url), level='ERROR')
+            self.log('BAD IMAGE URL: {}'.format(img_url), level='WARNING')
         return False
 
     def _notify_ios_message(self, item):
@@ -219,6 +223,21 @@ class KodiAssistant(hass.Hass):
                           target=target, **data_msg)
 
     def _adjust_kodi_lights(self, play=True):
+        automs_off = self._lights['auto_off']
+        for auto in automs_off:
+            auto_state = self.get_state(auto) == 'on'
+            if auto_state and play:
+                # Turn off automation
+                self.call_service("automation/turn_off", entity_id=auto)
+                self.log("Set automation off: {}".format(auto))
+            elif not auto_state and not play:
+                # Turn on automation
+                self.call_service("automation/turn_on", entity_id=auto)
+                self.log("Set automation on: {}".format(auto))
+            else:
+                self.log("Strange: automation is {} and play mode is {}"
+                         .format(auto_state, play))
+
         k_l = self._lights['dim'][self._lights['state']] + self._lights['off']
         for light_id in k_l:
             if play:
