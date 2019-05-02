@@ -178,6 +178,9 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 custom_updater:
+  card_urls:
+    - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
+    - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
 
 person:
   - name: Eugenio
