@@ -1,0 +1,8 @@
+{
+  "domain": "sensor",
+  "name": "hue_dimmer",
+  "documentation": "",
+  "dependencies": ["hue"],
+  "codeowners": [],
+  "requirements": []
+}

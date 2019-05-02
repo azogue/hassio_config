@@ -1,0 +1,8 @@
+{
+  "domain": "elecprice_spain_pvpc",
+  "name": "Price of electricity (PVPC) in Spain",
+  "documentation": "",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": ["beautifulsoup4", "html5lib>=1.0.1"]
+}

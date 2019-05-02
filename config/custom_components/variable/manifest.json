@@ -1,0 +1,8 @@
+{
+  "domain": "variable",
+  "name": "Generic container for external data to store in the state machine",
+  "documentation": "",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": []
+}
