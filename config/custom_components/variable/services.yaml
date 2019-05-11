@@ -1,0 +1,17 @@
+set_variable:
+  description: Set the value of the variable
+  fields:
+    variable:
+      description: Name of the entity id
+      example: 'variable.speedtest_data'
+    value:
+      description: Value to set for the variable
+    value_template:
+      description: Value to set for the variable as template
+    attributes:
+      description: Attributes (dict data)
+    attributes_template:
+      description: Attributes (dict data) as template
+    replace_attributes:
+      description: Flag to replace attributes
+      example: 'false'
