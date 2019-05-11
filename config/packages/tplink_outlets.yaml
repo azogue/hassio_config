@@ -21,7 +21,7 @@ homeassistant:
 tplink:
   discovery: false
   switch:
-    - host: 192.168.1.196
+    - host: !secret tplink_host_ip
 
 # POW voltage and power sensors
 sensor:
@@ -33,7 +33,7 @@ sensor:
 #        unit_of_measurement: 'A'
       tplink1_watts:
         friendly_name_template: "{{ states.switch.tplink1.name}} Current Consumption"
-        value_template: '{% if states("switch.tplink1") != "unknown" %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
+        value_template: '{% if (states("switch.tplink1") != "unknown") and ("current_power_w" in states.switch.tplink1.attributes) %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
         unit_of_measurement: 'W'
 #      tplink1_total_kwh:
 #        friendly_name_template: "{{ states.switch.tplink1.name}} Total Consumption"
