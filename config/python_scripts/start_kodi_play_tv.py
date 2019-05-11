@@ -4,57 +4,56 @@ en directo de un canal con noticias, o bien reproducir la última grabación.
 
 # Lista canales MovistarTV en tvheadend:
 
-        50, 'La 1 HD'
-        66, 'La 2 HD'
-        48, 'Antena 3 HD'
-        42, 'Cuatro HD'
-        43, 'Tele 5 HD'
-        49, 'laSexta HD'
-        55, '#0 HD'
-        70, '#Vamos HD'
-        69, 'À Punt'
-        52, 'La Ocho Mediterráneo'
-        67, 'M. FAMA 24H HD'
-        37, 'FDF'
-        72, 'Neox HD'
-        59, 'Atreseries HD'
-        39, 'Energy'
-        38, 'TRECE'
-        60, 'Ten'
-        41, 'Paramount Network'
-        53, 'DEPORTES'
-        71, '#Vamos HD'
-        63, 'GOL HD'
-        51, 'Teledeporte HD'
-        56, 'Real Madrid TV HD'
-        34, 'DMAX'
-        61, 'DKISS'
-        35, 'Divinity'
-        74, 'Nova HD'
-        73, 'MEGA HD'
-        58, 'BeMad HD'
-        31, 'Disney Ch.'
-        32, 'Boing'
-        68, 'Clan TVE HD'
-        36, 'Canal 24 H.'
-        33, 'Intereconomía'
-        62, 'Libertad Digital'
-        47, 'Canal Sur Andalucía'
-        46, 'Galicia TV Europa'
-        64, 'Canal Extremadura SAT'
-        45, 'TV3CAT'
-        44, 'ETB Sat.'
-        54, 'Aragón TV Int'
-        40, 'LTC'
-        65, 'Canal 24 H.'
-        57, 'Movistar+'
-        30, 'V.O.D'
+        20, 'La 1 HD',
+        36, 'La 2 HD',
+        18, 'Antena 3 HD',
+        12, 'Cuatro HD',
+        13, 'Tele 5 HD',
+        19, 'laSexta HD',
+        25, '#0 HD',
+        40, '#Vamos HD',
+        39, 'À Punt',
+        22, 'La Ocho Mediterráneo',
+        37, 'M. FAMA 24H HD',
+        7, 'FDF',
+        42, 'Neox HD',
+        29, 'Atreseries HD',
+        9, 'Energy',
+        8, 'TRECE',
+        30, 'Ten',
+        11, 'Paramount Network',
+        23, 'DEPORTES',
+        41, '#Vamos HD',
+        33, 'GOL HD',
+        21, 'Teledeporte HD',
+        26, 'Real Madrid TV HD',
+        4, 'DMAX',
+        31, 'DKISS',
+        5, 'Divinity',
+        44, 'Nova HD',
+        43, 'MEGA HD',
+        28, 'BeMad HD',
+        1, 'Disney Ch.',
+        2, 'Boing',
+        38, 'Clan TVE HD',
+        6, 'Canal 24 H.',
+        3, 'Intereconomía',
+        32, 'Libertad Digital',
+        17, 'Canal Sur Andalucía',
+        16, 'Galicia TV Europa',
+        34, 'Canal Extremadura SAT',
+        15, 'TV3CAT',
+        14, 'ETB Sat.',
+        24, 'Aragón TV Int',
+        10, 'LTC',
+        35, 'Canal 24 H.',
+        27, 'Movistar+',
 
 """
 
 # Participant entities
 MEDIA_PLAYER = 'media_player.kodi'
-# POWER_SWITCH = 'switch.tv_power'
+ENTITY_ANDROIDTV = "media_player.tv"
 INPUT_SELECT_OPTS = 'input_select.kodi_results'
 TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 
@@ -62,37 +61,37 @@ TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 now = datetime.datetime.now()
 play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
-    content_id = 49
-    media_dest = 'La Sexta HD'
+    content_id = 19
+    media_dest = 'laSexta HD'
 elif now.hour < 16:
-    content_id = 48
+    content_id = 18
     media_dest = 'Antena 3 HD'
 elif now.hour < 20:
-    content_id = 36
-    media_dest = 'Canal 24 Horas'
+    content_id = 6
+    media_dest = 'Canal 24 H.'
     # Last record?
     # play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
-    content_id = 49
-    media_dest = 'La Sexta HD'
+    content_id = 19
+    media_dest = 'laSexta HD'
 elif (now.hour == 20) or ((now.hour == 21) and (now.minute < 15)):
-    content_id = 48
+    content_id = 18
     media_dest = 'Antena 3 HD'
 else:
     media_dest = '#0 HD'
-    content_id = 55
+    content_id = 25
     # Last record?
     # play_live_tv = False
 
-# state_power = hass.states.get(POWER_SWITCH)
-# if state_power.state == 'off':
-#     # Need to power up TV system (and wait for it)
-#     hass.services.call('switch', 'turn_on', {"entity_id": POWER_SWITCH})
-#     time.sleep(5)
 
-# Turn on Kodi with CEC
-hass.services.call(
-        'media_player', 'turn_on', {"entity_id": MEDIA_PLAYER})
+# # Turn on Kodi with CEC
+# hass.services.call(
+#         'media_player', 'turn_on', {"entity_id": MEDIA_PLAYER})
+tv_state = hass.states.get(ENTITY_ANDROIDTV)
+if tv_state.state == "off":
+    hass.services.call('media_player', 'turn_on',
+                       {"entity_id": ENTITY_ANDROIDTV})
+
 
 # Play media:
 if play_live_tv:
