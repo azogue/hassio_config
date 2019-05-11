@@ -1011,6 +1011,9 @@ class EventListener(hass.Hass):
         color = payload_event.get('color', 'red')
         flashes = payload_event.get('flashes', 1)
         persistence = payload_event.get('persistence', 1)
+        lights_use = payload_event.get('lights', None)
+        if lights_use is not None:
+            self._lights_notif = lights_use
         self.log('flash_light_event received: {} - #{}/{}s'
                  .format(color, flashes, persistence))
         self.light_flash(XY_COLORS[color],
