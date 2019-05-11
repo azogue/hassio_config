@@ -309,9 +309,8 @@ class AlarmClock(hass.Hass):
         """Stop current play when turning off the input_boolean."""
         if self._in_alarm_mode:
             if self.get_state(self._media_player_sonos) == 'playing':
-                self.call_service('media_player/turn_off',
+                self.call_service('media_player/media_stop',
                                   entity_id=self._media_player_sonos)
-            # self.turn_on_bedroom_speakers({'off': True})
             if self._manual_trigger is not None:
                 self._last_trigger = None
                 self.set_state(self._manual_trigger, state='off')
@@ -490,7 +489,8 @@ class AlarmClock(hass.Hass):
                 repeat = False
             else:
                 volume_set = int(
-                    max(MIN_VOLUME,
+                    max(
+                        MIN_VOLUME,
                         (delta_sec / self._volume_ramp_sec) * self._max_volume)
                 ) / 100.
             self.call_service('media_player/volume_set',
@@ -516,7 +516,7 @@ class AlarmClock(hass.Hass):
                 media_content_type='music',
                 media_content_id='http://api.spreaker.com/listen/'
                                  'show/1060718/episode/latest/shoutcast.mp3')
-            self.log('TRIGGER_START with ep_info --> {}'.format(ep_info))
+            self.log('TRIGGER_START with special source')
         else:
             self.call_service('media_player/select_source',
                               entity_id=self._media_player_sonos,
