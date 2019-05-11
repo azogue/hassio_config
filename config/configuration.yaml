@@ -181,6 +181,7 @@ custom_updater:
   card_urls:
     - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
     - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
+    - https://raw.githubusercontent.com/custom-cards/cover-element/master/tracker.json
 
 person:
   - name: Eugenio
