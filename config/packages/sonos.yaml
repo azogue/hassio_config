@@ -2,5 +2,5 @@
 sonos:
   media_player:
     hosts:
-      - 192.168.1.50
-      - 192.168.1.42
+      - !secret sonos_host_1
+      - !secret sonos_host_2
