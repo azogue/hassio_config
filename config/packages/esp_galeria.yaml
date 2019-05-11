@@ -95,7 +95,7 @@ sensor:
     
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[0] < 80) %}{{ value_json.sample.ds_temps[0] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[0] < 80) and (value_json.sample.ds_temps[0] > 0) %}{{ value_json.sample.ds_temps[0] | round(1) }}{% endif %}"
     name: sensor_acs_probe_1
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -103,7 +103,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[1] < 80) %}{{ value_json.sample.ds_temps[1] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[1] < 80) and (value_json.sample.ds_temps[1] > 0) %}{{ value_json.sample.ds_temps[1] | round(1) }}{% endif %}"
     name: sensor_acs_probe_2
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -111,7 +111,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[2] < 80) %}{{ value_json.sample.ds_temps[2] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[2] < 80) and (value_json.sample.ds_temps[2] > 0) %}{{ value_json.sample.ds_temps[2] | round(1) }}{% endif %}"
     name: sensor_acs_probe_3
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -119,7 +119,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[3] < 80) %}{{ value_json.sample.ds_temps[3] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[3] < 80) and (value_json.sample.ds_temps[3] > 0) %}{{ value_json.sample.ds_temps[3] | round(1) }}{% endif %}"
     name: sensor_acs_probe_4
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -127,7 +127,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[4] < 80) %}{{ value_json.sample.ds_temps[4] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[4] < 80) and (value_json.sample.ds_temps[4] > 0) %}{{ value_json.sample.ds_temps[4] | round(1) }}{% endif %}"
     name: sensor_acs_probe_5
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -135,7 +135,7 @@ sensor:
     expire_after: !secret mqtt_default_expiration
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
-    value_template: "{% if (value_json.sample.ds_temps[5] < 80) %}{{ value_json.sample.ds_temps[5] | round(1) }}{% endif %}"
+    value_template: "{% if (value_json.sample.ds_temps[5] < 80) and (value_json.sample.ds_temps[5] > 0) %}{{ value_json.sample.ds_temps[5] | round(1) }}{% endif %}"
     name: sensor_acs_probe_6
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
