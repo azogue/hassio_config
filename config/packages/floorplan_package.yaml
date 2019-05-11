@@ -10,9 +10,3 @@ panel_custom:
     sidebar_icon: mdi:home
     url_path: floorplan
     config: !include ../floorplan.yaml
-
-# Entity needed to show Floorplan with custom-state-card
-binary_sensor:
-  - platform: mqtt
-    state_topic: dummy/floorplan/sensor
-    name: Floorplan
