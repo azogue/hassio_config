@@ -11,7 +11,7 @@
 
     # Not playing anything for a time
     - condition: state
-      entity_id: media_player.kodi_tv
+      entity_id: media_player.tele
       state: 'off'
       for:
         minutes: 15
@@ -43,12 +43,14 @@
       for:
         minutes: 5
 
-    # Family at home
-    - condition: state
-      entity_id: group.family
-      state: 'home'
-      for:
-        minutes: 10
+#    # Family at home
+#    - condition: state
+#      entity_id: group.family
+#      state: 'home'
+#      for:
+#        minutes: 10
+    - condition: template
+      value_template: '{{ (states.person.eugenio.state == "home") or (states.person.carmen.state == "home") }}'
 
     # Low Light level in office
     - condition: template
