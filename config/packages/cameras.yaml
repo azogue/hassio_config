@@ -115,18 +115,22 @@ camera:
 #    control_port: 7999
 #    camera_id: 2
 #
+  # Wyze cams
+  - platform: generic
+    name: WyzeCamPan
+    still_image_url: !secret wyzecampan_meye_snapshot
+    stream_source: !secret wyzecampan_rstp_url
+
   # Exterior camera
-  - platform: motioneye
-    snapshot_url: !secret kmoon_motioneye_local_snapshot
-    name: kMoon IPCAM100
-    with_motion_control: true
-    control_port: 7999
-    camera_id: 1
+  - platform: generic
+    name: WyzeCam2
+    still_image_url: !secret wyzecam2_meye_snapshot
+    stream_source: !secret wyzecam2_rstp_url
 
   # Office camera
   - platform: motioneye
     snapshot_url: !secret iegeek_motioneye_local_snapshot
-    name: ieGeek HD
+    name: Escam
     with_motion_control: true
     control_port: 7999
     camera_id: 3
