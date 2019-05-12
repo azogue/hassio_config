@@ -41,8 +41,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_CONTROL_CAM_ID, default=1): cv.positive_int
 })
 
-RG_STATUS = re.compile('> Detection status (\w+)\n')
-RG_CONTROL = re.compile('> Detection (\w+)\n')
+RG_STATUS = re.compile(' Detection status (\w+)\s?\n')
+RG_CONTROL = re.compile(' Detection (\w+)\s?\n')
 
 
 # pylint: disable=unused-argument
@@ -167,7 +167,8 @@ class MotionEyeCamera(Camera):
             if not status_found:
                 _LOGGER.error(f"Bad control response from {url}: "
                               f"{raw}, no pattern found")
-            if status_found[0] in ['ACTIVE', 'resumed']:
+                self._motion_detection_active = False
+            elif status_found[0] in ['ACTIVE', 'resumed']:
                 self._motion_detection_active = True
             else:
                 self._motion_detection_active = False
