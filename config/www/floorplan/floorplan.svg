@@ -10531,43 +10531,41 @@
          sodipodi:role="line">HR bed</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.89648438px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="132.28168"
-       y="330.06665"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="170.9025"
+       y="331.59122"
        id="sensor.sensor_livingroom_temperature"
-       sodipodi:linespacing="125%"
        transform="scale(0.95285584,1.0494767)"><title
          id="title33442">Temp salón</title><tspan
          sodipodi:role="line"
          id="tspan33444"
-         x="132.28168"
-         y="330.06665"
+         x="170.9025"
+         y="331.59122"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.89648438px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809">Tª sal</tspan></text>
     <text
-       sodipodi:linespacing="125%"
        id="sensor.sensor_livingroom_humidity"
-       y="342.55862"
-       x="132.10588"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6736784px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       y="344.08319"
+       x="170.7267"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"
        transform="scale(0.95285584,1.0494767)"><title
          id="title33448">Hum salón</title><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6736784px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Normal';text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#fa00c6;fill-opacity:0.95812809"
-         y="342.55862"
-         x="132.10588"
+         y="344.08319"
+         x="170.7267"
          id="tspan33450"
          sodipodi:role="line">HR sal</tspan></text>
     <path
        style="fill:#fa00c6;fill-opacity:0.95812809"
        inkscape:connector-curvature="0"
-       id="camera.kmoon_ipcam100"
+       id="camera.wyzecam2"
        d="m 235.67858,530.55235 1.64108,3.10557 a 0.93212671,1.0266456 0 0 0 1.27448,0.37089 l 9.66737,-6.19708 a 0.93212671,1.0266456 0 0 0 0.33673,-1.40373 l -4.68878,-8.87303 a 0.93212671,1.0266456 0 0 0 -1.27449,-0.37089 l -9.66737,6.19708 a 0.93212671,1.0266456 0 0 0 -0.33673,1.40373 l 1.64107,3.10556 -5.09796,-1.48352 5.15765,9.76034 1.34695,-5.61492 z">
       <title
          id="title7936">Cámara Terraza</title>
     </path>
     <path
        d="m 331.38366,114.33495 1.64108,3.10557 a 0.93212671,1.0266456 0 0 0 1.27448,0.37089 l 9.66737,-6.19708 a 0.93212671,1.0266456 0 0 0 0.33673,-1.40373 l -4.68878,-8.87303 a 0.93212671,1.0266456 0 0 0 -1.27449,-0.37089 l -9.66737,6.19708 a 0.93212671,1.0266456 0 0 0 -0.33673,1.40373 l 1.64107,3.10556 -5.09796,-1.48352 5.15765,9.76034 1.34695,-5.61492 z"
-       id="camera.iegeek_hd"
+       id="camera.escam"
        inkscape:connector-curvature="0"
        style="fill:#fa00c6;fill-opacity:0.95812809">
       <title
@@ -10639,6 +10637,14 @@
       <title
          id="title6169">Cámara Cocina</title>
     </path>
+    <path
+       d="m 111.62,344.48171 -1.64108,3.10557 a 0.93212671,1.0266456 0 0 1 -1.27448,0.37089 l -9.667366,-6.19708 a 0.93212671,1.0266456 0 0 1 -0.33673,-1.40373 l 4.688776,-8.87303 a 0.93212671,1.0266456 0 0 1 1.27449,-0.37089 l 9.66737,6.19708 a 0.93212671,1.0266456 0 0 1 0.33673,1.40373 l -1.64107,3.10556 5.09796,-1.48352 -5.15765,9.76034 z"
+       id="camera.wyzecampan"
+       inkscape:connector-curvature="0"
+       style="fill:#fa00c6;fill-opacity:0.95812809">
+      <title
+         id="title10594">Cámara Salón PAN</title>
+    </path>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -10690,7 +10696,7 @@
     <path
        style="fill:#e50000;fill-opacity:1"
        inkscape:connector-curvature="0"
-       id="light.bola_grande"
+       id="light.bola"
        d="m 179.31983,360.84563 3.72765,0 0,-6.03199 2.4851,0 0,6.03199 3.72765,0 4.97018,9.65114 -19.88077,0 4.97019,-9.65114 m 7.45529,10.85755 a 2.485096,2.412791 0 0 1 -2.48511,2.41278 2.485096,2.412791 0 0 1 -2.48509,-2.41278 l 4.9702,0 z">
       <title
          id="title32394">Bola</title>

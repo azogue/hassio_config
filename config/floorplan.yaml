@@ -166,7 +166,7 @@
           entities:
              - light.salon
              - light.cuenco
-             - light.bola_grande
+             - light.bola
              - light.central
              - light.tira
              - light.pie_sofa
