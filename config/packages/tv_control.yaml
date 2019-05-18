@@ -38,38 +38,61 @@ homeassistant:
     input_select.youtube_videos:
       icon: mdi:youtube
 
-input_boolean:
-  kodi_tv_state:
 
-#switch:
-#  - platform: command_line
-#    scan_interval: 120
-#    switches:
-#      toggle_kodi_ambilight:
-#        command_on: '/config/shell/switch_kodi_hyperion.sh 1'
-#        command_off: '/config/shell/switch_kodi_hyperion.sh 0'
-#        command_state: '/config/shell/switch_kodi_hyperion.sh'
-#        friendly_name: KODI Ambilight
-#        value_template: '{{ value_json == 1 }}'
-#      toggle_config_kodi_ambilight:
-#        command_on: '/config/shell/switch_kodi_hyperion.sh set_hue6'
-#        command_off: '/config/shell/switch_kodi_hyperion.sh set_hue4'
-#        command_state: '/config/shell/switch_kodi_hyperion.sh num_lights'
-#        friendly_name: KODI Ambilight INMERSION
-#        value_template: '{{ value_json == 6 }}'
+media_extractor:
+#  default_query: best
+#  customize:
+#    media_player.shield:
+#      video: bestvideo
+#      music: bestaudio[ext=mp3]
 
 media_player:
-- platform: firetv
-  name: Fire TV
-  host: 192.168.1.103
-  adbkey: "/config/firetv_keys/adbkey"
+- platform: androidtv
+  host: !secret philips_tv_host
+  name: "TV"
+  adb_server_ip: !secret local_ip
+  adb_server_port: 5037
+  scan_interval: 60
+  device_class: androidtv
+  apps:
+    com.amazon.avod: "Prime Video"
+    org.droidtv.playtv: "Otro"
+    com.google.android.apps.mediashell: "Google Cast"
+    com.google.android.apps.youtube: "YouTube?"
+    com.google.android.youtube.tv: "YouTube"
+    com.google.android.tvlauncher: "Android TV menu"
+    org.droidtv.settings: "Ajustes TV"
+    org.droidtv.tvsystemui: "Salvapantallas"
+
+- platform: androidtv
+  host: !secret shield_tv_host
+  name: nvidia_shield
+  adb_server_ip: !secret local_ip
+  adb_server_port: 5037
+  scan_interval: 20
+  device_class: androidtv
+  apps:
+    com.amazon.avod: "Prime Video"
+    com.amazon.amazonvideo.livingroom: "Prime Video"
+    org.xbmc.kodi: "Kodi"
+    org.droidtv.playtv: "Raw TV"
+    com.google.android.apps.mediashell: "Google Cast"
+    com.google.android.apps.youtube: "YouTube?"
+    com.google.android.youtube.tv: "YouTube"
+    com.google.android.tvlauncher: "Android TV menu"
+    com.rtve.androidtv: "RTVE a la carta"
+    org.droidtv.settings: "Ajustes TV"
+    org.droidtv.tvsystemui: "Salvapantallas"
+    com.movistarplus.androidtv: "Movistar+"
+    com.antena3.atresplayer.tv: "A3Player"
+
 
 - platform: kodi
   host: !secret shield_tv_host
   port: !secret kodi_port
   name: Kodi
-  username: !secret kodi_user
-  password: !secret kodi_pw
+  username: !secret kodi_app_user
+  password: !secret kodi_app_pw
   enable_websocket: true
   timeout: 10
   turn_on_action:
@@ -94,36 +117,48 @@ media_player:
 
 
 - platform: denonavr
-  host: 192.168.1.185
+  host: !secret denon_host
   name: Home cinema
   show_all_sources: false
 
 
 - platform: universal
-  name: Kodi TV
+  name: Tele
   state_template: >
-    {% if (states.media_player.kodi.state == 'idle') and (states.input_boolean.kodi_tv_state.state == 'off') %}
-    off
-    {% else %}
+    {% if (states.media_player.tv.state == 'off') %}
+    {{ states.media_player.home_cinema.state }}
+    {% elif ("app_id" in states.media_player.tv.attributes) and (states.media_player.tv.attributes.app_id == 'org.droidtv.tvsystemui') %}
+    idle
+    {% elif ("app_id" in states.media_player.tv.attributes) and (states.media_player.tv.attributes.app_id == 'com.google.android.apps.mediashell') %}
+    {{ states("media_player.55oled803_12") }}
+    {% elif ("app_id" in states.media_player.nvidia_shield.attributes) and (states.media_player.nvidia_shield.attributes.app_id == 'com.google.android.apps.mediashell') %}
+    {{ states("media_player.shield") }}
+    {% elif ("app_id" in states.media_player.nvidia_shield.attributes) and (states.media_player.nvidia_shield.attributes.app_id == 'org.xbmc.kodi') %}
     {{ states.media_player.kodi.state }}
+
+    {% elif ("app_id" in states.media_player.nvidia_shield.attributes) %}
+    {{ states("media_player.nvidia_shield") }}
+
+    {% else %}
+    {{ states.media_player.tv.state }}
     {% endif %}
   children:
+    - media_player.shield
+    - media_player.55oled803_12
     - media_player.kodi
+    - media_player.nvidia_shield
+    - media_player.tv
     - media_player.home_cinema
   commands:
     turn_on:
       service: media_player.turn_on
       data:
-        entity_id: media_player.kodi
+        entity_id: media_player.tv
     turn_off:
       service: media_player.turn_off
       data:
-        entity_id: media_player.kodi
-#    volume_set:
-#      service: media_player.volume_set
-#      data_template:
-#        entity_id: media_player.kodi
-#        volume_level: '{{ volume_level }}'
+        entity_id: media_player.tv
+
     volume_up:
       service: media_player.volume_up
       data:
@@ -136,21 +171,51 @@ media_player:
       service: media_player.volume_mute
       data:
         entity_id: media_player.home_cinema
-#    select_source:
-#      service: media_player.select_source
-#      data_template:
-#        entity_id: media_player.kodi
-#        source: '{{ source }}'
+    volume_set:
+      service: media_player.volume_set
+      data_template:
+        entity_id: media_player.home_cinema
+        volume_level: '{{ volume_level }}'
+
+    media_stop:
+      service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: "STOP"
+    media_pause:
+      service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: "PAUSE"
+
+    select_source:
+      service: python_script.select_tv_source
+      data_template:
+        source: '{{ source }}'
   attributes:
     is_volume_muted: media_player.home_cinema|is_volume_muted
     volume_level: media_player.home_cinema|volume_level
-#    source: media_player.kodi|source
-#    source_list: media_player.kodi|source_list
+    source: input_select.tv_source
+    source_list: input_select.tv_source|options
+    app_id: media_player.nvidia_shield|app_id
+    app_name: media_player.nvidia_shield|app_name
 
+binary_sensor:
+- platform: template
+  sensors:
+    tv_in_screen_saver:
+      friendly_name: "Salvapantallas TV"
+      # device_class:
+      value_template: "{{'app_name' in states.media_player.tv.attributes and states.media_player.tv.attributes['app_name'] == 'Salvapantallas'}}"
+      entity_id:
+        - media_player.tv
+
+
+# TODO make more tv time counters and one template sensor with sum
 sensor:
 - platform: history_stats
   name: Horas de TV
-  entity_id: media_player.kodi
+  entity_id: media_player.tele
   state: 'playing'
   type: time
   start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
@@ -175,16 +240,13 @@ input_select:
     name: TV Source
     options:
      - Nada
-     - Youtube
-     - Kodi
-     - VLC
-     - Prime Video
-     - Movistar+
-     - RTVE a la carta
-     - TDT
-     - Kodi RPI
-     - Inmersión
-     - OFF
+     - Kodi  # Shield Kodi app
+     - TDT  # Kodi PVR
+     - Youtube  # Shield app
+     - Movistar+  # Shield app
+     - RTVE a la carta  # Shield app
+     - Prime Video  # Shield app
+     - Salvapantallas 4k  # Shield app
     initial: Nada
     icon: mdi:television-box
 

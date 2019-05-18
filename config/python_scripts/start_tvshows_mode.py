@@ -43,16 +43,9 @@ TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
 now = datetime.datetime.now()
 play_live_tv = False
 
-# state_power = hass.states.get(POWER_SWITCH)
-# if state_power.state == 'off':
-#     # Need to power up TV system (and wait for it)
-#     hass.services.call('switch', 'turn_on', {"entity_id": POWER_SWITCH})
-#     time.sleep(5)
 
-# Turn on Kodi with CEC
-hass.services.call(
-        'media_player', 'turn_on', {"entity_id": MEDIA_PLAYER})
-
+# Turn on Kodi
+hass.services.call('media_player', 'turn_on', {"entity_id": 'media_player.tele'})
 hass.services.call('script', 'pvr_recordings')
 time.sleep(3)
 state_select = hass.states.get(INPUT_SELECT_OPTS)

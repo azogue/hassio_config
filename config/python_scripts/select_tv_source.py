@@ -98,6 +98,8 @@ options:
 
 INPUT_SELECT = 'input_select.tv_source'
 ENTITY_ANDROIDTV = "media_player.tv"
+ENTITY_SHIELD = "media_player.nvidia_shield"
+ENTITY_KODI = "media_player.kodi"
 ENTITY_HOMECINEMA = "media_player.home_cinema"
 
 COVER_VENTANAL = "cover.sonoff_cover_ventanal"
@@ -105,107 +107,102 @@ COVER_PUERTA = "cover.sonoff_cover_puerta_terraza"
 LIGHT_AMBILIGHT = "light.ambilight"
 SWITCH_AMBILIGHT_HUE = "switch.ambilight_plus_hue"
 
-scene_selection = data.get("scene")
-need_reset_select = True
+COMMANDS = {
+    "RIGHT": "RIGHT",
+    "LEFT": "LEFT",
+    "UP": "UP",
+    "DOWN": "DOWN",
+    "WAKE": "MENU",
+    "SLEEP": "SLEEP",
+    "ENTER": "ENTER",
+    "BACK": "BACK",
+    "HOME": "HOME",
+    "PLAY": "input keyevent 126",
+    "PAUSE": "input keyevent 127",
+    "STOP": "input keyevent 86",
+}
 
-logger.warning("TV SOURCE select: %s.", scene_selection)
+ANDROID_TV_APPS = {
+    "Kodi": "am start -a android.intent.action.VIEW -d -n org.xbmc.kodi/.Splash",
+    "Youtube": "am start -a android.intent.action.VIEW -d -n com.google.android.youtube.tv/com.google.android.apps.youtube.tv.activity.ShellActivity",
+    "Movistar+": "am start -a android.intent.action.VIEW -d -n com.movistarplus.androidtv/.MainActivity",
+    "RTVE a la carta": "am start -a android.intent.action.VIEW -d -n com.rtve.androidtv/.Screen.SplashScreen",
+    "Prime Video": "am start -a android.intent.action.VIEW -d -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity",
+}
 
-if scene_selection == 'OFF':
-    # hass.services.call('media_player', 'turn_off',
-    #                    {"entity_id": ENTITY_HOMECINEMA})
-    hass.services.call('media_player', 'turn_off',
+command = data.get("source")
+dest_entity = data.get(
+    "entity_id",
+    ENTITY_SHIELD,
+)
+# TODO stop active media_player in change of app/entity
+logger.warning("select_tv_source: %s [%s]", command, dest_entity)
+
+tv_state = hass.states.get(ENTITY_ANDROIDTV)
+shield_state = hass.states.get(ENTITY_SHIELD)
+homecinema_state = hass.states.get(ENTITY_HOMECINEMA)
+# logger.warning("select_tv_source_states: %s/%s/%s", *list(map(lambda x: x.state, [tv_state, shield_state, homecinema_state])))
+
+if tv_state.state == "off":
+    hass.services.call('media_player', 'turn_on',
                        {"entity_id": ENTITY_ANDROIDTV})
 
-elif scene_selection == 'Nada':
-    need_reset_select = False
+if "salvapantallas" in command.lower():
+    # Cast 4k video
+    hass.services.call(
+        # 'media_extractor', 'play_media',
+        'media_player', 'play_media',
+        {
+            "entity_id": "media_player.shield",
+            # "entity_id": "media_player.55oled803_12",
+            # "media_content_id": "https://youtu.be/xGlVPzmgpSM",
+            "media_content_id": "https://www.youtube.com/watch?v=Pj0w0xo2ChY&list=PL71F771F239EF17F7",
+            # "media_content_id": "https://www.youtube.com/watch?v=xGlVPzmgpSM",
+            # "media_content_id": "onOEns_MnC4",
+            # "media_content_id": "xGlVPzmgpSM",
+            "media_content_type": "video/youtube",
+            # "media_content_type": "YouTube",
+        }
+    )
+    hass.services.call(
+        'input_select', 'select_option',
+        {"entity_id": INPUT_SELECT, "option": "Nada"}
+    )
+elif command == "TDT":
+    hass.services.call(
+        'python_script', 'start_kodi_play_tv',
+    )
+    hass.services.call(
+        'input_select', 'select_option',
+        {"entity_id": INPUT_SELECT, "option": "Kodi"}
+    )
+elif command.upper() in COMMANDS.keys():
+    hass.services.call(
+        'androidtv', 'adb_command',
+        {
+            "entity_id": dest_entity,
+            "command": COMMANDS[command.upper()],
+        }
+    )
+elif command in ANDROID_TV_APPS.keys():
+    #  TODO stop current playing / change source? / start tv
 
+    hass.services.call(
+        'androidtv', 'adb_command',
+        {
+            "entity_id": dest_entity,
+            "command": ANDROID_TV_APPS[command],
+        }
+    )
+    hass.services.call(
+        'input_select', 'select_option',
+        {"entity_id": INPUT_SELECT, "option": command}
+    )
 else:
-    tv_state = hass.states.get(ENTITY_ANDROIDTV)
-
-    if tv_state.state == "off":
-        hass.services.call('media_player', 'turn_on',
-                           {"entity_id": ENTITY_ANDROIDTV})
-        time.sleep(1)
-
-    if scene_selection == 'Youtube':
-        # com.amazon.avod: "Prime Video"
-        # org.xbmc.kodi: "Kodi app"
-        # org.droidtv.playtv: "Raw TV"
-        # com.google.android.apps.mediashell: "Google Cast"
-        # com.google.android.apps.youtube: "YouTube?"
-        # com.google.android.youtube.tv: "YouTube"
-        # com.google.android.tvlauncher: "Android TV menu"
-        # com.rtve.androidtv: "RTVE a la carta"
-        # org.droidtv.settings: "Ajustes TV"
-        # org.droidtv.tvsystemui: "Salvapantallas"
-        # com.movistarplus.androidtv: "Movistar+"
-        # #    org.videolan.vlc: "VLC"
-
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "com.google.android.youtube.tv"})
-    elif scene_selection == 'Kodi':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "org.xbmc.kodi"})
-    elif scene_selection == 'VLC':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "org.videolan.vlc"})
-    elif scene_selection == 'Prime Video':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "com.amazon.avod"})
-    elif scene_selection == 'Movistar+':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "com.movistarplus.androidtv"})
-    elif scene_selection == 'RTVE a la carta':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "com.rtve.androidtv"})
-
-    elif scene_selection == 'TDT':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_HOMECINEMA,
-                            "source": "Game"})
-
-    elif scene_selection == 'Kodi RPI':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_HOMECINEMA,
-                            "source": "Kodi"})
-
-    elif scene_selection == 'Android TV':
-        hass.services.call('media_player', 'select_source',
-                           {"entity_id": ENTITY_ANDROIDTV,
-                            "source": "com.google.android.tvlauncher"})
-
-    elif scene_selection == 'Inmersión':
-        cover_state_1 = hass.states.get(COVER_VENTANAL)
-        cover_state_2 = hass.states.get(COVER_PUERTA)
-        pos_cover_1 = int(cover_state_1.attributes['current_position']) if 'current_position' in cover_state_1.attributes else 0
-        pos_cover_2 = int(cover_state_2.attributes['current_position']) if 'current_position' in cover_state_2.attributes else 0
-        ambi_hue_state = hass.states.get(SWITCH_AMBILIGHT_HUE)
-
-        logger.warning("Inmersion mode, now Ambi-Hue: %s, covers: V=%d, P=%d", ambi_hue_state.state, pos_cover_1, pos_cover_2)
-        #     if ('current_position' in cover_state.attributes
-        #             and int(cover_state.attributes['current_position']) > 40):
-        #         hass.services.call('cover', 'set_cover_position',
-        #                            {"entity_id": COVER_VENTANAL,
-        #                             "position": 15})
-        #         logger.warning("TV Night SCENE, cover_state: from %d to 15",
-        #                        int(cover_state.attributes['current_position']))
-        #     # hass.services.call('cover', 'set_position',
-        #     #                    {"entity_id": "cover.sonoff_cover_puerta_terraza",
-        #     #                     "position": 70})
-
-
-        hass.services.call('switch', 'toggle',
-                           {"entity_id": SWITCH_AMBILIGHT_HUE})
-
-if need_reset_select:
-    time.sleep(1)
-    hass.services.call('input_select', 'select_option',
-                       {"entity_id": INPUT_SELECT, "option": "Nada"})
-
-
+    hass.services.call(
+        'androidtv', 'adb_command',
+        {
+            "entity_id": dest_entity,
+            "command": command,
+        }
+    )
