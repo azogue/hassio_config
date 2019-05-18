@@ -75,12 +75,12 @@
   id: 'tv_on_if_off_and_kodi_play'
   trigger:
     platform: state
-    entity_id: media_player.kodi_tv
+    entity_id: media_player.kodi
     from: 'off'
     to: 'playing'
   action:
   - service: media_player.turn_on
-    entity_id: media_player.kodi
+    entity_id: media_player.tv
   - service: telegram_bot.send_message
     data_template:
       title: '*TV ON*'
@@ -88,28 +88,30 @@
       message: 'Encendido de TV automático en Kodi PLAY'
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
+        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.kodi_app
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 #
-- alias: Apagado de TV si encendida y KODI en idle>10 min
-  id: 'tv_off_if_kodi_idle'
+- alias: Apagado de TV si encendida con salvapantallas
+  id: 'tv_off_if_screensaver_some_time'
   trigger:
     platform: state
-    entity_id: media_player.kodi_tv
-    to: 'idle'
+    entity_id: binary_sensor.tv_in_screen_saver
+    to: 'on'
+#    entity_id: media_player.tele
+#    to: 'idle'
     for:
-      minutes: 10
+      minutes: 7
   action:
   - service: media_player.turn_off
-    entity_id: media_player.kodi_tv
+    entity_id: media_player.tele
   - service: telegram_bot.send_message
     data_template:
       title: '*TV OFF*'
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-      message: 'Apagado de TV automático (Kodi en `idle` > 10 min)'
+      message: 'Apagado de TV automático (en salvapantallas > 7 min)'
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv, ◼︎:/service_call media_player.media_stop media_player.kodi_tv
+        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.tele
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 
 - alias: Apagado de CAM salón en Kodi PLAY nocturno
@@ -378,7 +380,7 @@
     to: '4_hold_up'
   action:
     - service: media_player.turn_off
-      entity_id: media_player.kodi_tv,media_player.fire_tv,media_player.salon
+      entity_id: media_player.tele,media_player.salon
     - event: flash_light
       event_data:
         color: red
@@ -395,7 +397,7 @@
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
         disable_notification: true
         inline_keyboard:
-          - TV OFF:/service_call media_player.turn_off media_player.kodi_tv, TV ON:/service_call media_player.turn_on media_player.kodi_tv
+          - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele
           - Aura habitación:/service_call light.toggle light.aura_habitacion
 
 - alias: Turn TV Night scene (hue switch)
@@ -741,14 +743,19 @@
     - platform: state
       entity_id: light.tira
   condition:
-    condition: or
+    condition: and
     conditions:
       - condition: state
-        entity_id: light.tira
-        state: 'on'
-      - condition: state
-        entity_id: light.tira
+        entity_id: media_player.tv
         state: 'off'
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: light.tira
+            state: 'on'
+          - condition: state
+            entity_id: light.tira
+            state: 'off'
   action:
     - service: python_script.sync_yeelight
       data_template:
