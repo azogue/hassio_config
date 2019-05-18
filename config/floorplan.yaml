@@ -273,8 +273,9 @@
           entities:
             - camera.pi_zero_cam_1
             - camera.pi_zero_cam_2
-            - camera.kmoon_ipcam100
-            - camera.iegeek_hd
+            - camera.wyzecampan
+            - camera.wyzecam2
+            - camera.escam
           states:
             - state: 'idle'
               class: 'camera-idle'
