@@ -1,6 +1,0 @@
-# SONOS speakers
-sonos:
-  media_player:
-    hosts:
-      - !secret sonos_host_1
-      - !secret sonos_host_2
