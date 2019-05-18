@@ -6,6 +6,7 @@ homeassistant:
   unit_system: metric
   time_zone: !secret time_zone
   auth_providers:
+    - type: homeassistant
     - type: legacy_api_password
       api_password: !secret hass_pw
     - type: trusted_networks
@@ -55,13 +56,12 @@ http:
 logger:
   default: warn
   logs:
+#    custom_components.switch.tuyawifiplug: error
     aiohttp.server: critical
-    custom_components.switch.tuyawifiplug: error
-    miio: critical
     homeassistant.bootstrap: info
     homeassistant.core: error
     homeassistant.setup: warning
-    homeassistant.components.automation: info
+#    homeassistant.components.automation: info
     homeassistant.components.floorplan: debug
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
@@ -73,13 +73,10 @@ logger:
     homeassistant.components.sensor.influxdb: error
     homeassistant.components.tts: debug
     homeassistant.components.vacuum.xiaomi_miio: critical
+    miio: critical
     homeassistant.helpers.entity: error
 
 mqtt:
-##  discovery: true
-##  discovery_prefix: homeassistant
-##  broker: core-mosquitto
-#  broker: 192.168.1.30
   broker: 192.168.1.10
   client_id: !secret mqtt_client_id
   keepalive: 60
@@ -147,8 +144,6 @@ influxdb:
   database: !secret influxdb_db
   username: !secret influxdb_user
   password: !secret influxdb_pass
-  # ssl: true
-  # verify_ssl: true
   default_measurement: state
 
 recorder:
@@ -167,14 +162,9 @@ panel_iframe:
     title: Grafana
     url: !secret grafana_url
     icon: mdi:chart-areaspline
-#  psychrochart:
-#    title: Psicrométrico
-#    url: !secret psychrocam_svgchart_url
-#    icon: mdi:gradient
 
 automation: !include automations.yaml
 script: !include scripts.yaml
-#weblink: !include weblinks.yaml
 scene: !include scenes.yaml
 
 custom_updater:
