@@ -152,45 +152,45 @@ svg, svg * {
 
 /* Power sensor */
 
-.power-very-low-background {
+.power-very-low {
   fill: lime !important;
 }
 
-.power-below-average-background {
+.power-below-average {
   fill: green !important;
 }
 
-.power-average-background {
+.power-average {
   fill: yellow !important;
 }
 
-.power-high-background {
+.power-high {
 	fill: orange !important;
 }
 
-.power-very-high-background {
+.power-very-high {
 	fill: red !important;
 }
 
 
 /* Temperature sensor */
 
-.temp-very-low-background {
+.temp-very-low {
   fill: #d9edf7 !important;
   fill-opacity: 1 !important;
 }
 
-.temp-below-average-background {
+.temp-below-average {
   fill: #dcefe8 !important;
   fill-opacity: 1 !important;
 }
 
-.temp-average-background {
+.temp-average {
   fill: #dff0d8 !important;
   fill-opacity: 1 !important;
 }
 
-.temp-very-high-background {
+.temp-very-high {
   fill: #f2dede !important;
   fill-opacity: 1 !important;
 }
