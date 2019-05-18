@@ -17,31 +17,33 @@ Alarma:
   base_url: !secret base_url
   bot_target: !secret bot_admin_target
   rooms:
-    Estudio:
-      camera.iegeek_hd: binary_sensor.motioncam_office,10
+    Office:
+      camera.escam: binary_sensor.motioncam_office,10
       binary_sensor.sensor_office_mov1: 10
     Salón:
-      camera.sricam_360: binary_sensor.motioncam_salon,5
+      camera.pi_zero_cam_1: binary_sensor.motioncam_pizero,5
+      camera.wyzecampan: binary_sensor.motioncam_wyzecampan,5
       binary_sensor.sensor_livingroom_mov1: 5
 #    Cuadro:
 #      binary_sensor.local_pir:
     Cocina:
+      camera.pi_zero_cam_2: binary_sensor.motioncam_pizero2,5
       binary_sensor.sensor_kitchen_mov1: 3
     Terraza:
-      camera.kmoon_ipcam100: binary_sensor.motioncam_terraza,3
+      camera.wyzecam2: binary_sensor.motioncam_wyzecam2,3
       binary_sensor.sensor_terraza_mov1: 3
 
-FamilyTracker:
-  class: FamilyTracker
-  module: family_tracker
-  bot_chatids: !secret bot_chatids
-  bot_group_target: !secret bot_group_target
-  base_url: !secret base_url
-  people:  # Content of home_group: chat_id
-    person.eugenio:
-      chat_id_idx: 0
-    person.carmen:
-      chat_id_idx: 1
+#FamilyTracker:
+#  class: FamilyTracker
+#  module: family_tracker
+#  bot_chatids: !secret bot_chatids
+#  bot_group_target: !secret bot_group_target
+#  base_url: !secret base_url
+#  people:  # Content of home_group: chat_id
+#    person.eugenio:
+#      chat_id_idx: 0
+#    person.carmen:
+#      chat_id_idx: 1
 
 EnerpiPeakNotifier:
   class: EnerpiPeakNotifier
