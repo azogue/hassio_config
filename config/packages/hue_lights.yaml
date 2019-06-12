@@ -41,9 +41,8 @@ homeassistant:
       friendly_name: Hue + Ambilight
       icon: mdi:traffic-light
 
-    sensor.hue_dimmer_switch:
+    sensor.interruptor_salon:
       icon: mdi:light-switch
-      friendly_name: Interruptor salón
     sensor.interruptor_dormitorio:
       icon: mdi:light-switch
     sensor.interruptor_estudio:

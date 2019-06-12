@@ -4,6 +4,8 @@ homeassistant:
       icon: mdi:developer-board
     input_select.esp_modules:
       icon: mdi:developer-board
+    sensor.processor_use:
+      icon: mdi:chip
 
   # Customize entities matching a pattern
   customize_glob:
