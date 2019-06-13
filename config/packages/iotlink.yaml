@@ -1,0 +1,119 @@
+# #############################################################################
+# IOTLink - https://iotlink.gitlab.io/
+#
+# Windows service with MQTT client to track & control the PC
+#
+# #############################################################################
+# PREFIX: iotlink/workgroup/my-computer
+# #############################################################################
+#Run Application
+#
+#
+#Topic: {prefix}/{domainName}/{machineName}/commands/run
+#
+#Payload Type: JSON
+#
+#Payload:
+#command: Application name or command line.
+#Example: "notepad++.exe" or "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+#
+#args: Command line arguments.
+#path: Working directory which the application or command line will be executed from.
+#user: Username which the application will be executed from. If empty will execute on the first logged user.
+#
+#Example: { "command", "notepad.exe", "args": "C:\\teste.txt", "path": "C:\\", "user": "myusername" }
+
+homeassistant:
+  customize:
+    binary_sensor.w10_online:
+      friendly_name: "PC Online"
+    sensor.w10_cpu_usage:
+      friendly_name: "W10 CPU Usage"
+    sensor.w10_memory_usage:
+      friendly_name: "W10 Memory Usage"
+
+sensor:
+  - platform: mqtt
+    name: w10_cpu_usage
+    state_topic: !secret iotlink_topic_w10_cpu_usage
+    unit_of_measurement: '%'
+    icon: mdi:chip
+    value_template: "{{ value }}"
+    availability_topic: !secret iotlink_topic_w10_online
+    payload_available: "ON"
+    payload_not_available: "OFF"
+    qos: 2
+
+  - platform: mqtt
+    name: w10_memory_usage
+    state_topic: !secret iotlink_topic_w10_ram_usage
+    unit_of_measurement: '%'
+    icon: mdi:memory
+    value_template: "{{ value }}"
+    availability_topic: !secret iotlink_topic_w10_online
+    payload_available: "ON"
+    payload_not_available: "OFF"
+    qos: 2
+
+
+binary_sensor:
+  - platform: mqtt
+    name: w10_online
+    state_topic: !secret iotlink_topic_w10_online
+    value_template: "{{ value }}"
+    payload_on: "ON"
+    payload_off: "OFF"
+    device_class: "connectivity"
+    qos: 2
+
+switch:
+  - platform: template
+    switches:
+      w10_wake_suspend:
+        friendly_name: "PC Idle-sleep"
+        value_template: "{{ is_state('binary_sensor.w10_online', 'on') }}"
+        turn_on:
+          service: script.w10_command_wake
+        turn_off:
+          service: script.w10_command_suspend
+        icon_template: mdi:desktop-tower
+
+script:
+  w10_command_wake:
+    alias: "W10 Wake On Lan"
+    sequence:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: !secret iotlink_topic_w10_wol_mac
+
+  w10_command_shutdown:
+    alias: "W10 Shutdown"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: !secret iotlink_topic_w10_shutdown
+          payload: ""
+
+  w10_command_suspend:
+    alias: "W10 Suspend"
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: !secret iotlink_topic_w10_suspend
+          payload: ""
+
+#  w10_command_hibernate:
+#    alias: "W10 Hibernate"
+#    sequence:
+#      - service: mqtt.publish
+#        data:
+#          topic: "iotlink/{domainName}/{machineName}/commands/hibernate"
+#          payload: ""
+#
+#  w10_command_reboot:
+#    alias: "W10 Reboot"
+#    sequence:
+#      - service: mqtt.publish
+#        data:
+#          topic: "iotlink/{domainName}/{machineName}/commands/reboot"
+#          payload: ""
