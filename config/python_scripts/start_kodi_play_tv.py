@@ -67,7 +67,7 @@ elif now.hour < 16:
     content_id = 18
     media_dest = 'Antena 3 HD'
 elif now.hour < 20:
-    content_id = 6
+    content_id = 35
     media_dest = 'Canal 24 H.'
     # Last record?
     # play_live_tv = False
