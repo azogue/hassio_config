@@ -57,7 +57,12 @@ binary_sensor:
     name: 'Eugenio en casa'
     probability_threshold: 0.95
     observations:
-      - entity_id: 'device_tracker.iphone_beta'
+      - entity_id: 'device_tracker.iphone'
+        prob_given_true: 0.95
+        prob_given_false: 0.15
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'device_tracker.iphone_router'
         prob_given_true: 0.95
         prob_given_false: 0.15
         platform: 'state'
@@ -74,7 +79,7 @@ binary_sensor:
         to_state: 'home'
       - entity_id: 'device_tracker.applewatch'
         prob_given_true: 0.99
-        prob_given_false: 0.25
+        prob_given_false: 0.5
         platform: 'state'
         to_state: 'home'
 
@@ -109,7 +114,6 @@ binary_sensor:
         platform: 'state'
         to_state: 'home'
 
-# device_tracker.a68f412dc8734ee6a695974a9494c4c5
 # sensor.bssid
 # sensor.ssid
 sensor:
@@ -133,6 +137,9 @@ sensor:
           {{ states.sensor.connection_type.state }}
           {%endif%}
 
+owntracks:
+  max_gps_accuracy: 200
+  waypoints: True
 
 device_tracker:
 - platform: nmap_tracker
@@ -151,7 +158,5 @@ device_tracker:
   track_new_devices: yes
 
 - platform: bluetooth_tracker
+  track_new_devices: false
 
-- platform: owntracks
-  max_gps_accuracy: 200
-  waypoints: True

@@ -105,6 +105,7 @@ discovery:
 
 conversation:
 python_script:
+wake_on_lan:
 
 # Text to speech
 tts:
@@ -150,6 +151,22 @@ recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
   db_url: !secret recorder_db_url
+  exclude:
+    event_types:
+      - service_removed
+      - service_executed
+      - platform_discovered
+      - homeassistant_start
+      - homeassistant_stop
+      - feedreader
+      - service_registered
+      - call_service
+      - component_loaded
+      - logbook_entry
+      - system_log_event
+#      - automation_triggered
+#      - script_started
+      - timer_out_of_sync
 
 system_health:
 mobile_app:
@@ -172,6 +189,7 @@ custom_updater:
     - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
     - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
     - https://raw.githubusercontent.com/custom-cards/cover-element/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/simple-weather-card/master/tracker.json
 
 person:
   - name: Eugenio
@@ -179,9 +197,9 @@ person:
     user_id: !secret user_id_eu
     device_trackers:
       - device_tracker.iphone
+      - device_tracker.iphone_router
       - device_tracker.iphone_bt
-      - device_tracker.a68f412dc8734ee6a695974a9494c4c5
-      - device_tracker.homeadmin_iphone
+      - device_tracker.homeadmin_iphone_2
       - device_tracker.applewatch
 
   - name: Carmen
