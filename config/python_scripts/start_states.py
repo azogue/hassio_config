@@ -26,7 +26,7 @@ for bs, fn in cameras.items():
 
 # Notify HA init with iOS
 hass.services.call(
-    'notify', 'ios_iphone_beta',
+    'notify', 'mobile_app_iphone',
     {"title": "Home-assistant started",
      "message": "Hassio is now ready for you",
      "data": {"push": {"badge": 5,

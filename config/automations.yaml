@@ -179,7 +179,7 @@
     platform: event
     event_type: device_tracker_new_device
   action:
-  - service: notify.ios_iphone_beta
+  - service: notify.mobile_app_iphone
     alias: Notify new BT device
     data_template:
       title: "Nuevo dispositivo detectado"
@@ -231,15 +231,15 @@
         - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle group.luces_dormitorio
         - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call switch.toggle switch.estudio_light_relay, +:/init
 
-#  - service: notify.ios_iphone
-#    data:
-#      title: 'Empieza la noche!'
-#      message: 'Acaba de ponerse el sol..'
-#      data:
-#        push:
-#          badge: 0
-#          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
-#          category: "confirm"
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Empieza la noche!'
+      message: 'Acaba de ponerse el sol..'
+      data:
+        push:
+          badge: 0
+          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
+          category: "confirm"
 
 # Set a light scene with a python_script
 - alias: Salón Select Scene
@@ -330,7 +330,7 @@
     - platform: state
       entity_id: updater.updater
   action:
-  - service: notify.ios_iphone
+  - service: notify.mobile_app_iphone
     data:
       title: 'New Home Assistant Release'
       message: "Home Assistant  {{ states.updater.updater.state }}  is now available."

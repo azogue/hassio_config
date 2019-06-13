@@ -37,6 +37,13 @@ notify:
     name: telegram_group
     chat_id: !secret telegram_bot_group
 
+  - platform: group
+    name: ios_devices
+    services:
+#      - service: ios_ipad
+      - service: ios_iphonese
+      - service: mobile_app_iphone
+
 #####################################################
 ##                     Telegram BOT                 #
 #####################################################
