@@ -206,9 +206,19 @@ binary_sensor:
     tv_in_screen_saver:
       friendly_name: "Salvapantallas TV"
       # device_class:
-      value_template: "{{'app_name' in states.media_player.tv.attributes and states.media_player.tv.attributes['app_name'] == 'Salvapantallas'}}"
+      # {{'app_name' in states.media_player.tv.attributes and states.media_player.tv.attributes['app_name'] == 'Salvapantallas'}}
+      value_template: >
+        {{ (states.media_player.tv.state != "off") and (
+           (states.media_player.tv.attributes['app_name'] == "Otro")
+           and (states.media_player.nvidia_shield.state == "standby")
+           and (states.media_player.nvidia_shield.attributes['app_name'] == "Kodi")
+           and (states.media_player.kodi.state == 'idle')
+        ) or (states.media_player.tv.attributes['app_name'] == "Salvapantallas") }}
+
       entity_id:
         - media_player.tv
+        - media_player.nvidia_shield
+        - media_player.kodi
 
 
 # TODO make more tv time counters and one template sensor with sum

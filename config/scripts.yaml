@@ -22,9 +22,10 @@ good_night:
         disable_notification: true
     - alias: Apagado de luces
       service: light.turn_off
-      entity_id: all
-    - delay:
-        seconds: 10
+#      entity_id: all
+      entity_id: light.salon,light.bano,light.cocina,light.office,light.galeria,light.hall,light.piso
+#    - delay:
+#        seconds: 10
 #    - alias: Apagado total de TV y Home cinema
 #      service: switch.turn_off
 #      entity_id: switch.tv_power,switch.hall_light

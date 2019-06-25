@@ -64,13 +64,6 @@
   - service: script.turn_on
     entity_id: script.good_night
 
-#    # Notify script run
-#  - service: persistent_notification.create
-#    data:
-#      title: '¡Buenas noches!'
-#      message: "Script de buenas noches auto-activado en {{ as_timestamp(now())| timestamp_local}}."
-#      notification_id: "good_night_notif"
-
 - alias: Encendido de TV si apagada y KODI play
   id: 'tv_on_if_off_and_kodi_play'
   trigger:
@@ -88,7 +81,7 @@
       message: 'Encendido de TV automático en Kodi PLAY'
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.kodi_app
+        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.kodi
         - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 #
 - alias: Apagado de TV si encendida con salvapantallas
@@ -97,8 +90,6 @@
     platform: state
     entity_id: binary_sensor.tv_in_screen_saver
     to: 'on'
-#    entity_id: media_player.tele
-#    to: 'idle'
     for:
       minutes: 7
   action:
@@ -371,18 +362,19 @@
     to: '4_hold_up'
   action:
     - service: homeassistant.turn_off
-      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera,switch.calentador,switch.03200296dc4f22293a7f
-#    - event: flash_light
-#      event_data:
-#        color: red
-#        persistence: 1
-#        flashes: 2
+      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera
+    - event: flash_light
+      event_data:
+        color: orange
+        persistence: 3
+        flashes: 1
+        lights: "light.aura_habitacion"
 #    - delay:
 #        seconds: 5
     - service: telegram_bot.send_message
       data_template:
         title: '*All Off*'
-        message: "Apagando Despertador y termo al mantener pulsado OFF en mando hue"
+        message: "Apagando Despertador al mantener pulsado OFF en mando hue"
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
         disable_notification: true
         inline_keyboard:
@@ -400,9 +392,9 @@
   condition:
     condition: and
     conditions:
-      - condition: state
-        entity_id: group.family
-        state: 'home'
+#      - condition: state
+#        entity_id: group.family
+#        state: 'home'
       - condition: state
         entity_id: light.dormitorio
         state: 'off'
@@ -435,9 +427,9 @@
   condition:
     condition: and
     conditions:
-      - condition: state
-        entity_id: group.family
-        state: 'home'
+#      - condition: state
+#        entity_id: group.family
+#        state: 'home'
       - condition: state
         entity_id: light.estudio
         state: 'off'
