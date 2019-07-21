@@ -74,7 +74,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
     value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
@@ -83,7 +83,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
 #  - platform: mqtt
 #    state_topic: !secret mqtt_topic_esp_acs_status
 #    value_template: "{{ value_json.sample.lux}}"
@@ -92,7 +92,7 @@ sensor:
 #    qos: !secret mqtt_default_qos
 #    force_update: true
 #    expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_acs_status
     value_template: "{% if (value_json.sample.ds_temps[0] < 80) and (value_json.sample.ds_temps[0] > 0) %}{{ value_json.sample.ds_temps[0] | round(1) }}{% endif %}"

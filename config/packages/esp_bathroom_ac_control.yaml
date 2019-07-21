@@ -55,7 +55,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_bathroom_ac_status
     value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
@@ -64,7 +64,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_bathroom_ac_status
     value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
@@ -73,7 +73,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_bathroom_ac_status
     value_template: "{{ value_json.sample.snum | int }}"

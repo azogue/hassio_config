@@ -74,7 +74,7 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_livingroom_status
     value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
@@ -92,7 +92,7 @@ sensor:
 #    qos: !secret mqtt_default_qos
 #    force_update: true
 #    expire_after: !secret mqtt_default_expiration
-    
+
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_bedroom_status
     value_template: "{{ value_json.sample.snum | int }}"
@@ -103,17 +103,3 @@ sensor:
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: !secret mqtt_default_expiration_long
-
-
-#
-#group:
-#  Dormitorio:
-#    - switch.bedroom_light
-#    - binary_sensor.sensor_bedroom_light_switch
-#    - binary_sensor.sensor_bedroom_relay_1
-#    - binary_sensor.sensor_bedroom_relay_2
-##    - sensor.sensor_bedroom_temperature
-##    - sensor.sensor_bedroom_humidity
-#    - sensor.sensor_bedroom_illumination
-#    - binary_sensor.sensor_bedroom_online
-#    - sensor.sensor_bedroom_snum

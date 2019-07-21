@@ -1,11 +1,10 @@
-# Conectivity sensors:
 homeassistant:
   customize:
     sensor.ip_externa:
       friendly_name: IP externa
       icon: mdi:map-marker
     binary_sensor.internet_online:
-      friendly_name: ¿Hay conexión a internet?
+      friendly_name: "¿Hay conexión a internet?"
 
 binary_sensor:
   - platform: command_line
