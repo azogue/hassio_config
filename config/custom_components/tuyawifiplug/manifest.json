@@ -1,8 +1,8 @@
 {
-  "domain": "sensor",
-  "name": "hue_dimmer",
+  "domain": "tuyawifiplug",
+  "name": "Tuya Wifi Plug",
   "documentation": "",
-  "dependencies": ["hue"],
+  "dependencies": [],
   "codeowners": [],
   "requirements": []
 }
