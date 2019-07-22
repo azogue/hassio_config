@@ -64,7 +64,7 @@ binary_sensor:
 sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% endif %}"
+    value_template: "{% if 'temp' in value_json.sample %}{{ value_json.sample.temp | round(1) }}{% else %}unknown{% endif %}"
     name: sensor_office_temperature
     unit_of_measurement: "°C"
     qos: !secret mqtt_default_qos
@@ -73,7 +73,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% endif %}"
+    value_template: "{% if 'hum' in value_json.sample %}{{ value_json.sample.hum | round(1) }}{% else %}unknown{% endif %}"
     name: sensor_office_humidity
     unit_of_measurement: "%"
     qos: !secret mqtt_default_qos
@@ -82,7 +82,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% endif %}"
+    value_template: "{% if 'pres' in value_json.sample %}{{ value_json.sample.pres | round(1) }}{% else %}unknown{% endif %}"
     name: sensor_office_pressure
     unit_of_measurement: "mb"
     qos: !secret mqtt_default_qos
@@ -91,7 +91,7 @@ sensor:
 
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp_office_status
-    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% endif %}"
+    value_template: "{% if 'lux' in value_json.sample %}{{ value_json.sample.lux}}{% else %}unknown{% endif %}"
     name: sensor_office_illumination
     unit_of_measurement: "lx"
     qos: !secret mqtt_default_qos
