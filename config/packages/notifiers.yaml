@@ -2,16 +2,16 @@
 #                     Notify                       #
 ####################################################
 notify:
-  - platform: pushbullet
-    api_key: !secret pushbullet_api_key
-    name: pushbullet
+#  - platform: pushbullet
+#    api_key: !secret pushbullet_api_key
+#    name: pushbullet
 
-  - platform: kodi
-    name: kodi
-    host: !secret kodi_host
-    port: !secret kodi_port
-    username: !secret kodi_user
-    password: !secret kodi_pw
+#  - platform: kodi
+#    name: kodi
+#    host: !secret shield_tv_host
+#    port: !secret kodi_port
+#    username: !secret kodi_app_user
+#    password: !secret kodi_app_pw
 
 #  - platform: html5
 #    gcm_api_key: !secret gcm_api_key
