@@ -124,8 +124,8 @@ climate:
       minutes: 10
     keep_alive:
       minutes: 5
-#    initial_operation_mode: "off"
-#    away_temp: 28
+#    initial_hvac_mode: "off"
+#    away_temp: 30
 
   # TODO integrate both climate comps in one cold/heat one
   - platform: generic_thermostat
@@ -142,5 +142,5 @@ climate:
       minutes: 10
     keep_alive:
       minutes: 5
-#    initial_operation_mode: "off"
+#    initial_hvac_mode: "off"
     away_temp: 16

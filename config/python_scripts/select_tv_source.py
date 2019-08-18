@@ -147,7 +147,7 @@ if tv_state.state == "off":
     hass.services.call('media_player', 'turn_on',
                        {"entity_id": ENTITY_ANDROIDTV})
 
-if "salvapantallas" in command.lower():
+if "Salvapantallas" in command:
     # Cast 4k video
     hass.services.call(
         # 'media_extractor', 'play_media',

@@ -4,7 +4,7 @@ good_night:
   sequence:
     - alias: Apagado de TV
       service: switch.turn_off
-      entity_id: switch.03200296dc4f22293a7f,switch.hall_light
+      entity_id: switch.03200296dc4f22293a7f,switch.hall_light,switch.ambilight_plus_hue
 
 #    - alias: Bajada de persianas
 #      service: cover.close_cover

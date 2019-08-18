@@ -29,7 +29,7 @@ homeassistant:
 
 switch:
 - platform: template
-#  scan_interval: 60
+  scan_interval: 60
   switches:
     motion_detection_pizerocam1:
       value_template: "{{ is_state('camera.pi_zero_cam_1', 'recording') }}"
@@ -75,17 +75,17 @@ switch:
         service: camera.disable_motion_detection
         data:
           entity_id: camera.iegeek_hd
-    motion_detection_kmoon_ipcam100:
-      value_template: "{{ is_state('camera.kmoon_ipcam100', 'recording') }}"
-      entity_id: camera.kmoon_ipcam100
-      turn_on:
-        service: camera.enable_motion_detection
-        data:
-          entity_id: camera.kmoon_ipcam100
-      turn_off:
-        service: camera.disable_motion_detection
-        data:
-          entity_id: camera.kmoon_ipcam100
+#    motion_detection_kmoon_ipcam100:
+#      value_template: "{{ is_state('camera.kmoon_ipcam100', 'recording') }}"
+#      entity_id: camera.kmoon_ipcam100
+#      turn_on:
+#        service: camera.enable_motion_detection
+#        data:
+#          entity_id: camera.kmoon_ipcam100
+#      turn_off:
+#        service: camera.disable_motion_detection
+#        data:
+#          entity_id: camera.kmoon_ipcam100
 
 ###############################################################################
 # IP CAMERAS (from Motioneye
@@ -119,13 +119,13 @@ camera:
   - platform: generic
     name: WyzeCamPan
     still_image_url: !secret wyzecampan_meye_snapshot
-    stream_source: !secret wyzecampan_rstp_url
+#    stream_source: !secret wyzecampan_rstp_url
 
   # Exterior camera
   - platform: generic
     name: WyzeCam2
     still_image_url: !secret wyzecam2_meye_snapshot
-    stream_source: !secret wyzecam2_rstp_url
+#    stream_source: !secret wyzecam2_rstp_url
 
   # Office camera
   - platform: motioneye

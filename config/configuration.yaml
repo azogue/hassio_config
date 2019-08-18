@@ -7,8 +7,8 @@ homeassistant:
   time_zone: !secret time_zone
   auth_providers:
     - type: homeassistant
-    - type: legacy_api_password
-      api_password: !secret hass_pw
+#    - type: legacy_api_password
+#      api_password: !secret hass_pw
     - type: trusted_networks
       trusted_networks:
       - 192.168.1.0/24
@@ -32,20 +32,24 @@ frontend:
   themes: !include_dir_merge_named themes
 
 config:
+
 http:
   base_url: !secret base_url
-#  api_password: !secret hass_pw
-  ip_ban_enabled: True
-  login_attempts_threshold: 5
+  cors_allowed_origins:
+    - https://cast.home-assistant.io
+
+#  ip_ban_enabled: True
+#  login_attempts_threshold: 1000
+#  use_x_forwarded_for: true
 #  trusted_networks:
 #    - 127.0.0.1
 #    - 192.168.1.0/24
 #    - 172.30.33.2
 #    - 172.30.32.2
 #  use_x_forwarded_for: True
-#    trusted_proxies:
-#      - 127.0.0.1
-#      - ::1
+#  trusted_proxies:
+#    - 127.0.0.1
+#    - ::1
 #    trusted_networks:
 #      - 127.0.0.1
 #      - ::1
@@ -62,6 +66,7 @@ logger:
     homeassistant.core: error
     homeassistant.setup: warning
 #    homeassistant.components.automation: info
+    frontend: critical
     homeassistant.components.floorplan: debug
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
@@ -97,9 +102,9 @@ updater:
 
 hassio:
 stream:
-discovery:
-  ignore:
-    - yeelight
+#discovery:
+#  ignore:
+#    - yeelight
 #  enable:
 #    - homekit
 
@@ -150,7 +155,7 @@ influxdb:
 recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
-  db_url: !secret recorder_db_url
+#  db_url: !secret recorder_db_url
   exclude:
     event_types:
       - service_removed
@@ -192,22 +197,22 @@ custom_updater:
     - https://raw.githubusercontent.com/kalkih/simple-weather-card/master/tracker.json
 
 person:
-  - name: Eugenio
-    id: !secret person_id_eu
-    user_id: !secret user_id_eu
-    device_trackers:
-      - device_tracker.iphone
-      - device_tracker.iphone_router
-      - device_tracker.iphone_bt
-      - device_tracker.homeadmin_iphone_2
-      - device_tracker.applewatch
-
-  - name: Carmen
-    id: !secret person_id_carmen
-    user_id: !secret user_id_carmen
-    device_trackers:
-      - device_tracker.iphonese
-      - device_tracker.iphone_se
-      - device_tracker.iphone_de_carmen_bt
-      - device_tracker.homeadmin_iphonese
-      - device_tracker.applewatch_carmen
+#  - name: Eugenio
+#    id: !secret person_id_eu
+#    user_id: !secret user_id_eu
+#    device_trackers:
+#      - device_tracker.iphone
+#      - device_tracker.iphone_router
+#      - device_tracker.iphone_bt
+#      - device_tracker.homeadmin_iphone_2
+#      - device_tracker.applewatch
+#
+#  - name: Carmen
+#    id: !secret person_id_carmen
+#    user_id: !secret user_id_carmen
+#    device_trackers:
+#      - device_tracker.iphonese
+#      - device_tracker.iphone_se
+#      - device_tracker.iphone_de_carmen_bt
+#      - device_tracker.homeadmin_iphonese
+#      - device_tracker.applewatch_carmen

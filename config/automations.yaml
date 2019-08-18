@@ -880,16 +880,20 @@
 - alias: Apagado de AC
   id: 'auto_turnoff_ac'
   trigger:
-    - platform: state
-      entity_id: climate.termostato_ac
-      from: 'cool'
-      to: 'idle'
+    - platform: template
+      value_template: "{{ is_state_attr('climate.termostato_ac', 'hvac_action', 'idle') }}"
+#    - platform: state
+#      entity_id: climate.termostato_ac
+#      from: 'cool'
+#      to: 'idle'
       for:
         seconds: 30
-    - platform: state
-      entity_id: climate.calefaccion
-      from: 'heat'
-      to: 'idle'
+    - platform: template
+      value_template: "{{ is_state_attr('climate.calefaccion', 'hvac_action', 'idle') }}"
+#    - platform: state
+#      entity_id: climate.calefaccion
+#      from: 'heat'
+#      to: 'idle'
       for:
         seconds: 30
   action:
@@ -900,16 +904,16 @@
         message: "Apagado de {{ trigger.to_state.attributes.friendly_name }} (Tª: {{ trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature }} °C) (en `{{ trigger.from_state.state }}` desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }})"
         disable_notification: true
         inline_keyboard:
-          - Deshacer COOL:/service_call climate.set_operation_mode termostato_ac cool
-          - Deshacer HOT:/service_call climate.set_operation_mode calefaccion heat
-    - service: climate.set_operation_mode
+          - Deshacer COOL:/service_call climate.set_hvac_mode termostato_ac cool
+          - Deshacer HOT:/service_call climate.set_hvac_mode calefaccion heat
+    - service: climate.set_hvac_mode
       data:
         entity_id: climate.termostato_ac
-        operation_mode: 'off'
-    - service: climate.set_operation_mode
+        hvac_mode: 'off'
+    - service: climate.set_hvac_mode
       data:
         entity_id: climate.calefaccion
-        operation_mode: 'off'
+        hvac_mode: 'off'
     # Assure 1 trigger only
     - service: automation.turn_off
       entity_id: automation.apagado_de_ac

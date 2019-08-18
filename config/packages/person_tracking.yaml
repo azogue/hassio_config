@@ -147,6 +147,7 @@ device_tracker:
   exclude:
     - !secret local_ip
     - '127.0.0.1'
+#  scan_options: " --privileged -sP "
   home_interval: 30
 # # If new discovered devices are tracked by default (default: yes)
 #   track_new_devices: no

@@ -1,3 +1,25 @@
+"""
+climate.calefaccion	    off
+    hvac_modes: heat,off
+    current_temperature: 25.4
+    min_temp: 16
+    max_temp: 27
+    temperature: 18
+    hvac_action: off
+    preset_mode: null
+    preset_modes: away
+    friendly_name: Calefacción
+    supported_features: 17
+
+climate.termostato_ac	cool
+    hvac_modes: cool,off
+    current_temperature: 25.4
+    min_temp: 18
+    max_temp: 30
+    temperature: 26
+    hvac_action: cooling
+
+"""
 operation_mode = data.get("mode")
 cool_mode = operation_mode == 'cool'
 
@@ -21,14 +43,14 @@ if target_temp > current_temp - .5 and entity_name == 'termostato_ac':
     hass.services.call(
         'climate', 'set_temperature',
         {"entity_id": CLIMATE_ENTITY,
-         "operation_mode": operation_mode,
+         "hvac_mode": operation_mode,
          "temperature": new_temp})
 
 if state_climate.state == 'off':
     # Set operation mode to cool if necessary
-    hass.services.call('climate', 'set_operation_mode',
+    hass.services.call('climate', 'set_hvac_mode',
                        {"entity_id": CLIMATE_ENTITY,
-                        "operation_mode": operation_mode})
+                        "hvac_mode": operation_mode})
 
 # Turn on automation to turn off climate when finished
 hass.services.call('automation', 'turn_on', {"entity_id": AUTO_OFF_ENTITY})
@@ -53,5 +75,5 @@ hass.services.call(
      # "target": "{{ states.sensor.telegram_default_chatid.state | int }}",
      "target": target,
      "disable_notification": True,
-     "inline_keyboard": ["Deshacer:/service_call climate.set_operation_mode "
+     "inline_keyboard": ["Deshacer:/service_call climate.set_hvac_mode "
                          + entity_name + " off"]})
