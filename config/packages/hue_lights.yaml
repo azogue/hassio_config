@@ -35,6 +35,8 @@ homeassistant:
       icon: mdi:lava-lamp
     light.tira:
       icon: mdi:dots-horizontal
+    light.tira_larga:
+      icon: mdi:dots-horizontal
     light.ambilight:
       icon: mdi:monitor-star
     switch.ambilight_plus_hue:
@@ -47,11 +49,13 @@ homeassistant:
       icon: mdi:light-switch
     sensor.interruptor_estudio:
       icon: mdi:light-switch
+    sensor.interruptor_office:
+      icon: mdi:light-switch
 
-#hue:
-#  bridges:
-#    - host: !secret hue_bridge_host
-#      allow_unreachable: true
+hue:
+  bridges:
+    - host: !secret hue_bridge_host
+      allow_unreachable: true
 
 ## sensor.hue_dimmer_switch
 sensor:
