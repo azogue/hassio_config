@@ -10864,8 +10864,7 @@
        style="display:inline;fill:#fa00c6;fill-opacity:0.95812809"
        transform="matrix(1.0276598,0,0,1.1514489,86.08696,-263.10072)">
       <g
-         id="sensor.esp32ener_power"
-         style="fill:#fa00c6;fill-opacity:0.95812809">
+         id="sensor.esp32ener_power">
         <path
            d="m 149.4,285.2 0,6.4643 1.98129,0 0,5.28897 4.623,-7.05196 -2.64172,0 2.64172,-4.70131 -6.60429,0 z"
            id="path32372"
@@ -10884,7 +10883,7 @@
              id="tspan33472"
              x="158.60568"
              y="294.76981"
-             style="font-size:11.99999905px;fill:#fa00c6;fill-opacity:0.95812809">Power</tspan></text>
+             style="font-size:11.99999905px">Power</tspan></text>
       </g>
     </g>
     <path
