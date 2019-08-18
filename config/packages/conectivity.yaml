@@ -54,16 +54,19 @@ sensor:
 - platform: uptime
   unit_of_measurement: hours
 
-#- platform: pi_hole
-#  host: !secret pihole_host
-#  monitored_conditions:
-#    - dns_queries_today
-#    - ads_blocked_today
-#    - ads_percentage_today
-#    - unique_clients
-#    - unique_domains
-##    - domains_being_blocked
-#  scan_interval: 180
+- platform: pi_hole
+  host: !secret pihole_host
+#  host: !secret pihole_pwd
+  monitored_conditions:
+#      - queries_cached
+#      - queries_forwarded
+    - dns_queries_today
+    - ads_blocked_today
+    - ads_percentage_today
+    - unique_clients
+    - unique_domains
+#    - domains_being_blocked
+  scan_interval: 180
 #
 #no_ip:
 #  domain: !secret base_host
