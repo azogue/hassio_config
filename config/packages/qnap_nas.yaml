@@ -37,3 +37,22 @@ sensor:
       - network_rx
       - volume_percentage_used
 
+  - platform: nut
+    host: !secret nas_qnap_host
+    username: !secret nas_qnap_username
+    password: !secret nas_qnap_password
+    alias: qnapups
+    resources:
+      - ups.status.display
+      - input.voltage
+      - output.voltage
+      - ups.load
+      - battery.charge
+      - battery.runtime
+      #- ups.realpower.nominal == 900 W
+
+  - platform: template
+    sensors:
+      nut_ups_power:
+        value_template: "{{ (states.sensor.nut_ups_load.state | int) * 9 }}"
+        unit_of_measurement: W
