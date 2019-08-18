@@ -7,37 +7,35 @@ homeassistant:
       friendly_name: "¿Hay conexión a internet?"
 
 binary_sensor:
-  - platform: command_line
-    name: Internet Online
-    command: ping -W 1 -c 1 8.8.8.8 > /dev/null 2>&1 && echo success || echo fail
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 180
-
-  - platform: command_line
-    name: Router ON
-    command: ping -W 1 -c 1 192.168.1.1 > /dev/null 2>&1 && echo success || echo fail
-    device_class: connectivity
-    payload_on: "success"
-    payload_off: "fail"
-    scan_interval: 300
-
-  - platform: template
-    sensors:
-      services_notok:
-        friendly_name: Problemas
-        device_class: safety
-        value_template: >
-          {{
-           (states.binary_sensor.router_on.state == 'off') or
-           (states.binary_sensor.internet_online.state == 'off') or
-           (states.sensor.ip_externa.state == 'unknown')
-           }}
-        entity_id:
-          - binary_sensor.router_on
-          - binary_sensor.internet_online
-          - sensor.ip_externa
+#  - platform: command_line
+#    name: Internet Online
+#    command: ping -W 1 -c 1 8.8.8.8 > /dev/null 2>&1 && echo success || echo fail
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 180
+#
+#  - platform: command_line
+#    name: Router ON
+#    command: ping -W 1 -c 1 192.168.1.1 > /dev/null 2>&1 && echo success || echo fail
+#    device_class: connectivity
+#    payload_on: "success"
+#    payload_off: "fail"
+#    scan_interval: 300
+#
+#           (states.binary_sensor.router_on.state == 'off') or
+#           (states.binary_sensor.internet_online.state == 'off') or
+- platform: template
+  sensors:
+    services_notok:
+      friendly_name: Problemas
+      device_class: safety
+      value_template: "{{ (states.sensor.nut_ups_status.state != 'Online') or (states.sensor.ip_externa.state == 'unknown') }}"
+      entity_id:
+        - sensor.nut_ups_status
+        - sensor.ip_externa
+#          - binary_sensor.router_on
+#          - binary_sensor.internet_online
 
 sensor:
 - platform: rest
