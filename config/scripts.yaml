@@ -154,6 +154,16 @@ run_esp_command:
         esp_name: '{{ states.input_select.esp_modules.state  | lower }}'
         command: '{{ states.input_select.esp_command.state | lower}}'
 
+run_dev_command:
+  alias: Run dev command
+  #  id: run_dev_command
+  sequence:
+    - service: python_script.dev_command
+      data_template:
+        command: '{{ states.input_select.dev_command.state  | lower }}'
+        command_data: '{{ states.input_text.command_data.state }}'
+
+
 cec_tv_on:
   alias: TV ON
   #  id: cec_tv_on

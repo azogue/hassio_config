@@ -1,0 +1,20 @@
+input_select:
+  dev_command:
+    name: Comandos avanzados
+    options:
+     - Nada
+     - Flash
+     - ADB command to Shield
+     - ADB command to TV
+     - MQTT restart
+     - Cover ventanal 100
+     - Cover puerta 100
+     - Run in PC
+    initial: Nada
+    icon: mdi:dev-to
+
+input_text:
+  command_data:
+    name: 'Dev cmd data'
+    initial: ''
+
