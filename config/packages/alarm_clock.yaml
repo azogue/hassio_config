@@ -20,7 +20,7 @@ homeassistant:
 
 input_boolean:
   alarm_clock_status:
-    initial: on
+#    initial: on
     name: Despertador
   manual_trigger_lacafetera:
     name: Activa despertador matutino
