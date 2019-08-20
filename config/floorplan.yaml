@@ -273,8 +273,9 @@
           entities:
             - camera.pi_zero_cam_1
             - camera.pi_zero_cam_2
-            - camera.wyzecampan
-            - camera.wyzecam2
+            - camera.wyzecampan1
+            - camera.wyzecam1
+#            - camera.wyzecam2
             - camera.escam
           states:
             - state: 'idle'

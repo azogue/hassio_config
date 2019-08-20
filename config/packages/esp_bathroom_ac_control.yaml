@@ -115,7 +115,7 @@ climate:
     heater: switch.ac_dry_contact
     ac_mode: True
     target_sensor: sensor.temperatura_ac
-    min_temp: 18
+    min_temp: 20
     max_temp: 30
 #    target_temp: 27
     cold_tolerance: 1.0
