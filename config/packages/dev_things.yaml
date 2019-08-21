@@ -10,6 +10,10 @@ input_select:
      - Cover ventanal 100
      - Cover puerta 100
      - Run in PC
+     - Cam Vigilia
+     - Cam Reposo
+     - Cam Toggle Mode
+
     initial: Nada
     icon: mdi:dev-to
 

@@ -10,9 +10,10 @@ good_night:
 #      service: cover.close_cover
 #      entity_id: all
 
-#    - alias: Encendido de CAM Salón
-#      service: switch.turn_on
-#      entity_id: switch.camara
+    - alias: CAM Salón ON
+      service: python_script.dev_command
+      data:
+        command: "cam vigilia"
     - alias: Notificación de buenas noches
       service: telegram_bot.send_message
       data_template:

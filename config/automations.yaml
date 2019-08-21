@@ -853,30 +853,6 @@
     data_template:
       message: '{{ trigger.event.data.message }}'
 
-- alias: Expire video motion sensors in WyzeCams
-  id: "expire_video_motion_sensors_in_wyzecams"
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.motioncam_wyzecam2
-    to: 'on'
-    for:
-      minutes: 3
-  - platform: state
-    entity_id: binary_sensor.motioncam_wyzecam1
-    to: 'on'
-    for:
-      minutes: 3
-  - platform: state
-    entity_id: binary_sensor.motioncam_wyzecampan
-    to: 'on'
-    for:
-      minutes: 3
-  action:
-    service: python_script.incoming_ifttt_data
-    data_template:
-      message: 'RESET'
-      entity_id: '{{ trigger.to_state.entity_id }}'
-
 - alias: Apagado de AC
   id: 'auto_turnoff_ac'
   trigger:

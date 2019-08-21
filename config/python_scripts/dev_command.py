@@ -12,6 +12,8 @@ input_select:
      - Cover puerta 100
      - Run in PC
      - MQTT restart
+     - Cam Vigilia
+     - Cam Reposo
 
 """
 command_data = data.get('command_data', '')
@@ -61,6 +63,58 @@ elif command == "run in pc":
             "notification_id": "dev_command",
         }
     )
+
+elif "cam " in command:
+    if command == "cam toggle mode":
+        motion_detection_state = hass.states.get("switch.motion_detection_wyzecampan1")
+        if motion_detection_state.state == "on":  # turn off
+            h_target = 2 * 26  # 0-2600
+            v_target = 0
+            switch_action = 'turn_off'
+        else:
+            h_target = 60 * 26  # 0-2600
+            v_target = 50 * 7  # 0-700
+            switch_action = 'turn_on'
+    elif command == "cam vigilia":
+        h_target = 60 * 26  # 0-2600
+        v_target = 50 * 7  # 0-700
+        switch_action = 'turn_on'
+    else:  # command == "cam reposo":
+        h_target = 2 * 26  # 0-2600
+        v_target = 0
+        switch_action = 'turn_off'
+
+    hass.services.call(
+        'switch', switch_action,
+        {"entity_id": "switch.motion_detection_wyzecampan1"}
+    )
+    if switch_action == "turn_off":
+        # Wait for it a bit
+        time.sleep(2)
+
+    hass.services.call(
+        'mqtt', 'publish',
+        {
+            "topic": "Domus/wyzepan1/motors/horizontal/set",
+            "payload": '{}'.format(h_target),
+        }
+    )
+    hass.services.call(
+        'mqtt', 'publish',
+        {
+            "topic": "Domus/wyzepan1/motors/vertical/set",
+            "payload": '{}'.format(v_target),
+        }
+    )
+    # hass.services.call(
+    #     'cover' 'set_cover_tilt_position',
+    #     {"entity_id": "cover.wyzepan1_ptc_h","tilt_position": h_target}
+    # )
+    # hass.services.call(
+    #     'cover' 'set_cover_tilt_position',
+    #     {"entity_id": "cover.wyzepan1_ptc_v", "tilt_position": v_target}
+    # )
+    logger.info("Pan WyzeCam Tilt to position {}: {} / {}".format(command, h_target, v_target))
 
 elif "cover" in command:
     cover_esp_id = 'sm1wdr811x48'

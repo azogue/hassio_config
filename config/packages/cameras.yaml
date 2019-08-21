@@ -4,21 +4,11 @@ homeassistant:
       friendly_name: Salón
     camera.pi_zero_cam_2:
       friendly_name: Cocina
-    camera.sricam_360:
-      friendly_name: Salón
-    camera.iegeek_hd:
-      friendly_name: Estudio
-    camera.kmoon_ipcam100:
-      friendly_name: Terraza
+    camera.escam:
+      friendly_name: Office
 
-    switch.motion_detection_sricam_360:
-      friendly_name: VideoMov. Salón
-      icon: mdi:video
-    switch.motion_detection_iegeek_hd:
-      friendly_name: VideoMov. Estudio
-      icon: mdi:video
-    switch.motion_detection_kmoon_ipcam100:
-      friendly_name: VideoMov. Terraza
+    switch.motion_detection_escam:
+      friendly_name: VideoMov. Office
       icon: mdi:video
     switch.motion_detection_pizerocam1:
       friendly_name: VideoMov. Salón
@@ -53,39 +43,17 @@ switch:
         service: camera.disable_motion_detection
         data:
           entity_id: camera.pi_zero_cam_2
-#    motion_detection_sricam_360:
-#      value_template: "{{ is_state('camera.sricam_360', 'recording') }}"
-#      entity_id: camera.sricam_360
-#      turn_on:
-#        service: camera.enable_motion_detection
-#        data:
-#          entity_id: camera.sricam_360
-#      turn_off:
-#        service: camera.disable_motion_detection
-#        data:
-#          entity_id: camera.sricam_360
-    motion_detection_iegeek_hd:
-      value_template: "{{ is_state('camera.iegeek_hd', 'recording') }}"
-      entity_id: camera.iegeek_hd
+    motion_detection_escam:
+      value_template: "{{ is_state('camera.escam', 'recording') }}"
+      entity_id: camera.escam
       turn_on:
         service: camera.enable_motion_detection
         data:
-          entity_id: camera.iegeek_hd
+          entity_id: camera.escam
       turn_off:
         service: camera.disable_motion_detection
         data:
-          entity_id: camera.iegeek_hd
-#    motion_detection_kmoon_ipcam100:
-#      value_template: "{{ is_state('camera.kmoon_ipcam100', 'recording') }}"
-#      entity_id: camera.kmoon_ipcam100
-#      turn_on:
-#        service: camera.enable_motion_detection
-#        data:
-#          entity_id: camera.kmoon_ipcam100
-#      turn_off:
-#        service: camera.disable_motion_detection
-#        data:
-#          entity_id: camera.kmoon_ipcam100
+          entity_id: camera.escam
 
 ###############################################################################
 # IP CAMERAS (from Motioneye
@@ -107,44 +75,12 @@ camera:
     control_port: 7999
     camera_id: 1
 
-#  # Living room camera
-#  - platform: motioneye
-#    snapshot_url: !secret sricam_motioneye_local_snapshot
-#    name: SriCAM 360
-#    with_motion_control: true
-#    control_port: 7999
-#    camera_id: 2
-#
-  # Wyze cams
-  - platform: generic
-    name: WyzeCamPan
-    still_image_url: !secret wyzecampan_meye_snapshot
-#    stream_source: !secret wyzecampan_rstp_url
-
-  # Exterior camera
-  - platform: generic
-    name: WyzeCam2
-    still_image_url: !secret wyzecam2_meye_snapshot
-#    stream_source: !secret wyzecam2_rstp_url
-
   # Office camera
   - platform: motioneye
-    snapshot_url: !secret iegeek_motioneye_local_snapshot
+    snapshot_url: !secret escam_motioneye_local_snapshot
     name: Escam
     with_motion_control: true
     control_port: 7999
-    camera_id: 3
+    camera_id: 1
+#    stream_source: !secret escam_rstp_url
 
-#  - platform: ffmpeg
-#    input: !secret sricam_full_rstp
-#    name: SriCAM 360
-#    port: 5000
-#    extra_arguments:
-
-#  - platform: onvif
-#    host: !secret sricam_lan_ip
-#    name: SriCAM 360
-#    username: !secret sricam_user
-#    password: !secret sricam_pwd
-##    port: 5000
-##    extra_arguments:

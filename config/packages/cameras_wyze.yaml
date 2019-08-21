@@ -1,0 +1,169 @@
+#type: picture-glance
+#camera_image: camera.wyzecam1
+#camera_view: live
+#entities:
+#  - entity: binary_sensor.wyzecam1_motion
+#  - entity: binary_sensor.wyzecam1_night_mode
+#  - entity: switch.motion_detection_wyzecam1
+
+homeassistant:
+  customize:
+    camera.wyzecam1:
+      friendly_name: Wyze1
+    switch.motion_detection_wyzecam1:
+      friendly_name: VideoMov. Terraza
+      icon: mdi:video
+    sensor.wyzecam1_brightness:
+      friendly_name: Brillo Terraza
+      icon: mdi:brigtness
+    binary_sensor.wyzecam1_motion:
+      friendly_name: Movimiento Terraza
+    binary_sensor.wyzecam1_night_mode:
+      friendly_name: Modo noche Terraza
+
+    camera.wyzecam2:
+      friendly_name: Wyze2
+    switch.motion_detection_wyzecam2:
+      friendly_name: VideoMov. Wyze2
+      icon: mdi:video
+    sensor.wyzecam2_brightness:
+      friendly_name: Brillo Wyze1
+      icon: mdi:brigtness
+    binary_sensor.wyzecam2_motion:
+      friendly_name: Movimiento Wyze2
+    binary_sensor.wyzecam2_night_mode:
+      friendly_name: Modo noche Wyze2
+
+    camera.wyzecampan1:
+      friendly_name: Salón PAN
+    switch.motion_detection_wyzecampan1:
+      friendly_name: VideoMov. Salón PAN
+      icon: mdi:video
+    sensor.wyzecampan1_brightness:
+      friendly_name: Brillo WyzePan
+      icon: mdi:brigtness
+    binary_sensor.wyzecampan1_motion:
+      friendly_name: Movimiento Salón PAN
+    binary_sensor.wyzecampan1_night_mode:
+      friendly_name: Modo noche WyzePan
+
+camera:
+  - platform: generic
+    name: WyzeCam1
+    still_image_url: !secret wyzecam1_still_image_url
+#    stream_source: !secret wyzecam1_stream_source
+    username: !secret wyzecam1_username
+    password: !secret wyzecam1_password
+    authentication: basic
+    verify_ssl: false
+    framerate: 5
+
+  - platform: generic
+    name: WyzeCam2
+    still_image_url: !secret wyzecam2_still_image_url
+#    stream_source: !secret wyzecam2_stream_source
+    username: !secret wyzecam2_username
+    password: !secret wyzecam2_password
+    authentication: basic
+    verify_ssl: false
+    framerate: 5
+
+  - platform: generic
+    name: WyzeCamPan1
+    still_image_url: !secret wyzecampan1_still_image_url
+#    stream_source: !secret wyzecampan1_stream_source
+    username: !secret wyzecampan1_username
+    password: !secret wyzecampan1_password
+    authentication: basic
+    verify_ssl: false
+    framerate: 5
+
+binary_sensor:
+  - platform: mqtt
+    device_class: motion
+    state_topic: "Domus/wyze1/motion"
+    name: wyzecam1_motion
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    device_class: light
+    state_topic: "Domus/wyze1/night_mode"
+    name: wyzecam1_night_mode
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    device_class: motion
+    state_topic: "Domus/wyze2/motion"
+    name: wyzecam2_motion
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    device_class: light
+    state_topic: "Domus/wyze2/night_mode"
+    name: wyzecam2_night_mode
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    device_class: motion
+    state_topic: "Domus/wyzepan1/motion"
+    name: wyzecampan1_motion
+    payload_on: "ON"
+    payload_off: "OFF"
+
+  - platform: mqtt
+    device_class: light
+    state_topic: "Domus/wyzepan1/night_mode"
+    name: wyzecampan1_night_mode
+    payload_on: "ON"
+    payload_off: "OFF"
+
+sensor:
+  - platform: mqtt
+    state_topic: "Domus/wyze1/brightness"
+    name: wyzecam1_brightness
+    device_class: illuminance
+    json_attributes_topic: "Domus/wyze1"
+    unit_of_measurement: "%"
+
+  - platform: mqtt
+    state_topic: "Domus/wyze2/brightness"
+    name: wyzecam2_brightness
+    device_class: illuminance
+    json_attributes_topic: "Domus/wyze2"
+    unit_of_measurement: "%"
+
+  - platform: mqtt
+    state_topic: "Domus/wyzepan1/brightness"
+    name: wyzecampan1_brightness
+    device_class: illuminance
+    json_attributes_topic: "Domus/wyze1"
+    unit_of_measurement: "%"
+
+switch:
+  - platform: mqtt
+    name: motion_detection_wyzecam1
+    state_topic: "Domus/wyze1/motion/detection"
+    command_topic: "Domus/wyze1/motion/detection/set"
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    retain: true
+
+  - platform: mqtt
+    name: motion_detection_wyzecam2
+    state_topic: "Domus/wyze2/motion/detection"
+    command_topic: "Domus/wyze2/motion/detection/set"
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    retain: true
+
+  - platform: mqtt
+    name: motion_detection_wyzecampan1
+    state_topic: "Domus/wyzepan1/motion/detection"
+    command_topic: "Domus/wyzepan1/motion/detection/set"
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    retain: true
