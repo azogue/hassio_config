@@ -55,6 +55,13 @@ sensor:
       -  sensor.sensor_office_temperature
       -  sensor.dormitorio_temperature_rpi2mpd
 
+  - platform: statistics
+    entity_id: sensor.temperatura_ac
+    name: Temperatura AC
+    sampling_size: 10
+    max_age:
+      minutes: 5
+
   - platform: min_max
     type: mean
     name: Temperatura interior

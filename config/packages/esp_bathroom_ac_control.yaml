@@ -114,7 +114,7 @@ climate:
     name: Termostato AC
     heater: switch.ac_dry_contact
     ac_mode: True
-    target_sensor: sensor.temperatura_ac
+    target_sensor: sensor.temperatura_ac_mean
     min_temp: 20
     max_temp: 30
 #    target_temp: 27
@@ -132,7 +132,7 @@ climate:
     name: Calefacción
     heater: switch.ac_dry_contact
     ac_mode: False
-    target_sensor: sensor.temperatura_ac
+    target_sensor: sensor.temperatura_ac_mean
     min_temp: 16
     max_temp: 27
     target_temp: 18
