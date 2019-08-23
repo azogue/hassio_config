@@ -14,8 +14,13 @@ input_select:
      - MQTT restart
      - Cam Vigilia
      - Cam Reposo
-
+     - Cam GOTO
 """
+H_TARGET_VIG = 50 * 26  # 0-2600
+V_TARGET_VIG = 25 * 7  # 0-700
+H_TARGET_DISABLE = 2 * 26  # 0-2600
+V_TARGET_DISABLE = 0
+
 command_data = data.get('command_data', '')
 command = data.get('command', 'ADB command to Shield')
 
@@ -65,32 +70,38 @@ elif command == "run in pc":
     )
 
 elif "cam " in command:
-    if command == "cam toggle mode":
+    if command == "cam goto":
+        ht, vt, *_ = command_data.split()
+        h_target = int(ht) * 26  # 0-2600
+        v_target = int(vt) * 7
+        switch_action = None
+    elif command == "cam toggle mode":
         motion_detection_state = hass.states.get("switch.motion_detection_wyzecampan1")
         if motion_detection_state.state == "on":  # turn off
-            h_target = 2 * 26  # 0-2600
-            v_target = 0
+            h_target = H_TARGET_DISABLE
+            v_target = V_TARGET_DISABLE
             switch_action = 'turn_off'
         else:
-            h_target = 60 * 26  # 0-2600
-            v_target = 50 * 7  # 0-700
+            h_target = H_TARGET_VIG
+            v_target = V_TARGET_VIG
             switch_action = 'turn_on'
     elif command == "cam vigilia":
-        h_target = 60 * 26  # 0-2600
-        v_target = 50 * 7  # 0-700
+        h_target = H_TARGET_VIG
+        v_target = V_TARGET_VIG
         switch_action = 'turn_on'
     else:  # command == "cam reposo":
-        h_target = 2 * 26  # 0-2600
-        v_target = 0
+        h_target = H_TARGET_DISABLE
+        v_target = V_TARGET_DISABLE
         switch_action = 'turn_off'
 
-    hass.services.call(
-        'switch', switch_action,
-        {"entity_id": "switch.motion_detection_wyzecampan1"}
-    )
-    if switch_action == "turn_off":
-        # Wait for it a bit
-        time.sleep(2)
+    if switch_action is not None:
+        hass.services.call(
+            'switch', switch_action,
+            {"entity_id": "switch.motion_detection_wyzecampan1"}
+        )
+        if switch_action == "turn_off":
+            # Wait for it a bit
+            time.sleep(2)
 
     hass.services.call(
         'mqtt', 'publish',

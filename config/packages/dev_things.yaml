@@ -13,6 +13,7 @@ input_select:
      - Cam Vigilia
      - Cam Reposo
      - Cam Toggle Mode
+     - Cam GOTO
 
     initial: Nada
     icon: mdi:dev-to
