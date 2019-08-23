@@ -151,6 +151,47 @@ influxdb:
   username: !secret influxdb_user
   password: !secret influxdb_pass
   default_measurement: state
+  exclude:
+    entities:
+#      - "sensor.sensor_(.*)_snum"
+#      - "sensor.floors_(.*)"
+      - sensor.custom_card_tracker
+      - sensor.custom_component_tracker
+      - sensor.date_time
+      - sensor.time_utc
+      # No need to store text data:
+      - binary_sensor.floorplan
+      - sensor.psychrometric_evolution
+      - sensor.dark_sky_summary
+      - sensor.dark_sky_daily_summary
+      - sensor.dark_sky_hourly_summary
+      - sensor.dark_sky_summary_1d
+      - sensor.dark_sky_summary_2d
+      - sensor.dark_sky_summary_3d
+#      - sensor.dark_sky_humidity_1d
+      - sensor.dark_sky_humidity_2d
+      - sensor.dark_sky_humidity_3d
+#      - sensor.dark_sky_daytime_high_temperature_1d
+      - sensor.dark_sky_daytime_high_temperature_2d
+      - sensor.dark_sky_daytime_high_temperature_3d
+#      - sensor.dark_sky_pressure_1d
+      - sensor.dark_sky_pressure_2d
+      - sensor.dark_sky_pressure_3d
+#      - sensor.dark_sky_overnight_low_temperature_1d
+      - sensor.dark_sky_overnight_low_temperature_2d
+      - sensor.dark_sky_overnight_low_temperature_3d
+      # We have smoothed means:
+      - sensor.temperatura_ac
+      - sensor.temperatura_interior
+      - sensor.humedad_interior
+    domains:
+      - persistent_notification
+      - variable
+      - camera
+      - configurator
+      - input_select
+      - input_text
+      - group
 
 recorder:
   purge_interval: 1
