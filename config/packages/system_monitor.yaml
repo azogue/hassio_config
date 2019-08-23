@@ -68,27 +68,6 @@ sensor:
   - 'date_time'
 
 #  Removed because of hassio OS incompatibility:
-#2018-11-03 11:45:37 ERROR (MainThread) [homeassistant.components.sensor] Error while setting up platform htu21d
-#Traceback (most recent call last):
-#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 81, in open
-#    self._fd = os.open(path, os.O_RDWR, 0)
-#FileNotFoundError: [Errno 2] No such file or directory: '/dev/i2c-1'
-#
-#During handling of the above exception, another exception occurred:
-#
-#Traceback (most recent call last):
-#  File "/usr/local/lib/python3.6/site-packages/homeassistant/helpers/entity_platform.py", line 128, in _async_setup_platform
-#    SLOW_SETUP_MAX_WAIT, loop=hass.loop)
-#  File "/usr/local/lib/python3.6/asyncio/tasks.py", line 358, in wait_for
-#    return fut.result()
-#  File "/usr/local/lib/python3.6/site-packages/homeassistant/components/sensor/htu21d.py", line 51, in async_setup_platform
-#    bus = smbus.SMBus(config.get(CONF_I2C_BUS))
-#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 56, in __init__
-#    self.open(bus)
-#  File "/usr/local/lib/python3.6/site-packages/smbus/smbus.py", line 83, in open
-#    raise IOError(e.errno)
-#OSError: 2
-
 #- platform: htu21d
 #  name: local_htu21d
 #  scan_interval: 45
@@ -99,24 +78,17 @@ sensor:
   unit_of_measurement: "°C"
   value_template: '{{ value | multiply(0.001) | round(1) }}'
   scan_interval: 60
-#
-#- platform: command_line
-#  name: RPI3Dev1 CPU Temperature
-#  command: !secret ssh_cmd_rpi_temp_rpi3dev1
-#  unit_of_measurement: "°C"
-#  value_template: '{{ value | multiply(0.001) | round(1) }}'
-#  scan_interval: 180
-#
+
+- platform: command_line
+  name: RPI3Dev1 CPU Temperature
+  command: !secret ssh_cmd_rpi_temp_rpi3dev1
+  unit_of_measurement: "°C"
+  value_template: '{{ value | multiply(0.001) | round(1) }}'
+  scan_interval: 180
+
 #- platform: command_line
 #  name: RPI3Dev2 CPU Temperature
 #  command: !secret ssh_cmd_rpi_temp_rpi3dev2
-#  unit_of_measurement: "°C"
-#  value_template: '{{ value | multiply(0.001) | round(1) }}'
-#  scan_interval: 180
-
-#- platform: command_line
-#  name: RPI3Dev3 CPU Temperature
-#  command: !secret ssh_cmd_rpi_temp_rpi3dev3
 #  unit_of_measurement: "°C"
 #  value_template: '{{ value | multiply(0.001) | round(1) }}'
 #  scan_interval: 180
@@ -132,12 +104,6 @@ sensor:
 
 - platform: template
   sensors:
-#    {{states.variable.speedtest_data.attributes.ping.state}}
-#    {{states.variable.speedtest_data.attributes.ping.attributes}}
-#    {{states.variable.speedtest_data.attributes.download.state}}
-#    {{states.variable.speedtest_data.attributes.download.attributes}}
-#    {{states.variable.speedtest_data.attributes.upload.state}}
-#    {{states.variable.speedtest_data.attributes.upload.attributes}}
     speedtest_ping:
       friendly_name: "Speedtest Ping"
       unit_of_measurement: 'ms'
@@ -153,95 +119,6 @@ sensor:
       friendly_name: "Speedtest Download"
       value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.download.state}}{% else %}unknown{% endif %}'
       entity_id: variable.speedtest_data
-
-    sensor_power_time_drift:
-      value_template: >
-        {% if states.sensor.esp32ener_power.attributes.ts %}{{(as_timestamp(states.sensor.esp32ener_power.last_updated)
-        - as_timestamp(strptime(states.sensor.esp32ener_power.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Current meter
-      entity_id: sensor.esp32ener_power
-    sensor_bathroom_ac_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_bathroom_ac_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_bathroom_ac_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_bathroom_ac_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Baño
-      entity_id: sensor.sensor_bathroom_ac_snum
-    sensor_covers_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_covers_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_covers_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_covers_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Persianas
-      entity_id: sensor.sensor_covers_snum
-    sensor_bedroom_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_bedroom_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_bedroom_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_bedroom_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Dormitorio
-      entity_id: sensor.sensor_bedroom_snum
-    sensor_galeria_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_galeria_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_galeria_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_galeria_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Galería
-      entity_id: sensor.sensor_galeria_snum
-    sensor_hall_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_hall_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_hall_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_hall_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Hall
-      entity_id: sensor.sensor_hall_snum
-    sensor_study_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_study_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_study_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_study_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Estudio
-      entity_id: sensor.sensor_study_snum
-    sensor_office_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_office_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_office_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_office_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Office
-      entity_id: sensor.sensor_office_snum
-    sensor_livingroom_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_livingroom_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_livingroom_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_livingroom_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Salón
-      entity_id: sensor.sensor_livingroom_snum
-    sensor_kitchen_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_kitchen_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_kitchen_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_kitchen_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Cocina
-      entity_id: sensor.sensor_kitchen_snum
-    sensor_terraza_time_drift:
-      value_template: >
-        {% if states.sensor.sensor_terraza_snum.attributes.ts %}{{(as_timestamp(states.sensor.sensor_terraza_snum.last_updated)
-        - as_timestamp(strptime(states.sensor.sensor_terraza_snum.attributes.ts,
-              "%Y/%m/%d %H:%M:%S.%f"))) | round(2)}}{% endif %}
-      unit_of_measurement: "s"
-      friendly_name: Time sync Terraza
-      entity_id: sensor.sensor_terraza_snum
 
 #- platform: speedtest
 #  minute:
