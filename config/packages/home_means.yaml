@@ -9,6 +9,10 @@ homeassistant:
     sensor.temperatura_ac:
       icon: mdi:thermometer
       hidden: true
+    sensor.temperatura_ac_mean:
+      friendly_name: Temperatura AC (rm)
+      icon: mdi:thermometer
+
     sensor.temperatura_exterior:
       icon: mdi:thermometer
 
@@ -58,7 +62,7 @@ sensor:
 
   - platform: statistics
     entity_id: sensor.temperatura_ac
-    name: Temperatura AC
+    name: temperatura_ac_mean
     sampling_size: 25
     precision: 1
     max_age:
@@ -106,14 +110,14 @@ sensor:
 
   - platform: statistics
     entity_id: sensor.temperatura_interior
-    name: Temperatura (stats)
+    name: temperatura_stats_mean
     precision: 1
     sampling_size: 50
     max_age:
       minutes: 15
 
   - platform: statistics
-    name: Humedad (stats)
+    name: humedad_stats_mean
     precision: 1
     sampling_size: 50
     entity_id: sensor.humedad_interior
