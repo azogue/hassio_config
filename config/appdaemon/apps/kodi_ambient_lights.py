@@ -106,7 +106,7 @@ class KodiAssistant(hass.Hass):
         return 25
 
     def _ask_for_playing_item(self):
-        self.call_service('media_player/kodi_call_method',
+        self.call_service('kodi/call_method',
                           entity_id=self._media_player,
                           method=METHOD_GET_ITEM, **PARAMS_GET_ITEM)
 

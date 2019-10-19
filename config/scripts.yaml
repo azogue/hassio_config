@@ -89,7 +89,7 @@ update_library:
   alias: Update Kodi Library
   sequence:
     - alias: Call Kodi update
-      service: media_player.kodi_call_method
+      service: kodi.call_method
       data:
         entity_id: media_player.kodi
         method: VideoLibrary.Scan
@@ -98,7 +98,7 @@ recent_movies:
   alias: Últimas películas
   sequence:
     - alias: Call Kodi serv
-      service: media_player.kodi_call_method
+      service: kodi.call_method
       data:
         entity_id: media_player.kodi
         method: VideoLibrary.GetRecentlyAddedMovies
@@ -112,7 +112,7 @@ recent_episodes:
   alias: Últimos episodios
   sequence:
     - alias: Call Kodi serv
-      service: media_player.kodi_call_method
+      service: kodi.call_method
       data:
         entity_id: media_player.kodi
         method: VideoLibrary.GetRecentlyAddedEpisodes
@@ -127,7 +127,7 @@ pvr_recordings:
   alias: Últimas grabaciones de TV
   sequence:
     - alias: Call Kodi API
-      service: media_player.kodi_call_method
+      service: kodi.call_method
       data:
         entity_id: media_player.kodi
         method: PVR.GetRecordings
@@ -140,7 +140,7 @@ pvr_channels:
   alias: Canales de TV
   sequence:
     - alias: Call Kodi serv
-      service: media_player.kodi_call_method
+      service: kodi.call_method
       data:
         entity_id: media_player.kodi
         method: PVR.GetChannels
@@ -165,32 +165,32 @@ run_dev_command:
         command_data: '{{ states.input_text.command_data.state }}'
 
 
-cec_tv_on:
-  alias: TV ON
-  #  id: cec_tv_on
-  sequence:
-    - service: media_player.kodi_call_method
-      data:
-        entity_id: media_player.kodi
-        method: Addons.ExecuteAddon
-        addonid: script.json-cec
-        params:
-          command: activate
-
-cec_tv_off:
-  alias: TV OFF
-  #  id: cec_tv_off
-  sequence:
-    - service: input_boolean.turn_off
-      data:
-        entity_id: input_boolean.kodi_tv_state
-    - service: media_player.kodi_call_method
-      data:
-        entity_id: media_player.kodi
-        method: Addons.ExecuteAddon
-        addonid: script.json-cec
-        params:
-          command: standby
+#cec_tv_on:
+#  alias: TV ON
+#  #  id: cec_tv_on
+#  sequence:
+#    - service: kodi.call_method
+#      data:
+#        entity_id: media_player.kodi
+#        method: Addons.ExecuteAddon
+#        addonid: script.json-cec
+#        params:
+#          command: activate
+#
+#cec_tv_off:
+#  alias: TV OFF
+#  #  id: cec_tv_off
+#  sequence:
+#    - service: input_boolean.turn_off
+#      data:
+#        entity_id: input_boolean.kodi_tv_state
+#    - service: kodi.call_method
+#      data:
+#        entity_id: media_player.kodi
+#        method: Addons.ExecuteAddon
+#        addonid: script.json-cec
+#        params:
+#          command: standby
 
 step_up_cover_1:
   alias: Ventanal Up

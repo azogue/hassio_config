@@ -143,8 +143,7 @@ class DynamicKodiInputSelect(hass.Hass):
                 selected = self._ids_options[new]
             except KeyError as exc:
                 self.persistent_notification(
-                    "Selection not found: '{}'. Sorry. Keys are: {}"
-                        .format(result, self._ids_options.keys()), title="KODI OPTIONS ERROR",
+                    "Selection not found: '{}'. Sorry. Keys are: {}".format(new, self._ids_options.keys()), title="KODI OPTIONS ERROR",
                     id='bad_select_kodi_option')
                 return
             if selected:
