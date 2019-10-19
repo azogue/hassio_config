@@ -21,7 +21,7 @@ MASK_MSG_MAX_POWER_RESET = {"title": "Consumo eléctrico: Normal",
                                        "Pico de potencia: {} W. "
                                        "Alerta iniciada hace {:.1f} min."}
 MIN_TIME_TURN_OFF_AC = 150  # secs
-COEF_CRITICAL_LIMIT = 1.1   # 10% over limit
+COEF_CRITICAL_LIMIT = 1.15   # 15% over limit
 
 
 # noinspection PyClassHasNoInit

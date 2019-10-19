@@ -67,50 +67,6 @@ binary_sensor:
 
 
 sensor:
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_enerpi_status
-#    value_template: "{{ value_json.mean_10s }}"
-#    name: enerpi_power
-#    unit_of_measurement: "W"
-#    json_attributes: 'consumo_Wh,peak,mean_1m,mean_5m,counter'
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: 60
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_enerpi_status
-#    value_template: "{{ value_json.power }}"
-#    name: enerpi_ch1
-#    unit_of_measurement: "W"
-#    json_attributes: 'ch1_mean_10s,ch1_mean_1m,ch1_mean_5m,counter'
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: 60
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_enerpi_status
-#    value_template: "{{ value_json.power2 }}"
-#    name: enerpi_ch2
-#    unit_of_measurement: "W"
-#    json_attributes: 'ch2_mean_10s,ch2_mean_1m,ch2_mean_5m,counter'
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: 60
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_enerpi_status
-#    value_template: "{{ value_json.ldr }}"
-#    name: enerpi_ldr
-#    unit_of_measurement: "%"
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: 60
-
-#  - platform: mqtt
-#    state_topic: !secret mqtt_topic_esp32_ener_stream
-#    value_template: "{{ value_json.total | float | round }}"
-#    name: esp32ener_power
-#    unit_of_measurement: "W"
-#    qos: !secret mqtt_default_qos
-#    force_update: true
-#    expire_after: 60
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
     value_template: "{{ value_json.rms[2] | float | round }}"
@@ -128,7 +84,7 @@ sensor:
     name: esp32ener_ch1
     unit_of_measurement: "W"
 #    json_attributes: 'Peak_CH1,Low_CH1,ts'
-    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
+#    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: 60
@@ -138,7 +94,7 @@ sensor:
     name: esp32ener_ch2
     unit_of_measurement: "W"
 #    json_attributes: 'Peak_CH2,Low_CH2,ts'
-    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
+#    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
     qos: !secret mqtt_default_qos
     force_update: true
     expire_after: 60

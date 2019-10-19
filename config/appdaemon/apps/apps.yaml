@@ -50,7 +50,7 @@ EnerpiPeakNotifier:
   module: enerpi_alarm
   control: sensor.esp32ener_power
   max_power_kw: 5.0
-  max_power_kw_reset: 2.5
+  max_power_kw_reset: 3.0
   min_time_high: 15
   min_time_low: 60
 
