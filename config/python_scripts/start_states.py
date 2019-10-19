@@ -10,13 +10,7 @@ This unifies various automations and HA scripts in a simpler one.
 cameras = {
     'binary_sensor.motioncam_pizero': "Vídeo-Mov. en PIzero",
     'binary_sensor.motioncam_pizero2': "Vídeo-Mov. en PIW2",
-    # 'binary_sensor.motioncam_salon': "Vídeo-Mov. en Salón",
-    # 'binary_sensor.motioncam_terraza': "Vídeo-Mov. en Terraza",
-    'binary_sensor.motioncam_office': "Vídeo-Mov. en Office",
-
-    # 'binary_sensor.motioncam_wyzecam1': "Vídeo-Mov. en WyzeCam1",
-    'binary_sensor.motioncam_wyzecam2': "Vídeo-Mov. en WyzeCam2",
-    'binary_sensor.motioncam_wyzecampan': "Vídeo-Mov. en WyzeCamPan",
+    # 'binary_sensor.motioncam_office': "Vídeo-Mov. en Office",
 }
 for bs, fn in cameras.items():
     hass.states.set(bs, 'off',

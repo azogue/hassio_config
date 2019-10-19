@@ -43,17 +43,17 @@ switch:
         service: camera.disable_motion_detection
         data:
           entity_id: camera.pi_zero_cam_2
-    motion_detection_escam:
-      value_template: "{{ is_state('camera.escam', 'recording') }}"
-      entity_id: camera.escam
-      turn_on:
-        service: camera.enable_motion_detection
-        data:
-          entity_id: camera.escam
-      turn_off:
-        service: camera.disable_motion_detection
-        data:
-          entity_id: camera.escam
+#    motion_detection_escam:
+#      value_template: "{{ is_state('camera.escam', 'recording') }}"
+#      entity_id: camera.escam
+#      turn_on:
+#        service: camera.enable_motion_detection
+#        data:
+#          entity_id: camera.escam
+#      turn_off:
+#        service: camera.disable_motion_detection
+#        data:
+#          entity_id: camera.escam
 
 ###############################################################################
 # IP CAMERAS (from Motioneye
@@ -75,12 +75,12 @@ camera:
     control_port: 7999
     camera_id: 1
 
-  # Office camera
-  - platform: motioneye
-    snapshot_url: !secret escam_motioneye_local_snapshot
-    name: Escam
-    with_motion_control: true
-    control_port: 7999
-    camera_id: 1
+#  # Office camera
+#  - platform: motioneye
+#    snapshot_url: !secret escam_motioneye_local_snapshot
+#    name: Escam
+#    with_motion_control: true
+#    control_port: 7999
+#    camera_id: 1
 #    stream_source: !secret escam_rstp_url
 
