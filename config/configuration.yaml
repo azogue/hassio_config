@@ -100,13 +100,16 @@ mqtt:
 updater:
   include_used_components: true
 
+#hacs:
 hassio:
 stream:
-#discovery:
-#  ignore:
-#    - yeelight
-#  enable:
-#    - homekit
+
+discovery:
+  ignore:
+    - yeelight
+    - google_cast
+  enable:
+    - homekit
 
 conversation:
 python_script:
@@ -184,6 +187,7 @@ influxdb:
       - sensor.temperatura_ac
       - sensor.temperatura_interior
       - sensor.humedad_interior
+#      - sensor.esp32ener_real_power
     domains:
       - persistent_notification
       - variable
@@ -230,12 +234,12 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-custom_updater:
-  card_urls:
-    - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
-    - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
-    - https://raw.githubusercontent.com/custom-cards/cover-element/master/tracker.json
-    - https://raw.githubusercontent.com/kalkih/simple-weather-card/master/tracker.json
+#custom_updater:
+#  card_urls:
+#    - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
+#    - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
+#    - https://raw.githubusercontent.com/custom-cards/cover-element/master/tracker.json
+#    - https://raw.githubusercontent.com/kalkih/simple-weather-card/master/tracker.json
 
 person:
 #  - name: Eugenio
