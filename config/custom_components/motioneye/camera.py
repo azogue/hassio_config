@@ -19,7 +19,6 @@ from homeassistant.components.camera import (
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers import config_validation as cv
 from homeassistant.util.dt import utcnow
-from homeassistant.util.async_ import run_coroutine_threadsafe
 
 # TODO http://192.168.1.30:7999/3/config/set?emulate_motion=on/off
 # TODO implement ffmpeg_output_movies control: curl http://192.168.1.30:7999/3/config/set?ffmpeg_output_movies=off
@@ -121,7 +120,7 @@ class MotionEyeCamera(Camera):
 
     def camera_image(self):
         """Return bytes of camera image."""
-        return run_coroutine_threadsafe(
+        return asyncio.run_coroutine_threadsafe(
             self.async_camera_image(), self.hass.loop).result()
 
     async def async_camera_image(self):
