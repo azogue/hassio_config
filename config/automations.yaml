@@ -196,6 +196,81 @@
       data_template:
         scene: '{{ trigger.to_state.state }}'
 
+- alias: Purifier favorite level
+  id: 'set_purifier_favorite_level'
+  trigger:
+    platform: state
+    entity_id: input_number.airpurifier_office_favorite_level
+  action:
+    - service: fan.xiaomi_miio_set_favorite_level
+      data:
+        entity_id: fan.airpurifier_office
+      data_template:
+        level: '{{ states( "input_number.airpurifier_office_favorite_level" ) | int }}'
+
+- alias: Encendido de purificador si AQI alto
+  id: 'encendido_de_purificador_si_aqi_alto'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.airpurifier_office_air_quality_pm25
+    above: 25
+  condition:
+    - condition: state
+      entity_id: fan.airpurifier_office
+      state: 'off'
+      for:
+        seconds: 30
+  action:
+#  - service: fan.turn_on
+#    entity_id: fan.airpurifier_office
+  - service: fan.set_speed
+    data:
+      entity_id: fan.airpurifier_office
+      speed: Auto
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Purificador activado'
+      message: "Estaba apagado, pero AQI = {{ states.sensor.airpurifier_office_air_quality_pm25.state }}"
+      data:
+        push:
+          category: "airpurif"
+
+- alias: Purificador a auto desde velocidad fija
+  id: 'encendido_de_purificador_si_aqi_alto'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.airpurifier_office_air_quality_pm25
+    below: 15
+    for:
+      minutes: 2
+  condition:
+    - condition: template
+      value_template: "{{ (state_attr('fan.airpurifier_office', 'speed') == 'Favorite') and (state_attr('fan.airpurifier_office', 'favorite_level') > 3) }}"
+  action:
+  - service: fan.set_speed
+    data:
+      entity_id: fan.airpurifier_office
+      speed: Auto
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Purificador en modo auto'
+      message: "AQI es suficientemente baja: {{ states.sensor.airpurifier_office_air_quality_pm25.state }}"
+      data:
+        push:
+          category: "airpurif"
+
+#- alias: Purifier set mode
+#  id: 'set_purifier_favorite_level'
+#  trigger:
+#    platform: state
+#    entity_id: input_select.airpurifier_office_mode
+#  action:
+#    - service: fan.set_speed
+#      data:
+#        entity_id: fan.airpurifier_office
+#      data_template:
+#        speed: '{{ trigger.to_state.state }}'
+
 - alias: Tono Salón
   id: 'set_color_temp_in_living_room'
   trigger:

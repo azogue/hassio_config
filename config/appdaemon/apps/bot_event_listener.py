@@ -154,6 +154,11 @@ TELEGRAM_IOS_COMMANDS = {  # AWAY category
                          '/luceson': 'LIGHTS_ON',  # Lights ON!
                          '/ambilighttoggle': 'HYPERION_TOGGLE',
                          '/ambilightconfig': 'HYPERION_CHANGE',
+                         # Air purifier commands
+                         "/air_silent": "PURIFIER_SILENT",
+                         "/air_level": "PURIFIER_SET_LEVEL",
+                         "/air_off": "PURIFIER_OFF",
+
                          # '/ambilighttoggle': 'HYPERION_TOGGLE',
                          # '/ambilightconfig': 'HYPERION_CHANGE',
                          # # ALARMCLOCK category
@@ -1431,6 +1436,31 @@ class EventListener(hass.Hass):
         #     self.toggle("switch.toggle_config_kodi_ambilight")
         #     action_msg_log += 'CHANGE AMBILIGHT CONF'
         #     self.light_flash(XY_COLORS['violet'], persistence=2, n_flashes=2)
+
+        # Air purifier commands
+        elif action == 'PURIFIER_SILENT':  # Fan to silent mode
+            self.call_service(
+                "fan/set_speed",
+                entity_id="fan.airpurifier_office",
+                speed="Silent",
+            )
+            action_msg_log += f'Set Air purifier in silent mode'
+        elif action == 'PURIFIER_SET_LEVEL':  # Fan to fixed speed
+            level_ap = 6
+            self.call_service(
+                "fan/xiaomi_miio_set_favorite_level",
+                entity_id="fan.airpurifier_office",
+                level=level_ap,
+            )
+            self.call_service(
+                "fan/set_speed",
+                entity_id="fan.airpurifier_office",
+                speed="Favorite",
+            )
+            action_msg_log += f'Set Air purifier to fixed speed: {level_ap}'
+        elif action == 'PURIFIER_OFF':  # Fan off
+            self.turn_off("fan.airpurifier_office")
+            action_msg_log += f'Turn off Air purifier'
 
         # ALARMCLOCK category
         elif action == 'INIT_DAY':  # Luces Energy + Calefactor!

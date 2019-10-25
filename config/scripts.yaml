@@ -10,6 +10,9 @@ good_night:
 #      service: cover.close_cover
 #      entity_id: all
 
+    - alias: Purificador OFF
+      service: fan.turn_off
+      entity_id: fan.airpurifier_office
     - alias: CAM Salón ON
       service: python_script.dev_command
       data:
