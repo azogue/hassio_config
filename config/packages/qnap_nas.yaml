@@ -17,6 +17,9 @@ homeassistant:
       friendly_name: QNAP Upload
     sensor.nas_home_volume_used_datavol1:
       friendly_name: Disk used
+    sensor.nut_ups_power:
+      icon: mdi:shield-home
+      friendly_name: NUT UPS POWER
 
 sensor:
   - platform: qnap

@@ -108,8 +108,8 @@ discovery:
   ignore:
     - yeelight
     - google_cast
-  enable:
-    - homekit
+#  enable:
+#    - homekit
 
 conversation:
 python_script:

@@ -49,6 +49,8 @@ homeassistant:
       icon: mdi:light-switch
     sensor.interruptor_estudio:
       icon: mdi:light-switch
+    sensor.interruptor_cocina:
+      icon: mdi:light-switch
     sensor.interruptor_office:
       icon: mdi:light-switch
 

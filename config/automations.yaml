@@ -336,12 +336,14 @@
   id: 'update_available_notify'
   trigger:
     - platform: state
-      entity_id: updater.updater
+      entity_id: binary_sensor.updater
+      from: 'off'
+      to: 'on'
   action:
   - service: notify.mobile_app_iphone
     data:
       title: 'New Home Assistant Release'
-      message: "Home Assistant  {{ states.updater.updater.state }}  is now available."
+      message: "Home Assistant is now available: {{ states.binary_sensor.updater.attributes }}."
       data:
         push:
           badge: 1
@@ -550,7 +552,7 @@
     entity_id: vacuum.robot_aspirador
   condition:
     condition: template
-    value_template: '{{ "error" in states.vacuum.robot_aspirador.attributes }}'
+    value_template: '{{ ("error" in states.vacuum.robot_aspirador.attributes) or (states.vacuum.robot_aspirador.attributes.status == "Error") }}'
   action:
     service: telegram_bot.send_message
     data_template:
