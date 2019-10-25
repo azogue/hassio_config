@@ -807,33 +807,7 @@
         message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*, la anterior era: _{{ trigger.from_state.state }}_'
         disable_notification: true
 
-- alias: Vacuum select rooms to clean
-  id: 'select_rooms_to_clean'
-  trigger:
-    platform: state
-    entity_id: input_select.vacuum_clean_combination
-  action:
-    - service: python_script.select_vacuum_cleaning
-      data_template:
-        room: '{{ trigger.to_state.state }}'
 
-- alias: Botvac reset select command
-  id: 'botvac_reset_select_command'
-  trigger:
-    platform: time_pattern
-    minutes: '/5'
-#  trigger:
-#    platform: state
-#    entity_id: vacuum.robot_aspirador
-#    to: 'off'
-  condition:
-    condition: template
-    value_template: '{{ (states.vacuum.robot_aspirador.state == "docked") and (states.vacuum.robot_aspirador.attributes.status == "Charging") and (states.input_select.vacuum_clean_combination.state != "Nada") }}'
-  action:
-    service: input_select.select_option
-    entity_id: input_select.vacuum_clean_combination
-    data:
-      option: "Nada"
 
 #- alias: Apagado automático de enchufes a las 6h
 #  id: 'switches_auto_off_after_8hours'
