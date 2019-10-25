@@ -221,6 +221,31 @@ ios:
             behavior: 'default'
             context: 'default'
 
+      - name: airpurif
+        identifier: 'airpurif'
+        actions:
+          - identifier: 'PURIFIER_SILENT'
+            title: 'Al mínimo'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+            behavior: 'default'
+            context: 'default'
+          - identifier: 'PURIFIER_SET_LEVEL'
+            title: 'Velocidad fija'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+            behavior: 'default'
+            context: 'default'
+          - identifier: 'PURIFIER_OFF'
+            title: 'Apagar'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: yes
+            behavior: 'default'
+            context: 'default'
+
       - name: camera
         identifier: 'camera'
         actions:
