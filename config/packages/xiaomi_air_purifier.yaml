@@ -1,0 +1,72 @@
+homeassistant:
+  customize:
+    fan.airpurifier_office:
+      friendly_name: Purificador
+      icon: mdi:air-purifier
+
+fan:
+- platform: xiaomi_miio
+  name: airpurifier_office
+  host: !secret xiaomi_air_purifier_ip
+  token: !secret xiaomi_air_purifier_token
+
+sensor:
+  # Xiaomi Air Purifier 2S
+  - platform: template
+    sensors:
+      airpurifier_office_temperature:
+        friendly_name: "Temperature"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'temperature') }}"
+        unit_of_measurement: "°C"
+        device_class: "temperature"
+      airpurifier_office_humidity:
+        friendly_name: "Humidity"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'humidity') }}"
+        unit_of_measurement: "%"
+        device_class: "humidity"
+      airpurifier_office_air_quality_pm25:
+        friendly_name: "Air quality"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'aqi') | int }}"
+        unit_of_measurement: "μg/m³"
+        icon_template: "mdi:smog"
+      airpurifier_office_air_quality_pm25_mean:
+        friendly_name: "Air quality (average)"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'average_aqi') | int }}"
+        unit_of_measurement: "μg/m³"
+        icon_template: "mdi:weather-fog"
+      airpurifier_office_speed:
+        friendly_name: "Fan speed"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'motor_speed') | int }}"
+        unit_of_measurement: "rpm"
+        icon_template: "mdi:speedometer"
+      airpurifier_office_illuminance:
+        friendly_name: "Illuminance"
+        value_template: "{{ state_attr('fan.airpurifier_office', 'illuminance') | int }}"
+        unit_of_measurement: "lx"
+        icon_template: "mdi:lightbulb-on"
+
+#input_select:
+#  # Xiaomi Air Purifier 2S
+#  airpurifier_office_mode:
+#    name: Mode
+#    options:
+#      - Auto
+#      - Silent
+#      - Favorite
+#    icon: "mdi:fan"
+
+input_number:
+  # Xiaomi Air Purifier 2S
+  airpurifier_office_favorite_level:
+    name: "Favorite level"
+    initial: 5
+    min: 0
+    max: 14
+    step: 1
+    icon: "mdi:weather-windy"
+
+
+# AUTOMATIONS
+# - [x] Fan Off at night,
+# - [x] auto on if off + aqi > 25 + notify iphone
+# - [x] auto mode if on + favorite level > 3 + aqi < 15
