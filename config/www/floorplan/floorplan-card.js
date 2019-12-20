@@ -2,6 +2,8 @@ class FloorplanCard extends HTMLElement {
   constructor() {
     super();
 
+    this.version = "1.1.8";
+
     this.isScriptsLoading = false;
     this.isFloorplanLoading = false;
 
@@ -35,8 +37,8 @@ class FloorplanCard extends HTMLElement {
 
     const promises = [];
 
-    promises.push(this.loadScript('/local/floorplan/lib/floorplan.js'), false); // don't use cached version
-    promises.push(this.loadScript('/local/floorplan/lib/yaml.min.js'), true);
+    promises.push(this.loadScript(`/local/floorplan/lib/floorplan.js?v=${this.version}`, true));
+    promises.push(this.loadScript('/local/floorplan/lib/yaml.min.js', true));
     promises.push(this.loadScript('/local/floorplan/lib/jquery-3.4.1.min.js', true));
 
     return Promise.all(promises)
@@ -84,7 +86,7 @@ class FloorplanCard extends HTMLElement {
     container.id = 'container';
     card.appendChild(container);
 
-    const spinner = document.createElement('paper-spinner');
+    const spinner = document.createElement('paper-spinner-lite');
     container.appendChild(spinner);
 
     const floorplan = document.createElement('div');
@@ -114,19 +116,8 @@ class FloorplanCard extends HTMLElement {
         text-align: center;
       }
 
-      #floorplan {
-        width: 100%;
-        height: 100%;
-      }
-
-      .loading-container {
-        text-align: center;
-        padding: 8px;
-      }
-
-      .loading {
-        height: 0px;
-        overflow: hidden;
+      paper-spinner-lite {
+        margin-bottom: 50px;
       }
 
       #log {
@@ -202,14 +193,10 @@ class FloorplanCard extends HTMLElement {
   loadScript(scriptUrl, useCache) {
     return new Promise((resolve, reject) => {
       let script = document.createElement('script');
+      script.async = true;
       script.src = useCache ? scriptUrl : this.cacheBuster(scriptUrl);
-      script.onload = () => {
-        return resolve();
-      };
-      script.onerror = (err) => {
-        reject(new URIError(`${err.target.src}`));
-      };
-
+      script.onload = () => resolve();
+      script.onerror = (err) => reject(new URIError(`${err.target.src}`));
       this.appendChild(script);
     });
   }

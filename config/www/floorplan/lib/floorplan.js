@@ -1,18 +1,9 @@
-/*
- Floorplan for Home Assistant
- Version: 1.1.2
- By Petar Kozul
- https://github.com/pkozul/ha-floorplan
-*/
-
-'use strict';
-
 (function () {
   if (typeof window.Floorplan === 'function') return;
 
   class Floorplan {
     constructor() {
-      this.version = '1.0.7.57';
+      this.version = '1.1.14';
       this.root = {};
       this.hass = {};
       this.openMoreInfo = () => { };
@@ -23,7 +14,6 @@
       this.entityInfos = [];
       this.elementInfos = [];
       this.cssRules = [];
-      this.entityTransitions = {};
       this.lastMotionConfig = {};
       this.logLevels = [];
       this.handleEntitiesDebounced = {};
@@ -147,11 +137,11 @@
       const promises = [];
 
       if (this.isOptionEnabled(this.config.pan_zoom)) {
-        promises.push(this.loadScript('/local/custom_ui/floorplan/lib/svg-pan-zoom.min.js'));
+        promises.push(this.loadScript('/local/floorplan/lib/svg-pan-zoom.min.js'));
       }
 
       if (this.isOptionEnabled(this.config.fully_kiosk)) {
-        promises.push(this.loadScript('/local/custom_ui/floorplan/lib/fully-kiosk.js'));
+        promises.push(this.loadScript('/local/floorplan/lib/fully-kiosk.js'));
       }
 
       return promises.length ? Promise.all(promises) : Promise.resolve();
@@ -193,10 +183,15 @@
             defaultPageInfo.isDefault = true;
           }
 
-          const svgPromises = [Promise.resolve()]
-            .concat(pageInfos.map(pageInfo => this.loadPageFloorplanSvg(pageInfo, masterPageInfo)));
+          return this.loadPageFloorplanSvg(masterPageInfo, masterPageInfo) // load master page first
+            .then(() => {
+              const nonMasterPages = pageInfos.filter(pageInfo => pageInfo !== masterPageInfo);
 
-          return Promise.all(svgPromises);
+              const svgPromises = [Promise.resolve()]
+                .concat(nonMasterPages.map(pageInfo => this.loadPageFloorplanSvg(pageInfo, masterPageInfo)));
+
+              return Promise.all(svgPromises);
+            });
         });
     }
 
@@ -587,6 +582,7 @@
         for (let rule of config.rules) {
           rule.hover_over = (rule.hover_over === undefined) ? config.defaults.hover_over : rule.hover_over;
           rule.more_info = (rule.more_info === undefined) ? config.defaults.more_info : rule.more_info;
+          rule.propagate = (rule.propagate === undefined) ? config.defaults.propagate : rule.propagate;
         }
       }
 
@@ -630,10 +626,13 @@
           // Create a title element (to support hover over text)
           $svgElement.append(document.createElementNS('http://www.w3.org/2000/svg', 'title'));
 
-          $svgElement.off('click').on('click', this.onEntityClick.bind({ instance: this, svgElementInfo: svgElementInfo, entityId: entityId, rule: ruleInfo.rule }));
-          $svgElement.css('cursor', 'pointer');
+          if (ruleInfo.rule.action || (ruleInfo.rule.more_info !== false)) {
+            $svgElement.off('click').on('click', this.onEntityClick.bind({ instance: this, svgElementInfo: svgElementInfo, entityId: entityId, rule: ruleInfo.rule }));
+            $svgElement.css('cursor', 'pointer');
+          }
           $svgElement.addClass('ha-entity');
 
+          /*
           if ($svgElement.is('text') && ($svgElement[0].id === elementId)) {
             const backgroundSvgElement = svgElements.find(svgElement => svgElement.id === ($svgElement[0].id + '.background'));
             if (!backgroundSvgElement) {
@@ -644,6 +643,7 @@
               $(backgroundSvgElement).css('fill-opacity', 0);
             }
           }
+          */
         }
       }
     }
@@ -728,6 +728,7 @@
           $svgElement.off('click').on('click', this.onElementClick.bind({ instance: this, svgElementInfo: svgElementInfo, elementId: elementId, rule: rule }));
           $svgElement.css('cursor', 'pointer');
 
+          /*
           if ($svgElement.is('text') && ($svgElement[0].id === elementId)) {
             const backgroundSvgElement = svgElements.find(svgElement => svgElement.id === ($svgElement[0].id + '.background'));
             if (!backgroundSvgElement) {
@@ -738,6 +739,7 @@
               $(backgroundSvgElement).css('fill-opacity', 0);
             }
           }
+          */
 
           const actions = Array.isArray(rule.action) ? rule.action : [rule.action];
           for (let action of actions) {
@@ -792,7 +794,7 @@
       };
       ruleInfo.svgElementInfos[svgElement.id] = svgElementInfo;
 
-      this.addNestedSvgElementsToRule(svgElement, ruleInfo);
+      //      this.addNestedSvgElementsToRule(svgElement, ruleInfo);
 
       return svgElementInfo;
     }
@@ -830,37 +832,48 @@
                 */
     }
 
-    addClass(entityId, svgElement, className) {
-      if ($(svgElement).hasClass('ha-leave-me-alone')) return;
+    addClasses(entityId, svgElement, classes, propagate) {
+      if (!classes || !classes.length) return;
 
-      if (!$(svgElement).hasClass(className)) {
-        this.logDebug('CLASS', `${entityId} (adding class: ${className})`);
-        $(svgElement).addClass(className);
+      for (let className of classes) {
+        if ($(svgElement).hasClass('ha-leave-me-alone')) return;
 
-        if ($(svgElement).is('text')) {
-          $(svgElement).parent().find(`[id="${entityId}.background"]`).each((i, rectElement) => {
-            if (!$(rectElement).hasClass(className + '-background')) {
-              $(rectElement).addClass(className + '-background');
+        if (!$(svgElement).hasClass(className)) {
+          this.logDebug('CLASS', `${entityId} (adding class: ${className})`);
+          $(svgElement).addClass(className);
+
+          if ($(svgElement).is('text')) {
+            /*
+            $(svgElement).parent().find(`[id="${entityId}.background"]`).each((i, rectElement) => {
+              if (!$(rectElement).hasClass(className + '-background')) {
+                $(rectElement).addClass(className + '-background');
+              }
+            });
+            */
+          }
+        }
+
+        if (propagate || (propagate === undefined)) {
+          $(svgElement).find('*').each((i, svgNestedElement) => {
+            if (!$(svgNestedElement).hasClass('ha-leave-me-alone')) {
+              if (!$(svgNestedElement).hasClass(className)) {
+                $(svgNestedElement).addClass(className);
+              }
             }
           });
         }
       }
-
-      $(svgElement).find('*').each((i, svgNestedElement) => {
-        if (!$(svgNestedElement).hasClass('ha-leave-me-alone')) {
-          if (!$(svgNestedElement).hasClass(className)) {
-            $(svgNestedElement).addClass(className);
-          }
-        }
-      });
     }
 
-    removeClasses(entityId, svgElement, classes) {
+    removeClasses(entityId, svgElement, classes, propagate) {
+      if (!classes || !classes.length) return;
+
       for (let className of classes) {
         if ($(svgElement).hasClass(className)) {
           this.logDebug('CLASS', `${entityId} (removing class: ${className})`);
           $(svgElement).removeClass(className);
 
+          /*
           if ($(svgElement).is('text')) {
             $(svgElement).parent().find(`[id="${entityId}.background"]`).each((i, rectElement) => {
               if ($(rectElement).hasClass(className + '-background')) {
@@ -868,12 +881,15 @@
               }
             });
           }
+          */
 
-          $(svgElement).find('*').each((i, svgNestedElement) => {
-            if ($(svgNestedElement).hasClass(className)) {
-              $(svgNestedElement).removeClass(className);
-            }
-          });
+          if (propagate || (propagate === undefined)) {
+            $(svgElement).find('*').each((i, svgNestedElement) => {
+              if ($(svgNestedElement).hasClass(className)) {
+                $(svgNestedElement).removeClass(className);
+              }
+            });
+          }
         }
       }
     }
@@ -1094,6 +1110,7 @@
         }
       }
 
+      /*
       if (!svgElementInfo.alreadyHadBackground) {
         const rect = $(svgElement).parent().find(`[id="${entityId}.background"]`);
         if (rect.length) {
@@ -1112,6 +1129,7 @@
           }
         }
       }
+      */
     }
 
     handleEntityUpdateImage(entityId, ruleInfo, svgElementInfo) {
@@ -1207,92 +1225,30 @@
           const svgElementInfo = ruleInfo.svgElementInfos[svgElementId];
 
           if (svgElementInfo.svgElement) { // images may not have been updated yet
-            const wasTransitionApplied = this.handleEntityUpdateTransitionCss(entityInfo, ruleInfo, svgElementInfo, isInitialLoad);
-            this.handleUpdateCss(entityInfo, svgElementInfo, ruleInfo, wasTransitionApplied);
+            this.handleUpdateCss(entityInfo, svgElementInfo, ruleInfo);
           }
         }
       }
     }
 
-    handleEntityUpdateTransitionCss(entityInfo, ruleInfo, svgElementInfo, isInitialLoad) {
-      const entityId = entityInfo.entityId;
-      const entityState = this.hass.states[entityId];
-      const svgElement = svgElementInfo.svgElement;
-
-      if (!entityState) return;
-
-      let wasTransitionApplied = false;
-
-      if (ruleInfo.rule.states && ruleInfo.rule.state_transitions) {
-        const transitionConfig = ruleInfo.rule.state_transitions.find(transitionConfig => (transitionConfig.to_state === entityState.state));
-        if (transitionConfig && transitionConfig.from_state && transitionConfig.to_state && transitionConfig.duration) {
-          const elapsed = Math.max((new Date().getTime()) - new Date(entityState.last_changed).getTime(), 0);
-          const remaining = (transitionConfig.duration * 1000) - elapsed;
-
-          const fromStateConfig = ruleInfo.rule.states.find(stateConfig => (stateConfig.state === transitionConfig.from_state));
-          const toStateConfig = ruleInfo.rule.states.find(stateConfig => (stateConfig.state === transitionConfig.to_state));
-
-          const fromColor = this.getFill(fromStateConfig);
-          const toColor = this.getFill(toStateConfig);
-
-          if (fromColor && toColor && (remaining > 0)) {
-            let transition = this.entityTransitions[entityId];
-            if (!transition) {
-              this.logDebug('TRANSITION', `${entityId} (created)`);
-              transition = {
-                entityId: entityId,
-                svgElementInfo: svgElementInfo,
-                ruleInfo: ruleInfo,
-                duration: transitionConfig.duration,
-                fromStateConfig: fromStateConfig,
-                toStateConfig: toStateConfig,
-                fromColor: fromColor,
-                toColor: toColor,
-                startDateMs: undefined,
-                endDateMs: undefined,
-                isActive: false,
-              };
-              this.entityTransitions[entityId] = transition;
-            }
-
-            // Assume the transition starts (or started) when the original state change occurred
-            transition.startDateMs = this.serverToLocalDate(new Date(entityState.last_changed)).getTime();
-            transition.endDateMs = transition.startDateMs + (transition.duration * 1000);
-
-            // If the transition is not currently running, kick it off
-            if (!transition.isActive) {
-              // If this state change just occurred, the transition starts as of now
-              if (!isInitialLoad) {
-                transition.startDateMs = (new Date()).getTime();
-                transition.endDateMs = transition.startDateMs + (transition.duration * 1000);
-              }
-
-              this.logDebug('TRANSITION', `${transition.entityId}: (start)`);
-              transition.isActive = true;
-              this.handleEntityTransition(transition);
-            }
-            else {
-              // If the transition is currently running, it will be extended with latest start / end times
-              this.logDebug('TRANSITION', `${transition.entityId} (continue)`);
-            }
-
-            wasTransitionApplied = true;
-          }
-        }
-      }
-
-      return wasTransitionApplied;
+    getStateConfigClasses(stateConfig) { // support class: or classes:
+      if (!stateConfig) return [];
+      if (Array.isArray(stateConfig.class)) return stateConfig.class;
+      if (typeof stateConfig.class === "string") return stateConfig.class.split(" ").map(x => x.trim());
+      if (Array.isArray(stateConfig.classes)) return stateConfig.classes;
+      if (typeof stateConfig.classes === "string") return stateConfig.classes.split(" ").map(x => x.trim());
+      return [];
     }
 
-    handleUpdateCss(entityInfo, svgElementInfo, ruleInfo, wasTransitionApplied) {
+    handleUpdateCss(entityInfo, svgElementInfo, ruleInfo) {
       const entityId = entityInfo.entityId;
       const svgElement = svgElementInfo.svgElement;
 
-      let targetClass = undefined;
+      let targetClasses = [];
       const obsoleteClasses = [];
 
       if (ruleInfo.rule.class_template) {
-        targetClass = this.evaluate(ruleInfo.rule.class_template, entityId, svgElement);
+        targetClasses = this.evaluate(ruleInfo.rule.class_template, entityId, svgElement).split(" ");
       }
 
       // Get the config for the current state
@@ -1300,16 +1256,15 @@
         const entityState = this.hass.states[entityId];
 
         const stateConfig = ruleInfo.rule.states.find(stateConfig => (stateConfig.state === entityState.state));
-        if (stateConfig && stateConfig.class && !wasTransitionApplied) {
-          targetClass = stateConfig.class;
-        }
+        targetClasses = this.getStateConfigClasses(stateConfig);
 
         // Remove any other previously-added state classes
         for (let otherStateConfig of ruleInfo.rule.states) {
           if (!stateConfig || (otherStateConfig.state !== stateConfig.state)) {
-            if (otherStateConfig.class && (otherStateConfig.class !== targetClass) && (otherStateConfig.class !== 'ha-entity') && $(svgElement).hasClass(otherStateConfig.class)) {
-              if (svgElementInfo.originalClasses.indexOf(otherStateConfig.class) < 0) {
-                obsoleteClasses.push(otherStateConfig.class);
+            const otherStateClasses = this.getStateConfigClasses(otherStateConfig);
+            for (let otherStateClass of otherStateClasses) {
+              if (otherStateClass && (targetClasses.indexOf(otherStateClass) < 0) && (otherStateClass !== 'ha-entity') && $(svgElement).hasClass(otherStateClass) && (svgElementInfo.originalClasses.indexOf(otherStateClass) < 0)) {
+                obsoleteClasses.push(otherStateClass);
               }
             }
           }
@@ -1317,87 +1272,43 @@
       }
       else {
         if (svgElement.classList) {
-          for (let otherClassName of this.getArray(svgElement.classList)) {
-            if ((otherClassName !== targetClass) && (otherClassName !== 'ha-entity')) {
-              if (svgElementInfo.originalClasses.indexOf(otherClassName) < 0) {
-                obsoleteClasses.push(otherClassName);
-              }
+          for (let otherClass of this.getArray(svgElement.classList)) {
+            if ((targetClasses.indexOf(otherClass) < 0) && (otherClass !== 'ha-entity') && $(svgElement).hasClass(otherClass) && (svgElementInfo.originalClasses.indexOf(otherClass) < 0)) {
+              obsoleteClasses.push(otherClass);
             }
           }
         }
       }
 
       // Remove any obsolete classes from the entity
-      if (obsoleteClasses.length) {
-        //this.logDebug(`${entityId}: Removing obsolete classes: ${obsoleteClasses.join(', ')}`);
-        this.removeClasses(entityId, svgElement, obsoleteClasses);
-      }
+      //this.logDebug(`${entityId}: Removing obsolete classes: ${obsoleteClasses.join(', ')}`);
+      this.removeClasses(entityId, svgElement, obsoleteClasses, ruleInfo.rule.propagate);
 
-      // Add the target class to the entity
-      if (targetClass && !$(svgElement).hasClass(targetClass)) {
-        const hasTransitionConfig = ruleInfo.rule.states && ruleInfo.rule.state_transitions;
-        if (hasTransitionConfig && !wasTransitionApplied) {
-          const transition = this.entityTransitions[entityId];
-          if (transition && transition.isActive) {
-            this.logDebug('TRANSITION', `${transition.entityId} (cancel)`);
-            transition.isActive = false;
-          }
-        }
-
-        this.addClass(entityId, svgElement, targetClass);
-      }
+      // Add the target classes to the entity
+      this.addClasses(entityId, svgElement, targetClasses, ruleInfo.rule.propagate);
     }
 
     handleUpdateElementCss(svgElementInfo, ruleInfo) {
       const entityId = svgElementInfo.entityId;
       const svgElement = svgElementInfo.svgElement;
 
-      let targetClass = undefined;
+      let targetClasses = undefined;
       if (ruleInfo.rule.class_template) {
-        targetClass = this.evaluate(ruleInfo.rule.class_template, entityId, svgElement);
+        targetClasses = this.evaluate(ruleInfo.rule.class_template, entityId, svgElement).split(" ");
       }
 
       const obsoleteClasses = [];
-      for (let otherClassName of this.getArray(svgElement.classList)) {
-        if ((otherClassName !== targetClass) && (otherClassName !== 'ha-entity')) {
-          if (svgElementInfo.originalClasses.indexOf(otherClassName) < 0) {
-            obsoleteClasses.push(otherClassName);
-          }
+      for (let otherClass of this.getArray(svgElement.classList)) {
+        if ((targetClasses.indexOf(otherClass) < 0) && (otherClass !== 'ha-entity') && $(svgElement).hasClass(otherClass) && (svgElementInfo.originalClasses.indexOf(otherClass) < 0)) {
+          obsoleteClasses.push(otherClass);
         }
       }
 
       // Remove any obsolete classes from the entity
-      if (obsoleteClasses.length) {
-        this.removeClasses(entityId, svgElement, obsoleteClasses);
-      }
+      this.removeClasses(entityId, svgElement, obsoleteClasses, ruleInfo.rule.propagate);
 
       // Add the target class to the entity
-      if (targetClass && !$(svgElement).hasClass(targetClass)) {
-        this.addClass(entityId, svgElement, targetClass);
-      }
-    }
-
-    handleEntityTransition(transition) {
-      if (!transition.isActive) return;
-
-      const currentDateMs = new Date().getTime();
-
-      const isExpired = (currentDateMs >= transition.endDateMs);
-
-      const ratio = isExpired ? 1 : (currentDateMs - transition.startDateMs) / (transition.endDateMs - transition.startDateMs);
-      const color = this.getTransitionColor(transition.fromColor, transition.toColor, ratio);
-      //this.logDebug('TRANSITION', `${transition.entityId} (ratio: ${ratio}, element: ${transition.svgElementInfo.svgElement.id}, fill: ${color})`);
-      transition.svgElementInfo.svgElement.style.fill = color;
-
-      if (isExpired) {
-        transition.isActive = false;
-        this.logDebug('TRANSITION', `${transition.entityId} (end)`);
-        return;
-      }
-
-      setTimeout(() => {
-        this.handleEntityTransition(transition);
-      }, 100);
+      this.addClasses(entityId, svgElement, targetClasses, ruleInfo.rule.propagate);
     }
 
     handleEntityUpdateLastMotionCss(entityInfo) {
@@ -1413,18 +1324,16 @@
           const svgElementInfo = ruleInfo.svgElementInfos[svgElementId];
           const svgElement = svgElementInfo.svgElement;
 
+          const stateConfigClasses = this.getStateConfigClasses(this.lastMotionConfig);
+
           if (this.hass.states[this.lastMotionConfig.entity] &&
             (entityState.attributes.friendly_name === this.hass.states[this.lastMotionConfig.entity].state)) {
-            if (!$(svgElement).hasClass(this.lastMotionConfig.class)) {
-              //this.logDebug(`${entityId}: Adding last motion class '${this.lastMotionConfig.class}'`);
-              $(svgElement).addClass(this.lastMotionConfig.class);
-            }
+            //this.logDebug(`${entityId}: Adding last motion class '${this.lastMotionConfig.class}'`);
+            this.addClasses(entityId, svgElement, stateConfigClasses, ruleInfo.propagate);
           }
           else {
-            if ($(svgElement).hasClass(this.lastMotionConfig.class)) {
-              //this.logDebug(`${entityId}: Removing last motion class '${this.lastMotionConfig.class}'`);
-              $(svgElement).removeClass(this.lastMotionConfig.class);
-            }
+            //this.logDebug(`${entityId}: Removing last motion class '${this.lastMotionConfig.class}'`);
+            this.removeClasses(entityId, svgElement, stateConfigClasses, ruleInfo.propagate);
           }
         }
       }
@@ -1526,7 +1435,11 @@
     }
 
     onActionClick(svgElementInfo, entityId, elementId, rule) {
-      if (!rule || !rule.action) {
+      let entityInfo = this.entityInfos[entityId];
+      const actionRuleInfo = entityInfo && entityInfo.ruleInfos.find(ruleInfo => ruleInfo.rule.action);
+      const actionRule = rule.action ? rule : (actionRuleInfo ? actionRuleInfo.rule : undefined);
+
+      if (!rule || !actionRule) {
         if (entityId && (rule.more_info !== false)) {
           this.openMoreInfo(entityId);
         }
@@ -1537,7 +1450,7 @@
 
       const svgElement = svgElementInfo.svgElement;
 
-      const actions = Array.isArray(rule.action) ? rule.action : [rule.action];
+      const actions = Array.isArray(actionRule.action) ? actionRule.action : [actionRule.action];
       for (let action of actions) {
         if (action.service || action.service_template) {
           const actionService = this.getActionService(action, entityId, svgElement);
@@ -1557,7 +1470,7 @@
       }
 
       if (!calledServiceCount) {
-        if (entityId && (rule.more_info !== false)) {
+        if (entityId && (actionRule.more_info !== false)) {
           this.openMoreInfo(entityId);
         }
       }
@@ -1675,11 +1588,9 @@
       const actionService = this.getActionService(action, entityId, svgElement);
       const actionData = this.getActionData(action, entityId, svgElement);
 
-      /*
       if (!actionData.entity_id && entityId) {
         actionData.entity_id = entityId;
       }
-      */
 
       this.hass.callService(this.getDomain(actionService), this.getService(actionService), actionData);
     }
@@ -1764,22 +1675,24 @@
     log(level, message) {
       const text = `${this.formatDate(new Date())} ${level.toUpperCase()} ${message}`;
 
-      switch (level) {
-        case 'error':
-          console.error(text);
-          break;
+      if (this.config && this.config.debug && (this.config.debug !== false)) {
+        switch (level) {
+          case 'error':
+            console.error(text);
+            break;
 
-        case 'warning':
-          console.warn(text);
-          break;
+          case 'warning':
+            console.warn(text);
+            break;
 
-        case 'error':
-          console.info(text);
-          break;
+          case 'error':
+            console.info(text);
+            break;
 
-        default:
-          console.log(text);
-          break;
+          default:
+            console.log(text);
+            break;
+        }
       }
 
       const isTargetLogLevel = this.logLevels && this.logLevels.length && (this.logLevels.indexOf(level) >= 0);
@@ -1799,16 +1712,21 @@
     getStroke(stateConfig) {
       let stroke = undefined;
 
+      const stateConfigClasses = this.getStateConfigClasses(stateConfig);
+
       for (let cssRule of this.cssRules) {
-        if (cssRule.selectorText && cssRule.selectorText.indexOf(`.${stateConfig.class}`) >= 0) {
-          if (cssRule.style && cssRule.style.stroke) {
-            if (cssRule.style.stroke[0] === '#') {
-              stroke = cssRule.style.stroke;
+        for (let stateConfigClass of stateConfigClasses) {
+          if (cssRule.selectorText && cssRule.selectorText.indexOf(`.${stateConfigClass}`) >= 0) {
+            if (cssRule.style && cssRule.style.stroke) {
+              if (cssRule.style.stroke[0] === '#') {
+                stroke = cssRule.style.stroke;
+              }
+              else {
+                const rgb = cssRule.style.stroke.substring(4).slice(0, -1).split(',').map(x => parseInt(x));
+                stroke = `#${rgb[0].toString(16)[0]}${rgb[1].toString(16)[0]}${rgb[2].toString(16)[0]}`;
+              }
             }
-            else {
-              const rgb = cssRule.style.stroke.substring(4).slice(0, -1).split(',').map(x => parseInt(x));
-              stroke = `#${rgb[0].toString(16)[0]}${rgb[1].toString(16)[0]}${rgb[2].toString(16)[0]}`;
-            }
+            break;
           }
         }
       }
@@ -1819,26 +1737,27 @@
     getFill(stateConfig) {
       let fill = undefined;
 
+      const stateConfigClasses = this.getStateConfigClasses(stateConfig);
+
       for (let cssRule of this.cssRules) {
-        if (cssRule.selectorText && cssRule.selectorText.indexOf(`.${stateConfig.class}`) >= 0) {
-          if (cssRule.style && cssRule.style.fill) {
-            if (cssRule.style.fill[0] === '#') {
-              fill = cssRule.style.fill;
+        for (let stateConfigClass of stateConfigClasses) {
+          if (cssRule.selectorText && cssRule.selectorText.indexOf(`.${stateConfigClass}`) >= 0) {
+            if (cssRule.style && cssRule.style.fill) {
+              if (cssRule.style.fill[0] === '#') {
+                fill = cssRule.style.fill;
+              }
+              else {
+                const rgb = cssRule.style.fill.substring(4).slice(0, -1).split(',').map(x => parseInt(x));
+                fill = `#${rgb[0].toString(16)}${rgb[1].toString(16)}${rgb[2].toString(16)}`;
+              }
             }
-            else {
-              const rgb = cssRule.style.fill.substring(4).slice(0, -1).split(',').map(x => parseInt(x));
-              fill = `#${rgb[0].toString(16)}${rgb[1].toString(16)}${rgb[2].toString(16)}`;
-            }
+
+            break;
           }
         }
       }
 
       return fill;
-    }
-
-    getTransitionColor(fromColor, toColor, value) {
-      return (value <= 0) ? fromColor :
-        ((value >= 1) ? toColor : this.rgbToHex(this.mix(this.hexToRgb(toColor), this.hexToRgb(fromColor), value)));
     }
 
     /***************************************************************************************************************************/
@@ -1920,42 +1839,9 @@
       return base64;
     }
 
-    base64Encodebase64Encode(str) {
-      const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-      let out = "", i = 0, len = str.length, c1, c2, c3;
-      while (i < len) {
-        c1 = str.charCodeAt(i++) & 0xff;
-        if (i === len) {
-          out += CHARS.charAt(c1 >> 2);
-          out += CHARS.charAt((c1 & 0x3) << 4);
-          out += "==";
-          break;
-        }
-        c2 = str.charCodeAt(i++);
-        if (i === len) {
-          out += CHARS.charAt(c1 >> 2);
-          out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-          out += CHARS.charAt((c2 & 0xF) << 2);
-          out += "=";
-          break;
-        }
-        c3 = str.charCodeAt(i++);
-        out += CHARS.charAt(c1 >> 2);
-        out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-        out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
-        out += CHARS.charAt(c3 & 0x3F);
-      }
-
-      // IOS / Safari will not render base64 images unless length is divisible by 4
-      while ((out.length % 4) > 0) {
-        out += '=';
-      }
-
-      return out;
-    }
-
     cacheBuster(url) {
-      return `${url}${(url.indexOf('?') >= 0) ? '&' : '?'}_=${new Date().getTime()}`;
+      return url;
+      //return `${url}${(url.indexOf('?') >= 0) ? '&' : '?'}_=${new Date().getTime()}`;
     }
 
     debounce(func, wait, immediate) {
@@ -2016,76 +1902,6 @@
       }
 
       return false;
-    }
-
-    /***************************************************************************************************************************/
-    /* Color functions
-    /***************************************************************************************************************************/
-
-    rgbToHex(rgb) {
-      return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
-    }
-
-    hexToRgb(hex) {
-      // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandRegex, (m, r, g, b) => {
-        return r + r + g + g + b + b;
-      });
-
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    }
-
-    mix(color1, color2, weight) {
-      const p = weight;
-      const w = p * 2 - 1;
-      const w1 = ((w / 1) + 1) / 2;
-      const w2 = 1 - w1;
-      const rgb = [
-        Math.round(color1.r * w1 + color2.r * w2),
-        Math.round(color1.g * w1 + color2.g * w2),
-        Math.round(color1.b * w1 + color2.b * w2)
-      ];
-      return rgb;
-    }
-
-    wrap(svgTextElement, width, content) {
-      const $text = $(svgTextElement);
-
-      const words = content.split(/\s+/).reverse();
-      const line = [];
-      const lineNumber = 0;
-      const lineHeight = 1.1; // ems
-      const x = $text.attr("x");
-      const y = $text.attr("y");
-      //const dy = 0; //parseFloat($text.attr("dy")),
-
-      const $tspan = $text.append("tspan")
-        .attr("x", x)
-        .attr("y", y)
-        .attr("dy", dy + "em")
-        .text(null);
-
-      let word;
-      while (word = words.pop()) {
-        line.push(word);
-        $tspan.text(line.join(" "));
-        if ($tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          $tspan.text(line.join(" "));
-          line = [word];
-          $tspan = $text.append("tspan")
-            .attr("x", x)
-            .attr("y", y)
-            .attr("dy", ++lineNumber * lineHeight + dy + "em")
-            .text(word);
-        }
-      }
     }
   }
 
