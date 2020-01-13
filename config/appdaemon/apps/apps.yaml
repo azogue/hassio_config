@@ -33,6 +33,18 @@ Alarma:
       camera.wyzecam2: binary_sensor.motioncam_wyzecam2,3
       binary_sensor.sensor_terraza_mov1: 3
 
+HueTapControl:
+  module: hue_tap_controller
+  class: HueTapControl
+
+PowerRM:
+  module: rolling_mean
+  class: RollingMean
+  name: sensor.sustained_power
+  sensor: sensor.esp32ener_power
+  sensor_freq: 5
+  window_seconds: 900
+
 #FamilyTracker:
 #  class: FamilyTracker
 #  module: family_tracker
