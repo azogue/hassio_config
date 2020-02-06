@@ -24,8 +24,6 @@ V_TARGET_DISABLE = 0
 command_data = data.get('command_data', '')
 command = data.get('command', 'ADB command to Shield')
 
-logger.error("DEV command: {} -> {}".format(command, command_data))
-
 if command == "flash":
     try:
         flashes = int(command_data)
@@ -141,7 +139,7 @@ elif "cover" in command:
     except ValueError:
         position = 100
 
-    logger.warning("Set cover position: '{}' to {}".format(cover, position))
+    logger.info("Set cover position: '{}' to {}".format(cover, position))
     hass.services.call(
         'mqtt', 'publish',
         {

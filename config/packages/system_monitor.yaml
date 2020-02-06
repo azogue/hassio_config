@@ -29,9 +29,6 @@ timer:
   alarm_auto_on:
     duration: '00:10:00'
     icon: mdi:alarm-check
-  deadman:
-    duration: '01:00:00'
-    icon: mdi:emoticon-dead
 
 variable:
   speedtest_data:

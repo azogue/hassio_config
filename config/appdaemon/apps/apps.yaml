@@ -44,6 +44,10 @@ PowerRM:
   sensor: sensor.esp32ener_power
   sensor_freq: 5
   window_seconds: 900
+  max_power_kw: 5.0
+  max_power_kw_reset: 3.5
+  min_time_high: 15
+  min_time_low: 60
 
 #FamilyTracker:
 #  class: FamilyTracker

@@ -176,22 +176,22 @@ svg, svg * {
 /* Temperature sensor */
 
 .temp-very-low {
-  fill: #d9edf7 !important;
+  fill: #D9EDF7 !important;
   fill-opacity: 1 !important;
 }
 
 .temp-below-average {
-  fill: #dcefe8 !important;
+  fill: #DCEFE8 !important;
   fill-opacity: 1 !important;
 }
 
 .temp-average {
-  fill: #dff0d8 !important;
+  fill: #DFF0D8 !important;
   fill-opacity: 1 !important;
 }
 
 .temp-very-high {
-  fill: #f2dede !important;
+  fill: #F2DEDE !important;
   fill-opacity: 1 !important;
 }
 

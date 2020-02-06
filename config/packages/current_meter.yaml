@@ -10,18 +10,12 @@ homeassistant:
     sensor.esp32ener_power:
       icon: mdi:flash
       friendly_name: Consumo medido
-    sensor.esp32ener_real_power:
-      icon: mdi:flash
-      friendly_name: Consumo real
     sensor.esp32ener_ch1:
       icon: mdi:power-plug
       friendly_name: Circuito 1 (general)
     sensor.esp32ener_ch2:
       icon: mdi:flash-circle
       friendly_name: Circuito 2 (termo,AC,domótica)
-    sensor.esp32ener_ch3:
-      icon: mdi:stove
-      friendly_name: Cocina y horno
 
     binary_sensor.esp32_ener_online:
       friendly_name: Current Meter Online
@@ -65,37 +59,25 @@ binary_sensor:
         entity_id:
           - sensor.date_time
 
-
 sensor:
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
     value_template: "{{ value_json.rms[2] | float | round }}"
-#    name: esp32ener_ch3
     name: esp32ener_power
     unit_of_measurement: "W"
-#    json_attributes: 'Energy_instant_Wh,Energy_hour_Wh,Energy_day_kWh,ts,delta_ms,counter,Peak_CH3,Low_CH3'
     json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
-    qos: !secret mqtt_default_qos
     force_update: true
-    expire_after: 60
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
     value_template: "{{ value_json.rms[0]  | float | round }}"
     name: esp32ener_ch1
     unit_of_measurement: "W"
-#    json_attributes: 'Peak_CH1,Low_CH1,ts'
-#    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
-    qos: !secret mqtt_default_qos
     force_update: true
-    expire_after: 60
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
     value_template: "{{ value_json.rms[1]  | float | round }}"
     name: esp32ener_ch2
     unit_of_measurement: "W"
-#    json_attributes: 'Peak_CH2,Low_CH2,ts'
-#    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
-    qos: !secret mqtt_default_qos
     force_update: true
     expire_after: 60
 

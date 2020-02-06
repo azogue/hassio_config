@@ -35,7 +35,7 @@ homeassistant:
       icon: mdi:lava-lamp
     light.tira:
       icon: mdi:dots-horizontal
-    light.tira_larga:
+    light.tira_cocina:
       icon: mdi:dots-horizontal
     light.ambilight:
       icon: mdi:monitor-star
@@ -79,21 +79,6 @@ switch:
   password: !secret philips_tv_api_password
   scan_interval: 15
 
-
-input_number:
-  # Master Sliders Salón (brillo y Tª color)
-  light_main_slider_salon:
-    name: Brillo salón
-  #  initial: 0
-    min: 0
-    max: 255
-    step: 1
-  light_temp_slider_salon:
-    name: Blanco Salón
-  #  initial: 10
-    min: 0
-    max: 100
-    step: 1
 
 input_select:
   salon_light_scene:
