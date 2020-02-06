@@ -244,15 +244,14 @@ sensor:
         friendly_name: "Precio luz"
         value_template: "{%if states.sensor.pvpc.state %}{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}{% else %}unknown{% endif %}"
         entity_id: sensor.pvpc
-#      esp32ener_real_power:
-#        friendly_name: "Potencia real"
-#        unit_of_measurement: 'W'
-#        # -367.9333 + [ 1.79581719  1.65896788 -0.65356452] * X
-#        value_template: "{{ (-367.9333 + 1.79581719 * (states.sensor.esp32ener_ch1.state | float) + 1.65896788 * (states.sensor.esp32ener_ch2.state | float) - 0.65356452 * (states.sensor.esp32ener_power.state | float ))| round(2) }}"
-#        entity_id:
-#          - sensor.esp32ener_ch1
-#          - sensor.esp32ener_ch2
-#          - sensor.esp32ener_power
+
+  - platform: statistics
+    entity_id: sensor.main_power_total
+    name: sustained_power
+    sampling_size: 500
+    max_age:
+      minutes: 15
+    precision: 1
 
   - platform: elecprice_spain_pvpc
     electric_rate: discriminacion
