@@ -22,6 +22,7 @@ import requests
 
 
 LOG_LEVEL = 'INFO'
+LOGGER = "event_log"
 
 # Defaults para La Cafetera Alarm Clock:
 MEDIA_PLAYER = 'media_player.dormitorio'
@@ -236,7 +237,7 @@ class AlarmClock(hass.Hass):
                      ' NEXT SPECIAL: {} ({})'
                      .format(self._next_alarm, self._next_warm_up,
                              self._next_special_alarm, self._selected_player),
-                     LOG_LEVEL)
+                     level=LOG_LEVEL, log=LOGGER)
 
     def turn_on_morning_services(self, kwargs):
         """Turn ON the water boiler and so on in the morning."""
@@ -301,7 +302,7 @@ class AlarmClock(hass.Hass):
     def change_player(self, entity, attribute, old, new, kwargs):
         """Change player."""
         self.log('CHANGE PLAYER from {} to {}'
-                 .format(self._selected_player, new))
+                 .format(self._selected_player, new), log=LOGGER)
         self._selected_player = new
 
     # noinspection PyUnusedLocal
@@ -314,9 +315,9 @@ class AlarmClock(hass.Hass):
             if self._manual_trigger is not None:
                 self._last_trigger = None
                 self.set_state(self._manual_trigger, state='off')
-            self.log('TURN_OFF SONOS')
+            self.log('TURN_OFF SONOS', log=LOGGER)
         else:
-            self.log('TURN_OFF ALARM CLOCK, BUT ALREADY OFF?')
+            self.log('TURN_OFF ALARM CLOCK, BUT ALREADY OFF?', log=LOGGER)
         if self._handler_turnoff is not None:
             self.cancel_timer(self._handler_turnoff)
             self._handler_turnoff = None
@@ -327,13 +328,13 @@ class AlarmClock(hass.Hass):
         """Start reproduction manually."""
         self._alarm_on = (new == 'on')
         self.log('MASTER SWITCH BOOLEAN CHANGED from {} to {}'
-                 .format(old, new))
+                 .format(old, new), log=LOGGER)
 
     # noinspection PyUnusedLocal
     def manual_triggering(self, entity, attribute, old, new, kwargs):
         """Start reproduction manually."""
         self.log('MANUAL_TRIGGERING BOOLEAN CHANGED from {} to {}'
-                 .format(old, new))
+                 .format(old, new), log=LOGGER)
         # Manual triggering
         if (new == 'on') and (
                 (self._last_trigger is None)
@@ -359,7 +360,7 @@ class AlarmClock(hass.Hass):
         ):
             # Stop if it's playing
             self.log('TRIGGER_STOP (last trigger at {})'
-                     .format(self._last_trigger))
+                     .format(self._last_trigger), log=LOGGER)
             self.turn_off_alarm_clock()
 
     # noinspection PyUnusedLocal
@@ -367,7 +368,7 @@ class AlarmClock(hass.Hass):
         """Re-schedule next alarm when alarm time sliders change."""
         self._set_new_alarm_time()
         self.log('CHANGING ALARM TIME TO: {:%H:%M:%S}'
-                 .format(self._next_alarm), LOG_LEVEL)
+                 .format(self._next_alarm), level=LOG_LEVEL, log=LOGGER)
 
     # noinspection PyUnusedLocal
     def warm_up_time_change(self, entity, attribute, old, new, kwargs):
@@ -379,7 +380,7 @@ class AlarmClock(hass.Hass):
         """Re-schedule next alarm when alarm time sliders change."""
         self._set_new_special_alarm_datetime()
         self.log('CHANGING SPECIAL ALARM TIME TO: {:%d/%m/%y %H:%M:%S}'
-                 .format(self._next_special_alarm), LOG_LEVEL)
+                 .format(self._next_special_alarm), level=LOG_LEVEL, log=LOGGER)
 
     def _set_new_alarm_time(self):
         if self._handle_alarm is not None:
@@ -410,7 +411,7 @@ class AlarmClock(hass.Hass):
                 or (alarm_time is None)
                 or (alarm_time['state'] == 'unknown')):
             self._next_warm_up = None
-            self.log('Remove WARM UP TIME', LOG_LEVEL)
+            self.log('Remove WARM UP TIME', level=LOG_LEVEL, log=LOGGER)
             return
 
         time_alarm = dt.datetime.now().replace(
@@ -422,7 +423,7 @@ class AlarmClock(hass.Hass):
         self._handle_warm_up = self.run_daily(
             self.run_warm_up, self._next_warm_up.time())
         self.log('CHANGING WARM UP TIME TO: {:%H:%M:%S}'
-                 .format(self._next_warm_up), LOG_LEVEL)
+                 .format(self._next_warm_up), level=LOG_LEVEL, log=LOGGER)
 
     # noinspection PyUnusedLocal
     def _set_new_special_alarm_datetime(self, *args):
@@ -446,15 +447,19 @@ class AlarmClock(hass.Hass):
             self._handle_special_alarm = self.run_at(
                 self.trigger_service_in_alarm, self._next_special_alarm)
         except ValueError:
-            self.log("ERROR setting special alarm at {}!".format(time_alarm))
+            self.log("ERROR setting special alarm at {}!".format(time_alarm), log=LOGGER)
             self._handle_special_alarm = None
 
     def _set_sunrise_phase(self, *args_runin):
-        # self.log('SET_SUNRISE_PHASE: XY={xy_color}, '
-        #          'BRIGHT={brightness}, TRANSITION={transition}'
-        #          .format(**args_runin[0]), 'DEBUG')
+        params = {
+            k: v for k, v in args_runin[0].items()
+            if k in ("entity_id", "xy_color", "transition", "brightness")
+        }
+        self.log('SET_SUNRISE_PHASE: XY={xy_color}, '
+                 'BRIGHT={brightness}, TRANSITION={transition}'
+                 .format(**params), level='INFO', log=LOGGER)
         if self._in_alarm_mode:
-            self.call_service('light/turn_on', **args_runin[0])
+            self.call_service('light/turn_on', **params)
 
     # noinspection PyUnusedLocal
     def turn_on_lights_as_sunrise(self, *args):
@@ -474,12 +479,10 @@ class AlarmClock(hass.Hass):
                         entity_id=self._lights_alarm, xy_color=xy_color,
                         transition=self._transit_time, brightness=brightness)
             run_in += self._transit_time + 1
-            # self.log(f"sunrise phase {i} -> next runin {run_in}")
 
     # noinspection PyUnusedLocal
     def increase_volume(self, *args):
         """Recursive method to increase the playback volume until max."""
-        # self.log("INCREASE VOLUME GRADUALLY")
         repeat = True
         if self._in_alarm_mode and self._last_trigger is not None:
             delta_sec = (dt.datetime.now()
@@ -516,7 +519,7 @@ class AlarmClock(hass.Hass):
                 media_content_type='music',
                 media_content_id='http://api.spreaker.com/listen/'
                                  'show/1060718/episode/latest/shoutcast.mp3')
-            self.log('TRIGGER_START with special source')
+            self.log('TRIGGER_START with special source', log=LOGGER)
         else:
             self.call_service('media_player/select_source',
                               entity_id=self._media_player_sonos,
@@ -555,15 +558,18 @@ class AlarmClock(hass.Hass):
                     duration = alarm_info['duration'].total_seconds() + 20
                     self._handler_turnoff = self.run_in(
                         self.turn_off_alarm_clock, int(duration))
-                    self.log('ALARM RUNNING NOW. AUTO STANDBY PROGRAMMED '
-                             'IN {:.0f} SECONDS'.format(duration), LOG_LEVEL)
+                    self.log(
+                        'ALARM RUNNING NOW. AUTO STANDBY PROGRAMMED '
+                        'IN {:.0f} SECONDS'.format(duration),
+                        level=LOG_LEVEL, log=LOGGER
+                    )
                 else:
                     self._handler_turnoff = self.listen_state(
                         self.turn_off_alarm_clock, self._media_player_sonos,
                         new="off", duration=20)
                 self.notify_alarmclock(alarm_info)
             else:
-                self.log('POSTPONE ALARM', LOG_LEVEL)
+                self.log('POSTPONE ALARM', level=LOG_LEVEL, log=LOGGER)
                 self.run_in(self.trigger_service_in_alarm, STEP_RETRYING_SEC)
 
     def is_working_day(self):
@@ -584,20 +590,21 @@ class AlarmClock(hass.Hass):
                 self.log('ALARM CLOCK NOT TRIGGERED TODAY '
                          '(weekday={}, alarm weekdays={})'
                          .format(self.datetime().weekday(),
-                                 self._weekdays_alarm))
+                                 self._weekdays_alarm),
+                         log=LOGGER)
         else:
-            self.log('Alarm clock is running manually, no auto-triggering now')
+            self.log('Alarm clock is running manually, no auto-triggering now', log=LOGGER)
 
     # noinspection PyUnusedLocal
     def run_warm_up(self, *args):
         """Run the warm up sequence"""
         if self.is_working_day():
             self.turn_on_morning_services(dict(delta_to_repeat=10))
-            self.log('Warm up trigger')
+            self.log('Warm up trigger', log=LOGGER)
         else:
             self.run_in(self.turn_on_morning_services, 1800,
                         delta_to_repeat=10)
-            self.log('Warm up trigger in 1800 s')
+            self.log('Warm up trigger in 1800 s', log=LOGGER)
 
     # noinspection PyUnusedLocal
     def postpone_secuencia_despertador(self, *args):
@@ -608,4 +615,4 @@ class AlarmClock(hass.Hass):
         self.run_in(self.trigger_service_in_alarm,
                     self._delta_time_postponer_sec)
         self.log('Postponiendo alarma {:.1f} minutos...'
-                 .format(self._delta_time_postponer_sec / 60.))
+                 .format(self._delta_time_postponer_sec / 60.), log=LOGGER)

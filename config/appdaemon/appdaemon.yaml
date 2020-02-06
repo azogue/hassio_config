@@ -1,36 +1,57 @@
 secrets: /config/appdaemon/secrets.yaml
-log:
-  accessfile: /config/appdaemon/access.log
-  errorfile: /config/appdaemon/error.log
-  logfile: /config/appdaemon/appdaemon.log
-  log_generations: 2
-  log_size: 2000000
+logs:
+  main_log:
+    filename: /config/appdaemon/appdaemon.log
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+    log_generations: 10
+    log_size: 307200
+  access_log:
+    filename: /config/appdaemon/access.log
+  error_log:
+    filename: /config/appdaemon/errors.log
+    log_generations: 5
+    log_size: 307200
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  diag_log:
+    filename: /config/appdaemon/diag.log
+    log_generations: 5
+    log_size: 1048576
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  motion_log:
+    name: MotionLog
+    log_generations: 10
+    log_size: 1048576
+    filename: /config/appdaemon/motion_events.log
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  event_log:
+    name: EventLog
+    log_generations: 10
+    log_size: 307200
+    filename: /config/appdaemon/events.log
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  special_event_log:
+    name: SpecialEventLog
+    log_generations: 10
+    log_size: 307200
+    filename: /config/appdaemon/special_events.log
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
 appdaemon:
-  app_dir: /config/appdaemon/apps
-  threads: 30
-
-  # EXTRA - common vars
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: !secret elevation
+  time_zone: !secret time_zone
   path_base_data: /config
   path_ha_conf: /config
-
   notifier: notify.mobile_app_iphone
   chatid_sensor: sensor.telegram_default_chatid
   bot_group: notify.telegram_group
   bot_notifier: telegram_bot.send_message
-
   media_player: media_player.kodi
-
   plugins:
     HASS:
       type: hass
-      ha_url: http://hassio/homeassistant
-      ha_key: !secret ha_key
-      #commtype: SSE
-HADashboard:
-  dash_url: http://127.0.0.1:5050
-  dash_dir: /config/appdaemon/dashboards
-
-# Apps
-#hello_world:
-#  module: hello
-#  class: HelloWorld
+http:
+  url: http://127.0.0.1:5050
+hadashboard:
+admin:
+api:

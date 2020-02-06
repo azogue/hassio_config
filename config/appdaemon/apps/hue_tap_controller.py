@@ -17,11 +17,12 @@ LIGHT_PARAMS_AFTER_AMBI = {
     "profile": "relax",
     "brightness": 254,
 }
+LOGGER = "event_log"
 
 
 # noinspection PyClassHasNoInit
 class HueTapControl(hass.Hass):
-    """App to populate an input select with Kodi API calls results."""
+    """App to run commands when Hue Tap is clicked."""
 
     def initialize(self):
         """Set up appdaemon app."""
@@ -30,33 +31,48 @@ class HueTapControl(hass.Hass):
     def _tap_used(self, entity, attribute, old, new, kwargs):
         if new == "1_click":  # toggle terraza
             self.call_service("light/toggle", entity_id=LIGHT_TOGGLE)
-            self.log(f"Tap was used: {new} (before it was {old}) --> terraza is {self.get_state(LIGHT_TOGGLE)}")
+            self.log(
+                f"Tap was used: {new} (before it was {old}) "
+                f"--> terraza is {self.get_state(LIGHT_TOGGLE)}",
+                log=LOGGER,
+            )
         elif new == "2_click":  # adjust cover ventanal
             st_cover_pos = int(self.get_state(COVER_WINDOW, attribute="attributes")["current_position"])
             if st_cover_pos > 90:
                 # set position 30
                 self.call_service("cover/set_cover_position", entity_id=COVER_WINDOW, position=30)
-                self.log(f"Adjusting cover ventanal to 30 (was {st_cover_pos})")
+                self.log(
+                    f"Adjusting cover ventanal to 30 (was {st_cover_pos})",
+                    log=LOGGER,
+                )
             else:
                 # set position 100 (open)
                 self.call_service("cover/open_cover", entity_id=COVER_WINDOW)
-                self.log(f"OPEN cover ventanal (was {st_cover_pos})")
+                self.log(
+                    f"OPEN cover ventanal (was {st_cover_pos})",
+                    log=LOGGER,
+                )
         elif new == "3_click":  # adjust ambilight
             st_amb = self.get_state(SWITCH_AMBI)
             if st_amb == "off":
                 self.call_service("switch/turn_on", entity_id=SWITCH_AMBI)
-                self.log(f"Adjust Hue+ambilight to ON")
+                self.log(f"Adjust Hue+ambilight to ON", log=LOGGER)
             else:
                 self.call_service("switch/turn_off", entity_id=SWITCH_AMBI)
                 self.call_service("light/turn_on", **LIGHT_PARAMS_AFTER_AMBI)
-                self.log(f"Adjust Hue+ambilight to OFF")
+                self.log(f"Adjust Hue+ambilight to OFF", log=LOGGER)
         elif new == "4_click":  # adjust cover puerta
             st_cover_pos = int(self.get_state(COVER_DOOR, attribute="attributes")["current_position"])
             if st_cover_pos > 90:
-                # set position 50
-                self.call_service("cover/set_cover_position", entity_id=COVER_DOOR, position=50)
-                self.log(f"Adjusting cover puerta to 50 (was {st_cover_pos})")
+                # set position 60
+                self.call_service("cover/set_cover_position", entity_id=COVER_DOOR, position=60)
+                self.log(
+                    f"Adjusting cover puerta to 60 (was {st_cover_pos})",
+                    log=LOGGER,
+                )
             else:
                 # set position 100 (open)
                 self.call_service("cover/open_cover", entity_id=COVER_DOOR)
-                self.log(f"OPEN cover puerta (was {st_cover_pos})")
+                self.log(
+                    f"OPEN cover puerta (was {st_cover_pos})", log=LOGGER
+                )

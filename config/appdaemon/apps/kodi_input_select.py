@@ -21,6 +21,7 @@ ENTITY = 'input_select.kodi_results'
 MEDIA_PLAYER = 'media_player.kodi'
 DEFAULT_ACTION = "Nada que hacer"
 MAX_RESULTS = 20
+LOGGER = "event_log"
 
 
 # noinspection PyClassHasNoInit
@@ -55,13 +56,18 @@ class DynamicKodiInputSelect(hass.Hass):
                 self._ids_options.update(dict(zip(*zip(*data))))
                 labels = list(list(zip(*data))[0])
                 self._last_values = labels
-                self.log('{} NEW MOVIE OPTIONS:\n{}'
-                         .format(len(labels), labels))
+                self.log(
+                    '{} NEW MOVIE OPTIONS:\n{}'.format(len(labels), labels),
+                    log=LOGGER,
+                )
                 self.call_service('input_select/set_options', entity_id=ENTITY,
                                   options=[DEFAULT_ACTION] + labels)
-                self.set_state(ENTITY,
-                               attributes={"friendly_name": 'Recent Movies',
-                                           "icon": 'mdi:movie'})
+                self.set_state(
+                    ENTITY,
+                    state=DEFAULT_ACTION,
+                    attributes={"friendly_name": 'Recent Movies', "icon": 'mdi:movie'},
+                    # replace=True,
+                )
             elif method == 'VideoLibrary.GetRecentlyAddedEpisodes':
                 values = result['episodes']
                 data = [('{} - {}'.format(r['showtitle'], r['label']),
@@ -74,16 +80,22 @@ class DynamicKodiInputSelect(hass.Hass):
                     # First press --> filter non watched episodes
                     data = filter(lambda x: not x[1][2], data)
                     labels = list(list(zip(*data))[0])
-                self.log('{} NEW TVSHOW OPTIONS:\n{}'
-                         .format(len(labels), labels))
+                self.log(
+                    '{} NEW TVSHOW OPTIONS:\n{}'.format(len(labels), labels),
+                    log=LOGGER,
+                )
                 self._ids_options.update(d_data)
 
                 self._last_values = labels
                 self.call_service('input_select/set_options', entity_id=ENTITY,
                                   options=[DEFAULT_ACTION] + labels)
-                self.set_state(ENTITY,
-                               attributes={"friendly_name": 'Recent TvShows',
-                                           "icon": 'mdi:play-circle'})
+                self.set_state(
+                    ENTITY,
+                    state=DEFAULT_ACTION,
+                    attributes={"friendly_name": 'Recent TvShows',
+                                "icon": 'mdi:play-circle'},
+                    # replace=True,
+                )
             elif method == 'PVR.GetChannels':
                 values = result['channels']
                 data = [(r['label'], ('CHANNEL', r['channelid'], None))
@@ -91,23 +103,34 @@ class DynamicKodiInputSelect(hass.Hass):
                 self._ids_options.update(dict(zip(*zip(*data))))
                 labels = list(list(zip(*data))[0])
                 self._last_values = labels
-                self.log('{} NEW PVR OPTIONS:\n{}'.format(len(labels), labels))
+                self.log(
+                    '{} NEW PVR OPTIONS:\n{}'.format(len(labels), labels),
+                    log=LOGGER,
+                )
                 self.call_service('input_select/set_options', entity_id=ENTITY,
                                   options=[DEFAULT_ACTION] + labels)
-                self.set_state(ENTITY,
-                               attributes={"friendly_name": 'TV channels',
-                                           "icon": 'mdi:play-box-outline'})
+                self.set_state(
+                    ENTITY,
+                    state=DEFAULT_ACTION,
+                    attributes={"friendly_name": 'TV channels', "icon": 'mdi:play-box-outline'},
+                    # replace=True,
+                )
             elif method == 'PVR.GetRecordings':
                 try:
                     values = sorted(result['recordings'],
                                     key=lambda x: x['starttime'], reverse=True)
                 except KeyError as exc:
-                    self.log("No recordings found: {}".format(result),
-                             "WARNING")
+                    self.log(
+                        "No recordings found: {}".format(result),
+                        log=LOGGER,
+                        level="WARNING",
+                    )
                     self.persistent_notification(
                         "No recordings found: {}. Can't set recordings menu"
-                            .format(result), title="KODI ERROR",
-                        id='bad_set_kodi_recordings')
+                        .format(result),
+                        title="KODI ERROR",
+                        id='bad_set_kodi_recordings'
+                    )
                     return
 
                 def _date(starttime):
@@ -127,29 +150,40 @@ class DynamicKodiInputSelect(hass.Hass):
                 self._ids_options.update(dict(zip(*zip(*data))))
                 labels = list(list(zip(*data))[0])
                 self._last_values = labels
-                self.log('{} NEW PVR RECORDING OPTS:\n{}'.format(
-                    len(labels), labels))
+                self.log(
+                    '{} NEW PVR RECORDING OPTS:\n{}'
+                    .format(len(labels), labels),
+                    log=LOGGER,
+                )
                 self.call_service('input_select/set_options', entity_id=ENTITY,
                                   options=[DEFAULT_ACTION] + labels)
-                self.set_state(ENTITY,
-                               attributes={"friendly_name": 'TV Recordings',
-                                           "icon": 'mdi:play-box-outline'})
+                self.set_state(
+                    ENTITY,
+                    state=DEFAULT_ACTION,
+                    attributes={"friendly_name": 'TV Recordings',
+                                "icon": 'mdi:play-box-outline'},
+                    # replace=True,
+                )
 
     # noinspection PyUnusedLocal
     def _change_selected_result(self, entity, attribute, old, new, kwargs):
         if new != old:
-            # self.log('SELECTED OPTION: {} (from {})'.format(new, old))
             try:
                 selected = self._ids_options[new]
             except KeyError as exc:
                 self.persistent_notification(
-                    "Selection not found: '{}'. Sorry. Keys are: {}".format(new, self._ids_options.keys()), title="KODI OPTIONS ERROR",
-                    id='bad_select_kodi_option')
+                    "Selection not found: '{}'. Sorry. Keys are: {}"
+                    .format(new, self._ids_options.keys()),
+                    title="KODI OPTIONS ERROR",
+                    id='bad_select_kodi_option'
+                )
                 return
             if selected:
                 mediatype, file, _last_played = selected
-                self.log('PLAY MEDIA: {} {} [file={}]'
-                         .format(mediatype, new, file))
+                self.log(
+                    'PLAY MEDIA: {} {} [file={}]'.format(mediatype, new, file),
+                    log=LOGGER,
+                )
                 self.call_service('media_player/play_media',
                                   entity_id=MEDIA_PLAYER,
                                   media_content_type=mediatype,

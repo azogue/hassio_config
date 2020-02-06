@@ -17,6 +17,7 @@ import appdaemon.plugins.hass.hassapi as hass
 
 
 LOG_LEVEL = 'DEBUG'
+LOGGER = "event_log"
 
 EVENT_KODI_CALL_METHOD_RESULT = 'kodi_call_method_result'
 
@@ -118,24 +119,27 @@ class KodiAssistant(hass.Hass):
                 and method == METHOD_GET_ITEM:
             if 'item' in result:
                 item = result['item']
-                new_video = (self._item_playing is None
-                             or self._item_playing != item)
                 self._is_playing_video = item['type'] in TYPE_ITEMS_NOTIFY
-                self._item_playing = item
+                title = message = img_url = ""
+                if self._is_playing_video:
+                    title, message, img_url = self._get_kodi_info_params(item)
+                new_video = (self._item_playing is None
+                             or self._item_playing != title)
                 delta = self.datetime() - self._last_play
+                self._last_play = self.datetime()
                 if (self._is_playing_video and
-                        (new_video or delta > dt.timedelta(minutes=20))):
-                    self._last_play = self.datetime()
+                        (new_video or delta > dt.timedelta(minutes=30))):
                     self._adjust_kodi_lights(play=True)
+                    self._item_playing = title
                     # Notifications
-                    self._notify_ios_message(self._item_playing)
-                    self._notify_telegram_message(self._item_playing)
+                    self._notify_ios_message(title, message, img_url)
+                    self._notify_telegram_message(title, message, img_url)
             else:
                 self.log('RECEIVED BAD KODI RESULT: {}'
-                         .format(result), 'WARNING')
+                         .format(result), level='WARNING', log=LOGGER)
         elif event_id == EVENT_KODI_CALL_METHOD_RESULT \
                 and method == METHOD_GET_PLAYERS:
-            self.log('KODI GET_PLAYERS RECEIVED: {}'.format(result))
+            self.log('KODI GET_PLAYERS RECEIVED: {}'.format(result), log=LOGGER)
 
     def _get_kodi_info_params(self, item):
         """
@@ -173,7 +177,7 @@ class KodiAssistant(hass.Hass):
             elif 'season.poster' in item['art']:
                 raw_img_url = item['art']['season.poster']
             else:
-                self.log('No poster in item[art]={}'.format(item['art']))
+                self.log('No poster in item[art]={}'.format(item['art']), log=LOGGER)
                 k = list(item['art'].keys())[0]
                 raw_img_url = item['art'][k]
             img_url = parse.unquote_plus(
@@ -182,20 +186,19 @@ class KodiAssistant(hass.Hass):
                     and img_url.startswith('http://'):
                 img_url = img_url.replace('http:', 'https:')
             # self.log('MESSAGE: T={}, M={}, URL={}'
-            #          .format(title, message, img_url))
+            #          .format(title, message, img_url), log=LOGGER)
         except KeyError as e:
-            self.log('MESSAGE KeyError: {}; item={}'.format(e, item))
-        return title, message, img_url
+            self.log('MESSAGE KeyError: {}; item={}'.format(e, item), log=LOGGER)
+        return title, message, img_url.replace("//", "/")
 
     def _valid_image_url(self, img_url):
         if (img_url is not None) and img_url.startswith('http'):
             return True
         if img_url is not None:
-            self.log('BAD IMAGE URL: {}'.format(img_url), level='WARNING')
+            self.log('BAD IMAGE URL: {}'.format(img_url), level='WARNING', log=LOGGER)
         return False
 
-    def _notify_ios_message(self, item):
-        title, message, img_url = self._get_kodi_info_params(item)
+    def _notify_ios_message(self, title, message, img_url):
         if self._valid_image_url(img_url):
             data_msg = {"title": title, "message": message,
                         "data": {"attachment": {"url": img_url},
@@ -205,8 +208,7 @@ class KodiAssistant(hass.Hass):
                         "data": {"push": {"category": "kodiplay"}}}
         self.call_service(self._ios_notifier, **data_msg)
 
-    def _notify_telegram_message(self, item):
-        title, message, img_url = self._get_kodi_info_params(item)
+    def _notify_telegram_message(self, title, message, img_url):
         target = int(self.get_state(self._target_sensor))
         if self._valid_image_url(img_url):
             data_photo = {
@@ -229,14 +231,14 @@ class KodiAssistant(hass.Hass):
             if auto_state and play:
                 # Turn off automation
                 self.call_service("automation/turn_off", entity_id=auto)
-                self.log("Set automation off: {}".format(auto))
+                self.log("Set automation off: {}".format(auto), log=LOGGER)
             elif not auto_state and not play:
                 # Turn on automation
                 self.call_service("automation/turn_on", entity_id=auto)
-                self.log("Set automation on: {}".format(auto))
+                self.log("Set automation on: {}".format(auto), log=LOGGER)
             else:
                 self.log("Strange: automation is {} and play mode is {}"
-                         .format(auto_state, play))
+                         .format(auto_state, play), log=LOGGER)
 
         k_l = self._lights['dim'][self._lights['state']] + self._lights['off']
         for light_id in k_l:
@@ -249,13 +251,13 @@ class KodiAssistant(hass.Hass):
                     max_brightness = self._get_max_brightness_ambient_lights()
                     if light_id in self._lights['off']:
                         self.log('Apagando light {} para KODI PLAY'
-                                 .format(light_id), LOG_LEVEL)
+                                 .format(light_id), level=LOG_LEVEL, log=LOGGER)
                         self.call_service(
                             "light/turn_off", entity_id=light_id, transition=2)
                     elif ("brightness" in attrs_light.keys()
                           ) and (attrs_light["brightness"] > max_brightness):
                         self.log('Atenuando light {} para KODI PLAY'
-                                 .format(light_id), LOG_LEVEL)
+                                 .format(light_id), level=LOG_LEVEL, log=LOGGER)
                         self.call_service(
                             "light/turn_on", entity_id=light_id,
                             transition=2, brightness=max_brightness)
@@ -275,12 +277,12 @@ class KodiAssistant(hass.Hass):
                             "color_temp": state_before["color_temp"],
                             "brightness": state_before["brightness"]}
                     self.log('Reponiendo light {}, con state_before={}'
-                             .format(light_id, state_before), LOG_LEVEL)
+                             .format(light_id, state_before), level=LOG_LEVEL, log=LOGGER)
                     self.call_service("light/turn_on", entity_id=light_id,
                                       transition=2, **new_state_attrs)
                 else:
                     self.log('Doing nothing with light {}, state_before={}'
-                             .format(light_id, state_before), LOG_LEVEL)
+                             .format(light_id, state_before), level=LOG_LEVEL, log=LOGGER)
 
     # noinspection PyUnusedLocal
     def kodi_state(self, entity, attribute, old, new, kwargs):
@@ -292,15 +294,14 @@ class KodiAssistant(hass.Hass):
                 'media_content_type' in kodi_attrs
                 and kodi_attrs['media_content_type'] in TYPE_HA_ITEMS_NOTIFY)
             # self.log('KODI ATTRS: {}, is_playing_video={}'
-            #          .format(kodi_attrs, self._is_playing_video))
+            #          .format(kodi_attrs, self._is_playing_video), log=LOGGER)
             if self._is_playing_video:
                 self._ask_for_playing_item()
         elif ((new == 'idle') and self._is_playing_video) or (new == 'off'):
             self._is_playing_video = False
             self._last_play = self.datetime()
             self.log('KODI STOP. old:{}, new:{}, type_lp={}'
-                     .format(old, new, type(self._last_play)), LOG_LEVEL)
-            # self._item_playing = None
+                     .format(old, new, type(self._last_play)), level=LOG_LEVEL, log=LOGGER)
             self._adjust_kodi_lights(play=False)
 
     # noinspection PyUnusedLocal
@@ -308,4 +309,4 @@ class KodiAssistant(hass.Hass):
         """Change dim lights group with the change in the ambilight switch."""
         self._lights['state'] = new
         self.log('Dim Lights group changed from {} to {}'
-                 .format(self._lights['dim'][old], self._lights['dim'][new]))
+                 .format(self._lights['dim'][old], self._lights['dim'][new]), log=LOGGER)

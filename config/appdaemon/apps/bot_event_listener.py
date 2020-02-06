@@ -17,10 +17,9 @@ from time import time
 
 import appdaemon.plugins.hass.hassapi as hass
 from fuzzywuzzy.process import extractOne
-# import paramiko
-
 
 LOG_LEVEL = 'DEBUG'
+LOGGER = "event_log"
 
 ##################################################
 # Colors, regexprs...
@@ -85,12 +84,6 @@ TELEGRAM_BOT_HELP = '''*Comandos disponibles*:
 /desconectar - Desconectar la alarma.
 /despertadoroff - Luces de dormitorio en 'Energy'.
 /ducha - Luces de dormitorio en 'Energy' y encendido del calefactor.
-/enerpi - Muestra información general sobre el consumo eléctrico actual.
-/enerpifact - IMPLEMENTAR
-/enerpikwh - Gráfica de 24h del consumo eléctrico en kWh y € de factura.
-/enerpipower - Muestra la gráfica de 24h de la potencia eléctrica.
-/enerpitiles - Gráficas de 24h del sensor enerPI.
-/getcams - Devuelve instantáneas de las cámaras de la casa.
 /hasswiz - Inicia el asistente para interactuar con Home Assistant.
 /hastatus - Devuelve información sobre el funcionamiento de Home Assistant.
 /help - Muestra la descripción de los comandos disponibles.
@@ -134,8 +127,7 @@ TELEGRAM_HASS_CMDS = ['/getcams', '/status', '/hastatus', '/html', '/template',
                       '/service_call', '/help', '/start', '/test',
                       '/timeroff', '/timeron', '/canceltimer',
                       '/playkodi', '/plaympd',
-                      '/enerpi', '/enerpifact', '/enerpitiles',
-                      '/enerpikwh', '/enerpipower', '/init', '/hasswiz']
+                      '/init', '/hasswiz']
 TELEGRAM_IOS_COMMANDS = {  # AWAY category
                          '/armado': 'ALARM_ARM_NOW',  # Activar alarma
                          '/vigilancia': 'ALARM_HOME',  # Activar vigilancia
@@ -174,8 +166,6 @@ TELEGRAM_INLINE_KEYBOARD = [
     [('Llegada', '/llegada'), ('Llegada con TV', '/llegadatv')],
     [('Enciende luces', '/luceson'), ('Ambilight', '/ambilighttoggle')],
     [('Estado general', '/status'), ('HA status', '/hastatus')],
-    [('LOG HA', '/cathass'), ('LOG', '/catappd'), ('LOG ERR', '/catappderr')],
-    [('ENERGY', '/enerpi'), ('CAMS', '/getcams')],
     [('Home assistant wizard!', '/hasswiz'), ('Ayuda', '/help')]
 ]
 TELEGRAM_UNKNOWN = [
@@ -192,22 +182,9 @@ TELEGRAM_UNKNOWN = [
 TELEGRAM_KEYBOARD = ['/armado, /lucesoff',
                      '/llegada, /llegadatv',
                      '/luceson, /ambilighttoggle',
-                     '/cathass, /catappd, /catappderr',
-                     '/enerpi, /enerpitiles, /getcams',
+                     '/getcams',
                      '/status, /hastatus, /help',
                      '/hasswiz, /init']
-TELEGRAM_INLINE_KEYBOARD_ENERPI = [
-    [('Apaga luces', '/lucesoff'), ('Enciende luces', '/luceson')],
-    [('Potencia eléctrica', '/enerpi'), ('Consumo 24h', '/enerpikwh')],
-    [('Potencia 24h', '/enerpipower'), ('Grafs. enerPI', '/enerpitiles')]
-]
-TELEGRAM_KEYBOARD_ENERPI = ['/lucesoff, /luceson',
-                            '/enerpi, /enerpikwh',
-                            '/enerpipower, /enerpitiles']
-ENERPI_TILES = ['enerpi_tile_kwh', 'enerpi_tile_power', 'enerpi_tile_ldr']
-ENERPI_TILES_DESC = ['Consumo en kWh y € (24h)', 'Potencia eléctrica, W (24h)',
-                     'Iluminación']
-
 HASSWIZ_MENU_ACTIONS = [("Anterior ⬅︎", "op:back"),
                         ("Inicio ▲", "op:reset"), ("Salir ✕", "op:exit")]
 HASSWIZ_TYPES = ["switch", "light", "group", "sensor", "binary_sensor"]
@@ -305,19 +282,6 @@ ESP Binary sensor: {{states.switch.use_esp1_pir.state}}
 ESP Online: {{states.binary_sensor.cocina_online.state}} ({{relative_time(states.binary_sensor.cocina_online.last_changed)}})
 
 *{{states.switch.cocina.attributes.friendly_name}}* -> {{states.switch.cocina.state}} ({{relative_time(states.switch.cocina.last_changed)}})'''
-CMD_STATUS_TEMPL_ESTUDIO = '''*Estudio*:
-*LUCES* -> {{states.light.estudio.state}} ({{relative_time(states.light.estudio.last_changed)}})
-- Tª: {% if states.sensor.dht22_temperature_rpi2h.state != 'unknown' %}{{(((states.sensor.dht22_temperature_rpi2h.state|float) + (states.sensor.temperatura_estudio_rpi2h.state|float)) / 2)|round(1)}}{% else %}{{ states.sensor.temperatura_estudio_rpi2h.state }}{% endif %} ºC
-- HR: {{states.sensor.dht22_humidity_rpi2h.state}} %
-- Tªh: {{states.sensor.temperature_rpi2h.state}} ºC
-- HRh: {{states.sensor.humidity_rpi2h.state}} %
-- P: {{states.sensor.pressure_rpi2h.state}} mbar
-- Mov: {{states.binary_sensor.pir_estudio_rpi2h.state}} ({{relative_time(states.binary_sensor.pir_estudio_rpi2h.last_changed)}})
-- VMov: {{states.binary_sensor.motioncam_estudio.state}} ({{relative_time(states.binary_sensor.motioncam_estudio.last_changed)}})
-- Vibr: {{states.binary_sensor.vibration_sensor_rpi2h.state}} ({{relative_time(states.binary_sensor.vibration_sensor_rpi2h.last_changed)}})
-Enchufe Impresora: {{states.switch.impresora.state}} ({{relative_time(states.switch.impresora.last_changed)}})
-
-*Flexo* -> {{states.light.flexo.state}} ({{relative_time(states.light.flexo.last_changed)}})'''
 CMD_STATUS_TEMPL_GALERIA = '''*Galería*:
 - Tª: {{states.sensor.galeria_dht22_temperature.state}} ºC
 - HR: {{states.sensor.galeria_dht22_humidity.state}} %'''
@@ -327,12 +291,6 @@ CMD_STATUS_TEMPL_HEATER = '''*Caldera*:
 - ACS: {{states.sensor.galeria_acs.state}} ºC
 - Impulsión: {{states.sensor.galeria_impulsion_calefaccion.state}} ºC
 - Retorno: {{states.sensor.galeria_retorno_calefaccion.state}} ºC'''
-CMD_STATUS_TEMPL_ENERPI = '''*Consumo eléctrico*:
-- Potencia: *{{states.sensor.enerpi_power.state}} W* ({{states.sensor.enerpi.state}}, P5min: {{ states.sensor.enerpi.attributes['Power 5min (W)']|round() }} W)
-- Pico hoy: {{ states.sensor.enerpi.attributes['Power Peak (today)'] }} W
-- Consumo hoy: *{{ states.sensor.enerpi.attributes['Consumption Day (Wh)']|multiply(0.001)|round(2) }} kWh*
-- Consumo últimos días: {{ states.sensor.enerpi.attributes['Consumption Week (kWh)'] |replace(",", "; ") }} kWh
-  Ilum: {{states.sensor.enerpi_ldr.state}} %'''
 CMD_STATUS_TEMPL_ESP = '''*ESP8266*:
 - Tª: {{states.sensor.esp2_temperature.state}} ºC
 - HR: {{states.sensor.esp2_humidity.state}} %
@@ -347,24 +305,11 @@ ESP Online: {{states.binary_sensor.esp2_online.state}} ({{relative_time(states.b
 CMD_TEMPL_HASS_STATUS = '''*HASS Status*:
 *¿Problemas? -> {{states.binary_sensor.services_notok.state}}* ({{relative_time(states.binary_sensor.services_notok.last_changed)}})
 - IP: {{states.sensor.ip_externa.state}}
-- Internet: *{{states.binary_sensor.internet_online.state}}*, Router: {{states.binary_sensor.router_on.state}}, DL {{states.sensor.speedtest_download.state|int}} Mbps / UL {{states.sensor.speedtest_upload.state|int}} Mbps / ping {{states.sensor.speedtest_ping.state|int}}ms
-Servicios:
-- AppDaemon: *{{states.switch.systemd_appdaemon.state}}* ({{relative_time(states.switch.systemd_appdaemon.last_changed)}})
-- Homebridge: *{{states.switch.systemd_homebridge.state}}* ({{relative_time(states.switch.systemd_homebridge.last_changed)}})
-- Notify: Telegram {{states.binary_sensor.telegram_online.state}}, iOS {{states.binary_sensor.ios_online.state}}, Pushbullet {{states.binary_sensor.pushbullet_online.state}}, email {{states.binary_sensor.email_online.state}}, Kodi {{states.binary_sensor.kodi_online.state}}.
-Funcionando desde {{states.sensor.last_boot.state}} (HASS {{relative_time(states.sensor.last_boot.last_changed)}}). CPU al {{states.sensor.cpu_use.state}} %, RAM FREE {{states.sensor.ram_free.state}} MB, SD al {{states.sensor.disk_use_home.state}} %.
-- {{states.sensor.error_counter_notifiers.state}} warnings de notificación.
-- {{states.sensor.warning_counter_core.state}} core warnings.
-- {{states.sensor.core_error_counter.state}} core errors.'''
+- Internet: DL {{states.sensor.speedtest_download.state|int}} Mbps / UL {{states.sensor.speedtest_upload.state|int}} Mbps / ping {{states.sensor.speedtest_ping.state|int}}ms
+Funcionando desde {{states.sensor.last_boot.state}} (HASS {{relative_time(states.sensor.last_boot.last_changed)}}). CPU {{states.sensor.processor_use.state}} %, Tª {{states.sensor.hass_cpu_temperature.state}} %, RAM FREE {{states.sensor.memory_free.state}} MB, SD al {{states.sensor.disk_use_percent.state}} %'''
 
-# Custom shell script for capture a pic from a HASS camera:
-CMD_MAKE_HASS_PIC = '/home/homeassistant/.homeassistant/shell/capture_pic.sh' \
-                    ' snapshot_cameras/{cam_filename} {img_url} {hass_pw}'
-PIC_STATIC_URL = '{}/local/snapshot_cameras/{}'
 MAIN_PLAYER = 'media_player.kodi'
 BEDROOM_PLAYER = 'media_player.dormitorio_mopidy'
-
-CLOUD_CONVERT_API_TOKEN = 'TXh-teNxR30jl1wgjfdMNH59yeaub8diSKiXUgqpNFa0Na2cRrFFaFDUlXqiaz9qN80ZgdCU2cm0N3d2o9QUwQ'
 
 
 def _clean(telegram_text):
@@ -378,7 +323,6 @@ class EventListener(hass.Hass):
     """Event listener for ios actions and Telegram bot events."""
 
     # _config = None
-    _ha_key = None
     _base_url = None
 
     _lights_notif = None
@@ -404,7 +348,6 @@ class EventListener(hass.Hass):
 
     def initialize(self):
         """AppDaemon required method for app init."""
-        self._ha_key = self.args.get('ha_key')
         self._bot_name = '@' + self.args.get('bot_name')
         self._base_url = self.args.get('base_url')
         self._notifier = self.config.get('notifier').replace('.', '/')
@@ -466,7 +409,7 @@ class EventListener(hass.Hass):
                     friendly_name = self.friendly_name(entity_id)
                 else:
                     self.log('Entity not recognized: "{}" -> {}'
-                             .format(entity_id_name, choices))
+                             .format(entity_id_name, choices), log=LOGGER)
         else:
             # Fuzzy lookup in friendly names
             choices = self._hass_entities_plain.values()
@@ -476,7 +419,7 @@ class EventListener(hass.Hass):
                 entity_id = list(sorted(filter(
                     lambda x: self._hass_entities_plain[x] == friendly_name,
                     self._hass_entities_plain), reverse=True))
-                self.log('fuzzy: {} --> {}'.format(found, entity_id), 'DEBUG')
+                self.log('fuzzy: {} --> {}'.format(found, entity_id), level='DEBUG', log=LOGGER)
                 entity_id = entity_id[0]
             else:
                 # Fuzzy lookup in entity names
@@ -488,24 +431,8 @@ class EventListener(hass.Hass):
                     simple_found)
                 friendly_name = self.friendly_name(entity_id)
         self.log('Entity fuzzy recog: "{}" -> `{}`, "{}"'
-                 .format(entity_id_name, entity_id, friendly_name))
+                 .format(entity_id_name, entity_id, friendly_name), log=LOGGER)
         return entity_id, friendly_name
-
-    # def _ssh_command_output(self, user, host, command, timeout=10):
-    #     """Exec a ssh command in a remote host.
-    #
-    #     Returns ok, render, filtered_stdout
-    #     """
-    #     ssh = paramiko.SSHClient()
-    #     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    #     ssh.connect(host, username=user, key_filename=PATH_SSH_KEY)
-    #     _, stdout, stderr = ssh.exec_command(command, timeout=timeout)
-    #     out = stdout.read().decode()[:-1]
-    #     if not out:
-    #         out = stderr.read().decode()[:-1]
-    #         self.log('SSH ERROR: {}'.format(out))
-    #         return False, False, RG_COLOR.sub('', out)
-    #     return True, False, RG_COLOR.sub('', out)
 
     def _shell_command_output(self, cmd, timeout=10, **kwargs):
         """Exec a shell command in a subprocess and capture output.
@@ -520,125 +447,18 @@ class EventListener(hass.Hass):
             return True, False, RG_COLOR.sub('', out)
         except subprocess.CalledProcessError as e:
             self.log('CalledProcessError with {} -> {}, [{}]'
-                     .format(cmd, e, e.__class__))
+                     .format(cmd, e, e.__class__), log=LOGGER)
             return False, False, e.output.decode()
         except Exception as e:
             clean_e = str(e).replace('[', '(').replace(']', ')')
             msg = 'CHECK_OUTPUT ERROR: {} {}'.format(clean_e, e.__class__)
             return False, False, msg
 
-    def _gen_hass_cam_pics(self, cam_entity_id):
-        """curl -s
-        -o /home/homeassistant/.homeassistant/www/snapshot_cameras/{file}.jpg
-        -H "x-ha-access: {hass_pw}" {base_url}/api/camera_proxy/{cam_name}
-        """
-        # TODO usar camera/snapshot
-        # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity ESCAM QF001: idle>.jpg"}
-        # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity PiCamera Estudio: idle>.jpg"}
-        # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity Psychrometric chart: idle>.svg"}
-        # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity Psychrometric chart: idle>.jpg"}
-
-        # {"caption": "*Test msg 1*", "file": "/home/homeassistant/picamera/snapshot_<Entity PiCamera Estudio: idle>.jpg"}
-        file = cam_entity_id.replace('_', '') + '.jpg'
-        img_url = '{}/api/camera_proxy/camera.{}'.format(
-            self._base_url, cam_entity_id)
-        cmd = CMD_MAKE_HASS_PIC.format(
-            hass_pw=self._ha_key,
-            img_url=img_url, cam_filename=file)
-        ok, _, _ = self._shell_command_output(cmd, timeout=5)
-        if not ok:
-            self.log('HASS CAM BAD PIC {} -> {}'.format(cam_entity_id, file))
-        return PIC_STATIC_URL.format(self._base_url, file)
-
     def _exec_bot_shell_command(self, command, args, timeout=20, **kwargs):
         self.log('in shell_command_output with "{}", "{}"'
-                 .format(command, args), LOG_LEVEL)
-        # if command == '/tvshowscron':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     cmd = SSH_PYTHON_ENVS_PREFIX[host].format(user)
-        #     cmd += "python /home/osmc/PYTHON/cronify"
-        #     ok, render, out = self._ssh_command_output(user, host, cmd, timeout)
-        #     if ok:  # pretty print
-        #         pp_out = '*{}*\n'.format(out.splitlines()[0])
-        #         render = True
-        #         pp_out += '\n'.join(
-        #             ['- `{}`\n  --> NEXT *{} {}* (last: {} {})\n'.format(
-        #                 f[5], f[8], f[7], f[10], f[9])
-        #              for f in RG_CRON_JOB.findall(out)]) + '\n'
-        #         reboot_found = '\n'.join(['- `{}`\n'.format(
-        #             f[0]) for f in RG_CRON_JOB_REBOOT.findall(out)])
-        #         if reboot_found:
-        #             pp_out += 'Reboot JOBS:\n{}\n'.format(reboot_found)
-        #         return ok, render, pp_out
-        #     return ok, render, out
-        # elif command == '/tvshowsnext':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     cmd = SSH_PYTHON_ENVS_PREFIX[host].format(user)
-        #     cmd += "python /home/osmc/PYTHON/tvshows --next"
-        #     ok, render, out = self._ssh_command_output(user, host, cmd, 40)
-        #     if ok:  # pretty print
-        #         pp_out = '*{}*\n'.format(out.splitlines()[0])
-        #         render = True
-        #         for l in out.splitlines():
-        #             found = RG_TVS_DF.findall(l)
-        #             if found:
-        #                 found = list(found[0])
-        #                 found[2], found[3] = int(found[2]), int(found[3])
-        #                 pp_out += '_{}_ *{} S{:02d}E{:02d}* {}\n'.format(*found)
-        #         return ok, render, pp_out
-        #     return ok, render, out
-        # elif command == '/tvshowsinfo':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     cmd = SSH_PYTHON_ENVS_PREFIX[host].format(user)
-        #     cmd += "python /home/osmc/PYTHON/tvshows -i " + ' '.join(args)
-        #     return self._ssh_command_output(user, host, cmd, 600)
-        # elif command == '/tvshowsdd':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     cmd = SSH_PYTHON_ENVS_PREFIX[host].format(user)
-        #     cmd += "python /home/osmc/PYTHON/tvshows -dd " + ' '.join(args)
-        #     return self._ssh_command_output(user, host, cmd, 600)
-        # elif command == '/osmc':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     if args and args[0].startswith('python'):
-        #         args = SSH_PYTHON_ENVS_PREFIX[host].format(user) + ' '.join(args)
-        #     return self._ssh_command_output(user, host, args, timeout)
-        # elif command == '/osmcmail':
-        #     user, host = 'osmc', 'rpi3osmc'
-        #     cmd = 'tail -n 100 /var/mail/osmc'
-        #     return self._ssh_command_output(user, host, cmd, timeout)
-        # elif (command == '/rpi3') or (command == '/rpi3w'):
-        #     user, host = 'pi', 'rpi3w'
-        #     if args and args[0].startswith('python'):
-        #         args = SSH_PYTHON_ENVS_PREFIX[host].format(user) + ' '.join(args)
-        #     return self._ssh_command_output(user, host, args, timeout)
-        # elif command == '/rpi2':
-        #     user, host = 'pi', 'rpi2'
-        #     if args and args[0].startswith('python'):
-        #         args = SSH_PYTHON_ENVS_PREFIX[host].format(user) + ' '.join(args)
-        #     return self._ssh_command_output(user, host, args, timeout)
-        # elif command == '/rpi2h':
-        #     user, host = 'pi', 'rpi2h'
-        #     if args and args[0].startswith('python'):
-        #         args = SSH_PYTHON_ENVS_PREFIX[host].format(user) + ' '.join(args)
-        #     return self._ssh_command_output(user, host, args, timeout)
-        # elif command == '/rpi':
-        #     user, host = 'pi', 'rpi'
-        #     if args and args[0].startswith('python'):
-        #         args = SSH_PYTHON_ENVS_PREFIX[host].format(user) + ' '.join(args)
-        #     return self._ssh_command_output(user, host, args, timeout)
-        # el
+                 .format(command, args), level=LOG_LEVEL, log=LOGGER)
         if command == '/pitemps':
             cmd = 'python3 /home/pi/pitemps.py'
-            return self._shell_command_output(cmd, timeout=timeout, **kwargs)
-        elif command == '/cathass':
-            cmd = 'tail -n 100 ' \
-                  '/home/homeassistant/.homeassistant/home-assistant.log'
-            return self._shell_command_output(cmd, timeout=timeout, **kwargs)
-        elif command == '/catappd':
-            cmd = 'tail -n 100 /home/homeassistant/appdaemon.log'
-            return self._shell_command_output(cmd, timeout=timeout, **kwargs)
-        elif command == '/catappderr':
-            cmd = 'tail -n 100 /home/homeassistant/appdaemon_err.log'
             return self._shell_command_output(cmd, timeout=timeout, **kwargs)
         else:  # shell cmd
             return self._shell_command_output(' '.join(args), timeout=timeout, **kwargs)
@@ -653,7 +473,7 @@ class EventListener(hass.Hass):
         action = 'Encendido' if mode == 'on' else 'Apagado'
         run_delay = context['run_delay']
         self.log('Scheduled RUN: TimerOut turn_{} {} after {}s'
-                 .format(mode, entity_id, run_delay))
+                 .format(mode, entity_id, run_delay), log=LOGGER)
         cmd = '/service_call homeassistant/turn_'
         keyboard = ['Encender {}:{}on {}'.format(fn, cmd, entity_id),
                     'Apagar {}:{}off {}'.format(fn, cmd, entity_id)]
@@ -669,7 +489,7 @@ class EventListener(hass.Hass):
         handler = self._scheduled.pop((mode, entity_id))
         self.cancel_timer(handler)
         self.log('Cancelled Timer {}. Scheduled calls: {}'
-                 .format(handler, self._scheduled))
+                 .format(handler, self._scheduled), log=LOGGER)
 
     def _bot_hass_cmd(self, command, cmd_args, user_id):
         serv = self._bot_notifier + '/send_message'
@@ -724,7 +544,7 @@ class EventListener(hass.Hass):
                     else:
                         self.error('Service call bad args (no JSON): {}'
                                    .format(cmd_args))
-            self.log('Generic Service call: {}({})'.format(serv, msg))
+            self.log('Generic Service call: {}({})'.format(serv, msg), log=LOGGER)
         elif command == '/playkodi' or command == '/plaympd':
             use_kodi = command == '/playkodi'
             prefix = 'PLAY MEDIA ({})'.format(command)
@@ -782,10 +602,10 @@ class EventListener(hass.Hass):
                 msg['message'] = "*Timer {}*: {} -> delay: {} sec".format(
                     mode.upper(), cmd_args, run_delay)
                 self.log('Timer {} entity {} in {}s ({}) -> {}'
-                         .format(mode, entity, run_delay, runtime, handler))
+                         .format(mode, entity, run_delay, runtime, handler), log=LOGGER)
             else:
                 self.log('Timer {} bad call: {}'
-                         .format(mode.upper(), cmd_args))
+                         .format(mode.upper(), cmd_args), log=LOGGER)
         elif command == '/canceltimer':
             # /cancel_timer handler_id
             prefix = 'HASS CANCEL TIMER'
@@ -803,7 +623,7 @@ class EventListener(hass.Hass):
                             mode, entity_id)
                     else:
                         self.log("Can't cancel timer {} {}: {}"
-                                 .format(mode, entity_id, self._scheduled))
+                                 .format(mode, entity_id, self._scheduled), log=LOGGER)
                 else:
                     handler = cmd_args[0]
                     keys = list(filter(
@@ -815,9 +635,9 @@ class EventListener(hass.Hass):
                             *keys[0])
                     else:
                         self.log("Can't cancel timer with handler_id {}, {}"
-                                 .format(handler, self._scheduled))
+                                 .format(handler, self._scheduled), log=LOGGER)
             else:
-                self.log('Cancel Timer bad call (no args!)')
+                self.log('Cancel Timer bad call (no args!)', log=LOGGER)
         elif command == '/status':
             # multiple messaging:
             msg = dict(title=CMD_STATUS_TITLE, message=CMD_STATUS_TEMPL_SALON,
@@ -826,8 +646,6 @@ class EventListener(hass.Hass):
             self.call_service(serv, **msg)
             msg.pop('title')
             msg.pop('keyboard')
-            msg['message'] = CMD_STATUS_TEMPL_ESTUDIO
-            self.call_service(serv, **msg)
             msg['message'] = CMD_STATUS_TEMPL_DORM
             self.call_service(serv, **msg)
             msg['message'] = CMD_STATUS_TEMPL_COCINA
@@ -837,8 +655,6 @@ class EventListener(hass.Hass):
             msg['message'] = CMD_STATUS_TEMPL_HEATER
             self.call_service(serv, **msg)
             msg['message'] = CMD_STATUS_TEMPL_ESP
-            self.call_service(serv, **msg)
-            msg['message'] = CMD_STATUS_TEMPL_ENERPI
             msg.update(dict(inline_keyboard=TELEGRAM_INLINE_KEYBOARD,
                             disable_notification=False))
             prefix = 'SHOW HASS STATUS'
@@ -858,79 +674,19 @@ class EventListener(hass.Hass):
             prefix = 'TEMPLATE RENDER'
         elif command == '/test':
             args = ' '.join(cmd_args)
-            self.log('TEST FUZZY ENTITY: "{}"'.format(args))
+            self.log('TEST FUZZY ENTITY: "{}"'.format(args), log=LOGGER)
             entity, fn = self.fuzzy_get_entity_and_fn(args)
             message = 'TEST FUZZY "{}" -> {}, {}'.format(args, entity, fn)
-            self.log(message)
+            self.log(message, log=LOGGER)
             msg = dict(message=_clean(message), target=user_id,
                        disable_notification=True)
             prefix = 'TEST METHOD'
-        elif command == '/getcams':
-            serv = self._bot_notifier + '/send_photo'
-            msg = {"target": user_id,
-                   'keyboard': TELEGRAM_KEYBOARD}
-            self.call_service(serv,
-                              file='/home/homeassistant/picamera/image.jpg',
-                              caption='PiCamera Salón', **msg)
-            for i, (cam, cap) in enumerate(
-                    zip(['escam_qf001', 'picamera_estudio'],
-                        ['ESCAM QF001 Salón', 'PiCamera Estudio'])):
-                static_url = self._gen_hass_cam_pics(cam)
-                if i + 1 == len(ENERPI_TILES):
-                    msg.pop("keyboard")
-                    msg["inline_keyboard"] = TELEGRAM_INLINE_KEYBOARD
-                    msg["url"] = static_url
-                    msg["caption"] = cap
-                    break
-                self.call_service(serv, url=static_url, caption=cap, **msg)
-            prefix = 'SEND CAMERA PICS'
-        elif command == '/enerpitiles':
-            # TODO Solve for SVG cameras (not working now!)
-            serv = self._bot_notifier + '/send_photo'
-            msg = {"target": user_id,
-                   'keyboard': TELEGRAM_KEYBOARD_ENERPI}
-            for i, (cam, cap) in enumerate(
-                    zip(ENERPI_TILES, ENERPI_TILES_DESC)):
-                static_url = self._gen_hass_cam_pics(cam)
-                if i + 1 == len(ENERPI_TILES):
-                    msg.pop("keyboard")
-                    msg["inline_keyboard"] = TELEGRAM_INLINE_KEYBOARD_ENERPI
-                    msg["url"] = static_url
-                    msg["caption"] = cap
-                    break
-                self.call_service(serv, url=static_url, caption=cap, **msg)
-            prefix = 'SEND ENERPI TILES'
-        elif command == '/enerpikwh':
-            cam, cap = ENERPI_TILES[0], ENERPI_TILES_DESC[0]
-            static_url = self._gen_hass_cam_pics(cam)
-            serv = self._bot_notifier + '/send_photo'
-            msg = {"target": user_id,
-                   'url': static_url, 'caption': cap,
-                   'inline_keyboard': TELEGRAM_INLINE_KEYBOARD_ENERPI}
-            prefix = 'SEND ENERPI TILE KWH'
-        elif command == '/enerpipower':
-            cam, cap = ENERPI_TILES[1], ENERPI_TILES_DESC[1]
-            static_url = self._gen_hass_cam_pics(cam)
-            serv = self._bot_notifier + '/send_photo'
-            msg = {"target": user_id,
-                   'url': static_url, 'caption': cap,
-                   'inline_keyboard': TELEGRAM_INLINE_KEYBOARD_ENERPI}
-            prefix = 'SEND ENERPI TILE POWER'
-        elif command == '/enerpi':
-            cam, cap = ENERPI_TILES[1], ENERPI_TILES_DESC[1]
-            static_url = self._gen_hass_cam_pics(cam)
-            message = '{}\n\n{}\n'.format(CMD_STATUS_TEMPL_ENERPI,
-                                          static_url.replace('_', '\_'))
-            msg = {'title': "*Power status*:", 'message': message,
-                   "target": user_id,
-                   'inline_keyboard': TELEGRAM_INLINE_KEYBOARD_ENERPI}
-            prefix = 'ENERPI INFO'
         return serv, prefix, msg
 
     # noinspection PyUnusedLocal
     def alarm_mode_controller(self, entity, attribute, old, new, kwargs):
         """Cambia el master switch cuando se utiliza el input_select"""
-        self.log('ALARM_MODE_CONTROLLER {} -> {}'.format(old, new))
+        self.log('ALARM_MODE_CONTROLLER {} -> {}'.format(old, new), log=LOGGER)
         if new == 'Desconectada':
             self._alarm_state = False
             self.turn_off("switch.switch_master_alarm")
@@ -944,7 +700,7 @@ class EventListener(hass.Hass):
                                             old, new, kwargs):
         """Cambia el input_select cuando se utiliza el master switch"""
         self.log('ALARM_MODE_CONTROLLER_MASTER_SWITCH {} -> {}'
-                 .format(old, new))
+                 .format(old, new), log=LOGGER)
         selected_mode = self.get_state('input_select.alarm_mode')
         if new == 'on':
             self._alarm_state = True
@@ -957,14 +713,32 @@ class EventListener(hass.Hass):
                 self.select_option("input_select.alarm_mode",
                                    option="Desconectada")
 
-    def light_flash(self, xy_color, persistence=5, n_flashes=3):
+    def light_flash(
+        self,
+        xy_color,
+        persistence: float = 5.0,
+        n_flashes: int = 3,
+        transition: float = 1.0,
+    ):
         """Flash hue lights as visual notification."""
 
         def _turn_on(*args_runin):
-            self.call_service('light/turn_on', **args_runin[0])
+            params = args_runin[0]
+            self.call_service(
+                'light/turn_on',
+                entity_id=params["entity_id"],
+                xy_color=params["xy_color"],
+                transition=params["transition"],
+                brightness=params["brightness"],
+            )
 
         def _turn_off(*args_runin):
-            self.call_service('light/turn_off', **args_runin[0])
+            params = args_runin[0]
+            self.call_service(
+                'light/turn_off',
+                entity_id=params["entity_id"],
+                transition=params["transition"],
+            )
 
         # noinspection PyUnusedLocal
         def _restore_state(*args):
@@ -979,7 +753,7 @@ class EventListener(hass.Hass):
                                           brightness=attrs['attributes']['brightness'])
                     except KeyError as exc:
                         self.log("BAD LIGHT[{}] RESTORE ATTRS: {}"
-                                 .format(light, attrs))
+                                 .format(light, attrs), log=LOGGER)
                         self.call_service('light/turn_on', entity_id=light,
                                           transition=1, **attrs['attributes'])
                 else:
@@ -991,38 +765,51 @@ class EventListener(hass.Hass):
                                     for l in self._lights_notif.split(',')]
         self._lights_notif_st_attr = [self.get_state(l, attribute='all')
                                       for l in self._lights_notif.split(',')]
-        self.log('Flashing "{}" {} times, persistence={}s.'
-                 .format(self._lights_notif, n_flashes, persistence))
+        self.log(
+            'Flashing "{}" {} times, persistence={}s, trans={}s.'
+            .format(self._lights_notif, n_flashes, persistence, transition),
+            log=LOGGER,
+        )
 
         # Loop ON-OFF
         self.call_service('light/turn_off', entity_id=self._lights_notif,
                           transition=0)
         self.call_service('light/turn_on', entity_id=self._lights_notif,
-                          transition=1, xy_color=xy_color, brightness=254)
-        run_in = 2
+                          transition=transition, xy_color=xy_color, brightness=254)
+        run_in = int(persistence + transition)
         for i in range(1, n_flashes):
             self.run_in(_turn_off, run_in, entity_id=self._lights_notif,
-                        transition=1)
-            self.run_in(_turn_on, run_in + 2, entity_id=self._lights_notif,
-                        xy_color=xy_color, transition=1, brightness=254)
-            run_in += 4
+                        transition=transition)
+            run_in += int(persistence + transition)
+            self.run_in(_turn_on, run_in, entity_id=self._lights_notif,
+                        xy_color=xy_color, transition=transition, brightness=254)
+            run_in += int(persistence + transition)
 
         # Restore state
         self.run_in(_restore_state, run_in + persistence - 2,
-                    entity_id=self._lights_notif, transition=1)
+                    entity_id=self._lights_notif, transition=2)
 
     def receive_flash_light_event(self, event_id, payload_event, *args):
         """Event listener for flash light events."""
         color = payload_event.get('color', 'red')
         flashes = payload_event.get('flashes', 1)
-        persistence = payload_event.get('persistence', 1)
+        persistence = float(payload_event.get('persistence', 1))
+        transition = float(payload_event.get('transition', 1))
         lights_use = payload_event.get('lights', None)
         if lights_use is not None:
             self._lights_notif = lights_use
-        self.log('flash_light_event received: {} - #{}/{}s'
-                 .format(color, flashes, persistence))
-        self.light_flash(XY_COLORS[color],
-                         persistence=persistence, n_flashes=flashes)
+        self.log(
+            'flash_light_event received: {} - #{}/{}s'
+            .format(color, flashes, persistence),
+            log=LOGGER,
+            level="DEBUG",
+        )
+        self.light_flash(
+            XY_COLORS[color],
+            persistence=persistence,
+            n_flashes=flashes,
+            transition=transition,
+        )
 
     def receive_ios_event(self, event_id, payload_event, *args):
         """Event listener."""
@@ -1032,15 +819,15 @@ class EventListener(hass.Hass):
                     (action_name == 'com.apple.UNNotificationDismissActionIdentifier')):
                 # iOS Notification discard
                 self.log('NOTIFICATION Discard: {} - Args={}, more={}'
-                         .format(event_id, payload_event, args))
+                         .format(event_id, payload_event, args), log=LOGGER)
             else:
                 dev = payload_event['sourceDeviceName']
                 self.log('RESPONSE_TO_ACTION "{}" from dev="{}", otherArgs ={}'
-                         .format(action_name, dev, payload_event))
+                         .format(action_name, dev, payload_event), log=LOGGER)
                 self.response_to_action(action_name, dev, *args)
         else:
             self.log('NOTIFICATION WTF: "{}", payload={}, otherArgs={}'
-                     .format(event_id, payload_event, args))
+                     .format(event_id, payload_event, args), log=LOGGER)
 
     def play_url_in_media_player(self, target, media_url,
                                  use_kodi=True, media_type=None):
@@ -1085,7 +872,7 @@ class EventListener(hass.Hass):
             if callback_id is not None:
                 msg['message'] = msg['message'].replace('*', '')
             self.call_service(service, **msg)
-            self.log('TELEGRAM_COMMAND exec: {}'.format(command))
+            self.log('TELEGRAM_COMMAND exec: {}'.format(command), log=LOGGER)
             self.response_to_action(TELEGRAM_IOS_COMMANDS[command],
                                     self._bot_users[user_id],
                                     telegram_target=(user_id, callback_id))
@@ -1098,7 +885,7 @@ class EventListener(hass.Hass):
             if len(out) > 4000:
                 out = out[-4000:]
             self.log('SHELL CMD TOOK {:.3f}s -> {} {}'
-                     .format(time() - tic, command, cmd_args))
+                     .format(time() - tic, command, cmd_args), log=LOGGER)
             title = '*SHELL CMD OK*\n' if ok else '*SHELL CMD ERROR!*:\n'
             if ok and render:
                 message = "\n{}\n".format(out)
@@ -1111,14 +898,14 @@ class EventListener(hass.Hass):
                 msg["message"] = 'Running: {}'.format(_clean(command))
                 self.call_service(service, **msg)
             serv, prefix, msg = self._bot_hass_cmd(command, cmd_args, user_id)
-            self.log('{} TOOK {:.3f}s'.format(prefix, time() - tic))
+            self.log('{} TOOK {:.3f}s'.format(prefix, time() - tic), log=LOGGER)
             if serv and msg:
                 self.call_service(serv, **msg)
         else:
             rand_msg_mask = TELEGRAM_UNKNOWN[randrange(len(TELEGRAM_UNKNOWN))]
             p_cmd = '{}({})'.format(command, cmd_args)
             message = rand_msg_mask.format('{}({})'.format(command, cmd_args))
-            self.log('NOT IMPLEMENTED: ' + rand_msg_mask.format(p_cmd))
+            self.log('NOT IMPLEMENTED: ' + rand_msg_mask.format(p_cmd), log=LOGGER)
             self.call_service(self._bot_notifier + '/send_message',
                               target=user_id, keyboard=TELEGRAM_KEYBOARD,
                               message=message)
@@ -1132,18 +919,18 @@ class EventListener(hass.Hass):
         answer_callback_serv = self._bot_notifier + '/answer_callback_query'
         if option == 'reset':
             self._bot_wizstack[user_id] = []
-            self.log('HASSWIZ RESET')
+            self.log('HASSWIZ RESET', log=LOGGER)
             self.call_service(answer_callback_serv,
                               message="Reset wizard, start again", **data_msg)
         elif option == 'back':
             self._bot_wizstack[user_id] = self._bot_wizstack[user_id][:-1]
             message = "Back to: {}".format(self._bot_wizstack[user_id])
-            self.log('HASSWIZ BACK --> {}'.format(self._bot_wizstack[user_id]))
+            self.log('HASSWIZ BACK --> {}'.format(self._bot_wizstack[user_id]), log=LOGGER)
             self.call_service(answer_callback_serv,
                               message=message, **data_msg)
         elif option == 'exit':
             self._bot_wizstack[user_id] = []
-            self.log('HASSWIZ EXIT')
+            self.log('HASSWIZ EXIT', log=LOGGER)
             self.call_service(answer_callback_serv,
                               message="Bye bye...", **data_msg)
             self.call_service(self._bot_notifier + '/send_message',
@@ -1162,7 +949,7 @@ class EventListener(hass.Hass):
                     message = "Service called: {}/{}/{}"
                     message = message.format(service, operation, entity_id)
                     self.log('HASSWIZ: CALLING SERVICE "{}". Stack: {}'
-                             .format(message, self._bot_wizstack[user_id]))
+                             .format(message, self._bot_wizstack[user_id]), log=LOGGER)
                     self.call_service('{}/{}'.format(service, operation),
                                       entity_id=entity)
                     self.call_service(answer_callback_serv,
@@ -1173,7 +960,7 @@ class EventListener(hass.Hass):
                     else:
                         data = self.get_state(entity, attribute='attributes')
                     self.log('HASSWIZ STATE DATA -> {}/{}/{} -> {}'
-                             .format(service, operation, entity_id, data))
+                             .format(service, operation, entity_id, data), log=LOGGER)
                     message = "{} {}: -> {}".format(
                         entity_id, operation, str(data))
                     self.call_service(answer_callback_serv,
@@ -1183,7 +970,7 @@ class EventListener(hass.Hass):
                     message = 'Combination *not implemented* -> '
                     message += _clean(comb_err)
                     self.log('ERROR: COMBINATION NOT IMPLEMENTED -> {}'
-                             .format(comb_err), 'warning')
+                             .format(comb_err), level='warning', log=LOGGER)
                     self.call_service(answer_callback_serv,
                                       message=message, **data_msg)
                     return
@@ -1191,7 +978,7 @@ class EventListener(hass.Hass):
             else:
                 # Notificación de respuesta:
                 message = "Option selected: {}".format(option)
-                self.log(message)
+                self.log(message, log=LOGGER)
                 self.call_service(answer_callback_serv,
                                   message=message, **data_msg)
         # Show next wizard step
@@ -1200,7 +987,7 @@ class EventListener(hass.Hass):
         except IndexError:
             self.log('HASS WIZ INDEX ERROR: stack={}, max={}. Reseting stack'
                      .format(len(self._bot_wizstack[user_id]),
-                             len(HASSWIZ_STEPS)))
+                             len(HASSWIZ_STEPS)), log=LOGGER)
             self._bot_wizstack[user_id] = []
             wiz_step = HASSWIZ_STEPS[0]
         wiz_step_text = wiz_step['question']
@@ -1235,7 +1022,7 @@ class EventListener(hass.Hass):
     def receive_telegram_event(self, event_id, payload_event, *args):
         """Event listener for Telegram events."""
         self.log('TELEGRAM NOTIFICATION: "{}", payload={}'
-                 .format(event_id, payload_event), LOG_LEVEL)
+                 .format(event_id, payload_event), level=LOG_LEVEL, log=LOGGER)
         if 'chat_id' in payload_event:
             user_id = payload_event['chat_id']
         else:
@@ -1251,7 +1038,7 @@ class EventListener(hass.Hass):
                 self.play_url_in_media_player(user_id, text, use_kodi=True)
             else:
                 msg = 'TEXT RECEIVED: ```\n{}\n```'.format(text)
-                self.log('TELEGRAM TEXT: ' + str(text))
+                self.log('TELEGRAM TEXT: ' + str(text), log=LOGGER)
                 self.call_service(self._bot_notifier + '/send_message',
                                   target=user_id, message=msg)
         else:
@@ -1268,7 +1055,8 @@ class EventListener(hass.Hass):
                 command, cmd_args = cmd[0], cmd[1:]
                 self.log('CALLBACK REDIRECT TO COMMAND RESPONSE: '
                          'cmd="{}", args="{}", callback_id={}'
-                         .format(command, cmd_args, callback_id), LOG_LEVEL)
+                         .format(command, cmd_args, callback_id),
+                         level=LOG_LEVEL, log=LOGGER)
                 self.process_telegram_command(command, cmd_args, user_id,
                                               callback_id=callback_id)
             elif data_callback.startswith(COMMAND_WIZARD_OPTION):  # Wizard
@@ -1278,7 +1066,7 @@ class EventListener(hass.Hass):
                 rand_msg_mask = TELEGRAM_UNKNOWN[
                     randrange(len(TELEGRAM_UNKNOWN))]
                 self.log('CALLBACK RESPONSE NOT IMPLEMENTED: '
-                         + rand_msg_mask.format(data_callback))
+                         + rand_msg_mask.format(data_callback), log=LOGGER)
                 self.call_service(self._bot_notifier + '/send_message',
                                   target=user_id,
                                   keyboard=TELEGRAM_KEYBOARD,
@@ -1488,4 +1276,4 @@ class EventListener(hass.Hass):
             action_msg_log += 'WTF: origin={}'.format(origin)
             self.frontend_notif(action, origin)
 
-        self.log(action_msg_log)
+        self.log(action_msg_log, log=LOGGER)
