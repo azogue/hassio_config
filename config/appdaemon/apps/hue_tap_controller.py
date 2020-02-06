@@ -37,10 +37,18 @@ class HueTapControl(hass.Hass):
                 log=LOGGER,
             )
         elif new == "2_click":  # adjust cover ventanal
-            st_cover_pos = int(self.get_state(COVER_WINDOW, attribute="attributes")["current_position"])
+            st_cover_pos = int(
+                self.get_state(COVER_WINDOW, attribute="attributes")[
+                    "current_position"
+                ]
+            )
             if st_cover_pos > 90:
                 # set position 30
-                self.call_service("cover/set_cover_position", entity_id=COVER_WINDOW, position=30)
+                self.call_service(
+                    "cover/set_cover_position",
+                    entity_id=COVER_WINDOW,
+                    position=30,
+                )
                 self.log(
                     f"Adjusting cover ventanal to 30 (was {st_cover_pos})",
                     log=LOGGER,
@@ -49,8 +57,7 @@ class HueTapControl(hass.Hass):
                 # set position 100 (open)
                 self.call_service("cover/open_cover", entity_id=COVER_WINDOW)
                 self.log(
-                    f"OPEN cover ventanal (was {st_cover_pos})",
-                    log=LOGGER,
+                    f"OPEN cover ventanal (was {st_cover_pos})", log=LOGGER,
                 )
         elif new == "3_click":  # adjust ambilight
             st_amb = self.get_state(SWITCH_AMBI)
@@ -62,10 +69,18 @@ class HueTapControl(hass.Hass):
                 self.call_service("light/turn_on", **LIGHT_PARAMS_AFTER_AMBI)
                 self.log(f"Adjust Hue+ambilight to OFF", log=LOGGER)
         elif new == "4_click":  # adjust cover puerta
-            st_cover_pos = int(self.get_state(COVER_DOOR, attribute="attributes")["current_position"])
+            st_cover_pos = int(
+                self.get_state(COVER_DOOR, attribute="attributes")[
+                    "current_position"
+                ]
+            )
             if st_cover_pos > 90:
                 # set position 60
-                self.call_service("cover/set_cover_position", entity_id=COVER_DOOR, position=60)
+                self.call_service(
+                    "cover/set_cover_position",
+                    entity_id=COVER_DOOR,
+                    position=60,
+                )
                 self.log(
                     f"Adjusting cover puerta to 60 (was {st_cover_pos})",
                     log=LOGGER,
@@ -73,6 +88,4 @@ class HueTapControl(hass.Hass):
             else:
                 # set position 100 (open)
                 self.call_service("cover/open_cover", entity_id=COVER_DOOR)
-                self.log(
-                    f"OPEN cover puerta (was {st_cover_pos})", log=LOGGER
-                )
+                self.log(f"OPEN cover puerta (was {st_cover_pos})", log=LOGGER)
