@@ -1,16 +1,6 @@
 # HUE LIGHTS
 homeassistant:
   customize:
-    input_number.light_main_slider_salon:
-      friendly_name: Brillo
-      icon: mdi:brightness-7
-    input_number.light_temp_slider_salon:
-      friendly_name: Temperatura de color
-      icon: mdi:temperature-kelvin
-    automation.brillo_salon_sync:
-      icon: mdi:brightness-auto
-      friendly_name: Sync brillo bola grande
-
     light.bola_grande:
       icon: mdi:ceiling-light
     light.terraza:
@@ -54,6 +44,13 @@ homeassistant:
     sensor.interruptor_office:
       icon: mdi:light-switch
 
+    input_boolean.mirror_hue_motion_1:
+      friendly_name: Movimiento cocina (Hue)
+      icon: mdi:run
+    input_boolean.mirror_hue_motion_2:
+      friendly_name: Movimiento office (Hue)
+      icon: mdi:run
+
 hue:
   bridges:
     - host: !secret hue_bridge_host
@@ -79,7 +76,6 @@ switch:
   password: !secret philips_tv_api_password
   scan_interval: 15
 
-
 input_select:
   salon_light_scene:
     name: Escena de luz
@@ -99,3 +95,10 @@ input_select:
      - 'OFF'
     initial: Energía
     icon: mdi:lightbulb
+
+# for binary_sensor.hue_motion_sensor_1_motion and binary_sensor.hue_motion_sensor_2_motion
+input_boolean:
+  mirror_hue_motion_1:
+    initial: off
+  mirror_hue_motion_2:
+    initial: off
