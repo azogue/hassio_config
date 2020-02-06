@@ -1,12 +1,10 @@
 ###############################################################################
-# enerPI current meter
+# ShellyEM current meter, MQTT enabled
 ###############################################################################
 homeassistant:
   customize:
     sensor.elecprice_range:
       icon: mdi:currency-eur
-    sensor.esp32ener_consumption_day:
-      icon: mdi:flash-outline
     sensor.esp32ener_power:
       icon: mdi:flash
       friendly_name: Consumo medido
@@ -17,47 +15,99 @@ homeassistant:
       icon: mdi:flash-circle
       friendly_name: Circuito 2 (termo,AC,domótica)
 
-    binary_sensor.esp32_ener_online:
-      friendly_name: Current Meter Online
-#    input_number.enerpi_max_power:
-#      friendly_name: Max (kW)
-#      icon: mdi:flash-red-eye
-#    input_number.enerpi_max_power_reset:
-#      friendly_name: Reset at (kW)
-#      icon: mdi:flash-off
+    sensor.main_voltage:
+      friendly_name: Voltaje
+    sensor.main_power_react_ch1:
+      friendly_name: Reactiva CH1
+    sensor.main_power_react_ch2:
+      friendly_name: Reactiva CH2
+    sensor.main_power_total:
+      icon: mdi:flash
+    sensor.main_energy_total:
+      icon: mdi:chart-areaspline-variant
 
-#input_number:
-#  # enerPI alarm config
-#  enerpi_max_power:
-#    initial: 5.0
-#    min: 2.0
-#    max: 6.0
-#    step: 0.25
-#
-#  enerpi_max_power_reset:
-#    initial: 2.5
-#    min: 2.0
-#    max: 6.0
-#    step: 0.25
+    sensor.main_energy_ch1:
+      friendly_name: Energía (5min) CH1
+    sensor.main_energy_ch2:
+      friendly_name: Energía (5min) CH2
+    sensor.main_energy_total_ch1:
+      friendly_name: Energía total en CH1
+    sensor.main_energy_total_ch2:
+      friendly_name: Energía total en CH2
 
-binary_sensor:
-  - platform: mqtt
-    device_class: connectivity
-    state_topic: !secret mqtt_topic_esp32_ener_lwt
-    name: esp32_Ener Online
-    qos: !secret mqtt_default_qos
-    payload_on: "online"
-    payload_off: "offline"
+    utility_meter.billable_energy:
+      friendly_name: Contador energía
+    sensor.billable_energy_punta:
+      friendly_name: Energía en punta
+    sensor.billable_energy_valle:
+      friendly_name: Energía en valle
 
-  - platform: template
-    sensors:
-      electricity_high_cost_interval:
-        friendly_name: "Electricidad: Periodo punta"
-        device_class: power
-        value_template: >-
-          {{ (utcnow().hour >= 11) and (utcnow().hour < 21) }}
-        entity_id:
-          - sensor.date_time
+    utility_meter.daily_energy_punta_valle:
+      friendly_name: Tarifa 2.0
+    sensor.daily_energy_punta_valle_punta:
+      friendly_name: Energía en punta (día)
+    sensor.daily_energy_punta_valle_valle:
+      friendly_name: Energía en valle (día)
+
+    # Contadores de coste (precio * consumo)
+    sensor.energy_cost_hour:
+      icon: mdi:speedometer
+    utility_meter.hourly_energy_cost:
+      friendly_name: Contador coste horario
+    sensor.hourly_energy_cost_unique:
+      friendly_name: Coste hora actual
+
+    utility_meter.daily_energy_cost:
+      friendly_name: Contador coste diario
+    sensor.daily_energy_cost_unique:
+      friendly_name: Coste diario
+
+    utility_meter.monthly_energy_cost:
+      friendly_name: Contador coste mensual
+    sensor.monthly_energy_cost_unique:
+      friendly_name: Coste mes actual
+
+utility_meter:
+  billable_energy:
+    source: sensor.main_energy_total
+    cycle: yearly
+    offset: '00:00:30'
+    tariffs:
+      - Punta
+      - Valle
+  daily_energy_punta_valle:
+    source: sensor.main_energy_total
+    cycle: daily
+    offset: '00:00:30'
+    tariffs:
+      - Punta
+      - Valle
+
+  hourly_energy_consumption:
+    source: sensor.main_energy_total
+    cycle: hourly
+    offset: '00:00:15'
+    tariffs:
+      - unique
+
+  hourly_energy_cost:
+    source: sensor.energy_cost_hour
+    cycle: hourly
+    offset: '00:00:15'
+    tariffs:
+      - unique
+  daily_energy_cost:
+    source: sensor.energy_cost_hour
+    cycle: daily
+    offset: '00:00:15'
+    tariffs:
+      - unique
+  monthly_energy_cost:
+    source: sensor.energy_cost_hour
+    cycle: monthly
+    offset: '00:00:15'
+    tariffs:
+      - unique
 
 sensor:
   # OLD one in use to collect both for some time (data regression exercises)

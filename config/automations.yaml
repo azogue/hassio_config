@@ -679,3 +679,29 @@
   - data:
       entity_id: light.pie_sofa
     service: light.turn_off
+- alias: Cambio de tarifa eléctrica
+  id: cambio_tarifa_punta_valle
+  trigger:
+  - platform: time
+    at: '22:00:05'
+  - platform: time
+    at: '23:00:05'
+  - platform: time
+    at: '12:00:05'
+  - platform: time
+    at: '13:00:05'
+  condition:
+  - condition: template
+    value_template: '{{ (utcnow().hour == 21) or (utcnow().hour == 11) }}'
+  action:
+  - service: utility_meter.select_tariff
+    entity_id: utility_meter.daily_energy_punta_valle,utility_meter.billable_energy
+    data_template:
+      tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
+        %}Valle{% endif %}'
+  - service: persistent_notification.create
+    data_template:
+      title: Cambio tarifa eléctrica
+      message: Cambiando a tarifa {% if (utcnow().hour >= 11) and (utcnow().hour <
+        21) %}Punta{% else %}Valle{% endif %}
+      notification_id: cambio_tarifa_elec
