@@ -39,16 +39,16 @@ import homeassistant.util.dt as dt_util
 _LOGGER = logging.getLogger(__name__)
 _RESOURCE = "https://api.esios.ree.es/archives/80/download"
 
-REQUIREMENTS = ['beautifulsoup4', 'html5lib>=1.0.1']
+REQUIREMENTS = ["beautifulsoup4", "html5lib>=1.0.1"]
 
 ATTR_PRICE = "price"
 ATTR_RATE = "tariff"
 
 ATTRIBUTION = "Data retrieved from api.esios.ree.es by REE"
 
-DEFAULT_NAME = 'PVPC'
+DEFAULT_NAME = "PVPC"
 ICON = "mdi:currency-eur"
-RATES = ['normal', 'discriminacion', 'coche_electrico']
+RATES = ["normal", "discriminacion", "coche_electrico"]
 UNIT = "€/kWh"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -70,33 +70,40 @@ def scrap_xml_official_pvpc_daily_prices(
     Using `bs4` with 'html5lib' parser
     """
     from bs4 import BeautifulSoup as Soup
-    ident_tarifa = 'Z0{}'.format(tariff)
-    ident_precio = 'FEU'
+
+    ident_tarifa = "Z0{}".format(tariff)
+    ident_precio = "FEU"
 
     soup_pvpc = Soup(html_text, "html5lib")
-    str_horiz = soup_pvpc.find_all('horizonte')[0]['v']
-    ts_st = parse(str_horiz.split('/')[0]).astimezone(tz).date()
-    for serie in soup_pvpc.find_all('identificacionseriestemporales'):
-        columna = serie.find_next('terminocostehorario')['v']
+    str_horiz = soup_pvpc.find_all("horizonte")[0]["v"]
+    ts_st = parse(str_horiz.split("/")[0]).astimezone(tz).date()
+    for serie in soup_pvpc.find_all("identificacionseriestemporales"):
+        columna = serie.find_next("terminocostehorario")["v"]
         if (
             columna == ident_precio
-            and serie.tipoprecio['v'] == ident_tarifa
-            and len(serie.find_all('tipoprecio')) > 0
+            and serie.tipoprecio["v"] == ident_tarifa
+            and len(serie.find_all("tipoprecio")) > 0
         ):
-            values = [round(float(v['v']), 5) for v in serie.find_all('ctd')]
+            values = [round(float(v["v"]), 5) for v in serie.find_all("ctd")]
             return ts_st, values
     return ts_st, []
 
 
-async def async_setup_platform(hass, config, async_add_devices,
-                               discovery_info=None):
+async def async_setup_platform(
+    hass, config, async_add_devices, discovery_info=None
+):
     """Set up the electricity price sensor."""
     websession = async_get_clientsession(hass)
     async_add_devices(
-        [ElecPriceSensor(hass, websession,
-                         config.get(CONF_NAME),
-                         config.get(ATTR_RATE),
-                         config.get(CONF_TIMEOUT))]
+        [
+            ElecPriceSensor(
+                hass,
+                websession,
+                config.get(CONF_NAME),
+                config.get(ATTR_RATE),
+                config.get(CONF_TIMEOUT),
+            )
+        ]
     )
 
 
@@ -141,7 +148,8 @@ class ElecPriceSensor(RestoreEntity):
         if state:
             self._state = state.state
             self._today_prices = [
-                state.attributes[k] for k in state.attributes
+                state.attributes[k]
+                for k in state.attributes
                 if k.startswith("price")
             ]
             await self.async_update_ha_state()
@@ -180,10 +188,7 @@ class ElecPriceSensor(RestoreEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attributes = {
-            ATTR_ATTRIBUTION: ATTRIBUTION,
-            ATTR_RATE: self.rate
-        }
+        attributes = {ATTR_ATTRIBUTION: ATTRIBUTION, ATTR_RATE: self.rate}
         actual_hour = dt_util.now(self.hass.config.time_zone).hour
         prices = []
         if self._today_prices is not None:
@@ -200,7 +205,7 @@ class ElecPriceSensor(RestoreEntity):
             prices_sorted = dict(
                 sorted(
                     {i: p for i, p in enumerate(prices)}.items(),
-                    key=lambda x: x[1]
+                    key=lambda x: x[1],
                 )
             )
             min_price_at_hour = next(iter(prices_sorted))
@@ -266,7 +271,7 @@ class ElecPriceSensor(RestoreEntity):
             async_track_point_in_time(
                 self.hass,
                 self.async_update,
-                dt_util.now() + timedelta(seconds=2 * self._timeout)
+                dt_util.now() + timedelta(seconds=2 * self._timeout),
             )
             await self.async_update_prices()
 
@@ -274,7 +279,7 @@ class ElecPriceSensor(RestoreEntity):
         """Update electricity prices from the ESIOS API."""
         tz = self.hass.config.time_zone
         now = args[0].astimezone(tz) if args else dt_util.now(tz)
-        text = await self._download_official_data(now.strftime('%Y-%m-%d'))
+        text = await self._download_official_data(now.strftime("%Y-%m-%d"))
         if text is None:
             self._num_retries += 1
             if self._num_retries > 3:
@@ -299,14 +304,15 @@ class ElecPriceSensor(RestoreEntity):
         if now.hour >= 20:
             try:
                 text_tomorrow = await self._download_official_data(
-                    (now + timedelta(days=1)).strftime('%Y-%m-%d')
+                    (now + timedelta(days=1)).strftime("%Y-%m-%d")
                 )
                 day_fut, prices_fut = scrap_xml_official_pvpc_daily_prices(
                     text_tomorrow, tz, period
                 )
                 _LOGGER.info(
                     "Setting tomorrow (%s) prices: %s",
-                    day_fut.strftime('%Y-%m-%d'), str(prices)
+                    day_fut.strftime("%Y-%m-%d"),
+                    str(prices),
                 )
                 self._tomorrow_prices = prices_fut
                 return
