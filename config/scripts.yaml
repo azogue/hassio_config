@@ -1,278 +1,189 @@
 good_night:
   alias: Buenas noches
-#  id: good_night
   sequence:
-    - alias: Apagado de TV
-      service: switch.turn_off
-      entity_id: switch.03200296dc4f22293a7f,switch.hall_light,switch.ambilight_plus_hue
-
-#    - alias: Bajada de persianas
-#      service: cover.close_cover
-#      entity_id: all
-
-    - alias: Purificador OFF
-      service: fan.turn_off
-      entity_id: fan.airpurifier_office
-    - alias: CAM Salón ON
-      service: python_script.dev_command
-      data:
-        command: "cam vigilia"
-    - alias: Notificación de buenas noches
-      service: telegram_bot.send_message
-      data_template:
-        title: '*¡Buenas noches!*'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'Script de buenas noches *auto-activado*. Apagado de luces, interruptores y bajada de persianas.'
-        disable_notification: true
-    - alias: Apagado de luces
-      service: light.turn_off
-#      entity_id: all
-      entity_id: light.salon,light.bano,light.cocina,light.office,light.galeria,light.hall,light.piso
-#    - delay:
-#        seconds: 10
-#    - alias: Apagado total de TV y Home cinema
-#      service: switch.turn_off
-#      entity_id: switch.tv_power,switch.hall_light
-
+  - alias: Apagado de TV
+    service: switch.turn_off
+    entity_id: switch.03200296dc4f22293a7f,switch.hall_light,switch.ambilight_plus_hue
+  - alias: Purificador OFF
+    service: fan.turn_off
+    entity_id: fan.airpurifier_office
+  - alias: CAM Salón ON
+    service: python_script.dev_command
+    data:
+      command: cam vigilia
+  - alias: Notificación de buenas noches
+    service: telegram_bot.send_message
+    data_template:
+      title: '*¡Buenas noches!*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: Script de buenas noches *auto-activado*. Apagado de luces, interruptores
+        y bajada de persianas.
+      disable_notification: true
+  - alias: Apagado de luces
+    service: light.turn_off
+    entity_id: light.salon,light.bano,light.cocina,light.office,light.galeria,light.hall,light.piso
 good_morning:
   alias: Buenos días
-#  id: good_morning
   sequence:
-    - alias: Subida de persianas
-      service: cover.open_cover
-      entity_id: all
-
-    - alias: Notificación de buenos días
-      service: telegram_bot.send_message
-      data_template:
-        title: '*¡Buenos días!*'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'Script de buenos días *auto-activado*: Subida de persianas'
-        disable_notification: true
-
+  - alias: Subida de persianas
+    service: cover.open_cover
+    entity_id: all
+  - alias: Notificación de buenos días
+    service: telegram_bot.send_message
+    data_template:
+      title: '*¡Buenos días!*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Script de buenos días *auto-activado*: Subida de persianas'
+      disable_notification: true
 quick_heat_session:
-#  id: quick_heat_session
   alias: Quick HEAT session
   sequence:
-    - alias: Set heat mode con python script
-      service: python_script.set_cool_ac_session
-      data:
-        mode: heat
-
+  - alias: Set heat mode con python script
+    service: python_script.set_cool_ac_session
+    data:
+      mode: heat
 quick_cool_session:
-#  id: quick_cool_session
   alias: Quick COOL session
   sequence:
-    - alias: Set cool mode con python script
-      service: python_script.set_cool_ac_session
-      data:
-        mode: cool
-
+  - alias: Set cool mode con python script
+    service: python_script.set_cool_ac_session
+    data:
+      mode: cool
 start_vacuum:
-#  id: start_vacuum
   alias: Aspiradora
   sequence:
     service: vacuum.start
     data:
       entity_id: vacuum.robot_aspirador
-
+start_vacuum_office:
+  alias: Limpieza office
+  sequence:
+    service: vacuum.xiaomi_clean_zone
+    data:
+      entity_id: vacuum.robot_aspirador
+      zone:
+      - - 25500
+        - 29000
+        - 28700
+        - 31500
+      repeats: 2
 play_kodi_pvr:
-#  id: play_kodi_pvr
   alias: Enciende la caja tonta
   sequence:
-      service: python_script.start_kodi_play_tv
-
+    service: python_script.start_kodi_play_tv
 start_tvshows_mode:
-#  id: start_tvshows_mode
   alias: Set TVShows Mode
   sequence:
-      service: python_script.start_tvshows_mode
-
+    service: python_script.start_tvshows_mode
 update_library:
   alias: Update Kodi Library
   sequence:
-    - alias: Call Kodi update
-      service: kodi.call_method
-      data:
-        entity_id: media_player.kodi
-        method: VideoLibrary.Scan
-
+  - alias: Call Kodi update
+    service: kodi.call_method
+    data:
+      entity_id: media_player.kodi
+      method: VideoLibrary.Scan
 recent_movies:
   alias: Últimas películas
   sequence:
-    - alias: Call Kodi serv
-      service: kodi.call_method
-      data:
-        entity_id: media_player.kodi
-        method: VideoLibrary.GetRecentlyAddedMovies
-        properties:
-          - title
-          - year
-          - file
-          - lastplayed
-
+  - alias: Call Kodi serv
+    service: kodi.call_method
+    data:
+      entity_id: media_player.kodi
+      method: VideoLibrary.GetRecentlyAddedMovies
+      properties:
+      - title
+      - year
+      - file
+      - lastplayed
 recent_episodes:
   alias: Últimos episodios
   sequence:
-    - alias: Call Kodi serv
-      service: kodi.call_method
-      data:
-        entity_id: media_player.kodi
-        method: VideoLibrary.GetRecentlyAddedEpisodes
-        properties:
-          - showtitle
-          - file
-          - lastplayed
-          - dateadded
-          - firstaired
-
+  - alias: Call Kodi serv
+    service: kodi.call_method
+    data:
+      entity_id: media_player.kodi
+      method: VideoLibrary.GetRecentlyAddedEpisodes
+      properties:
+      - showtitle
+      - file
+      - lastplayed
+      - dateadded
+      - firstaired
 pvr_recordings:
   alias: Últimas grabaciones de TV
   sequence:
-    - alias: Call Kodi API
-      service: kodi.call_method
-      data:
-        entity_id: media_player.kodi
-        method: PVR.GetRecordings
-        properties:
-          - title
-          - starttime
-          - file
-
+  - alias: Call Kodi API
+    service: kodi.call_method
+    data:
+      entity_id: media_player.kodi
+      method: PVR.GetRecordings
+      properties:
+      - title
+      - starttime
+      - file
 pvr_channels:
   alias: Canales de TV
   sequence:
-    - alias: Call Kodi serv
-      service: kodi.call_method
-      data:
-        entity_id: media_player.kodi
-        method: PVR.GetChannels
-        channelgroupid: 1
-
+  - alias: Call Kodi serv
+    service: kodi.call_method
+    data:
+      entity_id: media_player.kodi
+      method: PVR.GetChannels
+      channelgroupid: 1
 run_esp_command:
   alias: Run command
-  #  id: run_esp_command
   sequence:
-    - service: python_script.pub_esp_command
-      data_template:
-        esp_name: '{{ states.input_select.esp_modules.state  | lower }}'
-        command: '{{ states.input_select.esp_command.state | lower}}'
-
+  - service: python_script.pub_esp_command
+    data_template:
+      esp_name: '{{ states.input_select.esp_modules.state  | lower }}'
+      command: '{{ states.input_select.esp_command.state | lower}}'
 run_dev_command:
   alias: Run dev command
-  #  id: run_dev_command
   sequence:
-    - service: python_script.dev_command
-      data_template:
-        command: '{{ states.input_select.dev_command.state  | lower }}'
-        command_data: '{{ states.input_text.command_data.state }}'
-
-
-#cec_tv_on:
-#  alias: TV ON
-#  #  id: cec_tv_on
-#  sequence:
-#    - service: kodi.call_method
-#      data:
-#        entity_id: media_player.kodi
-#        method: Addons.ExecuteAddon
-#        addonid: script.json-cec
-#        params:
-#          command: activate
-#
-#cec_tv_off:
-#  alias: TV OFF
-#  #  id: cec_tv_off
-#  sequence:
-#    - service: input_boolean.turn_off
-#      data:
-#        entity_id: input_boolean.kodi_tv_state
-#    - service: kodi.call_method
-#      data:
-#        entity_id: media_player.kodi
-#        method: Addons.ExecuteAddon
-#        addonid: script.json-cec
-#        params:
-#          command: standby
-
-step_up_cover_1:
-  alias: Ventanal Up
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover1
-        payload: '{"cover1": {"command": "step_up"}}'
-        qos: !secret mqtt_default_qos
-        retain: true
-step_down_cover_1:
-  alias: Ventanal Down
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover1
-        payload: '{"cover1": {"command": "step_down"}}'
-        qos: !secret mqtt_default_qos
-        retain: true
-step_up_cover_2:
-  alias: Puerta Up
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover2
-        payload: '{"cover2": {"command": "step_up"}}'
-        qos: !secret mqtt_default_qos
-        retain: true
-step_down_cover_2:
-  alias: Puerta Down
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover2
-        payload: '{"cover2": {"command": "step_down"}}'
-        qos: !secret mqtt_default_qos
-        retain: true
-
-set_mid_position_cover_1:
-  alias: Ventanal está en 50
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover1
-        payload: '{"cover1": {"command": "set_position", "value": 50 }}'
-        qos: !secret mqtt_default_qos
-        retain: true
-
-set_mid_position_cover_2:
-  alias: Puerta está en 50
-  sequence:
-    - service: mqtt.publish
-      data:
-        topic: !secret mqtt_topic_esp_covers_command_cover2
-        payload: '{"cover2": {"command": "set_position", "value": 50 }}'
-        qos: !secret mqtt_default_qos
-        retain: true
-
-# Sonoff script to request initial state in HA start
+  - service: python_script.dev_command
+    data_template:
+      command: '{{ states.input_select.dev_command.state  | lower }}'
+      command_data: '{{ states.input_text.command_data.state }}'
 start_status_sonoff_outlets:
   alias: Requerir estado de Sonoff
   sequence:
-#    - service: mqtt.publish
-#      data:
-#        topic: "sonoff/4cover"
-#        payload: "stat"
-#        qos: 1
-##      - service: mqtt.publish
-##        data:
-##          topic: "sonoff/dual1"
-##          payload: "stat"
-##          qos: 1
-    - service: mqtt.publish
-      data:
-        topic: "sonoff/pow/1"
-        payload: "stat"
-        qos: 1
-    - service: mqtt.publish
-      data:
-        topic: "sonoff/simple1"
-        payload: "stat"
-        qos: 1
+  - service: mqtt.publish
+    data:
+      topic: sonoff/pow/1
+      payload: stat
+      qos: 1
+  - service: mqtt.publish
+    data:
+      topic: sonoff/simple1
+      payload: stat
+      qos: 1
+cam_snapshot_1:
+  alias: Cam Snapshots
+  sequence:
+  - service: camera.snapshot
+    entity_id: camera.escam
+    data:
+      filename: /config/www/snapshot_iegeek_hd.jpg
+  - service: persistent_notification.create
+    data:
+      title: Snapshot
+      message: Link a snapshot Estudio [aquí](/local/snapshot_iegeek_hd.jpg).
+      notification_id: cam_snapshot_1
+'1577533914773':
+  alias: Inmersión
+  sequence:
+  - entity_id: media_player.nvidia_shield
+    service: media_player.turn_on
+  - entity_id: switch.ambilight_plus_hue
+    service: switch.turn_on
+  - data:
+      position: 30
+    entity_id: cover.shelly_ventanal
+    service: cover.set_cover_position
+  - data:
+      position: 70
+    entity_id: cover.shelly_puerta
+    service: cover.set_cover_position
+  - entity_id: light.tira_tv
+    service: light.turn_off
