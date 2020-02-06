@@ -120,6 +120,7 @@
       data:
         push:
           badge: 1
+          critical: 1
           sound: "US-EN-Alexa-Motion-Detected-Generic.wav"
           category: "confirm" # Needs to match the top level identifier you used in the ios configuration
           action_data: # Anything passed in action_data will get echoed back to Home Assistant.
@@ -213,34 +214,36 @@
   trigger:
     platform: numeric_state
     entity_id: sensor.airpurifier_office_air_quality_pm25
-    above: 25
+    above: 40
   condition:
-    - condition: state
-      entity_id: fan.airpurifier_office
-      state: 'off'
-      for:
-        seconds: 30
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: fan.airpurifier_office
+        state: 'off'
+        for:
+          seconds: 30
+      - condition: template
+        value_template: "{{ state_attr('fan.airpurifier_office', 'speed') == 'Silent' }}"
   action:
-#  - service: fan.turn_on
-#    entity_id: fan.airpurifier_office
+  - service: notify.mobile_app_iphone
+    data:
+      title: 'Purificador activado'
+      message: "{% if states.fan.airpurifier_office.state == 'off' %}Estaba apagado{% else %}Estaba en modo silencioso{% endif %}, pero AQI = {{ states.sensor.airpurifier_office_air_quality_pm25.state }}, así que pasa a modo Auto."
+      data:
+        push:
+          category: "airpurif"
   - service: fan.set_speed
     data:
       entity_id: fan.airpurifier_office
       speed: Auto
-  - service: notify.mobile_app_iphone
-    data:
-      title: 'Purificador activado'
-      message: "Estaba apagado, pero AQI = {{ states.sensor.airpurifier_office_air_quality_pm25.state }}"
-      data:
-        push:
-          category: "airpurif"
 
 - alias: Purificador a auto desde velocidad fija
   id: 'encendido_de_purificador_si_aqi_alto'
   trigger:
     platform: numeric_state
     entity_id: sensor.airpurifier_office_air_quality_pm25
-    below: 15
+    below: 10
     for:
       minutes: 2
   condition:
@@ -254,7 +257,7 @@
   - service: notify.mobile_app_iphone
     data:
       title: 'Purificador en modo auto'
-      message: "AQI es suficientemente baja: {{ states.sensor.airpurifier_office_air_quality_pm25.state }}"
+      message: "AQI es suficientemente baja: {{ states.sensor.airpurifier_office_air_quality_pm25.state }}, activando modo Auto."
       data:
         push:
           category: "airpurif"
@@ -270,53 +273,6 @@
 #        entity_id: fan.airpurifier_office
 #      data_template:
 #        speed: '{{ trigger.to_state.state }}'
-
-- alias: Tono Salón
-  id: 'set_color_temp_in_living_room'
-  trigger:
-    platform: state
-    entity_id: input_number.light_temp_slider_salon
-  action:
-    - service: light.turn_on
-      data:
-        entity_id:
-          - light.bola_grande
-          - light.cuenco
-          - light.tira
-          - light.central
-          - light.pie_sofa
-          - light.pie_tv
-      data_template:
-        color_temp: '{{ (states( "input_number.light_temp_slider_salon" )|round(0) * (500 - 155) / 100 + 155)|int }}'
-
-- alias: Brillo Salón
-  id: 'set_brightness_in_living_room'
-  trigger:
-    platform: state
-    entity_id: input_number.light_main_slider_salon
-  action:
-    - service: light.turn_on
-      data:
-        entity_id:
-          - light.salon
-      data_template:
-        brightness: '{{ states( "input_number.light_main_slider_salon" )|round( 0 ) }}'
-
-#- alias: Brillo Salón Sync
-#  trigger:
-#    - platform: state
-#      entity_id: light.bola_grande
-#      to: "on"
-#  action:
-#    - service: automation.turn_off
-#      entity_id: automation.brillo_salon
-#    - service: input_number.select_value
-#      data:
-#        entity_id: input_number.light_main_slider_salon
-#      data_template:
-#        value: '{{ trigger.to_state.attributes.brightness|int }}'
-#    - service: automation.turn_on
-#      entity_id: automation.brillo_salon
 
 # Startup notifications, default states, and more to run at HA start
 - alias: Start HomeAssistant
@@ -439,7 +395,7 @@
     to: '4_hold_up'
   action:
     - service: homeassistant.turn_off
-      entity_id: light.dormitorio,input_boolean.manual_trigger_lacafetera
+      entity_id: light.dormitorio,light.tira_cocina,input_boolean.manual_trigger_lacafetera
     - event: flash_light
       event_data:
         color: orange
@@ -771,19 +727,19 @@
     # If given, will trigger when condition has been for X time.
     for:
       minutes: 2
-#      seconds: 30
+      seconds: 30
   condition:
     - condition: state
       entity_id: switch.calentador
       state: 'on'
       for:
-        minutes: 15
+        minutes: 35
   action:
     - service: telegram_bot.send_message
       data_template:
         title: '*Calentador apagado*'
         target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: 'El calentador de agua ya ha llegado a su temperatura de consigna, así que lo he apagado, junto a la bomba de circulación. ON: {{((now() - states.switch.calentador.last_changed).total_seconds() / 3600)|round(2)}} h'
+        message: '{% set delta_cal_on = (now() - states.switch.calentador.last_changed).total_seconds() %}*Tiempo encendido: {{(delta_cal_on // 3600) | int }}h:{{ ((delta_cal_on % 3600) / 60) | int }}m*. El calentador de agua ha llegado a su temperatura de consigna, así que lo he apagado, junto a la bomba de circulación.'
         disable_notification: true
         inline_keyboard:
           - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
@@ -972,42 +928,6 @@
         message: "Pon a cargar el {{ trigger.to_state.attributes['Device Type'] }} (Batería: {{ trigger.to_state.state }} %)"
         disable_notification: false
 
-- alias: Alerta de memoria baja
-  id: 'memory_free_is_low'
-  trigger:
-    platform: time_pattern
-    minutes: '/30'
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.memory_free
-      above: 100
-      below: 350
-  action:
-    - service: timer.start
-      entity_id: timer.deadman
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Memoria muy baja en HASSIO host*'
-        target: !secret telegram_bot_chat_id_admin
-        message: "REVISA el correcto funcionamiento de HASSIO (RAM: {{ states.sensor.memory_free.state }} MB)"
-        disable_notification: false
-
-- alias: Deadman situation
-  id: 'deadman_situation'
-  trigger:
-    platform: event
-    event_type: timer.finished
-    event_data:
-      entity_id: timer.deadman
-  action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*REINICIANDO HOMEASSISTANT*'
-        target: !secret telegram_bot_chat_id_admin
-        message: "El _DeadMan timer_ se ha agotado. REVISA el correcto funcionamiento de HASSIO (RAM: {{ states.sensor.memory_free.state }} MB)"
-        disable_notification: false
-    - service: homeassistant.restart
-
 - alias: Alerta de puerta de entrada
   id: 'main_door_open'
   trigger:
@@ -1032,3 +952,20 @@
       data_template:
         last_state_ts: '{{ trigger.event.data }}'
         is_timer_finished: 1
+- id: '1577386722150'
+  alias: Set inmersion mode
+  description: Apaga pie sofa con activación de ambilight salón y pone pan cam en
+    reposo
+  trigger:
+  - entity_id: switch.ambilight_plus_hue
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      command: cam reposo
+    service: python_script.dev_command
+  - data:
+      entity_id: light.pie_sofa
+    service: light.turn_off
