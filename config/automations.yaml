@@ -1,76 +1,62 @@
 - alias: Buenas noches
-  id: 'buenas_noches'
+  id: buenas_noches
   trigger:
     platform: time_pattern
-    minutes: '/5'
+    minutes: /5
   condition:
-    # At night
-    - condition: time
-      after: '23:50:00'
-      before: '05:00:00'
-
-    # Not playing anything for a time
-    - condition: state
-      entity_id: media_player.tele
-      state: 'off'
-      for:
-        minutes: 15
-
-    # Lights off
-    - condition: state
-      entity_id: light.dormitorio
-      state: 'off'
-      for:
-        minutes: 3
-    - condition: state
-      entity_id: light.salon
-      state: 'off'
-      for:
-        minutes: 5
-    - condition: state
-      entity_id: light.hall_light
-      state: 'off'
-      for:
-        minutes: 5
-    - condition: state
-      entity_id: light.estudio
-      state: 'off'
-      for:
-        minutes: 5
-    - condition: state
-      entity_id: light.terraza
-      state: 'off'
-      for:
-        minutes: 5
-
-#    # Family at home
-#    - condition: state
-#      entity_id: group.family
-#      state: 'home'
-#      for:
-#        minutes: 10
-    - condition: template
-      value_template: '{{ (states.person.eugenio.state == "home") or (states.person.carmen.state == "home") }}'
-
-    # Low Light level in office
-    - condition: template
-      value_template: '{{ (states.sensor.sensor_office_illumination.state|int < 50) }}'
-
-    # No multi-trigger!
-    - condition: template
-      value_template: '{% if states.script.good_night.attributes.last_triggered %}{{as_timestamp(now()) - as_timestamp(states.script.good_night.attributes.last_triggered) > 12 * 3600}}{% else %}{{ 1 > 0 }}{% endif %}'
+  - condition: time
+    after: '23:50:00'
+    before: 05:00:00
+  - condition: state
+    entity_id: media_player.tele
+    state: 'off'
+    for:
+      minutes: 15
+  - condition: state
+    entity_id: light.dormitorio
+    state: 'off'
+    for:
+      minutes: 3
+  - condition: state
+    entity_id: light.salon
+    state: 'off'
+    for:
+      minutes: 5
+  - condition: state
+    entity_id: light.hall_light
+    state: 'off'
+    for:
+      minutes: 5
+  - condition: state
+    entity_id: light.estudio
+    state: 'off'
+    for:
+      minutes: 5
+  - condition: state
+    entity_id: light.terraza
+    state: 'off'
+    for:
+      minutes: 5
+  - condition: template
+    value_template: '{{ (states.person.eugenio.state == "home") or (states.person.carmen.state
+      == "home") }}'
+  - condition: template
+    value_template: '{{ (states.sensor.sensor_office_illumination.state|int < 50)
+      }}'
+  - condition: template
+    value_template: '{% if states.script.good_night.attributes.last_triggered %}{{as_timestamp(now())
+      - as_timestamp(states.script.good_night.attributes.last_triggered) > 12 * 3600}}{%
+      else %}{{ 1 > 0 }}{% endif %}'
   action:
-    # Run good_night script
   - service: script.turn_on
     entity_id: script.good_night
-
 - alias: Encendido de TV si apagada y KODI play
-  id: 'tv_on_if_off_and_kodi_play'
+  id: tv_on_if_off_and_kodi_play
   trigger:
     platform: state
     entity_id: media_player.kodi
     from: 'off'
-    to: 'playing'
+    to: playing
   action:
   - service: media_player.turn_on
     entity_id: media_player.tv
@@ -78,14 +64,15 @@
     data_template:
       title: '*TV ON*'
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-      message: 'Encendido de TV automático en Kodi PLAY'
+      message: Encendido de TV automático en Kodi PLAY
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.kodi
-        - Luces salón:/service_call light.toggle group.luces_salon, +:/init
-#
+      - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call
+        media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop
+        media_player.kodi
+      - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 - alias: Apagado de TV si encendida con salvapantallas
-  id: 'tv_off_if_screensaver_some_time'
+  id: tv_off_if_screensaver_some_time
   trigger:
     platform: state
     entity_id: binary_sensor.tv_in_screen_saver
@@ -99,15 +86,15 @@
     data_template:
       title: '*TV OFF*'
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-      message: 'Apagado de TV automático (en salvapantallas > 7 min)'
+      message: Apagado de TV automático (en salvapantallas > 7 min)
       disable_notification: true
       inline_keyboard:
-        - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop media_player.tele
-        - Luces salón:/service_call light.toggle group.luces_salon, +:/init
-
-# LAN/BT discover --> event device_tracker_new_device
+      - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call
+        media_player.turn_on media_player.tele, ◼︎:/service_call media_player.media_stop
+        media_player.tele
+      - Luces salón:/service_call light.toggle group.luces_salon, +:/init
 - alias: New BT device notifier
-  id: 'new_device_notify'
+  id: new_device_notify
   trigger:
     platform: event
     event_type: device_tracker_new_device
@@ -115,102 +102,91 @@
   - service: notify.mobile_app_iphone
     alias: Notify new BT device
     data_template:
-      title: "Nuevo dispositivo detectado"
-      message: "entity_id:\n* {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }}"
+      title: Nuevo dispositivo detectado
+      message: 'entity_id:
+
+        * {{ trigger.event.as_dict()[''data''][''entity_id''] }}. Hostname: {{ trigger.event.as_dict()[''data''][''host_name'']
+        }}'
       data:
         push:
           badge: 1
-          critical: 1
-          sound: "US-EN-Alexa-Motion-Detected-Generic.wav"
-          category: "confirm" # Needs to match the top level identifier you used in the ios configuration
-          action_data: # Anything passed in action_data will get echoed back to Home Assistant.
+          sound: US-EN-Alexa-Motion-Detected-Generic.wav
+          category: confirm
+          action_data:
             entity_id: light.cuenco
             event: event
   - service: notify.gmail
     data_template:
-      title: "HASS - Nuevo dispositivo detectado"
-      message: "entity_id: {{ trigger.event.as_dict()['data']['entity_id'] }}. Hostname: {{ trigger.event.as_dict()['data']['host_name'] }} [EVENT: {{ trigger.event.as_dict()['event_type'] }}]\n\nRAW: {{ trigger.event.as_dict() }}\n\nDEV TRACKER ATTRS: {{ states.device_tracker[trigger.event.as_dict()['data']['entity_id'].split('.')[1]].attributes }}"
+      title: HASS - Nuevo dispositivo detectado
+      message: 'entity_id: {{ trigger.event.as_dict()[''data''][''entity_id''] }}.
+        Hostname: {{ trigger.event.as_dict()[''data''][''host_name''] }} [EVENT: {{
+        trigger.event.as_dict()[''event_type''] }}]
 
-# Sun notifications
-#- alias: Notify sunrise
-#  trigger:
-#    platform: sun
-#    event: sunrise
-#    offset: '+00:00:00'
-#  action:
-#    service: notify.ios
-#    data:
-#      title: 'Buenos días!'
-#      message: 'Empieza un nuevo día!'
-#      data:
-#        push:
-#          badge: 0
-#          sound: "US-EN-Morgan-Freeman-Good-Morning.wav"
-#          category: "alarm" # Needs to match the top level identifier you used in the ios configuration
 
+        RAW: {{ trigger.event.as_dict() }}
+
+
+        DEV TRACKER ATTRS: {{ states.device_tracker[trigger.event.as_dict()[''data''][''entity_id''].split(''.'')[1]].attributes
+        }}'
 - alias: Notify sunset
-  id: 'sunset_notify'
+  id: sunset_notify
   trigger:
     platform: sun
     event: sunset
-    offset: '+00:00:00'
+    offset: +00:00:00
   action:
   - service: telegram_bot.send_message
     data_template:
-      title: 'Empieza la noche!'
-      message: 'Acaba de ponerse el sol... ¿Encendemos luces?'
+      title: Empieza la noche!
+      message: Acaba de ponerse el sol... ¿Encendemos luces?
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
       disable_notification: true
       inline_keyboard:
-        - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle group.luces_dormitorio
-        - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call switch.toggle switch.estudio_light_relay, +:/init
-
+      - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call
+        light.toggle group.luces_dormitorio
+      - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call
+        switch.toggle switch.estudio_light_relay, +:/init
   - service: notify.mobile_app_iphone
     data:
-      title: 'Empieza la noche!'
-      message: 'Acaba de ponerse el sol..'
+      title: Empieza la noche!
+      message: Acaba de ponerse el sol..
       data:
         push:
           badge: 0
-          sound: "US-EN-Morgan-Freeman-Setting-The-Mood.wav"
-          category: "confirm"
-
-# Set a light scene with a python_script
+          sound: US-EN-Morgan-Freeman-Setting-The-Mood.wav
+          category: confirm
 - alias: Salón Select Scene
-  id: 'select_scene_in_living_room'
+  id: select_scene_in_living_room
   trigger:
     platform: state
     entity_id: input_select.salon_light_scene
   action:
-    - service: python_script.select_light_profile
-      data_template:
-        scene: '{{ trigger.to_state.state }}'
-
-# Set a TV source with a python_script
+  - service: python_script.select_light_profile
+    data_template:
+      scene: '{{ trigger.to_state.state }}'
 - alias: TV Source Select
-  id: 'select_tv_source'
+  id: select_tv_source
   trigger:
     platform: state
     entity_id: input_select.tv_source
   action:
-    - service: python_script.select_tv_source
-      data_template:
-        scene: '{{ trigger.to_state.state }}'
-
+  - service: python_script.select_tv_source
+    data_template:
+      scene: '{{ trigger.to_state.state }}'
 - alias: Purifier favorite level
-  id: 'set_purifier_favorite_level'
+  id: set_purifier_favorite_level
   trigger:
     platform: state
     entity_id: input_number.airpurifier_office_favorite_level
   action:
-    - service: fan.xiaomi_miio_set_favorite_level
-      data:
-        entity_id: fan.airpurifier_office
-      data_template:
-        level: '{{ states( "input_number.airpurifier_office_favorite_level" ) | int }}'
-
+  - service: xiaomi_miio.fan_set_favorite_level
+    data:
+      entity_id: fan.airpurifier_office
+    data_template:
+      level: '{{ states( "input_number.airpurifier_office_favorite_level" ) | int
+        }}'
 - alias: Encendido de purificador si AQI alto
-  id: 'encendido_de_purificador_si_aqi_alto'
+  id: encendido_de_purificador_si_aqi_alto
   trigger:
     platform: numeric_state
     entity_id: sensor.airpurifier_office_air_quality_pm25
@@ -218,28 +194,30 @@
   condition:
     condition: or
     conditions:
-      - condition: state
-        entity_id: fan.airpurifier_office
-        state: 'off'
-        for:
-          seconds: 30
-      - condition: template
-        value_template: "{{ state_attr('fan.airpurifier_office', 'speed') == 'Silent' }}"
+    - condition: state
+      entity_id: fan.airpurifier_office
+      state: 'off'
+      for:
+        seconds: 30
+    - condition: template
+      value_template: '{{ state_attr(''fan.airpurifier_office'', ''speed'') == ''Silent''
+        }}'
   action:
   - service: notify.mobile_app_iphone
     data:
-      title: 'Purificador activado'
-      message: "{% if states.fan.airpurifier_office.state == 'off' %}Estaba apagado{% else %}Estaba en modo silencioso{% endif %}, pero AQI = {{ states.sensor.airpurifier_office_air_quality_pm25.state }}, así que pasa a modo Auto."
+      title: Purificador activado
+      message: '{% if states.fan.airpurifier_office.state == ''off'' %}Estaba apagado{%
+        else %}Estaba en modo silencioso{% endif %}, pero AQI = {{ states.sensor.airpurifier_office_air_quality_pm25.state
+        }}, así que pasa a modo Auto.'
       data:
         push:
-          category: "airpurif"
+          category: airpurif
   - service: fan.set_speed
     data:
       entity_id: fan.airpurifier_office
       speed: Auto
-
 - alias: Purificador a auto desde velocidad fija
-  id: 'encendido_de_purificador_si_aqi_alto'
+  id: encendido_de_purificador_si_aqi_alto
   trigger:
     platform: numeric_state
     entity_id: sensor.airpurifier_office_air_quality_pm25
@@ -247,8 +225,9 @@
     for:
       minutes: 2
   condition:
-    - condition: template
-      value_template: "{{ (state_attr('fan.airpurifier_office', 'speed') == 'Favorite') and (state_attr('fan.airpurifier_office', 'favorite_level') > 3) }}"
+  - condition: template
+    value_template: '{{ (state_attr(''fan.airpurifier_office'', ''speed'') == ''Favorite'')
+      and (state_attr(''fan.airpurifier_office'', ''favorite_level'') > 3) }}'
   action:
   - service: fan.set_speed
     data:
@@ -256,203 +235,119 @@
       speed: Auto
   - service: notify.mobile_app_iphone
     data:
-      title: 'Purificador en modo auto'
-      message: "AQI es suficientemente baja: {{ states.sensor.airpurifier_office_air_quality_pm25.state }}, activando modo Auto."
+      title: Purificador en modo auto
+      message: 'AQI es suficientemente baja: {{ states.sensor.airpurifier_office_air_quality_pm25.state
+        }}, activando modo Auto.'
       data:
         push:
-          category: "airpurif"
-
-#- alias: Purifier set mode
-#  id: 'set_purifier_favorite_level'
-#  trigger:
-#    platform: state
-#    entity_id: input_select.airpurifier_office_mode
-#  action:
-#    - service: fan.set_speed
-#      data:
-#        entity_id: fan.airpurifier_office
-#      data_template:
-#        speed: '{{ trigger.to_state.state }}'
-
-# Startup notifications, default states, and more to run at HA start
+          category: airpurif
 - alias: Start HomeAssistant
-  id: 'hass_startup'
+  id: hass_startup
   trigger:
-    - platform: homeassistant
-      event: start
+  - platform: homeassistant
+    event: start
   action:
-    - service: shell_command.cmd_init_ssh_identity
-    - service: python_script.set_telegram_chatid_sensor
-      data:
-        chat_id: !secret telegram_bot_chat_id_admin
-    - service: python_script.start_states
-
-# New version notify
+  - service: shell_command.cmd_init_ssh_identity
+  - service: python_script.set_telegram_chatid_sensor
+    data:
+      chat_id: 312423963
+  - service: python_script.start_states
 - alias: Update notifications
-  id: 'update_available_notify'
+  id: update_available_notify
   trigger:
-    - platform: state
-      entity_id: binary_sensor.updater
-      from: 'off'
-      to: 'on'
+  - platform: state
+    entity_id: binary_sensor.updater
+    from: 'off'
+    to: 'on'
   action:
   - service: notify.mobile_app_iphone
     data:
-      title: 'New Home Assistant Release'
-      message: "Home Assistant is now available: {{ states.binary_sensor.updater.attributes }}."
+      title: New Home Assistant Release
+      message: 'Home Assistant is now available: {{ states.binary_sensor.updater.attributes
+        }}.'
       data:
         push:
           badge: 1
-          category: "confirm"
-
+          category: confirm
 - alias: Turn ON TV with lights (hue switch)
-  id: 'turn_on_tv_dimmer_switch_action'
+  id: turn_on_tv_dimmer_switch_action
   trigger:
     platform: state
     entity_id: sensor.interruptor_salon
-    to: '1_hold_up'
+    to: 1_hold_up
   action:
-    - service: python_script.start_kodi_play_tv
-    - event: flash_light
-      event_data:
-        color: orange
-        persistence: 2
-        flashes: 3
-
+  - service: python_script.start_kodi_play_tv
+  - event: flash_light
+    event_data:
+      color: orange
+      persistence: 2
+      flashes: 3
 - alias: Turn OFF all (hue switch)
-  id: 'turn_off_all_dimmer_switch_action'
+  id: turn_off_all_dimmer_switch_action
   trigger:
     platform: state
     entity_id: sensor.interruptor_salon
-    to: '4_hold_up'
+    to: 4_hold_up
   action:
-    - service: media_player.turn_off
-      entity_id: media_player.tele,media_player.salon
-    - event: flash_light
-      event_data:
-        color: red
-        persistence: 1
-        flashes: 2
-    - delay:
-        seconds: 5
-    - service: homeassistant.turn_off
-      entity_id: group.all_lights
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*All Off*'
-        message: "Apagando TV y luces al mantener pulsado OFF en mando hue"
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        disable_notification: true
-        inline_keyboard:
-          - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call media_player.turn_on media_player.tele
-          - Aura habitación:/service_call light.toggle light.aura_habitacion
-
+  - service: media_player.turn_off
+    entity_id: media_player.tele,media_player.salon
+  - event: flash_light
+    event_data:
+      color: red
+      persistence: 1
+      flashes: 2
+  - delay:
+      seconds: 5
+  - service: homeassistant.turn_off
+    entity_id: group.all_lights
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*All Off*'
+      message: Apagando TV y luces al mantener pulsado OFF en mando hue
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      disable_notification: true
+      inline_keyboard:
+      - TV OFF:/service_call media_player.turn_off media_player.tele, TV ON:/service_call
+        media_player.turn_on media_player.tele
+      - Aura habitación:/service_call light.toggle light.aura_habitacion
 - alias: Turn TV Night scene (hue switch)
-  id: 'turn_tv_night_scene_dimmer_switch_action'
+  id: turn_tv_night_scene_dimmer_switch_action
   trigger:
     platform: state
     entity_id: sensor.interruptor_salon
-    to: '3_hold_up'  # '-' button
+    to: 3_hold_up
   action:
-    - service: input_select.select_option
-      entity_id: input_select.salon_light_scene
-      data:
-        option: "TV Night"
-
-#- alias: Turn Cinema mode ON (hue switch)
-#  id: 'turn_on_cinema_mode_dimmer_switch_action'
-#  trigger:
-#    platform: state
-#    entity_id: sensor.interruptor_salon
-#    to: '3_hold_up'
-#  action:
-#    - service: media_player.turn_on
-#      entity_id: media_player.kodi
-#    - event: flash_light
-#      event_data:
-#        color: blue
-#        persistence: 2
-#        flashes: 3
-#    - delay:
-#        seconds: 5
-#    - service: script.update_library
-#    - service: switch.turn_on
-#      entity_id: switch.toggle_kodi_ambilight
-#    - service: telegram_bot.send_message
-#      data_template:
-#        title: '*Cinema mode ON*'
-#        message: ""
-#        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-#        disable_notification: true
-#        inline_keyboard:
-#          - Ambilight:/service_call switch.toggle switch.toggle_kodi_ambilight, Luces:/service_call light.toggle light.salon
-
+  - service: input_select.select_option
+    entity_id: input_select.salon_light_scene
+    data:
+      option: TV Night
 - alias: Morning Turn OFF (hue switch)
-  id: 'morning_turn_off_dimmer_switch_action'
+  id: morning_turn_off_dimmer_switch_action
   trigger:
     platform: state
     entity_id: sensor.interruptor_dormitorio
-    to: '4_hold_up'
+    to: 4_hold_up
   action:
-    - service: homeassistant.turn_off
-      entity_id: light.dormitorio,light.tira_cocina,input_boolean.manual_trigger_lacafetera
-    - event: flash_light
-      event_data:
-        color: orange
-        persistence: 3
-        flashes: 1
-        lights: "light.aura_habitacion"
-#    - delay:
-#        seconds: 5
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*All Off*'
-        message: "Apagando Despertador al mantener pulsado OFF en mando hue"
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        disable_notification: true
-        inline_keyboard:
-          - Aura habitación:/service_call light.toggle light.aura_habitacion
-    - service: media_player.turn_off
-      entity_id: media_player.dormitorio
-
-
-- alias: Encendido luces dormitorio
-  id: 'ligths_on_bedroom'
-  trigger:
-    platform: state
-    entity_id: binary_sensor.sensor_bedroom_mov1
-    to: 'on'
-  condition:
-    condition: and
-    conditions:
-#      - condition: state
-#        entity_id: group.family
-#        state: 'home'
-      - condition: state
-        entity_id: light.dormitorio
-        state: 'off'
-        for:
-          seconds: 30
-      - condition: state
-        entity_id: alarm_control_panel.alarma
-        state: 'disarmed'
-#      - condition: template
-#        value_template: '{{ states.sensor.sensor_bedroom_illumination.state | int < 15 }}'
-      - condition: time
-        after: '8:30:00'
-        before: '22:30:00'
-  action:
-    - service: python_script.select_light_profile
-      data_template:
-        scene: 'bedroom_activate_minimal'
-#    - service: light.turn_on
-#      data:
-#        entity_id: light.aura_habitacion
-#        brightness: 222
-#        xy_color: [0.3945,0.406]
-
+  - service: homeassistant.turn_off
+    entity_id: light.dormitorio,light.tira_cocina,input_boolean.manual_trigger_lacafetera
+  - event: flash_light
+    event_data:
+      color: orange
+      persistence: 3
+      flashes: 1
+      lights: light.aura_habitacion
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*All Off*'
+      message: Apagando Despertador al mantener pulsado OFF en mando hue
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      disable_notification: true
+      inline_keyboard:
+      - Aura habitación:/service_call light.toggle light.aura_habitacion
+  - service: media_player.turn_off
+    entity_id: media_player.dormitorio
 - alias: Encendido luces estudio
-  id: 'ligths_on_study'
+  id: ligths_on_study
   trigger:
     platform: state
     entity_id: binary_sensor.sensor_study_mov1
@@ -460,498 +355,313 @@
   condition:
     condition: and
     conditions:
-#      - condition: state
-#        entity_id: group.family
-#        state: 'home'
-      - condition: state
-        entity_id: light.estudio
-        state: 'off'
-        for:
-          seconds: 30
-      - condition: state
-        entity_id: alarm_control_panel.alarma
-        state: 'disarmed'
-      - condition: template
-        value_template: '{{ states.sensor.sensor_study_illumination.state | int < 15 }}'
-      - condition: time
-        after: '8:30:00'
-        before: '23:00:00'
+    - condition: state
+      entity_id: light.estudio
+      state: 'off'
+      for:
+        seconds: 30
+    - condition: state
+      entity_id: alarm_control_panel.alarma
+      state: disarmed
+    - condition: template
+      value_template: '{{ states.sensor.sensor_study_illumination.state | int < 15
+        }}'
+    - condition: time
+      after: '8:30:00'
+      before: '23:00:00'
   action:
-    - service: python_script.select_light_profile
-      data_template:
-        scene: 'Estudio'
-
-#- alias: Luz hall abriendo cuadro
-#  id: 'luz_hall_abriendo_cuadro'
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.local_pir
-#    to: 'on'
-#  condition:
-#    - condition: numeric_state
-#      entity_id: sensor.sensor_hall_illumination
-#      below: 50
-#    - condition: state
-#      entity_id: light.hall_light
-#      state: 'off'
-#      for:
-#        seconds: 10
-#  action:
-#    - service: light.turn_on
-#      data:
-#        entity_id: light.hall_light
-
+  - service: python_script.select_light_profile
+    data_template:
+      scene: Estudio
 - alias: Botvac error notification
-  id: 'botvac_error_notify'
+  id: botvac_error_notify
   trigger:
     platform: state
     entity_id: vacuum.robot_aspirador
   condition:
     condition: template
-    value_template: '{{ ("error" in states.vacuum.robot_aspirador.attributes) or (states.vacuum.robot_aspirador.attributes.status == "Error") }}'
+    value_template: '{{ ("error" in states.vacuum.robot_aspirador.attributes) or (states.vacuum.robot_aspirador.attributes.status
+      == "Error") }}'
   action:
     service: telegram_bot.send_message
     data_template:
       title: '*Botvac Error*'
-      message: >
-        El robot aspirador ha fallado: _{{ states.vacuum.robot_aspirador.attributes.error }}_
-        (Status: {{ states.vacuum.robot_aspirador.attributes.status }}, batt: {{ states.vacuum.robot_aspirador.attributes.battery_level }} %)
+      message: 'El robot aspirador ha fallado: _{{ states.vacuum.robot_aspirador.attributes.error
+        }}_ (Status: {{ states.vacuum.robot_aspirador.attributes.status }}, batt:
+        {{ states.vacuum.robot_aspirador.attributes.battery_level }} %)
+
+        '
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
       disable_notification: false
       inline_keyboard:
-        - Locate botvac:/service_call vacuum.locate vacuum.robot_aspirador, To dock:/service_call vacuum.return_to_home vacuum.robot_aspirador
-        - Start:/service_call vacuum.start_pause vacuum.robot_aspirador, Stop:/service_call vacuum.stop vacuum.robot_aspirador, +:/init
-
+      - Locate botvac:/service_call vacuum.locate vacuum.robot_aspirador, To dock:/service_call
+        vacuum.return_to_home vacuum.robot_aspirador
+      - Start:/service_call vacuum.start_pause vacuum.robot_aspirador, Stop:/service_call
+        vacuum.stop vacuum.robot_aspirador, +:/init
 - alias: Carmen sale del hospital
-  id: 'dev_tracker_carmen_out_hospital'
+  id: dev_tracker_carmen_out_hospital
   trigger:
-#    - platform: zone
-#      entity_id: device_tracker.homeadmin_iphonese
-#      zone: zone.hospital
-#      event: leave #enter  # or "leave"
-##      for:
-##        minutes: 5
-    - platform: zone
-      entity_id: device_tracker.iphonese
-      zone: zone.hospital
-      event: leave #enter  # or "leave"
-#      for:
-#        minutes: 5
-    - platform: zone
-      entity_id: device_tracker.iphone_6s
-      zone: zone.hospital
-      event: leave #enter  # or "leave"
-#      for:
-#        minutes: 5
+  - platform: zone
+    entity_id: device_tracker.iphonese
+    zone: zone.hospital
+    event: leave
+  - platform: zone
+    entity_id: device_tracker.iphone_6s
+    zone: zone.hospital
+    event: leave
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Salida del Hospital*'
-        target: !secret telegram_bot_chat_id_admin
-        message: 'Carmen acaba de salir del hospital'
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Salida del Hospital*'
+      target: 312423963
+      message: Carmen acaba de salir del hospital
 - alias: Carmen llega al hospital
-  id: 'dev_tracker_carmen_in_hospital'
+  id: dev_tracker_carmen_in_hospital
   trigger:
-#    - platform: zone
-#      entity_id: device_tracker.homeadmin_iphonese
-#      zone: zone.hospital
-#      event: enter  # or "leave"
-##      for:
-##        minutes: 5
-    - platform: zone
-#      entity_id: device_tracker.iphonese
-      entity_id: device_tracker.iphone_6s
-      zone: zone.hospital
-      event: enter  # or "leave"
-#      for:
-#        minutes: 5
+  - platform: zone
+    entity_id: device_tracker.iphone_6s
+    zone: zone.hospital
+    event: enter
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Llegada a Hospital*'
-        target: !secret telegram_bot_chat_id_admin
-        message: 'Carmen acaba de llegar al hospital.'
-        disable_notification: true
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Llegada a Hospital*'
+      target: 312423963
+      message: Carmen acaba de llegar al hospital.
+      disable_notification: true
 - alias: Aviso de sensor MQTT offline
-  id: 'mqtt_sensor_go_offline_notify'
+  id: mqtt_sensor_go_offline_notify
   trigger:
-    - platform: state
-      entity_id: binary_sensor.esp32_ener_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_bedroom_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_livingroom_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_covers_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_study_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_office_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_kitchen_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_hall_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_terraza_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_galeria_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_bathroom_ac_snum
-      to: 'unknown'
-      for:
-        minutes: 2
-    - platform: state
-      entity_id: sensor.sensor_wine_snum
-      to: 'unknown'
-      for:
-        minutes: 10
+  - platform: state
+    entity_id: sensor.sensor_bedroom_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_livingroom_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_study_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_office_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_kitchen_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_terraza_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_galeria_snum
+    to: unknown
+    for:
+      minutes: 2
+  - platform: state
+    entity_id: sensor.sensor_bathroom_ac_snum
+    to: unknown
+    for:
+      minutes: 2
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Sensor offline*'
-        target: !secret telegram_bot_chat_id_admin
-        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha fallado*. Revísalo!"
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Sensor offline*'
+      target: 312423963
+      message: El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece
+        que *ha fallado*. Revísalo!
 - alias: Aviso de sensor MQTT online
-  id: 'mqtt_sensor_go_online_notify'
+  id: mqtt_sensor_go_online_notify
   trigger:
-    - platform: state
-      entity_id: sensor.esp32_ener_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_bedroom_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_livingroom_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_covers_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_study_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_office_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_kitchen_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_hall_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_terraza_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_galeria_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_bathroom_ac_snum
-      from: 'unknown'
-    - platform: state
-      entity_id: sensor.sensor_wine_snum
-      from: 'unknown'
-  action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Sensor online*'
-        target: !secret telegram_bot_chat_id_admin
-#        message: "El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece que *ha revivido*: `{{ trigger.to_state.attributes }}`. Estaba desaparecido desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }}."
-        message: "El micro ESP `{{ trigger.to_state.attributes.friendly_name[9:]}}` parece que ha **revivido**: Wake_{{ trigger.to_state.attributes.status.wake }}(WR:{{ trigger.to_state.attributes.status.wake_reason }},ERR:{{ trigger.to_state.attributes.status.c_error }}); Wifi -> {{ trigger.to_state.attributes.wifi_ap }} [CH {{ trigger.to_state.attributes.network.CH }}, RSSI: {{ trigger.to_state.attributes.rssi }}, IP_{{ trigger.to_state.attributes.ip[10:] }}]. Estaba desaparecido desde hace {{ ((now() - trigger.from_state.last_changed).total_seconds() / 60) | round(1) }} min."
-        disable_notification: true
-
-- alias: Sync Tira TV con Tira sofá
-  id: 'sync_light_strips'
-  trigger:
-    - platform: state
-      entity_id: light.tira
+  - platform: state
+    entity_id: sensor.sensor_bedroom_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_livingroom_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_study_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_office_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_kitchen_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_terraza_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_galeria_snum
+    from: unknown
+  - platform: state
+    entity_id: sensor.sensor_bathroom_ac_snum
+    from: unknown
   condition:
-    condition: and
-    conditions:
-      - condition: state
-        entity_id: media_player.tv
-        state: 'off'
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: light.tira
-            state: 'on'
-          - condition: state
-            entity_id: light.tira
-            state: 'off'
+    condition: template
+    value_template: '{{ (now() - trigger.from_state.last_changed).total_seconds()
+      > 120 }}'
   action:
-    - service: python_script.sync_yeelight
-      data_template:
-        new_state: '{{ trigger.to_state.state }}'
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Sensor online*'
+      target: 312423963
+      message: 'El micro ESP `{{ trigger.to_state.attributes.friendly_name[9:]}}`
+        parece que ha **revivido**: Wake_{{ trigger.to_state.attributes.status.wake
+        }}(WR:{{ trigger.to_state.attributes.status.wake_reason }},ERR:{{ trigger.to_state.attributes.status.c_error
+        }}); Wifi -> {{ trigger.to_state.attributes.wifi_ap }} [CH {{ trigger.to_state.attributes.network.CH
+        }}, RSSI: {{ trigger.to_state.attributes.rssi }}, IP_{{ trigger.to_state.attributes.ip[10:]
+        }}]. Estaba desaparecido desde hace {{ ((now() - trigger.from_state.last_changed).total_seconds()
+        / 60) | round(1) }} min.'
+      disable_notification: true
 - alias: Apagado automático de termo ACS
-  id: 'termo_auto_off'
+  id: termo_auto_off
   trigger:
     platform: numeric_state
     entity_id: sensor.esp32ener_ch2
-    # At least one of the following required
-#    above: 17
     below: 300
-    # If given, will trigger when condition has been for X time.
     for:
       minutes: 2
       seconds: 30
   condition:
-    - condition: state
-      entity_id: switch.calentador
-      state: 'on'
-      for:
-        minutes: 35
+  - condition: state
+    entity_id: switch.calentador
+    state: 'on'
+    for:
+      minutes: 35
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Calentador apagado*'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: '{% set delta_cal_on = (now() - states.switch.calentador.last_changed).total_seconds() %}*Tiempo encendido: {{(delta_cal_on // 3600) | int }}h:{{ ((delta_cal_on % 3600) / 60) | int }}m*. El calentador de agua ha llegado a su temperatura de consigna, así que lo he apagado, junto a la bomba de circulación.'
-        disable_notification: true
-        inline_keyboard:
-          - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar Calentador:/service_call switch.turn_off switch.calentador
-          - Encender bomba ACS:/service_call switch.turn_on switch.03200296dc4f22293a7f, Apagar bomba ACS:/service_call switch.turn_off switch.03200296dc4f22293a7f
-    - service: switch.turn_off
-      entity_id: switch.calentador,switch.03200296dc4f22293a7f
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Calentador apagado*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: '{% set delta_cal_on = (now() - states.switch.calentador.last_changed).total_seconds()
+        %}*Tiempo encendido: {{(delta_cal_on // 3600) | int }}h:{{ ((delta_cal_on
+        % 3600) / 60) | int }}m*. El calentador de agua ha llegado a su temperatura
+        de consigna, así que lo he apagado, junto a la bomba de circulación.'
+      disable_notification: true
+      inline_keyboard:
+      - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar
+        Calentador:/service_call switch.turn_off switch.calentador
+      - Encender bomba ACS:/service_call switch.turn_on switch.03200296dc4f22293a7f,
+        Apagar bomba ACS:/service_call switch.turn_off switch.03200296dc4f22293a7f
+  - service: switch.turn_off
+    entity_id: switch.calentador,switch.03200296dc4f22293a7f
 - alias: Notificación de cambio de IP
-  id: 'notif_cambio_ip'
+  id: notif_cambio_ip
   trigger:
     platform: state
     entity_id: sensor.ip_externa
   condition:
     condition: template
-    value_template: "{{ (trigger.to_state.state | length > 10) and (trigger.to_state.state != 'unavailable') }}"
+    value_template: '{{ (trigger.to_state.state | length > 10) and (trigger.to_state.state
+      != ''unavailable'') }}'
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Cambio de IP*'
-        target: !secret telegram_bot_chat_id_admin
-        message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*, la anterior era: _{{ trigger.from_state.state }}_'
-        disable_notification: true
-
-
-
-#- alias: Apagado automático de enchufes a las 6h
-#  id: 'switches_auto_off_after_8hours'
-#  trigger:
-#    - platform: state
-#      entity_id: switch.test_switch_2
-#      to: 'on'
-#      for:
-#        hours: 6
-#    - platform: state
-#      entity_id: switch.office_floor
-#      to: 'on'
-#      for:
-#        hours: 6
-#  action:
-#    - service: switch.turn_off
-#      entity_id: switch.test_switch_2,switch.office_floor
-#    - service: telegram_bot.send_message
-#      data_template:
-#        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
-#        target: !secret telegram_bot_chat_id_admin
-#        message: "El enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] *se ha apagado tras {{ (trigger.for.total_seconds() / 3600) | round(1) }}h encendido* (en ON desde {{ as_timestamp(trigger.to_state.last_changed) | timestamp_local }})"
-#        disable_notification: true
-#        inline_keyboard:
-#          - Antimosquitos Dormitorio ON:/service_call switch.turn_on switch.test_switch_2, Apagar Antimosquitos Dormitorio OFF:/service_call switch.turn_off switch.test_switch_2
-#          - Antimosquitos Salón ON:/service_call switch.turn_on switch.office_floor, Antimosquitos Salón OFF:/service_call switch.turn_off switch.office_floor
-
-#- alias: Retry etekcity commands
-#  id: 'retry_etekcity_commands'
-#  trigger:
-#    - platform: state
-#      entity_id: switch.vinoteca
-#      to: 'on'
-#      for:
-#        seconds: 10
-#    - platform: state
-#      entity_id: switch.camara
-#      to: 'on'
-#      for:
-#        seconds: 30
-##    - platform: state
-##      entity_id: switch.altavoz
-##      to: 'on'
-##      for:
-##        seconds: 20
-#    - platform: state
-#      entity_id: switch.test_switch_2
-#      to: 'on'
-#      for:
-#        seconds: 20
-#    - platform: state
-#      entity_id: switch.office_floor
-#      to: 'on'
-#      for:
-#        seconds: 20
-#    - platform: state
-#      entity_id: switch.vinoteca
-#      to: 'off'
-#      for:
-#        seconds: 10
-#    - platform: state
-#      entity_id: switch.camara
-#      to: 'off'
-#      for:
-#        seconds: 30
-##    - platform: state
-##      entity_id: switch.altavoz
-##      to: 'off'
-##      for:
-##        seconds: 20
-#    - platform: state
-#      entity_id: switch.test_switch_2
-#      to: 'off'
-#      for:
-#        seconds: 20
-#    - platform: state
-#      entity_id: switch.office_floor
-#      to: 'off'
-#      for:
-#        seconds: 20
-#  action:
-#    - service_template: 'switch.{% if trigger.to_state.state == "off" %}turn_off{% else %}turn_on{% endif %}'
-#      data_template:
-#        entity_id: '{{ trigger.entity_id }}'
-##    - service: telegram_bot.send_message
-##      data_template:
-##        title: '*Auto-Retry* de {{ trigger.to_state.attributes.friendly_name }}'
-##        target: !secret telegram_bot_chat_id_admin
-##        message: "Se reintenta la orden al enchufe {{ trigger.to_state.attributes.friendly_name }} [`{{ trigger.entity_id }}`] (en {{ trigger.to_state.state }} desde {{ as_timestamp(trigger.to_state.last_changed) | timestamp_local }})"
-##        disable_notification: true
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Cambio de IP*'
+      target: 312423963
+      message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*,
+        la anterior era: _{{ trigger.from_state.state }}_'
+      disable_notification: true
 - alias: IFTTT incoming event
-  id: 'ifttt_incoming_event'
+  id: ifttt_incoming_event
   trigger:
     platform: event
     event_type: ifttt_webhook_received
     event_data:
-      motion: on
+      motion: true
   action:
     service: python_script.incoming_ifttt_data
     data_template:
       message: '{{ trigger.event.data.message }}'
-
 - alias: Apagado de AC
-  id: 'auto_turnoff_ac'
+  id: auto_turnoff_ac
   trigger:
-    - platform: template
-      value_template: "{{ is_state_attr('climate.termostato_ac', 'hvac_action', 'idle') }}"
-#    - platform: state
-#      entity_id: climate.termostato_ac
-#      from: 'cool'
-#      to: 'idle'
-      for:
-        seconds: 30
-    - platform: template
-      value_template: "{{ is_state_attr('climate.calefaccion', 'hvac_action', 'idle') }}"
-#    - platform: state
-#      entity_id: climate.calefaccion
-#      from: 'heat'
-#      to: 'idle'
-      for:
-        seconds: 30
+  - platform: template
+    value_template: '{{ is_state_attr(''climate.termostato_ac'', ''hvac_action'',
+      ''idle'') }}'
+    for:
+      seconds: 30
+  - platform: template
+    value_template: '{{ is_state_attr(''climate.calefaccion'', ''hvac_action'', ''idle'')
+      }}'
+    for:
+      seconds: 30
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: "Apagado de {{ trigger.to_state.attributes.friendly_name }} (Tª: {{ trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature }} °C) (en `{{ trigger.from_state.state }}` desde {{ as_timestamp(trigger.from_state.last_changed) | timestamp_local }})"
-        disable_notification: true
-        inline_keyboard:
-          - Deshacer COOL:/service_call climate.set_hvac_mode termostato_ac cool
-          - Deshacer HOT:/service_call climate.set_hvac_mode calefaccion heat
-    - service: climate.set_hvac_mode
-      data:
-        entity_id: climate.termostato_ac
-        hvac_mode: 'off'
-    - service: climate.set_hvac_mode
-      data:
-        entity_id: climate.calefaccion
-        hvac_mode: 'off'
-    # Assure 1 trigger only
-    - service: automation.turn_off
-      entity_id: automation.apagado_de_ac
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Auto-OFF* de {{ trigger.to_state.attributes.friendly_name }}'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Apagado de {{ trigger.to_state.attributes.friendly_name }} (Tª: {{
+        trigger.to_state.attributes.current_temperature }} °C / target: {{ trigger.to_state.attributes.temperature
+        }} °C) (en `{{ trigger.from_state.state }}` desde {{ as_timestamp(trigger.from_state.last_changed)
+        | timestamp_local }})'
+      disable_notification: true
+      inline_keyboard:
+      - Deshacer COOL:/service_call climate.set_hvac_mode termostato_ac cool
+      - Deshacer HOT:/service_call climate.set_hvac_mode calefaccion heat
+  - service: climate.set_hvac_mode
+    data:
+      entity_id: climate.termostato_ac
+      hvac_mode: 'off'
+  - service: climate.set_hvac_mode
+    data:
+      entity_id: climate.calefaccion
+      hvac_mode: 'off'
+  - service: automation.turn_off
+    entity_id: automation.apagado_de_ac
 - alias: Alerta de batería baja
-  id: 'battery_is_near_dead'
+  id: battery_is_near_dead
   trigger:
-    - platform: numeric_state
-      entity_id: sensor.ipad_de_eugenio_battery_level
-      below: 45
+  - platform: numeric_state
+    entity_id: sensor.ipad_de_eugenio_battery_level
+    below: 45
   condition:
-    - condition: state
-      entity_id: sensor.ipad_de_eugenio_battery_state
-      state: 'Unplugged'
-      for:
-        hours: 1
+  - condition: state
+    entity_id: sensor.ipad_de_eugenio_battery_state
+    state: Unplugged
+    for:
+      hours: 1
   action:
-    - service: telegram_bot.send_message
-      data_template:
-        title: '*Batería baja en {{ trigger.to_state.attributes.friendly_name }}*'
-        target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-        message: "Pon a cargar el {{ trigger.to_state.attributes['Device Type'] }} (Batería: {{ trigger.to_state.state }} %)"
-        disable_notification: false
-
+  - service: telegram_bot.send_message
+    data_template:
+      title: '*Batería baja en {{ trigger.to_state.attributes.friendly_name }}*'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      message: 'Pon a cargar el {{ trigger.to_state.attributes[''Device Type''] }}
+        (Batería: {{ trigger.to_state.state }} %)'
+      disable_notification: false
 - alias: Alerta de puerta de entrada
-  id: 'main_door_open'
+  id: main_door_open
   trigger:
-    - platform: state
-      entity_id: input_boolean.mirror_eve_main_door
-      to: 'on'
+  - platform: state
+    entity_id: input_boolean.mirror_eve_main_door
+    to: 'on'
   action:
-    - service: python_script.main_door_opening
-      data_template:
-        last_state_ts: '{{ trigger.from_state.last_changed }}'
-        is_timer_finished: 0
-
+  - service: python_script.main_door_opening
+    data_template:
+      last_state_ts: '{{ trigger.from_state.last_changed }}'
+      is_timer_finished: 0
 - alias: Auto alarm timer finished
-  id: 'auto_alarm_timer_finished'
+  id: auto_alarm_timer_finished
   trigger:
     platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.alarm_auto_on
   action:
-    - service: python_script.main_door_opening
-      data_template:
-        last_state_ts: '{{ trigger.event.data }}'
-        is_timer_finished: 1
+  - service: python_script.main_door_opening
+    data_template:
+      last_state_ts: '{{ trigger.event.data }}'
+      is_timer_finished: 1
 - id: '1577386722150'
   alias: Set inmersion mode
   description: Apaga pie sofa con activación de ambilight salón y pone pan cam en
