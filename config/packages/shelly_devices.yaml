@@ -1,0 +1,69 @@
+homeassistant:
+  customize:
+    binary_sensor.pasillo_mov:
+      friendly_name: 'Movimiento (pasillo)'
+    binary_sensor.hall_mov:
+      friendly_name: 'Movimiento (hall)'
+    binary_sensor.alarm_moisture:
+      friendly_name: 'Sensor de inundación'
+    binary_sensor.alarm_smoke:
+      friendly_name: 'Sensor de humo'
+
+# Discovery for shelly devs with hacs custom component
+shelly:
+  username: !secret shelly_covers_user
+  password: !secret shelly_covers_pwd
+  devices:  #configure devices
+    # nº1
+    - id: "6882CB"
+      name: Persiana Ventanal
+    # nº2
+    - id: "C4BA30"
+      name: Persiana Puerta terraza
+
+    - id: "059F7A"
+      name: Current Meter
+
+    - id: "E098068CEC2C"
+      name: Sensores movimiento
+
+    - id: "8CAAB5058380"
+      name: Alarmas técnicas
+
+    - id: "8CAAB5055499"
+      name: Luz Hall
+      light_switch: true
+
+# MQTT connection (for quick response) for some devices
+binary_sensor:
+  - platform: mqtt
+    device_class: motion
+    name: hall_mov
+    state_topic: "shellies/shelly25-mov/input/0"
+    payload_on: "1"
+    payload_off: "0"
+    qos: 1
+
+  - platform: mqtt
+    device_class: motion
+    name: pasillo_mov
+    state_topic: "shellies/shelly25-mov/input/1"
+    payload_on: "1"
+    payload_off: "0"
+    qos: 1
+
+  - platform: mqtt
+    device_class: moisture
+    name: alarm_moisture
+    state_topic: "shellies/shelly25-cuadro/input/0"
+    payload_on: "1"
+    payload_off: "0"
+    qos: 1
+
+  - platform: mqtt
+    device_class: smoke
+    name: alarm_smoke
+    state_topic: "shellies/shelly25-cuadro/input/1"
+    payload_on: "1"
+    payload_off: "0"
+    qos: 1

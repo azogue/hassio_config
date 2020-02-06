@@ -60,6 +60,7 @@ binary_sensor:
           - sensor.date_time
 
 sensor:
+  # OLD one in use to collect both for some time (data regression exercises)
   - platform: mqtt
     state_topic: !secret mqtt_topic_esp32_ener_stream
     value_template: "{{ value_json.rms[2] | float | round }}"
@@ -79,18 +80,119 @@ sensor:
     name: esp32ener_ch2
     unit_of_measurement: "W"
     force_update: true
-    expire_after: 60
+
+  - platform: mqtt
+    name: "main_voltage"
+    state_topic: "shellies/shellyem/emeter/0/voltage"
+    value_template: "{%if value %}{{ value | float | round(1) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "V"
+    force_update: true
+    icon: mdi:current-ac
+
+  - platform: mqtt
+    name: "main_power_ch1"
+    state_topic: "shellies/shellyem/emeter/0/power"
+    value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "W"
+    force_update: true
+    icon: mdi:flash-outline
+
+  - platform: mqtt
+    name: "main_power_react_ch1"
+    state_topic: "shellies/shellyem/emeter/0/reactive_power"
+    value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "VA"
+    force_update: true
+    icon: mdi:transmission-tower
+
+  - platform: mqtt
+    name: "main_energy_ch1"
+    state_topic: "shellies/shellyem/emeter/0/energy"
+#    value_template: "{{ value | float / 60000 }}" # Fix for Watt-minutes
+    value_template: "{%if value %}{{ value | int }}{% else %}unknown{% endif %}" # Watt-minutes
+    qos: 1
+    unit_of_measurement: "Wm"
+    force_update: true
+    icon: mdi:chart-bar
+
+  - platform: mqtt
+    name: "main_energy_total_ch1"
+    state_topic: "shellies/shellyem/emeter/0/total"
+    value_template: "{%if value %}{{ (value | float / 1000) | round(3) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "kWh"
+    force_update: true
+    icon: mdi:chart-bar
+
+  - platform: mqtt
+    name: "main_power_ch2"
+    state_topic: "shellies/shellyem/emeter/1/power"
+    value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "W"
+    force_update: true
+    icon: mdi:flash-circle
+
+  - platform: mqtt
+    name: "main_power_react_ch2"
+    state_topic: "shellies/shellyem/emeter/1/reactive_power"
+    value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "VA"
+    force_update: true
+    icon: mdi:transmission-tower
+
+  - platform: mqtt
+    name: "main_energy_ch2"
+    state_topic: "shellies/shellyem/emeter/1/energy"
+#    value_template: "{{ value | float / 60000 }}" # Fix for Watt-minutes
+    value_template: "{%if value %}{{ value | int }}{% else %}unknown{% endif %}" # Watt-minutes
+    qos: 1
+    unit_of_measurement: "Wm"
+    force_update: true
+    icon: mdi:chart-bar
+
+  - platform: mqtt
+    name: "main_energy_total_ch2"
+    state_topic: "shellies/shellyem/emeter/1/total"
+    value_template: "{%if value %}{{ (value | float / 1000) | round(3) }}{% else %}unknown{% endif %}"
+    qos: 1
+    unit_of_measurement: "kWh"
+    force_update: true
+    icon: mdi:chart-bar
 
   - platform: template
     sensors:
-      esp32ener_consumption_day:
-        friendly_name: "Consumo hoy"
+      main_power_total:
+        friendly_name: "Potencia total"
+        unit_of_measurement: 'W'
+        value_template: "{% if (states.sensor.main_power_ch1.state != 'unknown') and (states.sensor.main_power_ch2.state != 'unknown') %}{{ ((states.sensor.main_power_ch1.state | float) + (states.sensor.main_power_ch2.state | float)) | round() }}{% else %}unknown{% endif %}"
+        entity_id:
+          - sensor.main_power_ch1
+          - sensor.main_power_ch2
+
+      main_energy_total:
+        friendly_name: "Consumo total"
         unit_of_measurement: 'kWh'
-        value_template: "{{ states.sensor.esp32ener_power.attributes.Energy_day_kWh | float | round(2) }}"
-        entity_id: sensor.esp32ener_power
+        value_template: "{% if (states.sensor.main_energy_total_ch1.state != 'unknown') and (states.sensor.main_energy_total_ch2.state != 'unknown') %}{{ ((states.sensor.main_energy_total_ch1.state | float) + (states.sensor.main_energy_total_ch2.state | float)) | round(3) }}{% else %}unknown{% endif %}"
+        entity_id:
+          - sensor.main_energy_total_ch1
+          - sensor.main_energy_total_ch2
+
+      energy_cost_hour:
+        friendly_name: "Gasto en energía (current hour)"
+        unit_of_measurement: '€'
+        value_template: "{%if states.sensor.pvpc.state %}{{ ((states.sensor.hourly_energy_consumption_unique.state | float) * (states.sensor.pvpc.state | float)) | round(5) }}{% else %}unknown{% endif %}"
+        entity_id:
+          - sensor.hourly_energy_consumption_unique
+          - sensor.pvpc
+
       elecprice_range:
         friendly_name: "Precio luz"
-        value_template: "{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}"
+        value_template: "{%if states.sensor.pvpc.state %}{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}{% else %}unknown{% endif %}"
         entity_id: sensor.pvpc
 #      esp32ener_real_power:
 #        friendly_name: "Potencia real"
