@@ -12,16 +12,8 @@ homeassistant:
     "sensor.speedtest*":
       icon: mdi:speedometer
 
-
-#binary_sensor:
-#  - platform: rpi_gpio
-#    name: Movimiento
-#    device_class: motion
-#    ports:
-#      18: local_pir
-#    bouncetime: 50
-#    pull_mode: "UP"
-#  #  invert_logic: true
+sentry:
+  dsn: !secret sentry_dsn
 
 timer:
   alarm_auto_on:
