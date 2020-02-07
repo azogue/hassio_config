@@ -123,29 +123,3 @@ sensor:
     entity_id: sensor.humedad_interior
     max_age:
       minutes: 15
-
-#  - sensor.temperatura_minima
-  - platform: influxdb
-    host: !secret influxdb_host
-    port: !secret influxdb_port
-    username: !secret influxdb_user
-    password: !secret influxdb_pass
-    # ssl: true
-    # verify_ssl: true
-    queries:
-      - name: "Temperatura mínima"
-        database: !secret influxdb_db
-        unit_of_measurement: °C
-        value_template: '{{ value | round(1) }}'
-        field: value #select
-        group_function: min
-        measurement: '"°C"' #from
-        where: '"entity_id" = ''temperatura_exterior'' and time > now() - 24h' #where
-      - name: temp_acs_max
-        database: !secret influxdb_db
-        unit_of_measurement: °C
-        value_template: '{{ value | round(1) }}'
-        field: value #select
-        group_function: max
-        measurement: '"°C"' #from
-        where: '"entity_id" = ''sensor_acs_probe_5'' and time > now() - 24h' #where
