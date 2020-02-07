@@ -52,33 +52,33 @@ en directo de un canal con noticias, o bien reproducir la última grabación.
 """
 
 # Participant entities
-MEDIA_PLAYER = 'media_player.kodi'
+MEDIA_PLAYER = "media_player.kodi"
 ENTITY_ANDROIDTV = "media_player.tv"
-INPUT_SELECT_OPTS = 'input_select.kodi_results'
-TELEGRAM_TARGET = 'sensor.telegram_default_chatid'
+INPUT_SELECT_OPTS = "input_select.kodi_results"
+TELEGRAM_TARGET = "sensor.telegram_default_chatid"
 
 # Decide what to play
 now = datetime.datetime.now()
 play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
     content_id = 19
-    media_dest = 'laSexta HD'
+    media_dest = "laSexta HD"
 elif now.hour < 16:
     content_id = 18
-    media_dest = 'Antena 3 HD'
+    media_dest = "Antena 3 HD"
 elif now.hour < 20:
     content_id = 35
-    media_dest = 'Canal 24 H.'
+    media_dest = "Canal 24 H."
     # Last record?
     # play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
     content_id = 19
-    media_dest = 'laSexta HD'
+    media_dest = "laSexta HD"
 elif (now.hour == 20) or ((now.hour == 21) and (now.minute < 15)):
     content_id = 18
-    media_dest = 'Antena 3 HD'
+    media_dest = "Antena 3 HD"
 else:
-    media_dest = '#0 HD'
+    media_dest = "#0 HD"
     content_id = 25
     # Last record?
     # play_live_tv = False
@@ -89,47 +89,65 @@ else:
 #         'media_player', 'turn_on', {"entity_id": MEDIA_PLAYER})
 tv_state = hass.states.get(ENTITY_ANDROIDTV)
 if tv_state.state == "off":
-    hass.services.call('media_player', 'turn_on',
-                       {"entity_id": ENTITY_ANDROIDTV})
+    hass.services.call(
+        "media_player", "turn_on", {"entity_id": ENTITY_ANDROIDTV}
+    )
 
 
 # Play media:
 if play_live_tv:
     notify_msg = "Encendido de caja tonta en '{}'.".format(media_dest)
     hass.services.call(
-        'media_player', 'play_media',
-        {"entity_id": MEDIA_PLAYER,
-         "media_content_type": "CHANNEL",
-         "media_content_id": content_id})
+        "media_player",
+        "play_media",
+        {
+            "entity_id": MEDIA_PLAYER,
+            "media_content_type": "CHANNEL",
+            "media_content_id": content_id,
+        },
+    )
 else:
-    hass.services.call('script', 'pvr_recordings')
+    hass.services.call("script", "pvr_recordings")
     time.sleep(4)
     state_select = hass.states.get(INPUT_SELECT_OPTS)
-    options = state_select.attributes.get('options')[1:] or []
+    options = state_select.attributes.get("options")[1:] or []
     if options:
         media_dest = options[0]
         notify_msg = "Play última grabación de TV: '{}'.".format(media_dest)
         hass.services.call(
-                'input_select', 'select_option',
-                {"entity_id": INPUT_SELECT_OPTS,
-                 "option": media_dest})
+            "input_select",
+            "select_option",
+            {"entity_id": INPUT_SELECT_OPTS, "option": media_dest},
+        )
     else:
-        notify_msg = "Encendido de caja tonta en '{}'. *No hay grabaciones disponibles*".format(media_dest)
+        notify_msg = "Encendido de caja tonta en '{}'. *No hay grabaciones disponibles*".format(
+            media_dest
+        )
         hass.services.call(
-            'media_player', 'play_media',
-            {"entity_id": MEDIA_PLAYER,
-             "media_content_type": "CHANNEL",
-             "media_content_id": content_id})
+            "media_player",
+            "play_media",
+            {
+                "entity_id": MEDIA_PLAYER,
+                "media_content_type": "CHANNEL",
+                "media_content_id": content_id,
+            },
+        )
 
 # Notify:
 target = int(hass.states.get(TELEGRAM_TARGET).state)
 hass.services.call(
-        'telegram_bot', 'send_message',
-        {"title": '*TV PVR ON*',
-         "target": target,
-         "disable_notification": True,
-         "message": notify_msg,
-         "inline_keyboard": ['OFF:/service_call media_player.turn_off media_player.kodi',
-                             'ON:/service_call media_player.turn_on media_player.kodi',
-                             '‖:/service_call media_player.media_play_pause media_player.kodi',
-                             '◼︎:/service_call media_player.media_stop media_player.kodi']})
+    "telegram_bot",
+    "send_message",
+    {
+        "title": "*TV PVR ON*",
+        "target": target,
+        "disable_notification": True,
+        "message": notify_msg,
+        "inline_keyboard": [
+            "OFF:/service_call media_player.turn_off media_player.kodi",
+            "ON:/service_call media_player.turn_on media_player.kodi",
+            "‖:/service_call media_player.media_play_pause media_player.kodi",
+            "◼︎:/service_call media_player.media_stop media_player.kodi",
+        ],
+    },
+)

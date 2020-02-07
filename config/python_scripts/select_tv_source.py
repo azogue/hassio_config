@@ -96,14 +96,14 @@ options:
      - OFF
 """
 
-INPUT_SELECT = 'input_select.tv_source'
+INPUT_SELECT = "input_select.tv_source"
 ENTITY_ANDROIDTV = "media_player.tv"
 ENTITY_SHIELD = "media_player.nvidia_shield"
 ENTITY_KODI = "media_player.kodi"
 ENTITY_HOMECINEMA = "media_player.home_cinema"
 
-COVER_VENTANAL = "cover.sonoff_cover_ventanal"
-COVER_PUERTA = "cover.sonoff_cover_puerta_terraza"
+COVER_VENTANAL = "cover.shelly_ventanal"
+COVER_PUERTA = "cover.shelly_puerta"
 LIGHT_AMBILIGHT = "light.ambilight"
 SWITCH_AMBILIGHT_HUE = "switch.ambilight_plus_hue"
 
@@ -131,10 +131,7 @@ ANDROID_TV_APPS = {
 }
 
 command = data.get("source")
-dest_entity = data.get(
-    "entity_id",
-    ENTITY_SHIELD,
-)
+dest_entity = data.get("entity_id", ENTITY_SHIELD,)
 # TODO stop active media_player in change of app/entity
 logger.warning("select_tv_source: %s [%s]", command, dest_entity)
 
@@ -144,14 +141,16 @@ homecinema_state = hass.states.get(ENTITY_HOMECINEMA)
 # logger.warning("select_tv_source_states: %s/%s/%s", *list(map(lambda x: x.state, [tv_state, shield_state, homecinema_state])))
 
 if tv_state.state == "off":
-    hass.services.call('media_player', 'turn_on',
-                       {"entity_id": ENTITY_ANDROIDTV})
+    hass.services.call(
+        "media_player", "turn_on", {"entity_id": ENTITY_ANDROIDTV}
+    )
 
 if "Salvapantallas" in command:
     # Cast 4k video
     hass.services.call(
         # 'media_extractor', 'play_media',
-        'media_player', 'play_media',
+        "media_player",
+        "play_media",
         {
             "entity_id": "media_player.shield",
             # "entity_id": "media_player.55oled803_12",
@@ -162,47 +161,44 @@ if "Salvapantallas" in command:
             # "media_content_id": "xGlVPzmgpSM",
             "media_content_type": "video/youtube",
             # "media_content_type": "YouTube",
-        }
+        },
     )
     hass.services.call(
-        'input_select', 'select_option',
-        {"entity_id": INPUT_SELECT, "option": "Nada"}
+        "input_select",
+        "select_option",
+        {"entity_id": INPUT_SELECT, "option": "Nada"},
     )
 elif command == "TDT":
     hass.services.call(
-        'python_script', 'start_kodi_play_tv',
+        "python_script", "start_kodi_play_tv",
     )
     hass.services.call(
-        'input_select', 'select_option',
-        {"entity_id": INPUT_SELECT, "option": "Kodi"}
+        "input_select",
+        "select_option",
+        {"entity_id": INPUT_SELECT, "option": "Kodi"},
     )
 elif command.upper() in COMMANDS.keys():
     hass.services.call(
-        'androidtv', 'adb_command',
-        {
-            "entity_id": dest_entity,
-            "command": COMMANDS[command.upper()],
-        }
+        "androidtv",
+        "adb_command",
+        {"entity_id": dest_entity, "command": COMMANDS[command.upper()],},
     )
 elif command in ANDROID_TV_APPS.keys():
     #  TODO stop current playing / change source? / start tv
 
     hass.services.call(
-        'androidtv', 'adb_command',
-        {
-            "entity_id": dest_entity,
-            "command": ANDROID_TV_APPS[command],
-        }
+        "androidtv",
+        "adb_command",
+        {"entity_id": dest_entity, "command": ANDROID_TV_APPS[command],},
     )
     hass.services.call(
-        'input_select', 'select_option',
-        {"entity_id": INPUT_SELECT, "option": command}
+        "input_select",
+        "select_option",
+        {"entity_id": INPUT_SELECT, "option": command},
     )
 else:
     hass.services.call(
-        'androidtv', 'adb_command',
-        {
-            "entity_id": dest_entity,
-            "command": command,
-        }
+        "androidtv",
+        "adb_command",
+        {"entity_id": dest_entity, "command": command,},
     )

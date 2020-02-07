@@ -21,8 +21,8 @@ V_TARGET_VIG = 25 * 7  # 0-700
 H_TARGET_DISABLE = 2 * 26  # 0-2600
 V_TARGET_DISABLE = 0
 
-command_data = data.get('command_data', '')
-command = data.get('command', 'ADB command to Shield')
+command_data = data.get("command_data", "")
+command = data.get("command", "ADB command to Shield")
 
 if command == "flash":
     try:
@@ -31,40 +31,41 @@ if command == "flash":
         flashes = 1
 
     hass.bus.fire(
-        'flash_light',
+        "flash_light",
         {
             "color": "red",
             "persistence": 1,
             "flashes": flashes,
             "lights": "light.lamparita,light.tira_larga",
-        }
+        },
     )
 
 elif command == "mqtt restart":
     logger.warning("Restarting MQTT addon!")
-    hass.services.call('hassio', 'addon_restart', {"addon": "a0d7b954_mqtt"})
+    hass.services.call("hassio", "addon_restart", {"addon": "a0d7b954_mqtt"})
 
 elif command == "run in pc":
     # Example: { "command", "notepad.exe", "args": "C:\\teste.txt", "path": "C:\\", "user": "myusername" }
     # logger.warning("Run in PC: '{}'".format(command_data))
     cmds = command_data.split()
-    payload = '''"command":"{}", "args":"{}", "user": "eugenio"'''.format(cmds[0], ' '.join(cmds[1:]))
-    payload = '{ XXX }'.replace("XXX", payload)
+    payload = '''"command":"{}", "args":"{}", "user": "eugenio"'''.format(
+        cmds[0], " ".join(cmds[1:])
+    )
+    payload = "{ XXX }".replace("XXX", payload)
     # logger.warning("Run in PC JSON: '{}'".format(payload))
     hass.services.call(
-        'mqtt', 'publish',
-        {
-            "topic": "iotlink/piso/w10/commands/run",
-            "payload": payload,
-        }
+        "mqtt",
+        "publish",
+        {"topic": "iotlink/piso/w10/commands/run", "payload": payload,},
     )
     hass.services.call(
-        'persistent_notification', 'create',
+        "persistent_notification",
+        "create",
         {
-            "title": 'Run in PC',
+            "title": "Run in PC",
             "message": "## Payload:\n\n```json\n{}\n```".format(payload),
             "notification_id": "dev_command",
-        }
+        },
     )
 
 elif "cam " in command:
@@ -74,46 +75,51 @@ elif "cam " in command:
         v_target = int(vt) * 7
         switch_action = None
     elif command == "cam toggle mode":
-        motion_detection_state = hass.states.get("switch.motion_detection_wyzecampan1")
+        motion_detection_state = hass.states.get(
+            "switch.motion_detection_wyzecampan1"
+        )
         if motion_detection_state.state == "on":  # turn off
             h_target = H_TARGET_DISABLE
             v_target = V_TARGET_DISABLE
-            switch_action = 'turn_off'
+            switch_action = "turn_off"
         else:
             h_target = H_TARGET_VIG
             v_target = V_TARGET_VIG
-            switch_action = 'turn_on'
+            switch_action = "turn_on"
     elif command == "cam vigilia":
         h_target = H_TARGET_VIG
         v_target = V_TARGET_VIG
-        switch_action = 'turn_on'
+        switch_action = "turn_on"
     else:  # command == "cam reposo":
         h_target = H_TARGET_DISABLE
         v_target = V_TARGET_DISABLE
-        switch_action = 'turn_off'
+        switch_action = "turn_off"
 
     if switch_action is not None:
         hass.services.call(
-            'switch', switch_action,
-            {"entity_id": "switch.motion_detection_wyzecampan1"}
+            "switch",
+            switch_action,
+            {"entity_id": "switch.motion_detection_wyzecampan1"},
         )
         if switch_action == "turn_off":
             # Wait for it a bit
             time.sleep(2)
 
     hass.services.call(
-        'mqtt', 'publish',
+        "mqtt",
+        "publish",
         {
             "topic": "Domus/wyzepan1/motors/horizontal/set",
-            "payload": '{}'.format(h_target),
-        }
+            "payload": "{}".format(h_target),
+        },
     )
     hass.services.call(
-        'mqtt', 'publish',
+        "mqtt",
+        "publish",
         {
             "topic": "Domus/wyzepan1/motors/vertical/set",
-            "payload": '{}'.format(v_target),
-        }
+            "payload": "{}".format(v_target),
+        },
     )
     # hass.services.call(
     #     'cover' 'set_cover_tilt_position',
@@ -123,10 +129,14 @@ elif "cam " in command:
     #     'cover' 'set_cover_tilt_position',
     #     {"entity_id": "cover.wyzepan1_ptc_v", "tilt_position": v_target}
     # )
-    logger.info("Pan WyzeCam Tilt to position {}: {} / {}".format(command, h_target, v_target))
+    logger.info(
+        "Pan WyzeCam Tilt to position {}: {} / {}".format(
+            command, h_target, v_target
+        )
+    )
 
 elif "cover" in command:
-    cover_esp_id = 'sm1wdr811x48'
+    cover_esp_id = "sm1wdr811x48"
     # - Cover ventanal 100
     # - Cover puerta 100
     if "ventanal" in command:
@@ -141,13 +151,18 @@ elif "cover" in command:
 
     logger.info("Set cover position: '{}' to {}".format(cover, position))
     hass.services.call(
-        'mqtt', 'publish',
+        "mqtt",
+        "publish",
         {
             "qos": 2,
             "retain": True,
             "topic": "smarty/{}/command/{}".format(cover_esp_id, cover),
-            "payload": '{"YYY": {"command": "set_position", "value": XX }}'.replace('YYY', cover).replace('XX', str(position)),
-        }
+            "payload": '{"YYY": {"command": "set_position", "value": XX }}'.replace(
+                "YYY", cover
+            ).replace(
+                "XX", str(position)
+            ),
+        },
     )
 
 elif command != "nada":
@@ -159,6 +174,7 @@ elif command != "nada":
     # example command data: "PAUSE"
     logger.warning("Run ADB cmd: '{}' in {}".format(command_data, entity))
     hass.services.call(
-        'androidtv', 'adb_command',
-        {"entity_id": entity, "command": command_data}
+        "androidtv",
+        "adb_command",
+        {"entity_id": entity, "command": command_data},
     )
