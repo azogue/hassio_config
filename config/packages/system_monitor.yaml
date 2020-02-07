@@ -11,8 +11,6 @@ homeassistant:
   customize_glob:
     "sensor.speedtest*":
       icon: mdi:speedometer
-    "sensor.sensor_*_time_drift":
-      icon: mdi:timer-sand
 
 
 #binary_sensor:
@@ -35,7 +33,6 @@ variable:
     value: 0
     attributes:
       icon: mdi:speedometer
-#    restore: true
 
 input_select:
   esp_command:
@@ -47,13 +44,11 @@ input_select:
     name: Módulos
     options:
      - Terraza
-     - Persianas
      - Salón
      - Dormitorio
      - Baño
      - Office
      - Estudio
-     - Hall
      - Cocina
      - Galería
      - Cuadro
@@ -64,11 +59,6 @@ sensor:
   - 'time_utc'
   - 'date_time'
 
-#  Removed because of hassio OS incompatibility:
-#- platform: htu21d
-#  name: local_htu21d
-#  scan_interval: 45
-
 - platform: command_line
   name: HASS CPU Temperature
   command: "cat /sys/class/thermal/thermal_zone0/temp"
@@ -77,25 +67,11 @@ sensor:
   scan_interval: 60
 
 - platform: command_line
-  name: RPI3Dev1 CPU Temperature
-  command: !secret ssh_cmd_rpi_temp_rpi3dev1
-  unit_of_measurement: "°C"
-  value_template: '{{ value | multiply(0.001) | round(1) }}'
-  scan_interval: 180
-
-- platform: command_line
   name: RPI4 CPU Temperature
   command: !secret ssh_cmd_rpi_temp_rpi4
   unit_of_measurement: "°C"
   value_template: '{{ value | multiply(0.001) | round(1) }}'
   scan_interval: 180
-
-#- platform: command_line
-#  name: RPI3Dev2 CPU Temperature
-#  command: !secret ssh_cmd_rpi_temp_rpi3dev2
-#  unit_of_measurement: "°C"
-#  value_template: '{{ value | multiply(0.001) | round(1) }}'
-#  scan_interval: 180
 
 - platform: systemmonitor
   resources:

@@ -45,16 +45,6 @@ sensor:
         unit_of_measurement: "lx"
         icon_template: "mdi:lightbulb-on"
 
-#input_select:
-#  # Xiaomi Air Purifier 2S
-#  airpurifier_office_mode:
-#    name: Mode
-#    options:
-#      - Auto
-#      - Silent
-#      - Favorite
-#    icon: "mdi:fan"
-
 input_number:
   # Xiaomi Air Purifier 2S
   airpurifier_office_favorite_level:
@@ -64,9 +54,3 @@ input_number:
     max: 14
     step: 1
     icon: "mdi:weather-windy"
-
-
-# AUTOMATIONS
-# - [x] Fan Off at night,
-# - [x] auto on if off + aqi > 25 + notify iphone
-# - [x] auto mode if on + favorite level > 3 + aqi < 15

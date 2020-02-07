@@ -47,7 +47,6 @@ sensor:
 - platform: cert_expiry
   host: !secret base_host
   scan_interval: 7200
-#    port: 443
 
 - platform: uptime
   unit_of_measurement: hours
@@ -56,10 +55,3 @@ pi_hole:
   host: localhost:4865
   ssl: false
   verify_ssl: false
-
-#no_ip:
-#  domain: !secret base_host
-#  username: !secret no_ip_user
-#  password: !secret no_ip_password
-
-# TODO AUTOMATION FOR CERT RENEW?
