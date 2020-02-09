@@ -683,13 +683,13 @@
   id: cambio_tarifa_punta_valle
   trigger:
   - platform: time
-    at: '22:00:05'
+    at: '22:00:00'
   - platform: time
-    at: '23:00:05'
+    at: '23:00:00'
   - platform: time
-    at: '12:00:05'
+    at: '12:00:00'
   - platform: time
-    at: '13:00:05'
+    at: '13:00:00'
   condition:
   - condition: template
     value_template: '{{ (utcnow().hour == 21) or (utcnow().hour == 11) }}'
@@ -699,9 +699,3 @@
     data_template:
       tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
         %}Valle{% endif %}'
-  - service: persistent_notification.create
-    data_template:
-      title: Cambio tarifa eléctrica
-      message: Cambiando a tarifa {% if (utcnow().hour >= 11) and (utcnow().hour <
-        21) %}Punta{% else %}Valle{% endif %}
-      notification_id: cambio_tarifa_elec

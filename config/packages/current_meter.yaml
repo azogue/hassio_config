@@ -71,14 +71,12 @@ utility_meter:
   billable_energy:
     source: sensor.main_energy_total
     cycle: yearly
-    offset: '00:00:30'
     tariffs:
       - Punta
       - Valle
   daily_energy_punta_valle:
     source: sensor.main_energy_total
     cycle: daily
-    offset: '00:00:30'
     tariffs:
       - Punta
       - Valle
@@ -86,26 +84,22 @@ utility_meter:
   hourly_energy_consumption:
     source: sensor.main_energy_total
     cycle: hourly
-    offset: '00:00:15'
     tariffs:
       - unique
 
   hourly_energy_cost:
     source: sensor.energy_cost_hour
     cycle: hourly
-    offset: '00:00:15'
     tariffs:
       - unique
   daily_energy_cost:
     source: sensor.energy_cost_hour
     cycle: daily
-    offset: '00:00:15'
     tariffs:
       - unique
   monthly_energy_cost:
     source: sensor.energy_cost_hour
     cycle: monthly
-    offset: '00:00:15'
     tariffs:
       - unique
 
