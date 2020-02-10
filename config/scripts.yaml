@@ -8,7 +8,7 @@ good_night:
     service: fan.turn_off
     entity_id: fan.airpurifier_office
   - alias: CAM Salón ON
-    service: python_script.dev_command
+    service: python_script.wyzecam_ptz
     data:
       command: cam vigilia
   - alias: Notificación de buenas noches
@@ -67,6 +67,20 @@ start_vacuum_office:
         - 28700
         - 31500
       repeats: 2
+toggle_position_wyzecampan:
+  alias: Swap position WyzeCamPan
+  sequence:
+    service: python_script.wyzecam_ptz
+    data:
+      command: 'cam toggle mode'
+set_position_escam_door:
+  alias: Set position door in ESCAM
+  sequence:
+    service: shell_command.cmd_set_escam_door
+set_position_escam_window:
+  alias: Set position window in ESCAM
+  sequence:
+    service: shell_command.cmd_set_escam_window
 play_kodi_pvr:
   alias: Enciende la caja tonta
   sequence:

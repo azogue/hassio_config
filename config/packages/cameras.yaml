@@ -82,3 +82,11 @@ camera:
     with_motion_control: true
     control_port: 7999
     camera_id: 1
+
+###############################################################################
+# PTZ ESCAM
+###############################################################################
+shell_command:
+  # PTZ camera commands
+  cmd_set_escam_door: '/config/shell/escam_ptz.py door'
+  cmd_set_escam_window: '/config/shell/escam_ptz.py window'
