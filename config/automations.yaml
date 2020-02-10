@@ -699,3 +699,28 @@
     data_template:
       tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
         %}Valle{% endif %}'
+- id: '1581280740493'
+  alias: Detect edge changes in tap switch
+  description: ''
+  trigger:
+  - entity_id: sensor.interruptor_exterior
+    platform: state
+  condition: []
+  action:
+  - data:
+      message: New State is {{ states.sensor.interruptor_exterior.state }} (at {{
+        now().time() }})
+      title: New trigger
+    service: persistent_notification.create
+  - event: hue_tap_triggered
+    event_data: {}
+- id: '1581282201922'
+  alias: Detect edge changes in hue dimmer kitchen
+  description: ''
+  trigger:
+  - entity_id: sensor.interruptor_cocina
+    platform: state
+  condition: []
+  action:
+  - event: hue_switch_kitchen_triggered
+    event_data: {}
