@@ -1,22 +1,29 @@
 homeassistant:
   customize:
-    sensor.iphone_battery_state:
-      friendly_name: iPhone X (Batt state)
-    sensor.iphone_battery_level:
-      friendly_name: iPhone X (Battery)
-    sensor.iphone_de_maria_del_carmen_battery_state:
-      friendly_name: iPhone SE (Batt state)
-    sensor.iphone_de_maria_del_carmen_battery_level:
-      friendly_name: iPhone SE (Battery)
-    sensor.ipad_de_eugenio_battery_state:
-      friendly_name: iPad (Batt state)
-    sensor.ipad_de_eugenio_battery_level:
-      friendly_name: iPad (Battery)
+    sensor.battery_state:
+      friendly_name: Eu (Batt state)
+    sensor.battery_level:
+      friendly_name: Eu (Battery)
+    sensor.battery_state_ipad:
+      friendly_name: iPad1 (Batt state)
+    sensor.battery_level_ipad:
+      friendly_name: iPad1 (Battery)
+    sensor.battery_state_carmen:
+      friendly_name: Carmen (Batt state)
+    sensor.battery_level_carmen:
+      friendly_name: Carmen (Battery)
+    sensor.battery_state_ipad_carmen:
+      friendly_name: iPad Carmen (Batt state)
+    sensor.battery_level_ipad_carmen:
+      friendly_name: iPad Carmen (Battery)
 
     person.eugenio:
       icon: mdi:human-male
     person.carmen:
       icon: mdi:human-female
+    binary_sensor.eugenio_fuera_de_casa:
+      icon: mdi:human-male
+      device_class: safety
     binary_sensor.eugenio_en_casa:
       icon: mdi:human-male
       device_class: occupancy
@@ -36,14 +43,8 @@ zone:
 - name: Home
   latitude: !secret latitude
   longitude: !secret longitude
-  radius: 125
-  icon: mdi:castle
-
-- name: !secret z1_name
-  latitude: !secret z1_latitude
-  longitude: !secret z1_longitude
-  radius: !secret z1_radius
-  icon: !secret z1_icon
+  radius: !secret radius_home
+  icon: mdi:home-heart
 
 - name: !secret z2_name
   latitude: !secret z2_latitude
@@ -88,14 +89,9 @@ binary_sensor:
     name: 'Carmen en casa'
     probability_threshold: 0.75
     observations:
-      - entity_id: 'device_tracker.iphonese'
+      - entity_id: 'device_tracker.iphone_6s'
         prob_given_true: 0.95
         prob_given_false: 0.15
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.iphone_se'
-        prob_given_true: 0.9
-        prob_given_false: 0.25
         platform: 'state'
         to_state: 'home'
       - entity_id: 'device_tracker.iphone_de_carmen_bt'
@@ -103,19 +99,12 @@ binary_sensor:
         prob_given_false: 0.33
         platform: 'state'
         to_state: 'home'
-      - entity_id: 'device_tracker.homeadmin_iphonese'
+      - entity_id: 'device_tracker.carmen_iphone_6s'
         prob_given_true: 0.99
         prob_given_false: 0.33
         platform: 'state'
         to_state: 'home'
-      - entity_id: 'device_tracker.applewatch_carmen'
-        prob_given_true: 0.99
-        prob_given_false: 0.5
-        platform: 'state'
-        to_state: 'home'
 
-# sensor.bssid
-# sensor.ssid
 sensor:
   - platform: template
     sensors:
@@ -124,11 +113,11 @@ sensor:
         value_template: >
           {% if states.sensor.ssid.state == "Domus" %}
           {% set bssid = states.sensor.bssid.state %}
-          {% if "58:ef:68:41:65" in bssid %}
+          {% if "68:41:65" in bssid %}
           Wifi Salón
-          {% elif "58:ef:68:41:67" in bssid %}
+          {% elif "68:41:67" in bssid %}
           Wifi Office
-          {% elif "58:ef:68:41:68" in bssid %}
+          {% elif "68:41:68" in bssid %}
           Wifi Cocina
           {% else %}
           {{ bssid }}??
@@ -136,9 +125,29 @@ sensor:
           {% else %}
           {{ states.sensor.connection_type.state }}
           {%endif%}
+  - platform: template
+    sensors:
+      iphone_carmen_wifi_ap:
+        friendly_name: "Wifi Carmen"
+        value_template: >
+          {% if states.sensor.ssid_carmen.state == "Domus" %}
+          {% set bssid = states.sensor.bssid_carmen.state %}
+          {% if "68:41:65" in bssid %}
+          Wifi Salón
+          {% elif "68:41:67" in bssid %}
+          Wifi Office
+          {% elif "68:41:68" in bssid %}
+          Wifi Cocina
+          {% else %}
+          {{ bssid }}??
+          {%endif%}
+          {% else %}
+          {{ states.sensor.connection_type_carmen.state }}
+          {%endif%}
+
 
 owntracks:
-  max_gps_accuracy: 200
+  max_gps_accuracy: 100
   waypoints: True
 
 device_tracker:
