@@ -15,8 +15,8 @@ import datetime as dt
 from urllib import parse
 import appdaemon.plugins.hass.hassapi as hass
 
-
 LOG_LEVEL = "DEBUG"
+LOG_LEVEL_HIGH = "WARNING"
 LOGGER = "event_log"
 
 EVENT_KODI_CALL_METHOD_RESULT = "kodi_call_method_result"
@@ -59,19 +59,10 @@ PARAMS_GET_ITEM = {
 }
 TYPE_ITEMS_NOTIFY = ["movie", "episode"]
 TYPE_HA_ITEMS_NOTIFY = ["tvshow", "movie"]
-# TYPE_ITEMS_IGNORE = ['channel', 'unknown']  # grabaciones: 'unknown'
-TELEGRAM_KEYBOARD_KODI = [
-    "/luceson",
-    "/ambilighttoggle, /ambilightconfig",
-    "/pitemps, /tvshowsnext",
-]
+
+TELEGRAM_KEYBOARD_KODI = ["/luceson, /ambilighttoggle"]
 TELEGRAM_INLINEKEYBOARD_KODI = [
-    [("Luces ON", "/luceson")],
-    [
-        ("Switch Ambilight", "/ambilighttoggle"),
-        ("Ch. config", "/ambilightconfig"),
-    ],
-    [("Tª", "/pitemps"), ("Next TvShows", "/tvshowsnext")],
+    [("Luces ON", "/luceson"), ("Switch Ambilight", "/ambilighttoggle")],
 ]
 
 
@@ -96,24 +87,11 @@ class KodiAssistant(hass.Hass):
         _lights_dim_on = self.args.get("lights_dim_on", "").split(",")
         _lights_dim_off = self.args.get("lights_dim_off", "").split(",")
         _lights_off = self.args.get("lights_off", "").split(",")
-        _automations_off = self.args.get("automations_off", "").split(",")
-        _switch_dim_group = self.args.get("switch_dim_lights_use")
-        if _switch_dim_group is not None:
-            self._lights = {
-                "dim": {"on": _lights_dim_on, "off": _lights_dim_off},
-                "off": _lights_off,
-                "auto_off": _automations_off,
-                "state": self.get_state(_switch_dim_group),
-            }
-            # Listen for ambilight changes to change light dim group:
-            self.listen_state(self.ch_dim_lights_group, _switch_dim_group)
-        else:
-            self._lights = {
-                "dim": {"on": _lights_dim_on, "off": _lights_dim_off},
-                "auto_off": _automations_off,
-                "off": _lights_off,
-                "state": "off",
-            }
+        self._lights = {
+            "dim": {"on": _lights_dim_on, "off": _lights_dim_off},
+            "off": _lights_off,
+            "state": "off",
+        }
 
         self._media_player = self.config["media_player"]
         self._ios_notifier = self.config["notifier"].replace(".", "/")
@@ -125,10 +103,6 @@ class KodiAssistant(hass.Hass):
         self.listen_event(
             self._receive_kodi_result, EVENT_KODI_CALL_METHOD_RESULT
         )
-        # self.log('KodiAssist Initialized with dim_lights_on={}, '
-        #          'dim_lights_off={}, off_lights={}.'
-        #        .format(self._lights['dim']['on'], self._lights['dim']['off'],
-        #                  self._lights['off']))
 
     def _get_max_brightness_ambient_lights(self):
         if self.now_is_between("09:00:00", "19:00:00"):
@@ -144,7 +118,7 @@ class KodiAssistant(hass.Hass):
             "kodi/call_method",
             entity_id=self._media_player,
             method=METHOD_GET_ITEM,
-            **PARAMS_GET_ITEM
+            **PARAMS_GET_ITEM,
         )
 
     # noinspection PyUnusedLocal
@@ -177,7 +151,7 @@ class KodiAssistant(hass.Hass):
             else:
                 self.log(
                     "RECEIVED BAD KODI RESULT: {}".format(result),
-                    level="WARNING",
+                    level=LOG_LEVEL_HIGH,
                     log=LOGGER,
                 )
         elif (
@@ -228,9 +202,7 @@ class KodiAssistant(hass.Hass):
             elif "season.poster" in item["art"]:
                 raw_img_url = item["art"]["season.poster"]
             else:
-                self.log(
-                    "No poster in item[art]={}".format(item["art"]), log=LOGGER
-                )
+                self.log(f"No poster in item[art]={item['art']}", log=LOGGER)
                 k = list(item["art"].keys())[0]
                 raw_img_url = item["art"][k]
             img_url = (
@@ -238,13 +210,17 @@ class KodiAssistant(hass.Hass):
             )
             if ("192.168." not in img_url) and img_url.startswith("http://"):
                 img_url = img_url.replace("http:", "https:")
-            # self.log('MESSAGE: T={}, M={}, URL={}'
-            #          .format(title, message, img_url), log=LOGGER)
+
+            self.log(
+                "MESSAGE: T={}, M={}, URL={}".format(title, message, img_url),
+                log=LOGGER,
+                level=LOG_LEVEL,
+            )
         except KeyError as e:
             self.log(
                 "MESSAGE KeyError: {}; item={}".format(e, item), log=LOGGER
             )
-        return title, message, img_url.replace("//", "/")
+        return title, message, img_url
 
     def _valid_image_url(self, img_url):
         if (img_url is not None) and img_url.startswith("http"):
@@ -252,7 +228,7 @@ class KodiAssistant(hass.Hass):
         if img_url is not None:
             self.log(
                 "BAD IMAGE URL: {}".format(img_url),
-                level="WARNING",
+                level=LOG_LEVEL_HIGH,
                 log=LOGGER,
             )
         return False
@@ -286,7 +262,7 @@ class KodiAssistant(hass.Hass):
             self.call_service(
                 "{}/send_photo".format(self._notifier_bot),
                 target=target,
-                **data_photo
+                **data_photo,
             )
             message + "\n{}\nEND".format(img_url)
         data_msg = {
@@ -298,29 +274,10 @@ class KodiAssistant(hass.Hass):
         self.call_service(
             "{}/send_message".format(self._notifier_bot),
             target=target,
-            **data_msg
+            **data_msg,
         )
 
     def _adjust_kodi_lights(self, play=True):
-        automs_off = self._lights["auto_off"]
-        for auto in automs_off:
-            auto_state = self.get_state(auto) == "on"
-            if auto_state and play:
-                # Turn off automation
-                self.call_service("automation/turn_off", entity_id=auto)
-                self.log("Set automation off: {}".format(auto), log=LOGGER)
-            elif not auto_state and not play:
-                # Turn on automation
-                self.call_service("automation/turn_on", entity_id=auto)
-                self.log("Set automation on: {}".format(auto), log=LOGGER)
-            else:
-                self.log(
-                    "Strange: automation is {} and play mode is {}".format(
-                        auto_state, play
-                    ),
-                    log=LOGGER,
-                )
-
         k_l = self._lights["dim"][self._lights["state"]] + self._lights["off"]
         for light_id in k_l:
             if play:
@@ -386,7 +343,7 @@ class KodiAssistant(hass.Hass):
                         "light/turn_on",
                         entity_id=light_id,
                         transition=2,
-                        **new_state_attrs
+                        **new_state_attrs,
                     )
                 else:
                     self.log(
@@ -408,8 +365,6 @@ class KodiAssistant(hass.Hass):
                 "media_content_type" in kodi_attrs
                 and kodi_attrs["media_content_type"] in TYPE_HA_ITEMS_NOTIFY
             )
-            # self.log('KODI ATTRS: {}, is_playing_video={}'
-            #          .format(kodi_attrs, self._is_playing_video), log=LOGGER)
             if self._is_playing_video:
                 self._ask_for_playing_item()
         elif ((new == "idle") and self._is_playing_video) or (new == "off"):
@@ -423,14 +378,3 @@ class KodiAssistant(hass.Hass):
                 log=LOGGER,
             )
             self._adjust_kodi_lights(play=False)
-
-    # noinspection PyUnusedLocal
-    def ch_dim_lights_group(self, entity, attribute, old, new, kwargs):
-        """Change dim lights group with the change in the ambilight switch."""
-        self._lights["state"] = new
-        self.log(
-            "Dim Lights group changed from {} to {}".format(
-                self._lights["dim"][old], self._lights["dim"][new]
-            ),
-            log=LOGGER,
-        )

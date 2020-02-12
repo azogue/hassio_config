@@ -8,67 +8,9 @@ AutoFeedback:
   bot_nicknames: !secret bot_nicknames
   base_url: !secret base_url
 
-#Alarma:
-#  class: AlarmControl
-#  module: alarm_control
-#  ha_key: !secret ha_key
-#  lights_notif: light.cuenco,light.lamparita
-#  bot_name: !secret bot_name
-#  base_url: !secret base_url
-#  bot_target: !secret bot_admin_target
-#  rooms:
-#    Office:
-#      camera.escam: binary_sensor.motioncam_office,10
-#      binary_sensor.sensor_office_mov1: 10
-#    Salón:
-#      camera.pi_zero_cam_1: binary_sensor.motioncam_pizero,5
-#      camera.wyzecampan: binary_sensor.motioncam_wyzecampan,5
-#      binary_sensor.sensor_livingroom_mov1: 5
-##    Cuadro:
-##      binary_sensor.local_pir:
-#    Cocina:
-#      camera.pi_zero_cam_2: binary_sensor.motioncam_pizero2,5
-#      binary_sensor.sensor_kitchen_mov1: 3
-#    Terraza:
-#      camera.wyzecam2: binary_sensor.motioncam_wyzecam2,3
-#      binary_sensor.sensor_terraza_mov1: 3
-
 HueTapControl:
   module: hue_tap_controller
   class: HueTapControl
-
-PowerRM:
-  module: rolling_mean
-  class: RollingMean
-  name: sensor.sustained_power
-  sensor: sensor.esp32ener_power
-  sensor_freq: 5
-  window_seconds: 900
-  max_power_kw: 5.0
-  max_power_kw_reset: 3.5
-  min_time_high: 15
-  min_time_low: 60
-
-#FamilyTracker:
-#  class: FamilyTracker
-#  module: family_tracker
-#  bot_chatids: !secret bot_chatids
-#  bot_group_target: !secret bot_group_target
-#  base_url: !secret base_url
-#  people:  # Content of home_group: chat_id
-#    person.eugenio:
-#      chat_id_idx: 0
-#    person.carmen:
-#      chat_id_idx: 1
-
-EnerpiPeakNotifier:
-  class: EnerpiPeakNotifier
-  module: enerpi_alarm
-  control: sensor.esp32ener_power
-  max_power_kw: 5.0
-  max_power_kw_reset: 3.0
-  min_time_high: 15
-  min_time_low: 60
 
 KodiMediaSelect:
   class: DynamicKodiInputSelect
@@ -88,9 +30,6 @@ KodiNotifier:
   lights_dim_off: light.bola_grande,light.cuenco
   lights_dim_on: light.pie_sofa,light.pie_tv
   lights_off: light.central,light.tira,light.tira_tv
-#  lights_off: light.central,light.tira,light.yeelight_strip_7811dca21ecf
-#  automations_off: automation.sync_tira_tv_con_tira_sofa
-#  switch_dim_lights_use: switch.toggle_kodi_ambilight
 
 MorningAlarmClock:
   class: AlarmClock
