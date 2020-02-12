@@ -8,6 +8,10 @@ AutoFeedback:
   bot_nicknames: !secret bot_nicknames
   base_url: !secret base_url
 
+KitchenLight:
+  module: light_with_motion_and_hue_switch
+  class: HueSwitchAndMotionControl
+
 HueTapControl:
   module: hue_tap_controller
   class: HueTapControl
