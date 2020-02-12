@@ -18,6 +18,11 @@
     for:
       minutes: 3
   - condition: state
+    entity_id: light.cocina
+    state: 'off'
+    for:
+      minutes: 3
+  - condition: state
     entity_id: light.salon
     state: 'off'
     for:
@@ -687,3 +692,18 @@
   action:
   - event: hue_switch_kitchen_triggered
     event_data: {}
+- id: '1581414425129'
+  alias: Enciende Hall al abrir cuadro
+  description: Encendido automático del Hall al abrir el cuadro de protecciones
+  trigger:
+  - entity_id: binary_sensor.cuadro_movimiento
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.hall_light
+    state: 'off'
+  action:
+  - entity_id: light.hall_light
+    service: light.turn_on

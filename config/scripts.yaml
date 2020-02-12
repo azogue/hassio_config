@@ -172,19 +172,7 @@ start_status_sonoff_outlets:
       topic: sonoff/simple1
       payload: stat
       qos: 1
-cam_snapshot_1:
-  alias: Cam Snapshots
-  sequence:
-  - service: camera.snapshot
-    entity_id: camera.escam
-    data:
-      filename: /config/www/snapshot_iegeek_hd.jpg
-  - service: persistent_notification.create
-    data:
-      title: Snapshot
-      message: Link a snapshot Estudio [aquí](/local/snapshot_iegeek_hd.jpg).
-      notification_id: cam_snapshot_1
-'1577533914773':
+inmersion:
   alias: Inmersión
   sequence:
   - entity_id: media_player.nvidia_shield
