@@ -12,6 +12,17 @@ HueTapControl:
   module: hue_tap_controller
   class: HueTapControl
 
+PeakNotifier:
+  class: PeakNotifier
+  module: power_alarm
+  instant_power: sensor.main_power_total
+  sustained_power: sensor.sustained_power
+  max_power_peak_kw: 6.5
+  max_power_kw: 4.6
+  max_power_kw_reset: 3.0
+  min_time_high: 30
+  min_time_low: 60
+
 KodiMediaSelect:
   class: DynamicKodiInputSelect
   module: kodi_input_select

@@ -191,6 +191,31 @@ ios:
             behavior: 'default'
             context: 'default'
 
+      - name: powerpeak
+        identifier: 'powerpeak'
+        actions:
+          - identifier: 'TURN_OFF_ACS'
+            title: 'Apaga Calentador'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+            behavior: 'default'
+            context: 'default'
+          - identifier: 'TURN_OFF_CLIMATE'
+            title: 'Apaga AC'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+            behavior: 'default'
+            context: 'default'
+          - identifier: 'TURN_OFF_ALL'
+            title: 'Apaga todo!'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: yes
+            behavior: 'default'
+            context: 'default'
+
       - name: airpurif
         identifier: 'airpurif'
         actions:

@@ -34,6 +34,8 @@ CAMERA_ENTITIES = [
     "camera.wyzecampan1",
     "camera.escam",
 ]
+CLIMATE_COOL = "climate.termostato_ac"
+CLIMATE_HEAT = "climate.calefaccion"
 COVER_VENTANAL = "cover.shelly_ventanal"
 COVER_PUERTA = "cover.shelly_puerta"
 FAN_OFFICE = "fan.airpurifier_office"
@@ -119,6 +121,9 @@ TELEGRAM_BOT_HELP = """*Comandos disponibles*:
 /llegadatv - Apagar la alarma y encender las luces y la tele.
 /lucesoff - Apagar las luces de casa.
 /luceson - Luces del salón al 100%.
+/off - Apagado de grandes consumos.
+/offac - Apagado de aire acondicionado.
+/offagua - Apagado de calentador eléctrico.
 /playkodi - Reproduce en Kodi la url pasada como argumento 
 /posponer - Posponer despertador unos minutos más.
 /resetalarm - Ignorar el armado de alarma y resetearla.
@@ -159,6 +164,10 @@ TELEGRAM_IOS_COMMANDS = {  # AWAY category
     "/silenciar": "ALARM_SILENT",  # Silenciar sirena
     "/resetalarm": "ALARM_RESET",  # Ignorar armado, reset
     "/desconectar": "ALARM_CANCEL",  # Desconectar alarma
+    # Peak Power category
+    "/off": "TURN_OFF_ALL",  # Apaga todos los consumos grandes
+    "/offac": "TURN_OFF_CLIMATE",  # Apaga aire acondicionado
+    "/offagua": "TURN_OFF_ACS",  # Apaga calentador eléctrico
     # CONFIRM category
     "/confirmar": "CONFIRM_OK",  # Validar
     # KODIPLAY category
@@ -1427,6 +1436,26 @@ class EventListener(hass.Hass):
             self.toggle(SWITCH_HUE_AMBILIGHT)
             action_msg_log += "TOGGLE KODI AMBILIGHT"
             self.light_flash(XY_COLORS["blue"], persistence=2, n_flashes=2)
+
+        # Peak Power category
+        elif action in ("TURN_OFF_ALL", "TURN_OFF_CLIMATE", "TURN_OFF_ACS"):
+            if action in ("TURN_OFF_ALL", "TURN_OFF_ACS"):
+                # Apaga calentador eléctrico
+                self.call_service("switch/turn_off", entity_id=SWITCH_ACS)
+                action_msg_log += f"Turn off water boiler"
+            if action in ("TURN_OFF_ALL", "TURN_OFF_CLIMATE"):
+                # Apaga aire acondicionado
+                serv = "climate/set_hvac_mode"
+                if self.get_state(CLIMATE_COOL) != "off":
+                    self.call_service(
+                        serv, entity_id=CLIMATE_COOL, hvac_mode="off"
+                    )
+                    action_msg_log += f"Turn off climate cool"
+                elif self.get_state(CLIMATE_HEAT) != "off":
+                    self.call_service(
+                        serv, entity_id=CLIMATE_HEAT, hvac_mode="off"
+                    )
+                    action_msg_log += f"Turn off climate heat"
 
         # Air purifier commands
         elif action == "PURIFIER_SILENT":  # Fan to silent mode
