@@ -142,10 +142,8 @@
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
       disable_notification: true
       inline_keyboard:
-      - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call
-        light.toggle group.luces_dormitorio
-      - Luz cocina:/service_call switch.toggle switch.cocina, Luz estudio:/service_call
-        switch.toggle switch.estudio_light_relay, +:/init
+      - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle light.dormitorio
+      - Luz cocina:/service_call light.toggle light.cocina, Luz estudio:/service_call light.toggle light.estudio
   - service: notify.mobile_app_iphone
     data:
       title: Empieza la noche!
@@ -346,33 +344,6 @@
       - Aura habitación:/service_call light.toggle light.aura_habitacion
   - service: media_player.turn_off
     entity_id: media_player.dormitorio
-- alias: Encendido luces estudio
-  id: ligths_on_study
-  trigger:
-    platform: state
-    entity_id: binary_sensor.sensor_study_mov1
-    to: 'on'
-  condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: light.estudio
-      state: 'off'
-      for:
-        seconds: 30
-    - condition: state
-      entity_id: alarm_control_panel.alarma
-      state: disarmed
-    - condition: template
-      value_template: '{{ states.sensor.sensor_study_illumination.state | int < 15
-        }}'
-    - condition: time
-      after: '8:30:00'
-      before: '23:00:00'
-  action:
-  - service: python_script.select_light_profile
-    data_template:
-      scene: Estudio
 - alias: Botvac error notification
   id: botvac_error_notify
   trigger:
@@ -443,11 +414,6 @@
     for:
       minutes: 2
   - platform: state
-    entity_id: sensor.sensor_study_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
     entity_id: sensor.sensor_office_snum
     to: unknown
     for:
@@ -487,9 +453,6 @@
     from: unknown
   - platform: state
     entity_id: sensor.sensor_livingroom_snum
-    from: unknown
-  - platform: state
-    entity_id: sensor.sensor_study_snum
     from: unknown
   - platform: state
     entity_id: sensor.sensor_office_snum
