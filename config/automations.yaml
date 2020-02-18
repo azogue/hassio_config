@@ -105,7 +105,6 @@
     event_type: device_tracker_new_device
   action:
   - service: notify.mobile_app_iphone
-    alias: Notify new BT device
     data_template:
       title: Nuevo dispositivo detectado
       message: 'entity_id:
@@ -220,7 +219,7 @@
       entity_id: fan.airpurifier_office
       speed: Auto
 - alias: Purificador a auto desde velocidad fija
-  id: encendido_de_purificador_si_aqi_alto
+  id: purificador_to_auto_from_fixed
   trigger:
     platform: numeric_state
     entity_id: sensor.airpurifier_office_air_quality_pm25
@@ -253,7 +252,7 @@
   - service: shell_command.cmd_init_ssh_identity
   - service: python_script.set_telegram_chatid_sensor
     data:
-      chat_id: 312423963
+      chat_id: !secret telegram_bot_chat_id_admin
   - service: python_script.start_states
 - alias: Update notifications
   id: update_available_notify
@@ -374,35 +373,33 @@
         vacuum.return_to_home vacuum.robot_aspirador
       - Start:/service_call vacuum.start_pause vacuum.robot_aspirador, Stop:/service_call
         vacuum.stop vacuum.robot_aspirador, +:/init
-- alias: Carmen sale del hospital
-  id: dev_tracker_carmen_out_hospital
+- id: dev_tracker_carmen_out_hospital
+  alias: Carmen sale del hospital
   trigger:
   - platform: zone
     entity_id: device_tracker.iphonese
     zone: zone.hospital
     event: leave
-  - platform: zone
-    entity_id: device_tracker.iphone_6s
+    platform: zone
     zone: zone.hospital
-    event: leave
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      title: '*Salida del Hospital*'
-      target: 312423963
+  - data_template:
       message: Carmen acaba de salir del hospital
+      target: !secret telegram_bot_chat_id_admin
+      title: '*Salida del Hospital*'
+    service: telegram_bot.send_message
 - alias: Carmen llega al hospital
   id: dev_tracker_carmen_in_hospital
   trigger:
   - platform: zone
-    entity_id: device_tracker.iphone_6s
+    entity_id: device_tracker.iphone_carmen
     zone: zone.hospital
     event: enter
   action:
   - service: telegram_bot.send_message
     data_template:
       title: '*Llegada a Hospital*'
-      target: 312423963
+      target: !secret telegram_bot_chat_id_admin
       message: Carmen acaba de llegar al hospital.
       disable_notification: true
 - alias: Aviso de sensor MQTT offline
@@ -447,7 +444,7 @@
   - service: telegram_bot.send_message
     data_template:
       title: '*Sensor offline*'
-      target: 312423963
+      target: !secret telegram_bot_chat_id_admin
       message: El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece
         que *ha fallado*. Revísalo!
 - alias: Aviso de sensor MQTT online
@@ -482,7 +479,7 @@
   - service: telegram_bot.send_message
     data_template:
       title: '*Sensor online*'
-      target: 312423963
+      target: !secret telegram_bot_chat_id_admin
       message: 'El micro ESP `{{ trigger.to_state.attributes.friendly_name[9:]}}`
         parece que ha **revivido**: Wake_{{ trigger.to_state.attributes.status.wake
         }}(WR:{{ trigger.to_state.attributes.status.wake_reason }},ERR:{{ trigger.to_state.attributes.status.c_error
@@ -536,7 +533,7 @@
   - service: telegram_bot.send_message
     data_template:
       title: '*Cambio de IP*'
-      target: 312423963
+      target: !secret telegram_bot_chat_id_admin
       message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*,
         la anterior era: _{{ trigger.from_state.state }}_'
       disable_notification: true
@@ -612,12 +609,12 @@
   trigger:
   - platform: state
     entity_id: input_boolean.mirror_eve_main_door
-    to: 'on'
   action:
-  - service: python_script.main_door_opening
-    data_template:
+  - event: main_door_triggered
+    event_data_template:
+      state: '{{ trigger.to_state.state }}'
       last_state_ts: '{{ trigger.from_state.last_changed }}'
-      is_timer_finished: 0
+      all_data: '{{ trigger }}'
 - alias: Auto alarm timer finished
   id: auto_alarm_timer_finished
   trigger:
@@ -630,7 +627,7 @@
     data_template:
       last_state_ts: '{{ trigger.event.data }}'
       is_timer_finished: 1
-- id: '1577386722150'
+- id: 'activa_extras_inmersion_mode'
   alias: Set inmersion mode
   description: Apaga pie sofa con activación de ambilight salón y pone pan cam en
     reposo
@@ -667,7 +664,7 @@
     data_template:
       tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
         %}Valle{% endif %}'
-- id: '1581280740493'
+- id: 'detect_edge_hue_tap'
   alias: Detect edge changes in tap switch
   description: ''
   trigger:
@@ -675,14 +672,9 @@
     platform: state
   condition: []
   action:
-  - data:
-      message: New State is {{ states.sensor.interruptor_exterior.state }} (at {{
-        now().time() }})
-      title: New trigger
-    service: persistent_notification.create
   - event: hue_tap_triggered
     event_data: {}
-- id: '1581282201922'
+- id: 'detect_edge_hue_dimmer_kitchen'
   alias: Detect edge changes in hue dimmer kitchen
   description: ''
   trigger:
@@ -692,7 +684,7 @@
   action:
   - event: hue_switch_kitchen_triggered
     event_data: {}
-- id: '1581414425129'
+- id: 'turn_on_hall_con_cuadro'
   alias: Enciende Hall al abrir cuadro
   description: Encendido automático del Hall al abrir el cuadro de protecciones
   trigger:

@@ -41,5 +41,4 @@ sensor:
 
 pi_hole:
   host: localhost:4865
-  ssl: false
-  verify_ssl: false
+  api_key: ""

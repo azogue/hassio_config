@@ -17,7 +17,7 @@ sentry:
 
 timer:
   alarm_auto_on:
-    duration: '00:10:00'
+    duration: '00:05:00'
     icon: mdi:alarm-check
 
 variable:
@@ -40,10 +40,8 @@ input_select:
      - Dormitorio
      - Baño
      - Office
-     - Estudio
      - Cocina
      - Galería
-     - Cuadro
 
 sensor:
 - platform: time_date

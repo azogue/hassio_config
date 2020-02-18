@@ -11,26 +11,20 @@ homeassistant:
 
 # Discovery for shelly devs with hacs custom component
 shelly:
-  username: !secret shelly_covers_user
-  password: !secret shelly_covers_pwd
+  username: !secret shelly_user
+  password: !secret shelly_pwd
   devices:  #configure devices
-    # nº1
-    - id: "6882CB"
+    - id: !secret shelly_id_cover_ventanal
       name: Persiana Ventanal
-    # nº2
-    - id: "C4BA30"
+    - id: !secret shelly_id_cover_puerta
       name: Persiana Puerta terraza
-
-    - id: "059F7A"
+    - id: !secret shelly_id_em
       name: Current Meter
-
-    - id: "E098068CEC2C"
+    - id: !secret shelly_id_cuadro_mov
       name: Sensores movimiento
-
-    - id: "8CAAB5058380"
+    - id: !secret shelly_id_cuadro_alerts
       name: Alarmas técnicas
-
-    - id: "8CAAB5055499"
+    - id: !secret shelly_id_hall
       name: Luz Hall
       light_switch: true
 

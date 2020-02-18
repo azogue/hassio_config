@@ -72,7 +72,7 @@ toggle_position_wyzecampan:
   sequence:
     service: python_script.wyzecam_ptz
     data:
-      command: 'cam toggle mode'
+      command: cam toggle mode
 set_position_escam_door:
   alias: Set position door in ESCAM
   sequence:

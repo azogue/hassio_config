@@ -2,7 +2,7 @@ homeassistant:
   customize:
     alarm_control_panel.alarma:
       friendly_name: Alarma del hogar
-      icon: mdi:security-home
+      icon: mdi:shield-home
     input_boolean.mirror_eve_main_door:
       friendly_name: Puerta principal
       icon: mdi:door-closed

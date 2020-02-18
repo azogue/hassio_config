@@ -52,17 +52,24 @@ ios:
         identifier: 'away'
         actions:
           - identifier: 'ALARM_ARM_NOW'
-            title: 'Activar alarma'
+            title: 'Activar totalmente'
             activationMode: 'background'
             authenticationRequired: yes
             destructive: yes
             behavior: 'default'
             context: 'default'
           - identifier: 'ALARM_HOME'
-            title: 'Activar vigilancia'
+            title: 'Activar en casa'
             activationMode: 'background'
             authenticationRequired: yes
             destructive: yes
+            behavior: 'default'
+            context: 'default'
+          - identifier: 'ALARM_CANCEL'
+            title: 'Desconectar'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: no
             behavior: 'default'
             context: 'default'
           - identifier: 'LIGHTS_OFF'
