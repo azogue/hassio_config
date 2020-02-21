@@ -3,6 +3,6 @@
   "name": "Price of electricity (PVPC) in Spain",
   "documentation": "",
   "dependencies": [],
-  "codeowners": [],
-  "requirements": ["beautifulsoup4", "html5lib>=1.0.1"]
+  "codeowners": ["@azogue"],
+  "requirements": ["xmltodict==0.12.0"]
 }

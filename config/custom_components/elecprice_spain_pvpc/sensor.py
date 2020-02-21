@@ -1,5 +1,5 @@
 """
-Sensor for checking the standard price of the electricity (PVPC) in Spain.
+Sensor to collect the standard daily prices of electricity ('PVPC') in Spain.
 
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.elecprice_spain_pvpc/
@@ -20,6 +20,7 @@ from typing import List, Optional, Tuple
 import aiohttp
 import async_timeout
 import voluptuous as vol
+import xmltodict
 from dateutil.parser import parse
 from pytz import timezone
 
@@ -37,9 +38,7 @@ import homeassistant.util.dt as dt_util
 
 
 _LOGGER = logging.getLogger(__name__)
-_RESOURCE = "https://api.esios.ree.es/archives/80/download"
-
-REQUIREMENTS = ["beautifulsoup4", "html5lib>=1.0.1"]
+_RESOURCE = "https://api.esios.ree.es/archives/80/download?date={day:%Y-%m-%d}"
 
 ATTR_PRICE = "price"
 ATTR_RATE = "tariff"
@@ -61,32 +60,38 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def scrap_xml_official_pvpc_daily_prices(
-    html_text: str, tz: timezone, tariff: int = 1
+def extract_prices_for_tariff(
+    xml_data: str, tz: timezone, tariff: int = 2
 ) -> Tuple[date, List[float]]:
     """
-    Scrape XML file content to extract hourly prices for the selected tariff
+    PVPC xml data extractor.
 
-    Using `bs4` with 'html5lib' parser
+    Extract hourly prices for the selected tariff from the xml daily file download
+    of the official _Spain Electric Network_ (Red Eléctrica Española, REE)
+    for the _Voluntary Price for Small Consumers_
+    (Precio Voluntario para el Pequeño Consumidor, PVPC).
     """
-    from bs4 import BeautifulSoup as Soup
+    data = xmltodict.parse(xml_data)["PVPCDesgloseHorario"]
 
-    ident_tarifa = "Z0{}".format(tariff)
-    ident_precio = "FEU"
+    str_horiz = data["Horizonte"]["@v"]
+    day: date = parse(str_horiz.split("/")[0]).astimezone(tz).date()
 
-    soup_pvpc = Soup(html_text, "html5lib")
-    str_horiz = soup_pvpc.find_all("horizonte")[0]["v"]
-    ts_st = parse(str_horiz.split("/")[0]).astimezone(tz).date()
-    for serie in soup_pvpc.find_all("identificacionseriestemporales"):
-        columna = serie.find_next("terminocostehorario")["v"]
-        if (
-            columna == ident_precio
-            and serie.tipoprecio["v"] == ident_tarifa
-            and len(serie.find_all("tipoprecio")) > 0
-        ):
-            values = [round(float(v["v"]), 5) for v in serie.find_all("ctd")]
-            return ts_st, values
-    return ts_st, []
+    tariff_id = f"Z0{tariff}"
+    prices = next(
+        filter(
+            lambda x: (
+                x["TerminoCosteHorario"]["@v"] == "FEU"
+                and x["TipoPrecio"]["@v"] == tariff_id
+            ),
+            data["SeriesTemporales"],
+        )
+    )
+
+    price_values = [
+        round(float(pair["Ctd"]["@v"]), 5) for pair in
+        prices["Periodo"]["Intervalo"]
+    ]
+    return day, price_values
 
 
 async def async_setup_platform(
@@ -237,9 +242,9 @@ class ElecPriceSensor(RestoreEntity):
             return self._today_prices[current_hour + 1]
         return self._today_prices[current_hour]
 
-    async def _download_official_data(self, date_str: str) -> Optional[str]:
+    async def _download_official_data(self, day: date) -> Optional[str]:
         """Make GET request to 'api.esios.ree.es' to retrieve hourly prices."""
-        url = f"{_RESOURCE}?date={date_str}"
+        url = _RESOURCE.format(day=day)
         try:
             with async_timeout.timeout(self._timeout, loop=self.hass.loop):
                 resp = await self._websession.get(url)
@@ -279,7 +284,7 @@ class ElecPriceSensor(RestoreEntity):
         """Update electricity prices from the ESIOS API."""
         tz = self.hass.config.time_zone
         now = args[0].astimezone(tz) if args else dt_util.now(tz)
-        text = await self._download_official_data(now.strftime("%Y-%m-%d"))
+        text = await self._download_official_data(now.date())
         if text is None:
             self._num_retries += 1
             if self._num_retries > 3:
@@ -295,8 +300,8 @@ class ElecPriceSensor(RestoreEntity):
             )
             return
 
-        period = RATES.index(self.rate) + 1
-        day, prices = scrap_xml_official_pvpc_daily_prices(text, tz, period)
+        tariff = RATES.index(self.rate) + 1
+        day, prices = extract_prices_for_tariff(text, tz, tariff)
         self._num_retries = 0
         self._today_prices = prices
 
@@ -304,10 +309,10 @@ class ElecPriceSensor(RestoreEntity):
         if now.hour >= 20:
             try:
                 text_tomorrow = await self._download_official_data(
-                    (now + timedelta(days=1)).strftime("%Y-%m-%d")
+                    (now + timedelta(days=1)).date()
                 )
-                day_fut, prices_fut = scrap_xml_official_pvpc_daily_prices(
-                    text_tomorrow, tz, period
+                day_fut, prices_fut = extract_prices_for_tariff(
+                    text_tomorrow, tz, tariff
                 )
                 _LOGGER.info(
                     "Setting tomorrow (%s) prices: %s",
