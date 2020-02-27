@@ -699,3 +699,57 @@
   action:
   - entity_id: light.hall_light
     service: light.turn_on
+- id: 'ibeacon_activated'
+  alias: iBeacon activado
+  description: 'Genera eventos cuando sub-zonas (beacons) se activan'
+  trigger:
+  - entity_id: device_tracker.iphone
+    event: enter
+    platform: zone
+    zone: zone.beacon_entrada
+  - entity_id: device_tracker.iphone
+    event: enter
+    platform: zone
+    zone: zone.beacon_salon
+  - entity_id: device_tracker.iphone
+    event: enter
+    platform: zone
+    zone: zone.beacon_estudio
+  - entity_id: device_tracker.iphone_carmen
+    event: enter
+    platform: zone
+    zone: zone.beacon_entrada
+  - entity_id: device_tracker.iphone_carmen
+    event: enter
+    platform: zone
+    zone: zone.beacon_salon
+  - entity_id: device_tracker.iphone_carmen
+    event: enter
+    platform: zone
+    zone: zone.beacon_estudio
+  condition: []
+  action:
+  - event: ibeacon_event
+    event_data_template:
+      zone: '{{ trigger.zone.entity_id }}'
+      event_type: '{{ trigger.event }}'
+      entity_id: '{{ trigger.entity_id }}'
+      source: '{{ trigger.to_state.attributes.source_type }}'
+- id: ios_location_trigger
+  alias: iOS Location triggered
+  trigger:
+  - entity_id: sensor.last_update_trigger
+    platform: state
+  - entity_id: sensor.last_update_trigger_carmen
+    platform: state
+  - entity_id: sensor.last_update_trigger_ipad_carmen
+    platform: state
+  - entity_id: sensor.last_update_trigger_ipad
+    platform: state
+  action:
+  - event: ios_location_trigger
+    event_data_template:
+      old_trigger: '{{ trigger.from_state.state }}'
+      new_trigger: '{{ trigger.to_state.state }}'
+      entity: '{{ trigger.to_state.entity_id }}'
+      all_data: '{{ trigger }}'
