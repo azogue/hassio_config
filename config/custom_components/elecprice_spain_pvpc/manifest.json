@@ -1,8 +1,0 @@
-{
-  "domain": "elecprice_spain_pvpc",
-  "name": "Price of electricity (PVPC) in Spain",
-  "documentation": "",
-  "dependencies": [],
-  "codeowners": ["@azogue"],
-  "requirements": ["xmltodict==0.12.0"]
-}

@@ -247,5 +247,10 @@ sensor:
       minutes: 15
     precision: 1
 
-  - platform: elecprice_spain_pvpc
+  - platform: pvpc_hourly_pricing
+    name: PVPC
     tariff: discriminacion
+
+#pvpc_hourly_pricing:
+#  - name: PVPC
+#    tariff: discriminacion
