@@ -58,6 +58,7 @@ media_player:
     org.droidtv.settings: "Ajustes TV"
     org.droidtv.tvsystemui: "Salvapantallas"
 
+
 - platform: androidtv
   host: !secret shield_tv_host
   name: nvidia_shield
@@ -90,24 +91,13 @@ media_player:
   enable_websocket: true
   timeout: 10
   turn_on_action:
-  - service: kodi.call_method
+  - service: python_script.select_tv_source
     data:
-      entity_id: media_player.kodi
-      method: Addons.ExecuteAddon
-      addonid: script.json-cec
-      params:
-        command: activate
+      source: Kodi
   turn_off_action:
   - service: media_player.media_stop
     data:
       entity_id: media_player.kodi
-  - service: kodi.call_method
-    data:
-      entity_id: media_player.kodi
-      method: Addons.ExecuteAddon
-      addonid: script.json-cec
-      params:
-        command: standby
 
 
 - platform: denonavr

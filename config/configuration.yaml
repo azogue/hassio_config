@@ -61,25 +61,28 @@ logger:
   default: warn
   logs:
 #    custom_components.switch.tuyawifiplug: error
+    asyncio: error
     aiohttp.server: critical
     homeassistant.bootstrap: info
-    homeassistant.core: error
-    homeassistant.setup: warning
+    pyShelly: error
 #    homeassistant.components.automation: info
     frontend: critical
     homeassistant.components.floorplan: debug
+    homeassistant.components.device_tracker: error
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
-    homeassistant.components.media_player: info
+    homeassistant.components.tplink.switch: error
     homeassistant.components.light.yeelight: critical
-    homeassistant.components.python_script: warning
     homeassistant.components.recorder: info
     homeassistant.components.script: info
     homeassistant.components.sensor.influxdb: error
     homeassistant.components.tts: debug
-    homeassistant.components.vacuum.xiaomi_miio: critical
+    homeassistant.components.xiaomi_miio.vacuum: error
+    tuyaha.tuyaapi: error
     miio: critical
     homeassistant.helpers.entity: error
+    custom_components.ambilights.switch: critical
+    DenonAVR: critical
 
 mqtt:
   broker: 192.168.1.10
@@ -132,6 +135,12 @@ history:
       - light
       - switch
       - vacuum
+  exclude:
+    entities:
+#      - sensor.main_power_total
+      - sensor.temperatura_ac
+      - sensor.temperatura_interior
+      - sensor.humedad_interior
 logbook:
   include:
     domains:
@@ -185,6 +194,7 @@ influxdb:
       - sensor.dark_sky_overnight_low_temperature_2d
       - sensor.dark_sky_overnight_low_temperature_3d
       # We have smoothed means:
+      - sensor.main_power_total
       - sensor.temperatura_ac
       - sensor.temperatura_interior
       - sensor.humedad_interior

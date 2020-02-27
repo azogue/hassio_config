@@ -146,8 +146,10 @@
       target: '{{ states.sensor.telegram_default_chatid.state | int }}'
       disable_notification: true
       inline_keyboard:
-      - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call light.toggle light.dormitorio
-      - Luz cocina:/service_call light.toggle light.cocina, Luz estudio:/service_call light.toggle light.estudio
+      - Luz salón:/service_call light.toggle group.luces_salon, Luz dormitorio:/service_call
+        light.toggle light.dormitorio
+      - Luz cocina:/service_call light.toggle light.cocina, Luz estudio:/service_call
+        light.toggle light.estudio
   - service: notify.mobile_app_iphone
     data:
       title: Empieza la noche!
@@ -376,9 +378,7 @@
 - id: dev_tracker_carmen_out_hospital
   alias: Carmen sale del hospital
   trigger:
-  - platform: zone
-    entity_id: device_tracker.iphonese
-    zone: zone.hospital
+  - entity_id: device_tracker.iphone_carmen
     event: leave
     platform: zone
     zone: zone.hospital

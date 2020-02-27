@@ -7,8 +7,8 @@ import datetime as dt
 import appdaemon.plugins.hass.hassapi as hass
 
 TAP_SENSOR = "sensor.interruptor_exterior"
-COVER_WINDOW = "cover.persiana_ventanal"
-COVER_DOOR = "cover.puerta_terraza"
+COVER_WINDOW = "cover.shelly_ventanal"
+COVER_DOOR = "cover.shelly_puerta"
 SWITCH_AMBI = "switch.ambilight_plus_hue"
 LIGHT_TOGGLE = "light.terraza"
 LIGHT_PARAMS_AFTER_AMBI = {

@@ -43,13 +43,13 @@ SCENES = {
         WAIT_TO_TURN_OFF_NIGHT,
     ),
     # between("sunrise + 00:14:00", "13:00:01")
-    "kitchen_concentrate": (
+    "kitchen_energy": (
         "hue/hue_activate_scene",
         {"scene_name": "Energía", "group_name": "Cocina"},
         WAIT_TO_TURN_OFF_MORNING,
     ),
     # between("13:00:00", "17:00:01")
-    "kitchen_energy": (
+    "kitchen_concentrate": (
         "hue/hue_activate_scene",
         {"scene_name": "Concentración", "group_name": "Cocina"},
         WAIT_TO_TURN_OFF_MIDDAY,
@@ -129,11 +129,11 @@ class HueSwitchAndMotionControl(hass.Hass):
         elif self.now_is_between("sunset - 00:30:00", "sunrise + 00:15:00"):
             scene_key = "kitchen_night"
         elif self.now_is_between("sunrise + 00:14:00", "13:00:01"):
-            # kitchen_concentrate
-            scene_key = "kitchen_concentrate"
-        elif self.now_is_between("13:00:00", "17:00:01"):
             # kitchen_energy
             scene_key = "kitchen_energy"
+        elif self.now_is_between("13:00:00", "17:00:01"):
+            # kitchen_concentrate
+            scene_key = "kitchen_concentrate"
         else:  # if self.now_is_between("17:00:00", "sunset - 00:30:01"):
             # kitchen_reading
             scene_key = "kitchen_reading"
@@ -235,12 +235,14 @@ class HueSwitchAndMotionControl(hass.Hass):
             self._motion_light_enabled = False
             self._light_on = False
             self._motion_on = False
+            self._reset_inactivity_timer(entity_id=HUE_SWITCH)
             self._reset_light_enabler(DELAY_TO_RE_ENABLE_MOTION_CONTROL)
         elif self._motion_light_enabled and new.startswith("1_click"):
             self._motion_light_enabled = False
             self._light_on = True
             self._motion_on = False
             self._reset_light_enabler(5 * SCENES[self._select_scene()][2])
+            self._reset_inactivity_timer(entity_id=HUE_SWITCH)
 
     def _motion_detected(self, entity, _attribute, old, new, _kwargs):
         """

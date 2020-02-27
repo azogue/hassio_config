@@ -242,7 +242,7 @@ sensor:
   - platform: statistics
     entity_id: sensor.main_power_total
     name: sustained_power
-    sampling_size: 500
+    sampling_size: 400
     max_age:
       minutes: 15
     precision: 1

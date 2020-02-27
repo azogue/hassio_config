@@ -223,6 +223,8 @@ class PeakNotifier(hass.Hass):
 
         now = dt.datetime.now()
         if not self._alarm_state and (new > self._upper_limit):
+            if new > self._current_peak:
+                self._current_peak = new
             # Pre-Alarm state, before trigger
             if self._last_trigger is None:
                 # Start power peak event
@@ -261,6 +263,9 @@ class PeakNotifier(hass.Hass):
             # waiting min time to trigger alarm)
             #     pass
         elif self._alarm_state:  # Alarm state, waiting for reset
+            if new > self._current_peak:
+                self._current_peak = new
+
             if (
                 not self._turn_off_measure_taken
                 and new > self._upper_limit * COEF_CRITICAL_LIMIT
@@ -360,3 +365,4 @@ class PeakNotifier(hass.Hass):
                 log=LOGGER,
             )
             self._last_trigger = None
+            self._current_peak = 0
