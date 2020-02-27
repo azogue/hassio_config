@@ -48,58 +48,22 @@ zone:
   radius: !secret z2_radius
   icon: !secret z2_icon
 
-binary_sensor:
-  - platform: 'bayesian'
-    prior: 0.75
-    name: 'Eugenio en casa'
-    probability_threshold: 0.95
-    observations:
-      - entity_id: 'device_tracker.iphone'
-        prob_given_true: 0.95
-        prob_given_false: 0.15
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.iphone_router'
-        prob_given_true: 0.95
-        prob_given_false: 0.15
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.iphone_bt'
-        prob_given_true: 0.99
-        prob_given_false: 0.25
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.homeadmin_iphone'
-        prob_given_true: 0.99
-        prob_given_false: 0.25
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.applewatch'
-        prob_given_true: 0.99
-        prob_given_false: 0.5
-        platform: 'state'
-        to_state: 'home'
+- name: !secret z3_name
+  latitude: !secret z3_latitude
+  longitude: !secret z3_longitude
+  radius: !secret z3_radius
+  icon: !secret z3_icon
+- name: !secret z4_name
+  latitude: !secret z4_latitude
+  longitude: !secret z4_longitude
+  radius: !secret z4_radius
+  icon: !secret z4_icon
+- name: !secret z5_name
+  latitude: !secret z5_latitude
+  longitude: !secret z5_longitude
+  radius: !secret z5_radius
+  icon: !secret z5_icon
 
-  - platform: 'bayesian'
-    prior: 0.6
-    name: 'Carmen en casa'
-    probability_threshold: 0.75
-    observations:
-      - entity_id: 'device_tracker.iphone_6s'
-        prob_given_true: 0.95
-        prob_given_false: 0.15
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.iphone_de_carmen_bt'
-        prob_given_true: 0.99
-        prob_given_false: 0.33
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'device_tracker.carmen_iphone_6s'
-        prob_given_true: 0.99
-        prob_given_false: 0.33
-        platform: 'state'
-        to_state: 'home'
 
 sensor:
   - platform: template
@@ -165,6 +129,14 @@ device_tracker:
   consider_home: 180
   track_new_devices: yes
 
+- platform: iphonedetect
+  consider_home: 60
+  scan_interval: 12
+  new_device_defaults:
+    track_new_devices: true
+  hosts:
+    iphonex_detect: !secret local_ip_iphonex
+    iphone6s_detect: !secret local_ip_iphone6s
+
 - platform: bluetooth_tracker
   track_new_devices: false
-
