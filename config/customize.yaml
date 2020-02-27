@@ -44,3 +44,8 @@ weblink.grafana:
   icon: mdi:chart-areaspline
 weblink.contabilidad:
   icon: mdi:bank
+sensor.nut_ups_power:
+  friendly_name: NUT UPS POWER
+  icon: mdi:shield-home
+light.tira_tv:
+  icon: mdi:dots-horizontal

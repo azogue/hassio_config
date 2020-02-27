@@ -189,3 +189,9 @@ inmersion:
     service: cover.set_cover_position
   - entity_id: light.tira_tv
     service: light.turn_off
+request_ios_locations:
+  alias: Request locations
+  sequence:
+  - service: notify.ios_devices
+    data:
+      message: request_location_update
