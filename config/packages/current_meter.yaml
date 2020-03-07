@@ -249,8 +249,8 @@ sensor:
 
   - platform: pvpc_hourly_pricing
     name: PVPC
-    tariff: discriminacion
+    tariff: discrimination
 
 #pvpc_hourly_pricing:
 #  - name: PVPC
-#    tariff: discriminacion
+#    tariff: discrimination
