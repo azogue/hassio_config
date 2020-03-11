@@ -158,10 +158,15 @@ class HueSwitchAndMotionControl(hass.Hass):
             self.cancel_timer(self._handler_turn_off_lights)
             self._handler_turn_off_lights = None
             if new_wait is None:
-                self.log(f"Reset wait counter from {entity_id}", log=LOGGER)
+                self.log(
+                    f"Reset wait counter from {entity_id}",
+                    level=EVENT_LOG_LEVEL,
+                    log=LOGGER,
+                )
         if new_wait is not None:
             self.log(
                 f"Set timer of {new_wait} s from deactivated {entity_id}",
+                level=EVENT_LOG_LEVEL,
                 log=LOGGER,
             )
             self._handler_turn_off_lights = self.run_in(
@@ -181,7 +186,11 @@ class HueSwitchAndMotionControl(hass.Hass):
             self._handler_light_enabler = self.run_in(
                 self._enable_motion_lights, new_wait
             )
-            self.log(f"Re-enable light control in {new_wait} s", log=LOGGER)
+            self.log(
+                f"Re-enable light control in {new_wait} s",
+                level=EVENT_LOG_LEVEL,
+                log=LOGGER,
+            )
 
     def _light_changed(self, _entity, _attribute, old, new, _kwargs):
         """

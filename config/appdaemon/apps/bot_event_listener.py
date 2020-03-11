@@ -708,14 +708,12 @@ class EventListener(hass.Hass):
             messages = self.camera_snapshots()
             msg = dict(
                 title="*multi-cam-snapshot*",
-                message=next(messages),
+                message=messages[0],
                 target=user_id,
                 keyboard=TELEGRAM_KEYBOARD,
                 disable_notification=True,
             )
-            msg.pop("title")
-            msg.pop("keyboard")
-            for message in messages:
+            for message in messages[1:]:
                 self.call_service(serv, **msg)
                 if "title" in msg:
                     msg.pop("title")
@@ -1247,7 +1245,11 @@ class EventListener(hass.Hass):
         self.persistent_notification(message, title=title, id=action_name)
 
     def _turn_off_lights_and_appliances(self, turn_off_heater=False):
-        self.turn_off("group.all_lights", transition=2)
+        self.call_service(
+            "light/turn_off",
+            entity_id="light.salon,light.bano,light.cocina,light.office,light.exterior,light.hall,light.yeelight_strip_7811dca21ecf",
+            transition=2,
+        )
         self.turn_off(SWITCH_PUMP_ACS)
         if turn_off_heater:
             self.turn_off(SWITCH_ACS)

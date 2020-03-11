@@ -40,8 +40,6 @@ appdaemon:
   longitude: !secret longitude
   elevation: !secret elevation
   time_zone: !secret time_zone
-  path_base_data: /config
-  path_ha_conf: /config
   notifier: notify.mobile_app_iphone
   chatid_sensor: sensor.telegram_default_chatid
   bot_group: notify.telegram_group

@@ -60,29 +60,29 @@ http:
 logger:
   default: warn
   logs:
-#    custom_components.switch.tuyawifiplug: error
     asyncio: error
     aiohttp.server: critical
     homeassistant.bootstrap: info
-    pyShelly: error
-#    homeassistant.components.automation: info
+    # homeassistant.core: error
     frontend: critical
     homeassistant.components.floorplan: debug
     homeassistant.components.device_tracker: error
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
-    homeassistant.components.tplink.switch: error
+    homeassistant.components.tplink.switch: critical
     homeassistant.components.light.yeelight: critical
     homeassistant.components.recorder: info
     homeassistant.components.script: info
     homeassistant.components.sensor.influxdb: error
     homeassistant.components.tts: debug
     homeassistant.components.xiaomi_miio.vacuum: error
+    pyShelly: error
     tuyaha.tuyaapi: error
     miio: critical
+    DenonAVR: critical
     homeassistant.helpers.entity: error
     custom_components.ambilights.switch: critical
-    DenonAVR: critical
+    # custom_components.switch.tuyawifiplug: error
 
 mqtt:
   broker: 192.168.1.10
