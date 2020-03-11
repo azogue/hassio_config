@@ -18,7 +18,7 @@ WAIT_TO_TURN_OFF_DEEP_NIGHT = 30  # After last sensor is off
 
 LIGHT_GROUP = "light.cocina"
 LIGHT_COLORED = "light.tira_cocina"
-HUE_SWITCH = "sensor.interruptor_cocina"
+HUE_SWITCH = "remote.interruptor_cocina"
 MOTION_SENSORS = (
     "input_boolean.mirror_hue_motion_1"
     ",binary_sensor.hue_motion_sensor_1_motion"

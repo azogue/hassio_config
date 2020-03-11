@@ -1,8 +1,0 @@
-{
-  "domain": "hue_dimmer",
-  "name": "Hue Dimmer Switches integration",
-  "documentation": "",
-  "dependencies": ["hue"],
-  "codeowners": [],
-  "requirements": []
-}

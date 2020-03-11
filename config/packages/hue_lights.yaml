@@ -33,15 +33,15 @@ homeassistant:
       friendly_name: Hue + Ambilight
       icon: mdi:traffic-light
 
-    sensor.interruptor_salon:
+    remote.interruptor_salon:
       icon: mdi:light-switch
-    sensor.interruptor_dormitorio:
+    remote.interruptor_dormitorio:
       icon: mdi:light-switch
-    sensor.interruptor_estudio:
+    remote.interruptor_estudio:
       icon: mdi:light-switch
-    sensor.interruptor_cocina:
+    remote.interruptor_cocina:
       icon: mdi:light-switch
-    sensor.interruptor_office:
+    remote.interruptor_office:
       icon: mdi:light-switch
 
     input_boolean.mirror_hue_motion_1:
@@ -56,9 +56,10 @@ hue:
     - host: !secret hue_bridge_host
       allow_unreachable: true
 
-## sensor.hue_dimmer_switch
-sensor:
-- platform: hue_dimmer
+# hue dimmer switches
+remote:
+- platform: huesensor
+#  scan_interval: 1
 
 # Philips TV Ambilight support with custom component
 light:
