@@ -56,10 +56,9 @@ hue:
     - host: !secret hue_bridge_host
       allow_unreachable: true
 
-# hue dimmer switches
+# hue switches
 remote:
-- platform: huesensor
-#  scan_interval: 1
+- platform: hueremote
 
 # Philips TV Ambilight support with custom component
 light:
