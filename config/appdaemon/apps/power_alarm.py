@@ -66,7 +66,6 @@ class TypeNotif(IntEnum):
         return data_msg
 
     def make_telegram_push_data(self, data_msg: dict, target: int) -> dict:
-        data_msg["target"] = int(self.get_state(self._target_sensor))
         data_msg["target"] = target
         data_msg["disable_notification"] = self.value == self.ALERT_OFF
         data_msg["inline_keyboard"] = [
@@ -121,7 +120,7 @@ class TypeNotif(IntEnum):
                 ),
             }
             data_msg["message"] = data_msg["message"].format(
-                self._current_peak, time_now, pow_instant, pow_sustained
+                current_peak, time_now, pow_instant, pow_sustained
             )
 
         else:
@@ -241,7 +240,7 @@ class PeakNotifier(hass.Hass):
                 self._alarm_start = now
                 self._turn_off_measure_taken = False
                 type_notif = TypeNotif.ALERT_ON
-                data = type_notif.make_notification_data(
+                data = type_notif.make_notification_message(
                     self._current_peak,
                     self._last_trigger,
                     self._alarm_start,
@@ -282,7 +281,7 @@ class PeakNotifier(hass.Hass):
                 ).total_seconds() > self._min_time_low:
                     # RESET ALARM
                     type_notif = TypeNotif.ALERT_OFF
-                    data = type_notif.make_notification_data(
+                    data = type_notif.make_notification_message(
                         self._current_peak,
                         self._last_trigger,
                         self._alarm_start,
@@ -342,7 +341,7 @@ class PeakNotifier(hass.Hass):
                         log=LOGGER,
                     )
                     type_notif = TypeNotif.ALERT_CRITICAL
-                    data = type_notif.make_notification_data(
+                    data = type_notif.make_notification_message(
                         self._current_peak,
                         self._last_trigger,
                         self._alarm_start,

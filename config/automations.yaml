@@ -615,18 +615,6 @@
       state: '{{ trigger.to_state.state }}'
       last_state_ts: '{{ trigger.from_state.last_changed }}'
       all_data: '{{ trigger }}'
-- alias: Auto alarm timer finished
-  id: auto_alarm_timer_finished
-  trigger:
-    platform: event
-    event_type: timer.finished
-    event_data:
-      entity_id: timer.alarm_auto_on
-  action:
-  - service: python_script.main_door_opening
-    data_template:
-      last_state_ts: '{{ trigger.event.data }}'
-      is_timer_finished: 1
 - id: 'activa_extras_inmersion_mode'
   alias: Set inmersion mode
   description: Apaga pie sofa con activación de ambilight salón y pone pan cam en

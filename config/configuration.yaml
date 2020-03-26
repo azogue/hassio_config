@@ -207,7 +207,6 @@ influxdb:
       - input_select
       - input_text
       - group
-
 recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
@@ -228,7 +227,6 @@ recorder:
 #      - automation_triggered
 #      - script_started
       - timer_out_of_sync
-
 system_health:
 mobile_app:
 panel_iframe:
@@ -240,35 +238,7 @@ panel_iframe:
     title: Grafana
     url: !secret grafana_url
     icon: mdi:chart-areaspline
-
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-
-#custom_updater:
-#  card_urls:
-#    - https://raw.githubusercontent.com/benct/lovelace-xiaomi-vacuum-card/master/tracker.json
-#    - https://raw.githubusercontent.com/MizterB/lovelace-secondaryinfo-entity-row/master/custom_cards.json
-#    - https://raw.githubusercontent.com/custom-cards/cover-element/master/tracker.json
-#    - https://raw.githubusercontent.com/kalkih/simple-weather-card/master/tracker.json
-
 person:
-#  - name: Eugenio
-#    id: !secret person_id_eu
-#    user_id: !secret user_id_eu
-#    device_trackers:
-#      - device_tracker.iphone
-#      - device_tracker.iphone_router
-#      - device_tracker.iphone_bt
-#      - device_tracker.homeadmin_iphone_2
-#      - device_tracker.applewatch
-#
-#  - name: Carmen
-#    id: !secret person_id_carmen
-#    user_id: !secret user_id_carmen
-#    device_trackers:
-#      - device_tracker.iphonese
-#      - device_tracker.iphone_se
-#      - device_tracker.iphone_de_carmen_bt
-#      - device_tracker.homeadmin_iphonese
-#      - device_tracker.applewatch_carmen

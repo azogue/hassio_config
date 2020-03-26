@@ -5,15 +5,6 @@ homeassistant:
   customize:
     sensor.elecprice_range:
       icon: mdi:currency-eur
-    sensor.esp32ener_power:
-      icon: mdi:flash
-      friendly_name: Consumo medido
-    sensor.esp32ener_ch1:
-      icon: mdi:power-plug
-      friendly_name: Circuito 1 (general)
-    sensor.esp32ener_ch2:
-      icon: mdi:flash-circle
-      friendly_name: Circuito 2 (termo,AC,domótica)
 
     sensor.main_voltage:
       friendly_name: Voltaje
@@ -104,27 +95,6 @@ utility_meter:
       - unique
 
 sensor:
-  # OLD one in use to collect both for some time (data regression exercises)
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp32_ener_stream
-    value_template: "{{ value_json.rms[2] | float | round }}"
-    name: esp32ener_power
-    unit_of_measurement: "W"
-    json_attributes_topic: !secret mqtt_topic_esp32_ener_stream
-    force_update: true
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp32_ener_stream
-    value_template: "{{ value_json.rms[0]  | float | round }}"
-    name: esp32ener_ch1
-    unit_of_measurement: "W"
-    force_update: true
-  - platform: mqtt
-    state_topic: !secret mqtt_topic_esp32_ener_stream
-    value_template: "{{ value_json.rms[1]  | float | round }}"
-    name: esp32ener_ch2
-    unit_of_measurement: "W"
-    force_update: true
-
   - platform: mqtt
     name: "main_voltage"
     state_topic: "shellies/shellyem/emeter/0/voltage"
