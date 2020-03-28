@@ -16,9 +16,6 @@ homeassistant:
     sensor.temperatura_exterior:
       icon: mdi:thermometer
 
-    sensor.temperatura_minima:
-      friendly_name: Mínima diaria
-      icon: mdi:thermometer
     sensor.temp_acs_max:
       friendly_name: ACS Máx Ret Solar
       icon: mdi:temperature-celsius
@@ -49,7 +46,6 @@ homeassistant:
       icon: mdi:toggle-switch
 
 sensor:
-
   - platform: min_max
     type: mean
     name: Temperatura AC

@@ -12,8 +12,8 @@ Hue profiles (x, y, bright):
 
 INPUT_SELECT = "input_select.salon_light_scene"
 HUE_LIGHTS_TO_CONTROL = (
-    "light.bola_grande,light.central,light.cuenco,"
-    "light.pie_sofa,light.pie_tv,light.tira"
+    "light.bola,light.central,light.cuenco,"
+    "light.pie_sofa,light.pie_tv,light.tira,light.tira_tv"
 )
 COVER_VENTANAL = "cover.shelly_ventanal"
 
@@ -97,76 +97,17 @@ elif scene_selection == "bedroom_activate_minimal":
 
 elif scene_selection == "Atardecer":
     hass.services.call(
-        "light",
-        "turn_on",
-        {
-            "entity_id": "light.yeelight_strip_7811dca21ecf_2",
-            "xy_color": [0.1714, 0.3528],
-            "brightness": 168.3,
-        },
-    )
-    hass.services.call(
         "hue",
         "hue_activate_scene",
         {"group_name": "Salón", "scene_name": "Atardecer en la sabana"},
     )
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.pie_tv",
-    #                     "xy_color": [0.521, 0.399], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.lamparita",
-    #                     "xy_color": [0.4638, 0.4495], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.cuenco",
-    #                     "xy_color": [0.461, 0.3568], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.bola_grande",
-    #                     "xy_color": [0.5327, 0.3853], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.pie_sofa",
-    #                     "xy_color": [0.5932, 0.3509], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.tira",
-    #                     "xy_color": [0.5932, 0.3509], "brightness": 170})
-    # hass.services.call('light', 'turn_on',
-    #                    {"entity_id": "light.central",
-    #                     "xy_color": [0.5327, 0.3853], "brightness": 170})
-    # Turn off some lights:
-    # hass.services.call('light', 'turn_off',
-    #                    {"entity_id": "light.go"})
-    # # Set cover position:
-    # hass.services.call('cover', 'set_position',
-    #                    {"entity_id": "cover.shelly_puerta",
-    #                     "position": 100})
-    # hass.services.call('cover', 'set_position',
-    #                    {"entity_id": "cover.shelly_ventanal",
-    #                     "position": 0})
-
 elif scene_selection == "TV Night":
-    hass.services.call(
-        "light",
-        "turn_on",
-        {
-            "entity_id": "light.yeelight_strip_7811dca21ecf_2",
-            "xy_color": [0.5931, 0.351],
-            "brightness": 135.15,
-        },
-    )
     hass.services.call(
         "light",
         "turn_on",
         {
             "entity_id": "light.pie_tv",
             "xy_color": [0.156, 0.219],
-            "brightness": 137,
-        },
-    )
-    hass.services.call(
-        "light",
-        "turn_on",
-        {
-            "entity_id": "light.lamparita",
-            "xy_color": [0.2916, 0.286],
             "brightness": 137,
         },
     )
@@ -183,7 +124,7 @@ elif scene_selection == "TV Night":
         "light",
         "turn_on",
         {
-            "entity_id": "light.bola_grande",
+            "entity_id": "light.bola",
             "xy_color": [0.1576, 0.2175],
             "brightness": 137,
         },
@@ -201,7 +142,7 @@ elif scene_selection == "TV Night":
         "light",
         "turn_on",
         {
-            "entity_id": "light.tira",
+            "entity_id": "light.tira,light.tira_tv",
             "xy_color": [0.2356, 0.1749],
             "brightness": 137,
         },
@@ -230,9 +171,6 @@ elif scene_selection == "TV Night":
             "TV Night SCENE, cover_state: from %d to 15",
             int(cover_state.attributes["current_position"]),
         )
-    # hass.services.call('cover', 'set_position',
-    #                    {"entity_id": "cover.shelly_puerta",
-    #                     "position": 70})
 else:
     logger.error("SCENE not recognized: %s", scene_selection)
     # - Comida

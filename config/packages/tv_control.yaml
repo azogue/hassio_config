@@ -51,13 +51,12 @@ media_player:
   apps:
     com.amazon.avod: "Prime Video"
     org.droidtv.playtv: "Otro"
+    org.droidtv.channels: "TDT"
     com.google.android.apps.mediashell: "Google Cast"
-    com.google.android.apps.youtube: "YouTube?"
     com.google.android.youtube.tv: "YouTube"
     com.google.android.tvlauncher: "Android TV menu"
     org.droidtv.settings: "Ajustes TV"
     org.droidtv.tvsystemui: "Salvapantallas"
-
 
 - platform: androidtv
   host: !secret shield_tv_host
@@ -68,19 +67,18 @@ media_player:
   device_class: androidtv
   apps:
     com.amazon.avod: "Prime Video"
+    com.hbo_android_tv: "HBO"
+    com.android.vending: "App Store"
     com.amazon.amazonvideo.livingroom: "Prime Video"
     org.xbmc.kodi: "Kodi"
-    org.droidtv.playtv: "Raw TV"
-    com.google.android.apps.mediashell: "Google Cast"
-    com.google.android.apps.youtube: "YouTube?"
-    com.google.android.youtube.tv: "YouTube"
-    com.google.android.tvlauncher: "Android TV menu"
     com.rtve.androidtv: "RTVE a la carta"
-    org.droidtv.settings: "Ajustes TV"
-    org.droidtv.tvsystemui: "Salvapantallas"
     com.movistarplus.androidtv: "Movistar+"
     com.antena3.atresplayer.tv: "A3Player"
-
+    com.google.android.apps.mediashell: "Google Cast"
+    com.google.android.youtube.tv: "YouTube"
+    com.google.android.tvlauncher: "Android TV menu"
+    org.droidtv.settings: "Ajustes TV"
+    org.droidtv.tvsystemui: "Salvapantallas"
 
 - platform: kodi
   host: !secret shield_tv_host
@@ -99,12 +97,10 @@ media_player:
     data:
       entity_id: media_player.kodi
 
-
 - platform: denonavr
   host: !secret denon_host
   name: Home cinema
   show_all_sources: false
-
 
 - platform: universal
   name: Tele
@@ -119,10 +115,8 @@ media_player:
     {{ states("media_player.shield") }}
     {% elif ("app_id" in states.media_player.nvidia_shield.attributes) and (states.media_player.nvidia_shield.attributes.app_id == 'org.xbmc.kodi') %}
     {{ states.media_player.kodi.state }}
-
     {% elif ("app_id" in states.media_player.nvidia_shield.attributes) %}
     {{ states("media_player.nvidia_shield") }}
-
     {% else %}
     {{ states.media_player.tv.state }}
     {% endif %}
@@ -239,6 +233,7 @@ input_select:
      - Youtube  # Shield app
      - Movistar+  # Shield app
      - RTVE a la carta  # Shield app
+     - HBO  # Shield app
      - Prime Video  # Shield app
      - Salvapantallas 4k  # Shield app
     initial: Nada

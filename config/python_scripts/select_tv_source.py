@@ -128,10 +128,12 @@ ANDROID_TV_APPS = {
     "Movistar+": "am start -a android.intent.action.VIEW -d -n com.movistarplus.androidtv/.MainActivity",
     "RTVE a la carta": "am start -a android.intent.action.VIEW -d -n com.rtve.androidtv/.Screen.SplashScreen",
     "Prime Video": "am start -a android.intent.action.VIEW -d -n com.amazon.amazonvideo.livingroom/com.amazon.ignition.IgnitionActivity",
+    "HBO": "am start -a android.intent.action.VIEW -d -n eu.hbogo.androidtv.production/eu.hbogo.androidtv.MainActivity",
+    # "HBO": "am start -a android.intent.action.VIEW -d -n com.hbo_android_tv/com.hbo_android_tv.MainActivity",
 }
 
 command = data.get("source")
-dest_entity = data.get("entity_id", ENTITY_SHIELD,)
+dest_entity = data.get("entity_id", ENTITY_SHIELD)
 # TODO stop active media_player in change of app/entity
 logger.warning("select_tv_source: %s [%s]", command, dest_entity)
 

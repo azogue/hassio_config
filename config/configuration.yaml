@@ -70,7 +70,7 @@ logger:
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
     homeassistant.components.tplink.switch: critical
-    homeassistant.components.light.yeelight: critical
+    homeassistant.components.yeelight: critical
     homeassistant.components.recorder: info
     homeassistant.components.script: info
     homeassistant.components.sensor.influxdb: error

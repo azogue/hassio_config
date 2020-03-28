@@ -64,4 +64,4 @@ MorningAlarmClock:
   postponer_minutos: 7
   room_select: input_select.room_altavoces
   lights_alarm: light.dormitorio,light.tira_cocina
-  manual_trigger: input_boolean.manual_trigger_lacafetera
+  manual_trigger: input_boolean.manual_trigger_alarmclock

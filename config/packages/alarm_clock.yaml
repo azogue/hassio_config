@@ -1,29 +1,23 @@
 # Alarma despertador
 homeassistant:
   customize:
-    input_boolean.alarm_clock_status:
-      icon: mdi:toggle-switch
     input_datetime.alarm_clock_time:
       icon: mdi:alarm
     input_datetime.water_boiler_start_time:
       icon: mdi:radiator
     input_datetime.next_special_wake_up:
-#      friendly_name: Hora de despertarse
-      icon: mdi:alarm
-    input_boolean.manual_trigger_lacafetera:
-      icon: mdi:play-circle
+      icon: mdi:alarm-plus
 
-#Programación despertador:
-#    - input_datetime.alarm_clock_time
-#    - input_datetime.water_boiler_start_time
-#    - input_datetime.next_special_wake_up
+    input_boolean.alarm_clock_status:
+      icon: mdi:toggle-switch
+      friendly_name: Despertador
+    input_boolean.manual_trigger_alarmclock:
+      icon: mdi:alarm-bell
+      friendly_name: Activa despertador matutino
 
 input_boolean:
   alarm_clock_status:
-#    initial: on
-    name: Despertador
-  manual_trigger_lacafetera:
-    name: Activa despertador matutino
+  manual_trigger_alarmclock:
     initial: off
 
 input_select:
@@ -50,6 +44,6 @@ input_datetime:
     has_time: true
 
   next_special_wake_up:
-    name: Siguiente pase de planta
+    name: Siguiente festivo
     has_date: true
     has_time: true

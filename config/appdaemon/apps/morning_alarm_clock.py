@@ -4,15 +4,7 @@ Automation task as a AppDaemon App for Home Assistant
 
 This little app is a not too simple alarm clock,
 which simulates a fast dawn with Hue lights,
-while waking up the home cinema system,
-waiting for the start of the broadcast of La Cafetera radio program to
-start playing it (or, if the alarm is at a different time of
-the typical emmision time, it just play the last published episode).
-
-For doing that, it talks directly with Kodi (or Mopidy, without any add-on)
-through its JSONRPC API, which has to run a specific Kodi Add-On:
-    `plugin.audio.lacafetera`
-
+while waking up the Sonos system in bedroom with a selected source.
 """
 import appdaemon.plugins.hass.hassapi as hass
 import datetime as dt
