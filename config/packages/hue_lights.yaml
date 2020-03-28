@@ -39,17 +39,6 @@ homeassistant:
       icon: mdi:light-switch
     remote.interruptor_estudio:
       icon: mdi:light-switch
-    remote.interruptor_cocina:
-      icon: mdi:light-switch
-    remote.interruptor_office:
-      icon: mdi:light-switch
-
-    input_boolean.mirror_hue_motion_1:
-      friendly_name: Movimiento cocina (Hue)
-      icon: mdi:run
-    input_boolean.mirror_hue_motion_2:
-      friendly_name: Movimiento office (Hue)
-      icon: mdi:run
 
 hue:
   bridges:
@@ -96,9 +85,5 @@ input_select:
     initial: Energía
     icon: mdi:lightbulb
 
-# for binary_sensor.hue_motion_sensor_1_motion and binary_sensor.hue_motion_sensor_2_motion
 input_boolean:
-  mirror_hue_motion_1:
-    initial: off
-  mirror_hue_motion_2:
-    initial: off
+  app_lights_automation:

@@ -652,26 +652,6 @@
     data_template:
       tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
         %}Valle{% endif %}'
-- id: 'detect_edge_hue_tap'
-  alias: Detect edge changes in tap switch
-  description: ''
-  trigger:
-  - entity_id: remote.interruptor_exterior
-    platform: state
-  condition: []
-  action:
-  - event: hue_tap_triggered
-    event_data: {}
-- id: 'detect_edge_hue_dimmer_kitchen'
-  alias: Detect edge changes in hue dimmer kitchen
-  description: ''
-  trigger:
-  - entity_id: remote.interruptor_cocina
-    platform: state
-  condition: []
-  action:
-  - event: hue_switch_kitchen_triggered
-    event_data: {}
 - id: 'turn_on_hall_con_cuadro'
   alias: Enciende Hall al abrir cuadro
   description: Encendido automático del Hall al abrir el cuadro de protecciones
