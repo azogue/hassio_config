@@ -18,10 +18,28 @@ WAIT_TO_TURN_OFF_DEEP_NIGHT = 30  # After last sensor is off
 
 LIGHT_GROUP = "light.cocina"
 LIGHT_COLORED = "light.tira_cocina"
-HUE_SWITCH = "remote.interruptor_cocina"
+
+RWL_BUTTONS = {
+    1000: "1_click",
+    2000: "2_click",
+    3000: "3_click",
+    4000: "4_click",
+    1001: "1_hold",
+    2001: "2_hold",
+    3001: "3_hold",
+    4001: "4_hold",
+    1002: "1_click_up",
+    2002: "2_click_up",
+    3002: "3_click_up",
+    4002: "4_click_up",
+    1003: "1_hold_up",
+    2003: "2_hold_up",
+    3003: "3_hold_up",
+    4003: "4_hold_up",
+}
+
 MOTION_SENSORS = (
-    "input_boolean.mirror_hue_motion_1"
-    ",binary_sensor.hue_motion_sensor_1_motion"
+    "binary_sensor.hue_motion_sensor_1_motion"
     ",binary_sensor.sensor_kitchen_mov1"
 )
 SCENES = {
@@ -111,8 +129,8 @@ class HueSwitchAndMotionControl(hass.Hass):
         self.listen_state(self._light_changed, LIGHT_GROUP)
         self.listen_event(
             self._switch_event,
-            "hue_switch_kitchen_triggered",
-            constrain_input_boolean=self._main_constrain,
+            "deconz_event",
+            id="interruptor_cocina",
         )
 
     def _turn_lights_off(self, *_args, **_kwargs):
@@ -151,21 +169,19 @@ class HueSwitchAndMotionControl(hass.Hass):
             log=LOGGER,
         )
 
-    def _reset_inactivity_timer(
-        self, new_wait: Optional[int] = None, entity_id: str = ""
-    ):
+    def _reset_inactivity_timer(self, new_wait: Optional[int] = None):
         if self._handler_turn_off_lights is not None:
             self.cancel_timer(self._handler_turn_off_lights)
             self._handler_turn_off_lights = None
             if new_wait is None:
                 self.log(
-                    f"Reset wait counter from {entity_id}",
+                    f"Reset wait counter from switch",
                     level=EVENT_LOG_LEVEL,
                     log=LOGGER,
                 )
         if new_wait is not None:
             self.log(
-                f"Set timer of {new_wait} s from deactivated {entity_id}",
+                f"Set timer of {new_wait} s from deactivated switch",
                 level=EVENT_LOG_LEVEL,
                 log=LOGGER,
             )
@@ -222,36 +238,41 @@ class HueSwitchAndMotionControl(hass.Hass):
         else:
             self._light_on = is_on
 
-    def _switch_event(self, _event, _event_data, *_args, **_kwargs):
+    def _switch_event(self, _event, event_data, *_args, **_kwargs):
         """
         Listener to manual press on Hue dimmer switch (for manual usage)
 
         Usually 2 events are received: 'X_click' and 'X_click_up',
-        but the first one can be missed.
 
         When ON/OFF buttons are used, motion lights are disabled for some time.
         """
+        new = RWL_BUTTONS[event_data["event"]]
         ts_now = monotonic()
         delta = ts_now - self._last_switch_press
         self._last_switch_press = ts_now
-        new = self.get_state(HUE_SWITCH)
         self.log(
             f"MANUAL SWITCH -> {new} (delta_T={delta:.1f}s)",
             level="WARNING",
             log=LOGGER,
         )
-        if self._motion_light_enabled and new.startswith("4_click"):
+        if self._motion_light_enabled and new == "4_click":
             self._motion_light_enabled = False
             self._light_on = False
             self._motion_on = False
-            self._reset_inactivity_timer(entity_id=HUE_SWITCH)
+            self._reset_inactivity_timer()
             self._reset_light_enabler(DELAY_TO_RE_ENABLE_MOTION_CONTROL)
-        elif self._motion_light_enabled and new.startswith("1_click"):
+            # Turn off light
+            self.call_service("light/turn_off", entity_id="light.cocina", transition=2)
+        elif self._motion_light_enabled and new == "1_click":
             self._motion_light_enabled = False
             self._light_on = True
             self._motion_on = False
             self._reset_light_enabler(5 * SCENES[self._select_scene()][2])
-            self._reset_inactivity_timer(entity_id=HUE_SWITCH)
+            self._reset_inactivity_timer()
+            # Turn on light with "kitchen_energy"
+            self.call_service(
+                "hue/hue_activate_scene", scene_name="Energía", group_name="Cocina"
+            )
 
     def _motion_detected(self, entity, _attribute, old, new, _kwargs):
         """
@@ -278,7 +299,7 @@ class HueSwitchAndMotionControl(hass.Hass):
         if not self._motion_on and activated:
             # turn lights on (1st time)
             self._motion_on = True
-            self._reset_inactivity_timer(entity_id=entity)
+            self._reset_inactivity_timer()
             if not self._light_on:
                 self._turn_lights_on(entity)
 
@@ -286,9 +307,9 @@ class HueSwitchAndMotionControl(hass.Hass):
             self._motion_on = False
             # wait some time before turning lights off
             self._reset_inactivity_timer(
-                new_wait=SCENES[self._select_scene()][2], entity_id=entity
+                new_wait=SCENES[self._select_scene()][2]
             )
         else:
             self._motion_on = any_active
             if activated:
-                self._reset_inactivity_timer(entity_id=entity)
+                self._reset_inactivity_timer()

@@ -2,11 +2,14 @@
 """
 Automation task as a AppDaemon App for Home Assistant
 """
-import datetime as dt
-
 import appdaemon.plugins.hass.hassapi as hass
 
-TAP_SENSOR = "remote.interruptor_exterior"
+TAP_BUTTONS = {
+    34: "1_click",
+    16: "2_click",
+    17: "3_click",
+    18: "4_click",
+}
 COVER_WINDOW = "cover.shelly_ventanal"
 COVER_DOOR = "cover.shelly_puerta"
 SWITCH_AMBI = "switch.ambilight_plus_hue"
@@ -26,10 +29,14 @@ class HueTapControl(hass.Hass):
 
     def initialize(self):
         """Set up appdaemon app."""
-        self.listen_event(self._tap_event_triggered, "hue_tap_triggered")
+        self.listen_event(
+            self._tap_event_triggered,
+            "deconz_event",
+            id="hue_tap_10",
+        )
 
-    def _tap_event_triggered(self, event_name, _event_data, *_args, **_kwargs):
-        tap_code = self.get_state(TAP_SENSOR)
+    def _tap_event_triggered(self, _event_name, event_data, *_args, **_kwargs):
+        tap_code = TAP_BUTTONS[event_data["event"]]
         if tap_code == "1_click":  # toggle terraza
             self.call_service("light/toggle", entity_id=LIGHT_TOGGLE)
             self.log(
