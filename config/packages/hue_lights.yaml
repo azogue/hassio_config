@@ -1,7 +1,7 @@
 # HUE LIGHTS
 homeassistant:
   customize:
-    light.bola_grande:
+    light.bola:
       icon: mdi:ceiling-light
     light.terraza:
       icon: mdi:lightbulb-outline
@@ -24,6 +24,8 @@ homeassistant:
     light.go:
       icon: mdi:lava-lamp
     light.tira:
+      icon: mdi:dots-horizontal
+    light.tira_tv:
       icon: mdi:dots-horizontal
     light.tira_cocina:
       icon: mdi:dots-horizontal

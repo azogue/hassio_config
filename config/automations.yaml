@@ -492,7 +492,7 @@
   id: termo_auto_off
   trigger:
     platform: numeric_state
-    entity_id: sensor.esp32ener_ch2
+    entity_id: sensor.main_power_ch2
     below: 300
     for:
       minutes: 2
