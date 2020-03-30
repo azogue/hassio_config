@@ -216,11 +216,3 @@ sensor:
     max_age:
       minutes: 15
     precision: 1
-
-  - platform: pvpc_hourly_pricing
-    name: PVPC
-    tariff: discrimination
-
-#pvpc_hourly_pricing:
-#  - name: PVPC
-#    tariff: discrimination
