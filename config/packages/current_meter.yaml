@@ -3,9 +3,6 @@
 ###############################################################################
 homeassistant:
   customize:
-    sensor.elecprice_range:
-      icon: mdi:currency-eur
-
     sensor.main_voltage:
       friendly_name: Voltaje
     sensor.main_power_react_ch1:
@@ -204,15 +201,11 @@ sensor:
           - sensor.hourly_energy_consumption_unique
           - sensor.pvpc
 
-      elecprice_range:
-        friendly_name: "Precio luz"
-        value_template: "{%if states.sensor.pvpc.state %}{% set price = 100 * (states.sensor.pvpc.state | float) %}{% if price > 15 %}Muy cara{% elif price > 12 %}Cara{% elif price > 8 %}Normal{% elif price > 4 %}Barata{% else %}Muy barata{% endif %}{% else %}unknown{% endif %}"
-        entity_id: sensor.pvpc
-
   - platform: statistics
     entity_id: sensor.main_power_total
     name: sustained_power
     sampling_size: 400
     max_age:
       minutes: 15
+    scan_interval: 10
     precision: 1
