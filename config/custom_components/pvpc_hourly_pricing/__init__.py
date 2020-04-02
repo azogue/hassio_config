@@ -2,23 +2,20 @@
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME, CONF_TIMEOUT
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
 
-from .const import ATTR_TARIFF, DEFAULT_NAME, DEFAULT_TIMEOUT, DOMAIN, PLATFORM, TARIFFS
+from .const import ATTR_TARIFF, DEFAULT_NAME, DEFAULT_TARIFF, DOMAIN, PLATFORM, TARIFFS
 
 UI_CONFIG_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
-        vol.Required(ATTR_TARIFF, default=TARIFFS[1]): vol.In(TARIFFS),
+        vol.Required(ATTR_TARIFF, default=DEFAULT_TARIFF): vol.In(TARIFFS),
     }
 )
-SENSOR_SCHEMA = UI_CONFIG_SCHEMA.extend(
-    {vol.Optional(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): cv.positive_int}
-)
 CONFIG_SCHEMA = vol.Schema(
-    {DOMAIN: cv.ensure_list(SENSOR_SCHEMA)}, extra=vol.ALLOW_EXTRA
+    {DOMAIN: cv.ensure_list(UI_CONFIG_SCHEMA)}, extra=vol.ALLOW_EXTRA
 )
 
 
