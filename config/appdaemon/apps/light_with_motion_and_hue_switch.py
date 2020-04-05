@@ -18,6 +18,7 @@ WAIT_TO_TURN_OFF_DEEP_NIGHT = 30  # After last sensor is off
 
 LIGHT_GROUP = "light.cocina"
 LIGHT_COLORED = "light.tira_cocina"
+LIGHT_MAIN = "light.hue_ambiance_panel_1"
 
 RWL_BUTTONS = {
     1000: "1_click",
@@ -42,9 +43,24 @@ MOTION_SENSORS = (
     "binary_sensor.hue_motion_sensor_1_motion"
     ",binary_sensor.sensor_kitchen_mov1"
 )
+
+SCENE_DEEP_NIGHT = "kitchen_deep_night"
+SCENE_NIGHT = "kitchen_night"
+SCENE_ENERGY = "kitchen_energy"
+SCENE_CONCENTRATION = "kitchen_concentrate"
+SCENE_READING = "kitchen_reading"
+
+SCENE_ROTATION = {
+    SCENE_NIGHT: 0,
+    SCENE_DEEP_NIGHT: 1,
+    SCENE_ENERGY: 2,
+    SCENE_CONCENTRATION: 3,
+    SCENE_READING: 4,
+}
+
 SCENES = {
     # between("01:00:00", "06:00:00")
-    "kitchen_deep_night": (
+    SCENE_DEEP_NIGHT: (
         "light/turn_on",
         {
             "entity_id": LIGHT_COLORED,
@@ -55,25 +71,25 @@ SCENES = {
         WAIT_TO_TURN_OFF_DEEP_NIGHT,
     ),
     # between("sunset - 00:30:00", "sunrise + 00:15:00")
-    "kitchen_night": (
+    SCENE_NIGHT: (
         "hue/hue_activate_scene",
         {"scene_name": "Lectura", "group_name": "Cocina"},
         WAIT_TO_TURN_OFF_NIGHT,
     ),
     # between("sunrise + 00:14:00", "13:00:01")
-    "kitchen_energy": (
+    SCENE_ENERGY: (
         "hue/hue_activate_scene",
         {"scene_name": "Energía", "group_name": "Cocina"},
         WAIT_TO_TURN_OFF_MORNING,
     ),
     # between("13:00:00", "17:00:01")
-    "kitchen_concentrate": (
+    SCENE_CONCENTRATION: (
         "hue/hue_activate_scene",
         {"scene_name": "Concentración", "group_name": "Cocina"},
         WAIT_TO_TURN_OFF_MIDDAY,
     ),
     # between("17:00:00", "sunset - 00:30:01")
-    "kitchen_reading": (
+    SCENE_READING: (
         "light/turn_on",
         {
             "entity_id": LIGHT_GROUP,
@@ -98,7 +114,10 @@ class HueSwitchAndMotionControl(hass.Hass):
     _light_on: bool
     _motion_on: bool
     _motion_light_enabled: bool
+
     _last_switch_press: float
+    _last_light_on: float
+    _last_scene: str
 
     _motion_states: Dict[str, Any]
     _handler_turn_off_lights = None
@@ -110,6 +129,8 @@ class HueSwitchAndMotionControl(hass.Hass):
         self._light_on = light_st == "on"
         self._main_constrain = "input_boolean.app_lights_automation"
         self._last_switch_press = 0.0
+        self._last_light_on = 0.0
+        self._last_scene = SCENE_ENERGY
 
         self._motion_states = {}
         for sensor in MOTION_SENSORS.split(","):
@@ -133,41 +154,62 @@ class HueSwitchAndMotionControl(hass.Hass):
             id="interruptor_cocina",
         )
 
-    def _turn_lights_off(self, *_args, **_kwargs):
-        self.log(f"APAGA LUCES -------------", level="WARNING", log=LOGGER)
+    def _turn_lights_off(self, *_args, **kwargs):
+        transition = kwargs.get("transition", 1)
         self.call_service(
-            "light/turn_off", entity_id=LIGHT_GROUP, transition=1
+            "light/turn_off", entity_id=LIGHT_GROUP, transition=transition
         )
         self._light_on = False
-        self._handler_turn_off_lights = None
+        if self._handler_turn_off_lights is not None:
+            self.cancel_timer(self._handler_turn_off_lights)
+            self._handler_turn_off_lights = None
+
+        # Log off operation with ∆T on
+        delta_on = monotonic() - self._last_light_on
+        if "manual" in kwargs:
+            self.log(
+                f"MANUAL OFF (delta_T={delta_on / 60:.1f} min) ---", log=LOGGER
+            )
+        else:
+            self.log(
+                f"AUTO OFF (delta_T={delta_on / 60:.1f} min) -----",
+                level="WARNING",
+                log=LOGGER,
+            )
 
     def _select_scene(self):
         if self.now_is_between("01:00:00", "06:00:00"):
-            scene_key = "kitchen_deep_night"
+            scene_key = SCENE_DEEP_NIGHT
         elif self.now_is_between("sunset - 00:30:00", "sunrise + 00:15:00"):
-            scene_key = "kitchen_night"
+            scene_key = SCENE_NIGHT
         elif self.now_is_between("sunrise + 00:14:00", "13:00:01"):
             # kitchen_energy
-            scene_key = "kitchen_energy"
+            scene_key = SCENE_ENERGY
         elif self.now_is_between("13:00:00", "17:00:01"):
             # kitchen_concentrate
-            scene_key = "kitchen_concentrate"
+            scene_key = SCENE_CONCENTRATION
         else:  # if self.now_is_between("17:00:00", "sunset - 00:30:01"):
             # kitchen_reading
-            scene_key = "kitchen_reading"
+            scene_key = SCENE_READING
 
         return scene_key
 
-    def _turn_lights_on(self, entity: str, *_args, **_kwargs):
-        scene_key = self._select_scene()
+    def _turn_lights_on(self, origin: str, scene_key: Optional[str] = None):
+        level = "INFO"
+        if scene_key is None:
+            level = "WARNING"
+            scene_key = self._select_scene()
         service, params, _ = SCENES[scene_key]
         self.call_service(service, **params)
         self._light_on = True
+        self._last_light_on = monotonic()
         self.log(
-            f"ENCIENDE LUCES [{scene_key}] from {entity}",
-            level="WARNING",
+            f"ENCIENDE LUCES [{scene_key}] from {origin}",
+            level=level,
             log=LOGGER,
         )
+        # Store scene to enable looping
+        self._last_scene = scene_key
 
     def _reset_inactivity_timer(self, new_wait: Optional[int] = None):
         if self._handler_turn_off_lights is not None:
@@ -222,12 +264,13 @@ class HueSwitchAndMotionControl(hass.Hass):
                     level="WARNING",
                     log=LOGGER,
                 )
+                self._last_light_on = monotonic()
             self._light_on = True
         elif is_off and old == "on":
             if self._light_on:
                 self.log(
                     "UNSYNCED OFF LIGHT (stored as on)",
-                    level="WARNING",
+                    level="ERROR",
                     log=LOGGER,
                 )
             self._light_on = False
@@ -247,32 +290,58 @@ class HueSwitchAndMotionControl(hass.Hass):
         When ON/OFF buttons are used, motion lights are disabled for some time.
         """
         new = RWL_BUTTONS[event_data["event"]]
+        if new.endswith("_up"):
+            # Ignore button release
+            return
+
         ts_now = monotonic()
         delta = ts_now - self._last_switch_press
         self._last_switch_press = ts_now
-        self.log(
-            f"MANUAL SWITCH -> {new} (delta_T={delta:.1f}s)",
-            level="WARNING",
-            log=LOGGER,
-        )
-        if self._motion_light_enabled and new == "4_click":
-            self._motion_light_enabled = False
-            self._light_on = False
-            self._motion_on = False
-            self._reset_inactivity_timer()
-            self._reset_light_enabler(DELAY_TO_RE_ENABLE_MOTION_CONTROL)
-            # Turn off light
-            self.call_service("light/turn_off", entity_id="light.cocina", transition=2)
-        elif self._motion_light_enabled and new == "1_click":
-            self._motion_light_enabled = False
-            self._light_on = True
-            self._motion_on = False
-            self._reset_light_enabler(5 * SCENES[self._select_scene()][2])
-            self._reset_inactivity_timer()
+        self.log(f"MANUAL SWITCH -> {new} (delta_T={delta:.2f}s)", log=LOGGER)
+
+        if new == "1_click":
+            # Turn on, no motion control for some time
+            if self._motion_light_enabled:
+                self._motion_light_enabled = False
+                self._motion_on = False
+                self._reset_light_enabler(5 * SCENES[self._select_scene()][2])
+                self._reset_inactivity_timer()
             # Turn on light with "kitchen_energy"
-            self.call_service(
-                "hue/hue_activate_scene", scene_name="Energía", group_name="Cocina"
-            )
+            self._turn_lights_on("switch", SCENE_ENERGY)
+
+        elif new == "4_click":
+            # Turn off, no motion control for some time
+            if self._motion_light_enabled:
+                self._motion_light_enabled = False
+                self._motion_on = False
+                self._reset_light_enabler(DELAY_TO_RE_ENABLE_MOTION_CONTROL)
+                self._reset_inactivity_timer()
+            # Turn off light
+            self._turn_lights_off(manual=True, transition=2)
+
+        elif new == "2_click":
+            # Turn on, no motion control for some time
+            if self._motion_light_enabled:
+                self._motion_light_enabled = False
+                self._motion_on = False
+                self._reset_light_enabler(5 * SCENES[self._select_scene()][2])
+                self._reset_inactivity_timer()
+
+            # Rotate through scenes
+            idx = (SCENE_ROTATION[self._last_scene] + 1) % len(SCENE_ROTATION)
+            next_scene = next(
+                filter(lambda x: x[1] == idx, SCENE_ROTATION.items())
+            )[0]
+            self._turn_lights_on("switch_loop", next_scene)
+            if next_scene == SCENE_DEEP_NIGHT:
+                self.call_service(
+                    "light/turn_off", entity_id=LIGHT_MAIN, transition=0
+                )
+
+        elif new == "3_hold":
+            # Turn off, but enable motion control
+            self._turn_lights_off(manual=True, transition=0)
+            self._enable_motion_lights()
 
     def _motion_detected(self, entity, _attribute, old, new, _kwargs):
         """
