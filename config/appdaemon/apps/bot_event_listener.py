@@ -1247,7 +1247,7 @@ class EventListener(hass.Hass):
     def _turn_off_lights_and_appliances(self, turn_off_heater=False):
         self.call_service(
             "light/turn_off",
-            entity_id="light.salon,light.bano,light.cocina,light.office,light.exterior,light.hall,light.yeelight_strip_7811dca21ecf",
+            entity_id="light.salon,light.bano,light.cocina,light.exterior,light.hall,light.lamparita,light.yeelight_strip_7811dca21ecf",
             transition=2,
         )
         self.turn_off(SWITCH_PUMP_ACS)
@@ -1497,17 +1497,17 @@ class EventListener(hass.Hass):
                 mask=NOTIF_MASK_POSTPONE_ALARMCLOCK,
                 title="Posponer despertador",
             )
-            self.turn_off("input_boolean.manual_trigger_lacafetera")
+            self.turn_off("input_boolean.manual_trigger_alarmclock")
             action_msg_log += "Dormilón!"
             self.fire_event("postponer_despertador", jam="true")
-        elif action == "ALARMCLOCK_OFF":  # Luces Energy
+        elif action == "ALARMCLOCK_OFF":
             self.frontend_notif(
                 action,
                 origin,
                 mask=NOTIF_MASK_ALARMCLOCK_OFF,
                 title="Despertador apagado",
             )
-            self.turn_off("input_boolean.manual_trigger_lacafetera")
+            self.turn_off("input_boolean.manual_trigger_alarmclock")
             action_msg_log += "Apagado de alarma"
 
         # Unrecognized cat

@@ -125,6 +125,7 @@ sensor:
     entity_ids:
       -  sensor.sensor_terraza_humidity
       -  sensor.sensor_galeria_humidity
+
   - platform: statistics
     entity_id: sensor.temperatura_exterior
     name: temperatura_ext_stats_mean

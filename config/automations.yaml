@@ -333,7 +333,7 @@
     to: 4_hold_up
   action:
   - service: homeassistant.turn_off
-    entity_id: light.dormitorio,light.tira_cocina,input_boolean.manual_trigger_lacafetera
+    entity_id: light.dormitorio,light.tira_cocina,input_boolean.manual_trigger_alarmclock
   - event: flash_light
     event_data:
       color: orange

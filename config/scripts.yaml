@@ -16,7 +16,7 @@ good_night:
         y bajada de persianas.
       disable_notification: true
   - service: light.turn_off
-    entity_id: light.salon,light.bano,light.cocina,light.office,light.exterior,light.hall,light.yeelight_strip_7811dca21ecf
+    entity_id: light.salon,light.bano,light.cocina,light.exterior,light.hall,light.lamparita,light.yeelight_strip_7811dca21ecf
 good_morning:
   alias: Buenos días
   sequence:
