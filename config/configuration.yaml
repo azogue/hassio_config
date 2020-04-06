@@ -135,12 +135,15 @@ history:
       - light
       - switch
       - vacuum
+      - input_boolean
   exclude:
     entities:
-#      - sensor.main_power_total
       - sensor.temperatura_ac
       - sensor.temperatura_interior
       - sensor.humedad_interior
+      - sensor.date_time
+      - sensor.time_utc
+
 logbook:
   include:
     domains:
@@ -166,15 +169,11 @@ influxdb:
   default_measurement: state
   exclude:
     entities:
-#      - "sensor.sensor_(.*)_snum"
 #      - "sensor.floors_(.*)"
-      - sensor.custom_card_tracker
-      - sensor.custom_component_tracker
+      - sensor.hacs
       - sensor.date_time
       - sensor.time_utc
       # No need to store text data:
-      - binary_sensor.floorplan
-      - sensor.psychrometric_evolution
       - sensor.dark_sky_summary
       - sensor.dark_sky_daily_summary
       - sensor.dark_sky_hourly_summary
@@ -198,7 +197,6 @@ influxdb:
       - sensor.temperatura_ac
       - sensor.temperatura_interior
       - sensor.humedad_interior
-#      - sensor.esp32ener_real_power
     domains:
       - persistent_notification
       - variable
@@ -210,7 +208,7 @@ influxdb:
 recorder:
   purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
-#  db_url: !secret recorder_db_url
+  db_url: !secret recorder_db_url
   exclude:
     event_types:
       - service_removed
@@ -224,9 +222,6 @@ recorder:
       - component_loaded
       - logbook_entry
       - system_log_event
-#      - automation_triggered
-#      - script_started
-      - timer_out_of_sync
 system_health:
 mobile_app:
 panel_iframe:

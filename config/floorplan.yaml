@@ -199,7 +199,7 @@
 #             - switch.tv_power
 #             - switch.camara
 #             - switch.sonoff_simple_1
-             - switch.tplink1
+#             - switch.tplink1
              - switch.calentador
                # bomba_circ_acs
              - switch.03200296dc4f22293a7f

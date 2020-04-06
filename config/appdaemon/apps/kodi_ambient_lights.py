@@ -367,7 +367,7 @@ class KodiAssistant(hass.Hass):
             )
             if self._is_playing_video:
                 self._ask_for_playing_item()
-        elif ((new == "idle") and self._is_playing_video) or (new == "off"):
+        elif (new == "idle") and self._is_playing_video:
             self._is_playing_video = False
             self._last_play = self.datetime()
             self.log(
@@ -378,3 +378,13 @@ class KodiAssistant(hass.Hass):
                 log=LOGGER,
             )
             self._adjust_kodi_lights(play=False)
+        elif new == "off":
+            self._is_playing_video = False
+            self.log(
+                "KODI turned off. old:{}, new:{}, type_lp={}".format(
+                    old, new, type(self._last_play)
+                ),
+                level=LOG_LEVEL,
+                log=LOGGER,
+            )
+            self._light_states = {}

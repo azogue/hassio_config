@@ -112,7 +112,16 @@ binary_sensor:
     payload_on: "ON"
     payload_off: "OFF"
 
-#sensor:
+sensor:
+  - platform: mqtt
+    state_topic: "Domus/wyzepan1/motors/horizontal"
+    name: wyzecampan1_position_x
+    json_attributes_topic: "Domus/wyzepan1"
+
+  - platform: mqtt
+    state_topic: "Domus/wyzepan1/motors/vertical"
+    name: wyzecampan1_position_y
+    json_attributes_topic: "Domus/wyzepan1"
 #  - platform: mqtt
 #    state_topic: "Domus/wyze1/brightness"
 #    name: wyzecam1_brightness

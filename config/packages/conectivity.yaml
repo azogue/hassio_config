@@ -12,7 +12,7 @@ binary_sensor:
   host: 8.8.8.8
   count: 1
   device_class: connectivity
-  scan_interval: 180
+  scan_interval: 90
 
 - platform: template
   sensors:
@@ -30,7 +30,7 @@ sensor:
   resource: http://ip.jsontest.com
   name: IP Externa
   value_template: '{% if value_json %}{{ value_json.ip }}{% else %}{{ states.sensor.ip_externa.state}}{% endif %}'
-  scan_interval: 300
+  scan_interval: 150
 
 - platform: cert_expiry
   host: !secret base_host
@@ -38,7 +38,3 @@ sensor:
 
 - platform: uptime
   unit_of_measurement: hours
-
-pi_hole:
-  host: localhost:4865
-  api_key: ""

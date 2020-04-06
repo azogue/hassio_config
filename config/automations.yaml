@@ -189,6 +189,10 @@
     data_template:
       level: '{{ states( "input_number.airpurifier_office_favorite_level" ) | int
         }}'
+  - service: fan.set_speed
+    data:
+      entity_id: fan.airpurifier_office
+      speed: Favorite
 - alias: Encendido de purificador si AQI alto
   id: encendido_de_purificador_si_aqi_alto
   trigger:
@@ -295,15 +299,8 @@
   action:
   - service: media_player.turn_off
     entity_id: media_player.tele,media_player.salon
-  - event: flash_light
-    event_data:
-      color: red
-      persistence: 1
-      flashes: 2
-  - delay:
-      seconds: 5
-  - service: homeassistant.turn_off
-    entity_id: group.all_lights
+  - service: light.turn_off
+    entity_id: light.salon,light.cocina,light.hall_light,light.dormitorio,light.estudio,light.lamparita,light.yeelight_strip_7811dca21ecf
   - service: telegram_bot.send_message
     data_template:
       title: '*All Off*'
@@ -604,18 +601,7 @@
       message: 'Pon a cargar el {{ trigger.to_state.attributes[''Device Type''] }}
         (Batería: {{ trigger.to_state.state }} %)'
       disable_notification: false
-- alias: Alerta de puerta de entrada
-  id: main_door_open
-  trigger:
-  - platform: state
-    entity_id: input_boolean.mirror_eve_main_door
-  action:
-  - event: main_door_triggered
-    event_data_template:
-      state: '{{ trigger.to_state.state }}'
-      last_state_ts: '{{ trigger.from_state.last_changed }}'
-      all_data: '{{ trigger }}'
-- id: 'activa_extras_inmersion_mode'
+- id: activa_extras_inmersion_mode
   alias: Set inmersion mode
   description: Apaga pie sofa con activación de ambilight salón y pone pan cam en
     reposo
@@ -652,7 +638,7 @@
     data_template:
       tariff: '{% if (utcnow().hour >= 11) and (utcnow().hour < 21) %}Punta{% else
         %}Valle{% endif %}'
-- id: 'turn_on_hall_con_cuadro'
+- id: turn_on_hall_con_cuadro
   alias: Enciende Hall al abrir cuadro
   description: Encendido automático del Hall al abrir el cuadro de protecciones
   trigger:
@@ -667,9 +653,9 @@
   action:
   - entity_id: light.hall_light
     service: light.turn_on
-- id: 'ibeacon_activated'
+- id: ibeacon_activated
   alias: iBeacon activado
-  description: 'Genera eventos cuando sub-zonas (beacons) se activan'
+  description: Genera eventos cuando sub-zonas (beacons) se activan
   trigger:
   - entity_id: device_tracker.iphone
     event: enter
@@ -702,7 +688,7 @@
       zone: '{{ trigger.zone.entity_id }}'
       event_type: '{{ trigger.event }}'
       entity_id: '{{ trigger.entity_id }}'
-      source: '{{ trigger.to_state.attributes.source_type }}'
+      source: '{{ trigger.to_state.source_type }}'
 - id: ios_location_trigger
   alias: iOS Location triggered
   trigger:

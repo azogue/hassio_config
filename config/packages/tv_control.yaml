@@ -3,10 +3,6 @@
 ###############################################################################
 homeassistant:
   customize:
-    media_player.kodi:
-      hidden: true
-    input_boolean.kodi_tv_state:
-      hidden: true
     script.play_kodi_pvr:
       friendly_name: Enciende la caja tonta
       icon: mdi:television-guide
