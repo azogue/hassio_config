@@ -281,7 +281,7 @@
   id: turn_on_tv_dimmer_switch_action
   trigger:
     platform: state
-    entity_id: remote.interruptor_salon
+    entity_id: sensor.interruptor_salon
     to: 1_hold_up
   action:
   - service: python_script.start_kodi_play_tv
@@ -294,7 +294,7 @@
   id: turn_off_all_dimmer_switch_action
   trigger:
     platform: state
-    entity_id: remote.interruptor_salon
+    entity_id: sensor.interruptor_salon
     to: 4_hold_up
   action:
   - service: media_player.turn_off
@@ -315,7 +315,7 @@
   id: turn_tv_night_scene_dimmer_switch_action
   trigger:
     platform: state
-    entity_id: remote.interruptor_salon
+    entity_id: sensor.interruptor_salon
     to: 3_hold_up
   action:
   - service: input_select.select_option
@@ -326,7 +326,7 @@
   id: morning_turn_off_dimmer_switch_action
   trigger:
     platform: state
-    entity_id: remote.interruptor_dormitorio
+    entity_id: sensor.interruptor_dormitorio
     to: 4_hold_up
   action:
   - service: homeassistant.turn_off

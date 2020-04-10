@@ -13,7 +13,6 @@ TAP_BUTTONS = {
 COVER_WINDOW = "cover.shelly_ventanal"
 COVER_DOOR = "cover.shelly_puerta"
 SWITCH_AMBI = "switch.ambilight_plus_hue"
-LIGHT_TOGGLE = "light.terraza"
 LIGHT_PARAMS_AFTER_AMBI = {
     "entity_id": "light.salon",
     "transition": 3,
@@ -32,19 +31,13 @@ class HueTapControl(hass.Hass):
         self.listen_event(
             self._tap_event_triggered,
             "deconz_event",
-            id="hue_tap_10",
+            id="interruptor_exterior",
         )
 
     def _tap_event_triggered(self, _event_name, event_data, *_args, **_kwargs):
         tap_code = TAP_BUTTONS[event_data["event"]]
-        if tap_code == "1_click":  # toggle terraza
-            self.call_service("light/toggle", entity_id=LIGHT_TOGGLE)
-            self.log(
-                f"Tap was used: {tap_code}"
-                f"--> terraza is {self.get_state(LIGHT_TOGGLE)}",
-                log=LOGGER,
-            )
-        elif tap_code == "3_click":  # adjust ambilight
+        # if tap_code == "1_click":  # toggle terraza already setup in deconz
+        if tap_code == "3_click":  # adjust ambilight
             st_amb = self.get_state(SWITCH_AMBI)
             if st_amb == "off":
                 self.call_service("switch/turn_on", entity_id=SWITCH_AMBI)

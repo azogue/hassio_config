@@ -40,13 +40,13 @@ homeassistant:
     sensor.interruptor_cocina:
       icon: mdi:light-switch
     sensor.interruptor_exterior:
-      icon: mdi:remote
+      icon: mdi:google-circles-communities
 
-    remote.interruptor_salon:
+    sensor.interruptor_salon:
       icon: mdi:light-switch
-    remote.interruptor_dormitorio:
+    sensor.interruptor_dormitorio:
       icon: mdi:light-switch
-    remote.interruptor_estudio:
+    sensor.interruptor_estudio:
       icon: mdi:light-switch
 
 hue:
@@ -54,7 +54,7 @@ hue:
     - host: !secret hue_bridge_host
       allow_unreachable: true
 
-# sensors from events for hue switches in deconz
+# sensors from events for hue switches in deconz & hue
 sensor:
   - platform: eventsensor
     name: Interruptor exterior
@@ -116,9 +116,77 @@ sensor:
       3003: 3_hold_up
       4003: 4_hold_up
 
-# hue switches
-remote:
-- platform: hueremote
+  - platform: eventsensor
+    name: Interruptor salón
+    event: hue_event
+    event_data:
+      id: interruptor_salon
+    state: event
+    state_map:
+      1000: 1_click
+      2000: 2_click
+      3000: 3_click
+      4000: 4_click
+      1001: 1_hold
+      2001: 2_hold
+      3001: 3_hold
+      4001: 4_hold
+      1002: 1_click_up
+      2002: 2_click_up
+      3002: 3_click_up
+      4002: 4_click_up
+      1003: 1_hold_up
+      2003: 2_hold_up
+      3003: 3_hold_up
+      4003: 4_hold_up
+
+  - platform: eventsensor
+    name: Interruptor estudio
+    event: hue_event
+    event_data:
+      id: interruptor_estudio
+    state: event
+    state_map:
+      1000: 1_click
+      2000: 2_click
+      3000: 3_click
+      4000: 4_click
+      1001: 1_hold
+      2001: 2_hold
+      3001: 3_hold
+      4001: 4_hold
+      1002: 1_click_up
+      2002: 2_click_up
+      3002: 3_click_up
+      4002: 4_click_up
+      1003: 1_hold_up
+      2003: 2_hold_up
+      3003: 3_hold_up
+      4003: 4_hold_up
+
+  - platform: eventsensor
+    name: Interruptor dormitorio
+    event: hue_event
+    event_data:
+      id: interruptor_dormitorio
+    state: event
+    state_map:
+      1000: 1_click
+      2000: 2_click
+      3000: 3_click
+      4000: 4_click
+      1001: 1_hold
+      2001: 2_hold
+      3001: 3_hold
+      4001: 4_hold
+      1002: 1_click_up
+      2002: 2_click_up
+      3002: 3_click_up
+      4002: 4_click_up
+      1003: 1_hold_up
+      2003: 2_hold_up
+      3003: 3_hold_up
+      4003: 4_hold_up
 
 # Philips TV Ambilight support with custom component
 light:
