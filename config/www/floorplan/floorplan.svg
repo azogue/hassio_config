@@ -10728,7 +10728,7 @@
     <path
        style="fill:#e50000;fill-opacity:1"
        inkscape:connector-curvature="0"
-       id="light.yeelight_strip_7811dca21ecf"
+       id="light.tira_tv"
        d="m 242.98515,444.35213 -0.0179,16.64263 1.01621,-0.076 -4.8e-4,1.95052 2.00404,-0.13663 0.008,-1.95793 2.00403,-0.13663 0.007,1.95693 2.00403,-0.13663 4.9e-4,-1.95055 1.01621,-0.0622 -0.01,-16.6407 -8.0304,0.54691 m 2.01071,1.82047 4.00811,-0.27292 0.004,12.71935 -4.0223,0.27391 0.01,-12.72035 m 1.0018,0.90703 -0.008,1.9579 2.01826,-0.13742 -0.007,-1.95695 -2.00406,0.13663 m -0.008,2.94008 0.007,1.95694 2.00403,-0.13648 0.008,-1.95791 -2.01829,0.13741 m -6.8e-4,2.9327 0.007,1.95695 2.00406,-0.13664 0.008,-1.95792 -2.01823,0.13741 m -6.9e-4,2.93268 0.007,1.95696 2.00401,-0.13665 0.008,-1.95791 -2.01829,0.13741 z">
       <title
          id="title32414">Yeelight</title>
@@ -10864,7 +10864,7 @@
        style="display:inline;fill:#fa00c6;fill-opacity:0.95812809"
        transform="matrix(1.0276598,0,0,1.1514489,86.08696,-263.10072)">
       <g
-         id="sensor.esp32ener_power_label"
+         id="sensor.main_power_total_label"
          style="fill:#fa00c6;fill-opacity:0.95812809">
         <path
            d="m 149.4,285.2 0,6.4643 1.98129,0 0,5.28897 4.623,-7.05196 -2.64172,0 2.64172,-4.70131 -6.60429,0 z"
@@ -10872,12 +10872,12 @@
            inkscape:connector-curvature="0"
            style="fill:#fa00c6;fill-opacity:0.95812809" />
         <text
-           inkscape:label="#sensor.esp32ener_power"
+           inkscape:label="#sensor.main_power_total"
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.99999905px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            x="158.60568"
            y="294.76981"
-           id="sensor.esp32ener_power"
+           id="sensor.main_power_total"
            sodipodi:linespacing="125%"><title
              id="title33470">Potencia</title><tspan
              sodipodi:role="line"
@@ -11023,7 +11023,7 @@
     </g>
     <text
        sodipodi:linespacing="125%"
-       id="sensor.temperatura_exterior"
+       id="sensor.temperatura_ext_stats_mean"
        y="26.237329"
        x="326.27408"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.61693192px;line-height:125%;font-family:'Gill Sans';-inkscape-font-specification:'Gill Sans, Bold';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#fa00c6;fill-opacity:0.95812809;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"

@@ -86,11 +86,11 @@
 
         - name: Power Sensors
           entities:
-             -  sensor.esp32ener_power
+             -  sensor.main_power_total
           text_template: '${entity.state ? entity.state + "W" : "??"}'
           class_template: '
             var power = parseFloat(entity.state);
-            if (power < 350)
+            if (power < 300)
               return "power-very-low-background";
             else if (power < 500)
               return "power-below-average-background";
@@ -104,7 +104,7 @@
 
         - name: Temperature Sensors
           entities:
-             - sensor.temperatura_exterior
+             - sensor.temperatura_ext_stats_mean
              - sensor.temperatura_stats_mean
              - sensor.sensor_terraza_temperature
              - sensor.sensor_galeria_temperature
@@ -171,8 +171,7 @@
              - light.tira
              - light.pie_sofa
              - light.pie_tv
-             - light.lamparita
-             - light.yeelight_strip_7811dca21ecf
+             - light.tira_tv
              - light.aura_habitacion
              - light.hue_habitacion
              - light.dormitorio
@@ -180,16 +179,14 @@
              - light.flexo
              - light.estudio
              - light.terraza
-#             - light.hall
              - light.hall_light
-#             - light.exterior
           states:
             - state: 'on'
               class: 'light-on'
             - state: 'off'
               class: 'light-off'
           action:
-            domain: homeassistant   # This optional parameter allows you to use other services such as homeassistant.toggle like here.
+            domain: light   # This optional parameter allows you to use other services such as homeassistant.toggle like here.
             service: toggle
 
         - name: Switches
