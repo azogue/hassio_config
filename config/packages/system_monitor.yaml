@@ -65,6 +65,11 @@ sensor:
     - type: last_boot
   scan_interval: 30
 
+- platform: eventsensor
+  name: Last detected device
+  event: device_tracker_new_device
+  state: mac
+
 - platform: template
   sensors:
     speedtest_ping:
