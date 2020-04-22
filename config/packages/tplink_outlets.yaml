@@ -1,61 +1,35 @@
 ###############################################################################
-# TP-LINK OUTLETS
+# TP-LINK OUTLETS (configured in Integrations UI)
 ###############################################################################
-
-homeassistant:
-  customize:
-    switch.tplink1:
-      icon: mdi:power-plug
-      friendly_name: Enchufe TP
-
-    switch.tplink2:
-      icon: mdi:power-plug
-      friendly_name: Enchufe TP2
-
-    sensor.tplink1_watts:
-      icon: mdi:flash
-      friendly_name: Consumo en TP
-    sensor.tplink2_watts:
-      icon: mdi:flash
-      friendly_name: Consumo en TP2
-#    sensor.tplink1_volts:
-#      icon: mdi:power-plug
-#      friendly_name: Voltaje en TP
-#    sensor.tplink1_today_kwh:
-#      icon: mdi:flash-outline
-#      friendly_name: Consumo día
-
 #tplink:
 #  discovery: false
 #  switch:
 #    - host: !secret tplink_host_ip
 #    - host: !secret tplink_host_ip2
 
+homeassistant:
+  customize:
+    switch.tplink1:
+      icon: mdi:power-plug
+      friendly_name: Enchufe TP
+    switch.tplink2:
+      icon: mdi:power-plug
+      friendly_name: Enchufe TP2
+
+    sensor.tplink1_watts:
+      icon: mdi:flash
+    sensor.tplink2_watts:
+      icon: mdi:flash
+
 # POW voltage and power sensors
 sensor:
   - platform: template
     sensors:
-#      tplink1_amps:
-#        friendly_name_template: "{{ states.switch.tplink1.name}} Current"
-#        value_template: '{{ states.switch.tplink1.attributes["current_a"] | float }}'
-#        unit_of_measurement: 'A'
       tplink1_watts:
-        friendly_name_template: "{{ states.switch.tplink1.name}} Current Consumption"
+        friendly_name_template: '{% if states("switch.tplink1") %}{{ states.switch.tplink1.name}} Current Consumption{% else %}Disabled TP1 Current Consumption{% endif %}'
         value_template: '{% if (states("switch.tplink1") != "unknown") and ("current_power_w" in states.switch.tplink1.attributes) %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
         unit_of_measurement: 'W'
       tplink2_watts:
-        friendly_name_template: "{{ states.switch.tplink2.name}} Current Consumption"
+        friendly_name_template: '{% if states("switch.tplink2") %}{{ states.switch.tplink2.name}} Current Consumption{% else %}Disabled TP1 Current Consumption{% endif %}'
         value_template: '{% if (states("switch.tplink2") != "unknown") and ("current_power_w" in states.switch.tplink2.attributes) %}{{ states.switch.tplink2.attributes["current_power_w"] | float }}{% endif %}'
         unit_of_measurement: 'W'
-#      tplink1_total_kwh:
-#        friendly_name_template: "{{ states.switch.tplink1.name}} Total Consumption"
-#        value_template: '{{ states.switch.tplink1.attributes["total_energy_kwh"] | float }}'
-#        unit_of_measurement: 'kWh'
-#      tplink1_volts:
-#        friendly_name_template: "{{ states.switch.tplink1.name}} Voltage"
-#        value_template: '{{ states.switch.tplink1.attributes["voltage"] | float }}'
-#        unit_of_measurement: 'V'
-#      tplink1_today_kwh:
-#        friendly_name_template: "{{ states.switch.tplink1.name}} Today's Consumption"
-#        value_template: '{{ states.switch.my_tp_switch.attributes["today_energy_kwh"] | float }}'
-#        unit_of_measurement: 'kWh'

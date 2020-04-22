@@ -211,11 +211,15 @@ class KodiAssistant(hass.Hass):
             if ("192.168." not in img_url) and img_url.startswith("http://"):
                 img_url = img_url.replace("http:", "https:")
 
+            url_valid = self._valid_image_url(img_url)
             self.log(
-                "MESSAGE: T={}, M={}, URL={}".format(title, message, img_url),
+                "MESSAGE: T={}, URL={}, ok={}".format(title, message, img_url, url_valid),
                 log=LOGGER,
                 level=LOG_LEVEL,
             )
+            if not url_valid:
+                img_url = None
+
         except KeyError as e:
             self.log(
                 "MESSAGE KeyError: {}; item={}".format(e, item), log=LOGGER
@@ -233,27 +237,19 @@ class KodiAssistant(hass.Hass):
             )
         return False
 
-    def _notify_ios_message(self, title, message, img_url):
-        if self._valid_image_url(img_url):
-            data_msg = {
-                "title": title,
-                "message": message,
-                "data": {
-                    "attachment": {"url": img_url},
-                    "push": {"category": "kodiplay"},
-                },
-            }
-        else:
-            data_msg = {
-                "title": title,
-                "message": message,
-                "data": {"push": {"category": "kodiplay"}},
-            }
+    def _notify_ios_message(self, title, message, img_url=None):
+        data_msg = {
+            "title": title,
+            "message": message,
+            "data": {"push": {"category": "kodiplay"}},
+        }
+        if img_url is not None:
+            data_msg["data"]["attachment"] = {"url": img_url}
         self.call_service(self._ios_notifier, **data_msg)
 
-    def _notify_telegram_message(self, title, message, img_url):
+    def _notify_telegram_message(self, title, message, img_url=None):
         target = int(self.get_state(self._target_sensor))
-        if self._valid_image_url(img_url):
+        if img_url is not None:
             data_photo = {
                 "url": img_url,
                 "keyboard": TELEGRAM_KEYBOARD_KODI,
@@ -334,7 +330,7 @@ class KodiAssistant(hass.Hass):
                         }
                     self.log(
                         "Reponiendo light {}, con state_before={}".format(
-                            light_id, state_before
+                            light_id, new_state_attrs
                         ),
                         level=LOG_LEVEL,
                         log=LOGGER,

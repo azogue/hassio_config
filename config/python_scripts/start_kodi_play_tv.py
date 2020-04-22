@@ -59,7 +59,6 @@ TELEGRAM_TARGET = "sensor.telegram_default_chatid"
 
 # Decide what to play
 now = datetime.datetime.now()
-play_live_tv = True
 if (now.hour < 14) or ((now.hour == 14) and (now.minute < 50)):
     content_id = 19
     media_dest = "laSexta HD"
@@ -69,8 +68,6 @@ elif now.hour < 16:
 elif now.hour < 20:
     content_id = 35
     media_dest = "Canal 24 H."
-    # Last record?
-    # play_live_tv = False
 elif (now.hour == 20) and (now.minute < 50):
     content_id = 19
     media_dest = "laSexta HD"
@@ -81,57 +78,25 @@ else:
     media_dest = "#0 HD"
     content_id = 25
     # Last record?
-    # play_live_tv = False
 
-
-# # Turn on Kodi with CEC
-# hass.services.call(
-#         'media_player', 'turn_on', {"entity_id": MEDIA_PLAYER})
+# Turn on TV
 tv_state = hass.states.get(ENTITY_ANDROIDTV)
 if tv_state.state == "off":
     hass.services.call(
         "media_player", "turn_on", {"entity_id": ENTITY_ANDROIDTV}
     )
 
-
 # Play media:
-if play_live_tv:
-    notify_msg = "Encendido de caja tonta en '{}'.".format(media_dest)
-    hass.services.call(
-        "media_player",
-        "play_media",
-        {
-            "entity_id": MEDIA_PLAYER,
-            "media_content_type": "CHANNEL",
-            "media_content_id": content_id,
-        },
-    )
-else:
-    hass.services.call("script", "pvr_recordings")
-    time.sleep(4)
-    state_select = hass.states.get(INPUT_SELECT_OPTS)
-    options = state_select.attributes.get("options")[1:] or []
-    if options:
-        media_dest = options[0]
-        notify_msg = "Play última grabación de TV: '{}'.".format(media_dest)
-        hass.services.call(
-            "input_select",
-            "select_option",
-            {"entity_id": INPUT_SELECT_OPTS, "option": media_dest},
-        )
-    else:
-        notify_msg = "Encendido de caja tonta en '{}'. *No hay grabaciones disponibles*".format(
-            media_dest
-        )
-        hass.services.call(
-            "media_player",
-            "play_media",
-            {
-                "entity_id": MEDIA_PLAYER,
-                "media_content_type": "CHANNEL",
-                "media_content_id": content_id,
-            },
-        )
+notify_msg = "Encendido de caja tonta en '{}'.".format(media_dest)
+hass.services.call(
+    "media_player",
+    "play_media",
+    {
+        "entity_id": MEDIA_PLAYER,
+        "media_content_type": "CHANNEL",
+        "media_content_id": content_id,
+    },
+)
 
 # Notify:
 target = int(hass.states.get(TELEGRAM_TARGET).state)

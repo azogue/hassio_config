@@ -300,7 +300,7 @@
   - service: media_player.turn_off
     entity_id: media_player.tele,media_player.salon
   - service: light.turn_off
-    entity_id: light.salon,light.cocina,light.hall_light,light.dormitorio,light.estudio,light.lamparita,light.yeelight_strip_7811dca21ecf
+    entity_id: light.salon,light.cocina,light.terraza,light.hall_light,light.dormitorio,light.estudio,light.lamparita,light.yeelight_strip_7811dca21ecf
   - service: telegram_bot.send_message
     data_template:
       title: '*All Off*'

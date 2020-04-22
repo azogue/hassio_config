@@ -1247,7 +1247,7 @@ class EventListener(hass.Hass):
     def _turn_off_lights_and_appliances(self, turn_off_heater=False):
         self.call_service(
             "light/turn_off",
-            entity_id="light.salon,light.bano,light.cocina,light.exterior,light.hall,light.lamparita,light.yeelight_strip_7811dca21ecf",
+            entity_id="light.salon,light.estudio,light.dormitorio,light.cocina,light.terraza,light.hall_light,light.lamparita,light.yeelight_strip_7811dca21ecf",
             transition=2,
         )
         self.turn_off(SWITCH_PUMP_ACS)

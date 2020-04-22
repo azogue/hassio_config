@@ -41,7 +41,7 @@ PeakNotifier:
   module: power_alarm
   instant_power: sensor.main_power_total
   sustained_power: sensor.sustained_power
-  max_power_peak_kw: 6.5
+  max_power_peak_kw: 5.5
   max_power_kw: 4.6
   max_power_kw_reset: 3.0
   min_time_high: 30
@@ -62,7 +62,7 @@ KodiYoutube:
 KodiNotifier:
   class: KodiAssistant
   module: kodi_ambient_lights
-  lights_dim_off: light.bola_grande,light.cuenco
+  lights_dim_off: light.bola,light.cuenco
   lights_dim_on: light.pie_sofa,light.pie_tv
   lights_off: light.central,light.tira,light.tira_tv
 

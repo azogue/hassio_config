@@ -48,20 +48,20 @@ homeassistant:
 binary_sensor:
   - platform: template
     sensors:
-      show_ac_cool:
-        friendly_name: "AC posible"
-        device_class: 'cold'
-        value_template: >-
-          {{ (states.sensor.season != "winter") and (states.sensor.temperatura_ac_mean.state | float > 21) and (states.sensor.temperatura_ext_stats_mean.state | float > 20) }}
-        attribute_templates:
-          t_ext: '{{ states.sensor.temperatura_exterior.state }}'
-          t_int: '{{ states.sensor.temperatura_ac_mean.state }}'
-          season: '{{ states.sensor.season.state }}'
       show_ac_heat:
         friendly_name: "Calefacción posible"
         device_class: 'heat'
         value_template: >-
           {{ (states.sensor.season != "summer") and (states.sensor.temperatura_ac_mean.state | float < 23) and (states.sensor.temperatura_ext_stats_mean.state | float < 21) }}
+        attribute_templates:
+          t_ext: '{{ states.sensor.temperatura_exterior.state }}'
+          t_int: '{{ states.sensor.temperatura_ac_mean.state }}'
+          season: '{{ states.sensor.season.state }}'
+      show_ac_cool:
+        friendly_name: "AC posible"
+        device_class: 'cold'
+        value_template: >-
+          {{ (states.sensor.season != "winter") and (states.binary_sensor.show_ac_heat.state == "off") and (states.sensor.temperatura_ac_mean.state | float > 21) and (states.sensor.temperatura_ext_stats_mean.state | float > 20) }}
         attribute_templates:
           t_ext: '{{ states.sensor.temperatura_exterior.state }}'
           t_int: '{{ states.sensor.temperatura_ac_mean.state }}'
@@ -81,7 +81,7 @@ sensor:
   - platform: statistics
     entity_id: sensor.temperatura_ac
     name: temperatura_ac_mean
-    sampling_size: 25
+    sampling_size: 100
     precision: 1
     max_age:
       minutes: 5
