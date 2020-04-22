@@ -16,6 +16,26 @@ HueTapControl:
   module: hue_tap_controller
   class: HueTapControl
 
+LastMotionHistory:
+  class: MultiBinSensor
+  module: multi_bin_sensor_history
+  new_entity: sensor.last_motion
+  max_history: 10
+  binary_sensors:
+    binary_sensor.mirror_eve_main_door: Puerta principal
+    binary_sensor.hall_mov: Hall
+    binary_sensor.pasillo_mov: Pasillo
+    binary_sensor.sensor_kitchen_mov1: Barra
+    binary_sensor.hue_motion_sensor_1_motion: Cocina
+    binary_sensor.sensor_bedroom_mov1: Dormitorio
+    binary_sensor.sensor_livingroom_mov1: Salón
+    binary_sensor.sensor_study_mov1: Estudio
+    binary_sensor.hue_motion_sensor_2_motion: Office
+    binary_sensor.cuadro_movimiento: Cuadro
+  format_last_changed: '%H:%M:%S'
+  icon: mdi:motion-sensor
+  friendly_name: Last motion
+
 PeakNotifier:
   class: PeakNotifier
   module: power_alarm
