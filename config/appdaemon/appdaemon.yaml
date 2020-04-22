@@ -17,6 +17,12 @@ logs:
     log_generations: 5
     log_size: 1048576
     format: "{asctime} {levelname:<8} {appname:<10}: {message}"
+  alarm_log:
+    name: AlarmLog
+    filename: /config/appdaemon/alarm.log
+    log_generations: 5
+    log_size: 307200
+    format: "{asctime} {levelname:<8} {appname:<10}: {message}"
   motion_log:
     name: MotionLog
     log_generations: 10

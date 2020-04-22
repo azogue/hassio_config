@@ -6,12 +6,12 @@ homeassistant:
     input_boolean.mirror_eve_main_door:
       friendly_name: Puerta principal
       icon: mdi:door-closed
-
-
-#{{ states.alarm_control_panel.alarma.state }}
-#
-#{{ states.alarm_control_panel.alarma.attributes.changed_by }}
-#{{ states.alarm_control_panel.alarma.attributes }}
+    input_boolean.alarm_auto_arm_when_exit_home:
+      friendly_name: Auto-arm at exit
+      icon: mdi:shield-key-outline
+    input_boolean.alarm_notify_events:
+      friendly_name: Alarm event notifications
+      icon: mdi:shield-alert-outline
 
 ###############################################################################
 # ALARM PANEL
@@ -19,6 +19,11 @@ homeassistant:
 input_boolean:
   mirror_eve_main_door:
     initial: off
+
+  alarm_auto_arm_when_exit_home:
+    initial: on
+  alarm_notify_events:
+    initial: on
 
 binary_sensor:
   - platform: template
@@ -34,20 +39,25 @@ binary_sensor:
 alarm_control_panel:
   - platform: manual
     name: Alarma
-#    code: !secret ha_alarmcode
-#    code_template: '{{ states.}}'
-    pending_time: 30
-    delay_time: 20
-    trigger_time: 20
+
+    # default is armed_away
+    # ∆ before changing to triggered
+    delay_time: 0
+    # ∆ before changing to anything else (not triggered)
+    pending_time: 20
+    # Trigger duration
+    trigger_time: 60
+
+    triggered:
+      pending_time: 1
     disarmed:
+      delay_time: 0
       trigger_time: 0
     armed_home:
-      pending_time: 0
-      delay_time: 0
-      trigger_time: 3
+      pending_time: 10
+      delay_time: 10
+      trigger_time: 180
     armed_night:
       pending_time: 0
-      delay_time: 10
-      trigger_time: 1
-
-#    armed_custom_bypass/armed_home/armed_away/armed_night/disarmed/triggered:
+      delay_time: 20
+      trigger_time: 30
