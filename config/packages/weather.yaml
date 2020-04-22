@@ -90,17 +90,6 @@ sensor:
       - pressure
     scan_interval: 1200
 
-  - platform: aemet
-    name: AEMET
-    api_key: !secret aemet_opendata_api_key
-    station_id: !secret aemet_local_station_id
-    monitored_conditions:
-      - temperature
-      - humidity
-      - pressure
-      - precipitation
-      - wind_speed
-    scan_interval: 1800
 ###############################################################################
 # SVG CAMERAS
 ###############################################################################
