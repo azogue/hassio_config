@@ -64,6 +64,28 @@ zone:
   radius: !secret z5_radius
   icon: !secret z5_icon
 
+# BLE iBeacons
+- name: beacon_entrada
+  latitude: !secret latitude_ibeacon_entrada
+  longitude: !secret longitude_ibeacon_entrada
+  radius: !secret radius_ibeacons
+  passive: false
+  icon: 'mdi:lighthouse-on'
+
+- name: beacon_salon
+  latitude: !secret latitude_ibeacon_salon
+  longitude: !secret longitude_ibeacon_salon
+  radius: !secret radius_ibeacons
+  passive: false
+  icon: 'mdi:lighthouse-on'
+
+- name: beacon_estudio
+  latitude: !secret latitude_ibeacon_estudio
+  longitude: !secret longitude_ibeacon_estudio
+  radius: !secret radius_ibeacons
+  passive: false
+  icon: 'mdi:lighthouse-on'
+
 
 sensor:
   - platform: template

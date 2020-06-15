@@ -34,7 +34,9 @@ current_temp = state_climate.attributes["current_temperature"]
 
 if target_temp > current_temp - 0.5 and entity_name == "termostato_ac":
     # Decrease the target temp if necessary
-    new_temp = max(24, target_temp - 2)
+    new_temp = target_temp - 2
+    if new_temp < 24:
+        new_temp = 24
     hass.services.call(
         "climate",
         "set_temperature",

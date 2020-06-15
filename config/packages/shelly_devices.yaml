@@ -11,6 +11,9 @@ homeassistant:
 
 # Discovery for shelly devs with hacs custom component
 shelly:
+  discovery: false
+  settings:
+    temperature: { decimals: 1 }
   username: !secret shelly_user
   password: !secret shelly_pwd
   devices:  #configure devices
@@ -26,6 +29,9 @@ shelly:
       name: Alarmas técnicas
     - id: !secret shelly_id_hall
       name: Luz Hall
+      light_switch: true
+    - id: !secret shelly_id_pasillo
+      name: Luz Pasillo
       light_switch: true
 
 # MQTT connection (for quick response) for some devices

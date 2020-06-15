@@ -30,8 +30,8 @@ homeassistant:
 ##        local_key: !secret maxcio_wifi_plug_1_local_key
 ##        name: Doble enchufe
 
-tuya:
-  username: !secret tuya_app_user
-  password: !secret tuya_app_pwd
-  country_code: 34
-  platform: smart_life
+#tuya:
+#  username: !secret tuya_app_user
+#  password: !secret tuya_app_pwd
+#  country_code: 34
+#  platform: smart_life

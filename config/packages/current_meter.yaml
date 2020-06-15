@@ -120,16 +120,6 @@ sensor:
     icon: mdi:transmission-tower
 
   - platform: mqtt
-    name: "main_energy_ch1"
-    state_topic: "shellies/shellyem/emeter/0/energy"
-#    value_template: "{{ value | float / 60000 }}" # Fix for Watt-minutes
-    value_template: "{%if value %}{{ value | int }}{% else %}unknown{% endif %}" # Watt-minutes
-    qos: 1
-    unit_of_measurement: "Wm"
-    force_update: true
-    icon: mdi:chart-bar
-
-  - platform: mqtt
     name: "main_energy_total_ch1"
     state_topic: "shellies/shellyem/emeter/0/total"
     value_template: "{%if value %}{{ (value | float / 1000) | round(3) }}{% else %}unknown{% endif %}"
@@ -155,16 +145,6 @@ sensor:
     unit_of_measurement: "VA"
     force_update: true
     icon: mdi:transmission-tower
-
-  - platform: mqtt
-    name: "main_energy_ch2"
-    state_topic: "shellies/shellyem/emeter/1/energy"
-#    value_template: "{{ value | float / 60000 }}" # Fix for Watt-minutes
-    value_template: "{%if value %}{{ value | int }}{% else %}unknown{% endif %}" # Watt-minutes
-    qos: 1
-    unit_of_measurement: "Wm"
-    force_update: true
-    icon: mdi:chart-bar
 
   - platform: mqtt
     name: "main_energy_total_ch2"

@@ -44,20 +44,20 @@ alarm_control_panel:
     # ∆ before changing to triggered
     delay_time: 0
     # ∆ before changing to anything else (not triggered)
-    pending_time: 20
+    arming_time: 20
     # Trigger duration
     trigger_time: 60
 
-    triggered:
-      pending_time: 1
-    disarmed:
-      delay_time: 0
-      trigger_time: 0
+    #triggered:
+    #  pending_time: 1
+    #disarmed:
+    #  delay_time: 0
+    #  trigger_time: 0
     armed_home:
-      pending_time: 10
-      delay_time: 10
-      trigger_time: 180
-    armed_night:
-      pending_time: 0
+      arming_time: 10
       delay_time: 20
-      trigger_time: 30
+      trigger_time: 60
+    armed_night:
+      arming_time: 60
+      delay_time: 20
+      trigger_time: 20

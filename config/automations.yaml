@@ -444,47 +444,50 @@
       target: !secret telegram_bot_chat_id_admin
       message: El micro ESP [`{{ trigger.to_state.attributes.friendly_name }}`] parece
         que *ha fallado*. Revísalo!
-- alias: Aviso de sensor MQTT online
-  id: mqtt_sensor_go_online_notify
+- id: mqtt_sensor_go_online_notify
+  alias: Aviso de sensor MQTT online
   trigger:
-  - platform: state
-    entity_id: sensor.sensor_bedroom_snum
+  - entity_id: sensor.sensor_bedroom_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_livingroom_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_livingroom_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_office_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_office_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_kitchen_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_kitchen_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_terraza_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_terraza_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_galeria_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_galeria_snum
     from: unknown
-  - platform: state
-    entity_id: sensor.sensor_bathroom_ac_snum
+    platform: state
+    to: '1'
+  - entity_id: sensor.sensor_bathroom_ac_snum
     from: unknown
-  condition:
-    condition: template
-    value_template: '{{ (now() - trigger.from_state.last_changed).total_seconds()
-      > 120 }}'
+    platform: state
+    to: '1'
+  condition: []
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      title: '*Sensor online*'
-      target: !secret telegram_bot_chat_id_admin
+  - data_template:
+      disable_notification: true
       message: 'El micro ESP `{{ trigger.to_state.attributes.friendly_name[9:]}}`
         parece que ha **revivido**: Wake_{{ trigger.to_state.attributes.status.wake
         }}(WR:{{ trigger.to_state.attributes.status.wake_reason }},ERR:{{ trigger.to_state.attributes.status.c_error
         }}); Wifi -> {{ trigger.to_state.attributes.wifi_ap }} [CH {{ trigger.to_state.attributes.network.CH
         }}, RSSI: {{ trigger.to_state.attributes.rssi }}, IP_{{ trigger.to_state.attributes.ip[10:]
-        }}]. Estaba desaparecido desde hace {{ ((now() - trigger.from_state.last_changed).total_seconds()
-        / 60) | round(1) }} min.'
-      disable_notification: true
+        }}]. Estaba desaparecido desde {{ trigger.from_state.last_changed }}.'
+      target: !secret telegram_bot_chat_id_admin
+      title: '*Sensor online*'
+    service: telegram_bot.send_message
 - alias: Apagado automático de termo ACS
   id: termo_auto_off
   trigger:
