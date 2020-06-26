@@ -699,14 +699,153 @@
     platform: state
   - entity_id: sensor.last_update_trigger_carmen
     platform: state
-  - entity_id: sensor.last_update_trigger_ipad_carmen
-    platform: state
-  - entity_id: sensor.last_update_trigger_ipad
-    platform: state
   action:
   - event: ios_location_trigger
     event_data_template:
       old_trigger: '{{ trigger.from_state.state }}'
       new_trigger: '{{ trigger.to_state.state }}'
       entity: '{{ trigger.to_state.entity_id }}'
-      all_data: '{{ trigger }}'
+- id: '1586798932353'
+  alias: Apaga tira tv con tele encendida
+  description: ''
+  trigger:
+  - entity_id: media_player.tele
+    for: 0:00:5
+    platform: state
+    to: 'on'
+  - entity_id: media_player.tele
+    for: 0:00:05
+    platform: state
+    to: playing
+  condition:
+  - condition: device
+    device_id: bba9959889974c7e9c76e40d817addf4
+    domain: light
+    entity_id: light.tira_tv
+    type: is_on
+  action:
+  - device_id: bba9959889974c7e9c76e40d817addf4
+    domain: light
+    entity_id: light.tira_tv
+    type: turn_off
+- id: '1586799062117'
+  alias: Enciende tira tv al apagar tele
+  description: ''
+  trigger:
+  - entity_id: media_player.tele
+    for: 0:00:10
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: light.salon
+    state: 'on'
+  action:
+  - brightness_pct: 100
+    device_id: bba9959889974c7e9c76e40d817addf4
+    domain: light
+    entity_id: light.tira_tv
+    type: turn_on
+- id: '1587147476397'
+  alias: Set Hue update_interval
+  description: ''
+  trigger:
+  - entity_id: input_number.hue_polling_interval
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      scan_interval:
+        seconds: '{{states("input_number.hue_polling_interval") | int}}'
+    entity_id: sensor.hue_polling_interval
+    service: fasthue.set_update_interval
+- id: '1588574415005'
+  alias: Apaga Pasillo tras inactividad
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.pasillo_mov
+    for: 00:{{ states.input_number.wait_time_turn_off_lights.state | int}}:00
+    platform: state
+    to: 'off'
+  condition:
+  - condition: device
+    device_id: f4a977e087424bc4a810148e1d85f9c0
+    domain: light
+    entity_id: light.shelly_pasillo
+    type: is_on
+  action:
+  - device_id: f4a977e087424bc4a810148e1d85f9c0
+    domain: light
+    entity_id: light.shelly_pasillo
+    type: turn_off
+- id: '1588589242672'
+  alias: Apaga Hall tras inactividad
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.hall_mov
+    for: 00:{{ states.input_number.wait_time_turn_off_lights.state | int}}:00
+    platform: state
+    to: 'off'
+  condition:
+  - condition: device
+    device_id: e97e14b10b2d4bbdb03237cf59a2afff
+    domain: light
+    entity_id: light.hall_light
+    type: is_on
+  action:
+  - device_id: e97e14b10b2d4bbdb03237cf59a2afff
+    domain: light
+    entity_id: light.hall_light
+    type: turn_off
+- id: '1588592490318'
+  alias: Enciende Hall con movimiento
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.hall_mov
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.central_lights_automation
+    state: 'on'
+  - condition: device
+    device_id: e97e14b10b2d4bbdb03237cf59a2afff
+    domain: light
+    entity_id: light.hall_light
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    type: is_off
+  action:
+  - device_id: e97e14b10b2d4bbdb03237cf59a2afff
+    domain: light
+    entity_id: light.hall_light
+    type: turn_on
+- id: '1588592607712'
+  alias: Enciende pasillo con movimiento
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.pasillo_mov
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.central_lights_automation
+    state: 'on'
+  - condition: device
+    device_id: f4a977e087424bc4a810148e1d85f9c0
+    domain: light
+    entity_id: light.shelly_pasillo
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    type: is_off
+  action:
+  - device_id: f4a977e087424bc4a810148e1d85f9c0
+    domain: light
+    entity_id: light.shelly_pasillo
+    type: turn_on
