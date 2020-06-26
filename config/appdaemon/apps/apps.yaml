@@ -20,17 +20,19 @@ LastMotionHistory:
   class: MultiBinSensor
   module: multi_bin_sensor_history
   new_entity: sensor.last_motion
-  max_history: 10
+  max_history: 20
   binary_sensors:
-    binary_sensor.mirror_eve_main_door: Puerta principal
+    binary_sensor.mirror_eve_main_door: Puerta principal (BT)
+    binary_sensor.main_door: Puerta principal
     binary_sensor.hall_mov: Hall
     binary_sensor.pasillo_mov: Pasillo
     binary_sensor.sensor_kitchen_mov1: Barra
-    binary_sensor.hue_motion_sensor_1_motion: Cocina
+    binary_sensor.mini_motion_cocina: Cocina
+    binary_sensor.motion_sensor_cocina: Cocina (f)
     binary_sensor.sensor_bedroom_mov1: Dormitorio
     binary_sensor.sensor_livingroom_mov1: Salón
-    binary_sensor.sensor_study_mov1: Estudio
-    binary_sensor.hue_motion_sensor_2_motion: Office
+    binary_sensor.sensor_study_mov1: Estudio (mesa)
+    binary_sensor.motion_sensor_office: Estudio
     binary_sensor.cuadro_movimiento: Cuadro
   format_last_changed: '%H:%M:%S'
   icon: mdi:motion-sensor
@@ -41,7 +43,7 @@ PeakNotifier:
   module: power_alarm
   instant_power: sensor.main_power_total
   sustained_power: sensor.sustained_power
-  max_power_peak_kw: 5.5
+  max_power_peak_kw: 5.2
   max_power_kw: 4.6
   max_power_kw_reset: 3.0
   min_time_high: 30

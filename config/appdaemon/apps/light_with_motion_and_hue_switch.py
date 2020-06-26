@@ -15,11 +15,13 @@ LIGHT_GROUP = "light.cocina"
 LISTEN_EVENT = "deconz_event"
 LISTEN_EVENT_ID = "interruptor_cocina"
 MOTION_CONTROL_CONSTRAIN = "input_boolean.app_lights_automation"
-MOTION_SENSOR_MAIN = "binary_sensor.hue_motion_sensor_1_motion"
-MOTION_SENSOR_SECONDARY = "binary_sensor.sensor_kitchen_mov1"
+
+MOTION_SENSOR_MAIN = "binary_sensor.motion_sensor_cocina"
+MOTION_SENSOR_SECONDARY = "binary_sensor.mini_motion_cocina"
+MOTION_SENSOR_AUX = "binary_sensor.sensor_kitchen_mov1"
 
 DELAY_TO_RE_ENABLE_MOTION_CONTROL = 120
-MAX_DELAY_MOTION_OFF = 600
+MAX_DELAY_MOTION_OFF = 900
 
 # Time with light enabled after last sensor is off
 WAIT_TO_TURN_OFF_MORNING = 120
@@ -104,7 +106,7 @@ class HueSwitchAndMotionControl(hass.Hass):
         self._last_scene = SCENE_ENERGY
 
         self._motion_states = {}
-        for sensor in [MOTION_SENSOR_MAIN, MOTION_SENSOR_SECONDARY]:
+        for sensor in [MOTION_SENSOR_MAIN, MOTION_SENSOR_SECONDARY, MOTION_SENSOR_AUX]:
             self._motion_states[sensor] = self.get_state(sensor) == "on"
             self.listen_state(
                 self._motion_detected,
@@ -334,6 +336,14 @@ class HueSwitchAndMotionControl(hass.Hass):
         * Each activated motion sensor resets the wait timer, if previously set
         * Last deactivated sensor sets a new wait timer to turn off lights.
         """
+        if new is None:
+            self.log(
+                f"Motion sensor disappeared: {entity} -> from {old} to {new}",
+                level="WARNING",
+                log=LOGGER,
+            )
+            return
+
         activated = new == "on"
         if not self._motion_light_enabled:
             if activated and self._light_on:
@@ -368,6 +378,12 @@ class HueSwitchAndMotionControl(hass.Hass):
 
     def _no_motion_for_long_time(self, *_args, **_kwargs):
         """Listener to main motion sensor being off a long time."""
+        light_st = self.get_state(LIGHT_GROUP)
+        self._light_on = light_st == "on"
+
+        if not self._light_on:
+            return
+
         now = monotonic()
         self.log(
             f"NO MOTION FOR A LONG TIME (since {self._last_light_on:.0f} s)-> "

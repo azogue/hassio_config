@@ -26,7 +26,7 @@ logs:
   motion_log:
     name: MotionLog
     log_generations: 10
-    log_size: 1048576
+    log_size: 307200
     filename: /config/appdaemon/motion_events.log
     format: "{asctime} {levelname:<8} {appname:<10}: {message}"
   event_log:

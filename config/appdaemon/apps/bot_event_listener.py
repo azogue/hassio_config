@@ -263,7 +263,7 @@ CMD_TEMPL_HOME_STATUS = """
 Mov Hall: {{ states.binary_sensor.hall_mov.state }} ({{ relative_time(states.binary_sensor.hall_mov.last_changed) }})
 Mov Pasillo: {{ states.binary_sensor.pasillo_mov.state }} ({{ relative_time(states.binary_sensor.pasillo_mov.last_changed) }})
 Mov Cocina (B): {{ states.binary_sensor.sensor_kitchen_mov1.state }} ({{ relative_time(states.binary_sensor.sensor_kitchen_mov1.last_changed) }})
-Mov Cocina (H): {{ states.binary_sensor.hue_motion_sensor_1_motion.state }} ({{ relative_time(states.binary_sensor.hue_motion_sensor_1_motion.last_changed) }})
+Mov Cocina (H): {{ states.binary_sensor.motion_sensor_cocina.state }} ({{ relative_time(states.binary_sensor.motion_sensor_cocina.last_changed) }})
 Mov Salón: {{ states.binary_sensor.sensor_livingroom_mov1.state }} ({{ relative_time(states.binary_sensor.sensor_livingroom_mov1.last_changed) }})
 Mov Dormitorio: {{ states.binary_sensor.sensor_bedroom_mov1.state }} ({{ relative_time(states.binary_sensor.sensor_bedroom_mov1.last_changed) }})
 Mov Office: {{ states.binary_sensor.sensor_office_mov1.state }} ({{ relative_time(states.binary_sensor.sensor_office_mov1.last_changed) }})
