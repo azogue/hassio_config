@@ -32,9 +32,9 @@ sensor:
   value_template: '{% if value_json %}{{ value_json.ip }}{% else %}{{ states.sensor.ip_externa.state}}{% endif %}'
   scan_interval: 150
 
-- platform: cert_expiry
-  host: !secret base_host
-  scan_interval: 7200
+#- platform: cert_expiry
+#  host: !secret base_host
+#  scan_interval: 7200
 
 - platform: uptime
   unit_of_measurement: hours

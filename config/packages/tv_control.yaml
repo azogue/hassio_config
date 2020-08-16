@@ -93,10 +93,11 @@ media_player:
     data:
       entity_id: media_player.kodi
 
-- platform: denonavr
-  host: !secret denon_host
-  name: Home cinema
-  show_all_sources: false
+# Configured via UI
+#- platform: denonavr
+#  host: !secret denon_host
+#  name: Home cinema
+#  show_all_sources: false
 
 - platform: universal
   name: Tele

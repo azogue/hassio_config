@@ -49,10 +49,10 @@ homeassistant:
     sensor.interruptor_estudio:
       icon: mdi:light-switch
 
-hue:
-  bridges:
-    - host: !secret hue_bridge_host
-      allow_unreachable: true
+#hue:
+#  bridges:
+#    - host: !secret hue_bridge_host
+#      allow_unreachable: true
 
 # sensors from events for hue switches in deconz & hue --> in UI -> eventsensor CC
 
