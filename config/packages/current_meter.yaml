@@ -160,7 +160,10 @@ sensor:
       main_power_total:
         friendly_name: "Potencia total"
         unit_of_measurement: 'W'
-        value_template: "{% if (states.sensor.main_power_ch1.state != 'unknown') and (states.sensor.main_power_ch2.state != 'unknown') %}{{ ((states.sensor.main_power_ch1.state | float) + (states.sensor.main_power_ch2.state | float)) | round() }}{% else %}unknown{% endif %}"
+        value_template: >
+          {%- if (states.sensor.main_power_ch1.state != 'unknown') and (states.sensor.main_power_ch2.state != 'unknown') -%}
+          {{ (34 + 1.011765 * (states.sensor.main_power_ch1.state | float) + 1.015986 * (states.sensor.main_power_ch2.state | float)) | round() }}
+          {%- else %}unknown{% endif -%}
         entity_id:
           - sensor.main_power_ch1
           - sensor.main_power_ch2
