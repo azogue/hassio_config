@@ -17,24 +17,10 @@ homeassistant:
 # ALARM PANEL
 ###############################################################################
 input_boolean:
-  mirror_eve_main_door:
-    initial: off
-
   alarm_auto_arm_when_exit_home:
     initial: on
   alarm_notify_events:
     initial: on
-
-binary_sensor:
-  - platform: template
-    sensors:
-      mirror_eve_main_door:
-        friendly_name: Puerta principal
-        device_class: door
-        value_template: >-
-          {{ is_state('input_boolean.mirror_eve_main_door', 'on') }}
-        entity_id:
-        - input_boolean.mirror_eve_main_door
 
 alarm_control_panel:
   - platform: manual

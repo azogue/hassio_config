@@ -22,8 +22,10 @@ LastMotionHistory:
   new_entity: sensor.last_motion
   max_history: 20
   binary_sensors:
-    binary_sensor.mirror_eve_main_door: Puerta principal (BT)
     binary_sensor.main_door: Puerta principal
+    binary_sensor.mirror_eve_bath_door: Puerta baño
+    binary_sensor.door_galeria: Puerta Galería
+    binary_sensor.door_terraza: Puerta Terraza
     binary_sensor.hall_mov: Hall
     binary_sensor.pasillo_mov: Pasillo
     binary_sensor.sensor_kitchen_mov1: Barra
@@ -31,8 +33,9 @@ LastMotionHistory:
     binary_sensor.motion_sensor_cocina: Cocina (f)
     binary_sensor.sensor_bedroom_mov1: Dormitorio
     binary_sensor.sensor_livingroom_mov1: Salón
-    binary_sensor.sensor_study_mov1: Estudio (mesa)
-    binary_sensor.motion_sensor_office: Estudio
+    # binary_sensor.sensor_study_mov1: Estudio (mesa)
+    binary_sensor.mini_motion_estudio: Estudio
+    binary_sensor.motion_sensor_bathroom: Baño
     binary_sensor.cuadro_movimiento: Cuadro
   format_last_changed: '%H:%M:%S'
   icon: mdi:motion-sensor

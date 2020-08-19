@@ -25,6 +25,10 @@ homeassistant:
       friendly_name: "Aire acondicionado"
       icon: mdi:air-conditioner
 
+# Configured in UI
+#input_boolean:
+#  bath_door:
+
 binary_sensor:
   - platform: mqtt
     device_class: connectivity
@@ -33,6 +37,17 @@ binary_sensor:
     qos: !secret mqtt_default_qos
     payload_on: "online"
     payload_off: "offline"
+
+  - platform: template
+    sensors:
+      mirror_eve_bath_door:
+        unique_id: "manual_template_puerta_banyo_eve_sensor"
+        friendly_name: Puerta Baño
+        device_class: door
+        value_template: >-
+          {{ is_state('input_boolean.bath_door', 'on') }}
+        entity_id:
+        - input_boolean.bath_door
 
 #  - platform: mqtt
 #    device_class: motion

@@ -22,7 +22,7 @@ homekit:
 #      - switch.15556050840d8ea15efb_2
 #      - switch.tplink1
 
-      - input_boolean.mirror_eve_main_door
+      - input_boolean.bath_door
 
       - sensor.sensor_galeria_humidity
       - sensor.sensor_galeria_temperature
