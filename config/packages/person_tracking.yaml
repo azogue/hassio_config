@@ -86,7 +86,6 @@ zone:
   passive: false
   icon: 'mdi:lighthouse-on'
 
-
 sensor:
   - platform: template
     sensors:
@@ -137,10 +136,6 @@ sensor:
           - sensor.ssid_carmen
           - sensor.bssid_carmen
 
-owntracks:
-  max_gps_accuracy: 100
-  waypoints: True
-
 device_tracker:
 - platform: nmap_tracker
   hosts: 192.168.1.1-240
@@ -166,6 +161,3 @@ device_tracker:
   hosts:
     iphonex_detect: !secret local_ip_iphonex
     iphone6s_detect: !secret local_ip_iphone6s
-
-- platform: bluetooth_tracker
-  track_new_devices: false
