@@ -74,6 +74,7 @@ class MotionEyeCamera(Camera):
                 f":{control_port}/{cam_id}/detection/"
             )
 
+        self._online = True
         self._last_image = None
         self._last_status = None
         self._motion_detection_active = False
@@ -130,6 +131,10 @@ class MotionEyeCamera(Camera):
             with async_timeout.timeout(10, loop=self.hass.loop):
                 response = await websession.get(self._snapshot_url)
             self._last_image = await response.read()
+            if not self._online:
+                _LOGGER.warning("%s: Recovered camera image", self.entity_id)
+                self._online = True
+
             if (self._control_url is None or
                     (self._last_status is not None
                      and (utcnow() - self._last_status).total_seconds() < 60)):
@@ -137,12 +142,15 @@ class MotionEyeCamera(Camera):
 
             await self.async_get_camera_motion_status(command='status')
         except asyncio.TimeoutError:
-            _LOGGER.warning("Timeout getting camera image")
-            return self._last_image
+            if self._online:
+                _LOGGER.warning("%s: Timeout getting camera image", self.entity_id)
+                self._online = False
         except aiohttp.ClientError as err:
-            _LOGGER.error("ClientError getting new camera image for %s: %s",
-                          self.name, err)
-            return self._last_image
+            if self._online:
+                _LOGGER.error(
+                    "%s: ClientError getting new camera image: %s", self.name, err
+                )
+                self._online = False
 
         return self._last_image
 
