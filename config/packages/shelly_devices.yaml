@@ -33,6 +33,9 @@ shelly:
     - id: !secret shelly_id_pasillo
       name: Luz Pasillo
       light_switch: true
+    - id: !secret shelly_id_office
+      name: Luces Office
+      light_switch: true
 
 # MQTT connection (for quick response) for some devices
 binary_sensor:

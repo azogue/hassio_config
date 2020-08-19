@@ -7,10 +7,14 @@ homekit:
       - climate
       - vacuum
     include_entities:
-      - media_player.kodi_tv
-      - light.yeelight_strip_7811dca21ecf
+#      - fan.ventilador
+      - media_player.tele
+#      - light.yeelight_strip_7811dca21ecf
 
       - light.hall_light
+      - light.shelly_pasillo
+      - light.office_cold
+      - light.office_warm
 
       - switch.calentador
 #      - switch.03200296dc4f22293a7f
