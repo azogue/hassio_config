@@ -15,20 +15,10 @@ homeassistant:
   #      - 127.0.0.1
   packages:  !include_dir_named packages
   customize: !include customize.yaml
-  whitelist_external_dirs:
-    - !secret ext_dir_1
-    - !secret ext_dir_2
-#    - !secret ext_dir_3
   #customize_glob: !include frontend/customize_glob.yaml
 
 frontend:
   javascript_version: latest
-  extra_html_url:
-    - /local/custom_ui/state-card-floorplan.html
-    - /local/custom_ui/floorplan/ha-floorplan.html
-  extra_html_url_es5:
-    - /local/custom_ui/state-card-floorplan.html
-    - /local/custom_ui/floorplan/ha-floorplan.htmll
   themes: !include_dir_merge_named themes
 
 config:
@@ -223,15 +213,6 @@ recorder:
       - system_log_event
 system_health:
 mobile_app:
-panel_iframe:
-  contab_access:
-    title: Contabilidad
-    url: !secret weblink_contab_url
-    icon: mdi:bank
-  grafana_access:
-    title: Grafana
-    url: !secret grafana_url
-    icon: mdi:chart-areaspline
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
