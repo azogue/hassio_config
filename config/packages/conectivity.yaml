@@ -18,8 +18,11 @@ binary_sensor:
   sensors:
     services_notok:
       friendly_name: Problemas
+      unique_id: "manual_template_services_not_ok"
       device_class: safety
       value_template: "{{ (states.sensor.nut_ups_status.state != 'Online') or (states.binary_sensor.internet_online.state != 'on') or (states.sensor.ip_externa.state == 'unknown') }}"
+      delay_on: "0:00:30"
+      delay_off: "0:01:30"
       entity_id:
         - sensor.nut_ups_status
         - sensor.ip_externa

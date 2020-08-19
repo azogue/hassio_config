@@ -64,6 +64,8 @@ media_player:
   apps:
     com.amazon.avod: "Prime Video"
     com.hbo_android_tv: "HBO"
+    com.disney.disneyplus: "Disney+"
+    com.netflix.ninja: "Netflix"
     com.android.vending: "App Store"
     com.amazon.amazonvideo.livingroom: "Prime Video"
     org.xbmc.kodi: "Kodi"
@@ -179,6 +181,7 @@ binary_sensor:
 - platform: template
   sensors:
     tv_in_screen_saver:
+      unique_id: "manual_template_sensor_tv_in_screen_saver"
       friendly_name: "Salvapantallas TV"
       # device_class:
       # {{'app_name' in states.media_player.tv.attributes and states.media_player.tv.attributes['app_name'] == 'Salvapantallas'}}

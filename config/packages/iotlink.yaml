@@ -70,6 +70,7 @@ switch:
   - platform: template
     switches:
       w10_wake_suspend:
+        unique_id: "manual_template_switch_w10_wake_suspend"
         friendly_name: "PC Idle-sleep"
         value_template: "{{ is_state('binary_sensor.w10_online', 'on') }}"
         turn_on:

@@ -93,6 +93,7 @@ utility_meter:
 
 sensor:
   - platform: mqtt
+    unique_id: "manual-mqtt-sensor-shellyem-main_voltage"
     name: "main_voltage"
     state_topic: "shellies/shellyem/emeter/0/voltage"
     value_template: "{%if value %}{{ value | float | round(1) }}{% else %}unknown{% endif %}"
@@ -103,6 +104,7 @@ sensor:
 
   - platform: mqtt
     name: "main_power_ch1"
+    unique_id: "manual-mqtt-sensor-shellyem-main_power_ch1"
     state_topic: "shellies/shellyem/emeter/0/power"
     value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -112,6 +114,7 @@ sensor:
 
   - platform: mqtt
     name: "main_power_react_ch1"
+    unique_id: "manual-mqtt-sensor-shellyem-main_power_react_ch1"
     state_topic: "shellies/shellyem/emeter/0/reactive_power"
     value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -121,6 +124,7 @@ sensor:
 
   - platform: mqtt
     name: "main_energy_total_ch1"
+    unique_id: "manual-mqtt-sensor-shellyem-main_energy_total_ch1"
     state_topic: "shellies/shellyem/emeter/0/total"
     value_template: "{%if value %}{{ (value | float / 1000) | round(3) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -130,6 +134,7 @@ sensor:
 
   - platform: mqtt
     name: "main_power_ch2"
+    unique_id: "manual-mqtt-sensor-shellyem-main_power_ch2"
     state_topic: "shellies/shellyem/emeter/1/power"
     value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -139,6 +144,7 @@ sensor:
 
   - platform: mqtt
     name: "main_power_react_ch2"
+    unique_id: "manual-mqtt-sensor-shellyem-main_power_react_ch2"
     state_topic: "shellies/shellyem/emeter/1/reactive_power"
     value_template: "{%if value %}{{ value | float | round(0) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -148,6 +154,7 @@ sensor:
 
   - platform: mqtt
     name: "main_energy_total_ch2"
+    unique_id: "manual-mqtt-sensor-shellyem-main_energy_total_ch2"
     state_topic: "shellies/shellyem/emeter/1/total"
     value_template: "{%if value %}{{ (value | float / 1000) | round(3) }}{% else %}unknown{% endif %}"
     qos: 1
@@ -158,7 +165,8 @@ sensor:
   - platform: template
     sensors:
       main_power_total:
-        friendly_name: "Potencia total"
+        friendly_name: "Potencia total calibrada"
+        unique_id: "manual_template_sensor_main_power_total"
         unit_of_measurement: 'W'
         value_template: >
           {%- if (states.sensor.main_power_ch1.state != 'unknown') and (states.sensor.main_power_ch2.state != 'unknown') -%}
@@ -169,6 +177,7 @@ sensor:
           - sensor.main_power_ch2
 
       main_energy_total:
+        unique_id: "manual_template_sensor_main_energy_total"
         friendly_name: "Consumo total"
         unit_of_measurement: 'kWh'
         value_template: "{% if (states.sensor.main_energy_total_ch1.state != 'unknown') and (states.sensor.main_energy_total_ch2.state != 'unknown') %}{{ ((states.sensor.main_energy_total_ch1.state | float) + (states.sensor.main_energy_total_ch2.state | float)) | round(3) }}{% else %}unknown{% endif %}"
@@ -177,6 +186,7 @@ sensor:
           - sensor.main_energy_total_ch2
 
       energy_cost_hour:
+        unique_id: "manual_template_sensor_energy_cost_hour"
         friendly_name: "Gasto en energía (current hour)"
         unit_of_measurement: '€'
         value_template: "{%if states.sensor.pvpc.state %}{{ ((states.sensor.hourly_energy_consumption_unique.state | float) * (states.sensor.pvpc.state | float)) | round(5) }}{% else %}unknown{% endif %}"

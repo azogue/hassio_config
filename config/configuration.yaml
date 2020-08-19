@@ -69,7 +69,7 @@ logger:
     homeassistant.components.device_tracker: error
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
-    homeassistant.components.tplink.switch: critical
+#    homeassistant.components.tplink.switch: critical
     homeassistant.components.yeelight: critical
     homeassistant.components.recorder: info
     homeassistant.components.script: info
@@ -103,10 +103,9 @@ mqtt:
 updater:
   include_used_components: true
 
-#hacs:
 cloud:
 hassio:
-stream:
+#stream:
 
 discovery:
   ignore:

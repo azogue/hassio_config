@@ -31,7 +31,7 @@ input_boolean:
 switch:
 # Sonoff POW 16A
   - platform: mqtt
-#    name: circuito_termo
+    unique_id: "manual-mqtt-switch-calentador"
     name: calentador
     state_topic: "sonoff/pow/1/stat"
     command_topic: "sonoff/pow/1"
@@ -107,6 +107,7 @@ switch:
 # Sonoff POW voltage and power sensors
 sensor:
   - platform: mqtt
+    unique_id: "manual-mqtt-sensor-sonoff_pow_1"
     state_topic: "sonoff/pow/1/power"
     value_template: "{{ value_json.Power }}"
     name: sonoff_pow_1

@@ -95,6 +95,7 @@ sensor:
       -  sensor.sensor_study_temperature
       -  sensor.sensor_office_temperature
       -  sensor.sensor_livingroom_temperature
+      -  sensor.multi_2_temperature
       -  sensor.dormitorio_temperature_rpi2mpd
       -  sensor.sensor_bathroom_ac_temperature
 
@@ -117,6 +118,7 @@ sensor:
       -  sensor.sensor_livingroom_humidity
       -  sensor.dormitorio_humidity_rpi2mpd
       -  sensor.sensor_bathroom_ac_humidity
+      -  sensor.multi_2_humidity
 
   - platform: min_max
     type: mean
@@ -125,6 +127,7 @@ sensor:
     entity_ids:
       -  sensor.sensor_terraza_humidity
       -  sensor.sensor_galeria_humidity
+      -  sensor.multi_1_humidity
 
   - platform: statistics
     entity_id: sensor.temperatura_exterior

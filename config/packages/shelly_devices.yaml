@@ -38,6 +38,7 @@ shelly:
 binary_sensor:
   - platform: mqtt
     device_class: motion
+    unique_id: "manual-mqtt-binsensor-hall_mov"
     name: hall_mov
     state_topic: "shellies/shelly25-mov/input/0"
     payload_on: "1"
@@ -46,6 +47,7 @@ binary_sensor:
 
   - platform: mqtt
     device_class: motion
+    unique_id: "manual-mqtt-binsensor-pasillo_mov"
     name: pasillo_mov
     state_topic: "shellies/shelly25-mov/input/1"
     payload_on: "1"
@@ -54,6 +56,7 @@ binary_sensor:
 
   - platform: mqtt
     device_class: moisture
+    unique_id: "manual-mqtt-binsensor-alarm_moisture"
     name: alarm_moisture
     state_topic: "shellies/shelly25-cuadro/input/0"
     payload_on: "1"
@@ -62,6 +65,7 @@ binary_sensor:
 
   - platform: mqtt
     device_class: smoke
+    unique_id: "manual-mqtt-binsensor-alarm_smoke"
     name: alarm_smoke
     state_topic: "shellies/shelly25-cuadro/input/1"
     payload_on: "1"

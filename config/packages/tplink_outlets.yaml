@@ -9,15 +9,15 @@
 
 homeassistant:
   customize:
-    switch.tplink1:
-      icon: mdi:power-plug
-      friendly_name: Enchufe TP
+#    switch.tplink1:
+#      icon: mdi:power-plug
+#      friendly_name: Enchufe TP
     switch.tplink2:
       icon: mdi:power-plug
-      friendly_name: Enchufe TP2
+      friendly_name: Enchufe TP
 
-    sensor.tplink1_watts:
-      icon: mdi:flash
+#    sensor.tplink1_watts:
+#      icon: mdi:flash
     sensor.tplink2_watts:
       icon: mdi:flash
 
@@ -25,11 +25,19 @@ homeassistant:
 sensor:
   - platform: template
     sensors:
-      tplink1_watts:
-        friendly_name_template: '{% if states("switch.tplink1") %}{{ states.switch.tplink1.name}} Current Consumption{% else %}Disabled TP1 Current Consumption{% endif %}'
-        value_template: '{% if (states("switch.tplink1") != "unknown") and ("current_power_w" in states.switch.tplink1.attributes) %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
-        unit_of_measurement: 'W'
+#      tplink1_watts:
+#        unique_id: "manual_template_sensor_tplink1_watts"
+#        friendly_name_template: '{% if states("switch.tplink1") %}{{ states.switch.tplink1.name}} Current Consumption{% else %}Disabled TP1 Current Consumption{% endif %}'
+#        value_template: '{% if (states("switch.tplink1") != "unknown") and ("current_power_w" in states.switch.tplink1.attributes) %}{{ states.switch.tplink1.attributes["current_power_w"] | float }}{% endif %}'
+#        unit_of_measurement: 'W'
+#        availability_template: '{% states("switch.tplink1") != "unknown" %}'
+#        entity_id:
+#          - switch.tplink1
       tplink2_watts:
+        unique_id: "manual_template_sensor_tplink2_watts"
         friendly_name_template: '{% if states("switch.tplink2") %}{{ states.switch.tplink2.name}} Current Consumption{% else %}Disabled TP1 Current Consumption{% endif %}'
         value_template: '{% if (states("switch.tplink2") != "unknown") and ("current_power_w" in states.switch.tplink2.attributes) %}{{ states.switch.tplink2.attributes["current_power_w"] | float }}{% endif %}'
+#        availability_template: '{% states("switch.tplink2") != "unknown" %}'
         unit_of_measurement: 'W'
+        entity_id:
+          - switch.tplink2

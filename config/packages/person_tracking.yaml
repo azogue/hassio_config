@@ -91,6 +91,7 @@ sensor:
   - platform: template
     sensors:
       iphone_wifi_ap:
+        unique_id: "manual_template_sensor_eu_wifi"
         friendly_name_template: '{% if states.sensor.ssid.state == "Domus" %}Eu Wifi AP{% else %}Eu (no home Wifi){%endif%}'
         icon_template: '{% if states.sensor.ssid.state == "Domus" %}mdi:router-wireless{% else %}mdi:wifi-off{%endif%}'
         value_template: >
@@ -108,9 +109,12 @@ sensor:
           {% else %}
           {{ states.sensor.connection_type.state }}
           {%endif%}
-  - platform: template
-    sensors:
+        entity_id:
+          - sensor.connection_type
+          - sensor.ssid
+          - sensor.bssid
       iphone_carmen_wifi_ap:
+        unique_id: "manual_template_sensor_carmen_wifi"
         friendly_name_template: '{% if states.sensor.ssid_carmen.state == "Domus" %}Carmen Wifi AP{% else %}Carmen (no home Wifi){%endif%}'
         icon_template: '{% if states.sensor.ssid_carmen.state == "Domus" %}mdi:router-wireless{% else %}mdi:wifi-off{%endif%}'
         value_template: >
@@ -128,7 +132,10 @@ sensor:
           {% else %}
           {{ states.sensor.connection_type_carmen.state }}
           {%endif%}
-
+        entity_id:
+          - sensor.connection_type_carmen
+          - sensor.ssid_carmen
+          - sensor.bssid_carmen
 
 owntracks:
   max_gps_accuracy: 100

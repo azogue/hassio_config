@@ -45,6 +45,7 @@ sensor:
     username: !secret nas_qnap_username
     password: !secret nas_qnap_password
     alias: qnapups
+    scan_interval: 30
     resources:
       - ups.status.display
       - input.voltage
@@ -57,5 +58,9 @@ sensor:
   - platform: template
     sensors:
       nut_ups_power:
+        unique_id: "manual_template_sensor_nut_ups_power"
         value_template: "{{ (states.sensor.nut_ups_load.state | int) * 9 }}"
         unit_of_measurement: W
+        device_class: 'power'
+        entity_id:
+          - sensor.nut_ups_load
