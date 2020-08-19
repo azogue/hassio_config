@@ -3,6 +3,15 @@ homeassistant:
     fan.airpurifier_office:
       friendly_name: Purificador
       icon: mdi:air-purifier
+    vacuum.robot_aspirador:
+      friendly_name: Aspiradora
+
+vacuum:
+- platform: xiaomi_miio
+  name: robot_aspirador
+  host: !secret xiaomi_vacuum_robot_ip
+  token: !secret xiaomi_vacuum_robot_token
+  scan_interval: 120
 
 fan:
 - platform: xiaomi_miio
@@ -10,40 +19,64 @@ fan:
   host: !secret xiaomi_air_purifier_ip
   token: !secret xiaomi_air_purifier_token
 
+- platform: xiaomi_miio_fan
+  name: Ventilador
+  host: !secret xiaomi_fan_ip
+  token: !secret xiaomi_fan_token
+  model: zhimi.fan.za4
+
 sensor:
   # Xiaomi Air Purifier 2S
   - platform: template
     sensors:
       airpurifier_office_temperature:
+        unique_id: "manual_template_sensor_airpurifier_office_temperature"
         friendly_name: "Temperature"
         value_template: "{{ state_attr('fan.airpurifier_office', 'temperature') }}"
         unit_of_measurement: "°C"
         device_class: "temperature"
+        entity_id:
+          - fan.airpurifier_office
       airpurifier_office_humidity:
+        unique_id: "manual_template_sensor_airpurifier_office_humidity"
         friendly_name: "Humidity"
         value_template: "{{ state_attr('fan.airpurifier_office', 'humidity') }}"
         unit_of_measurement: "%"
         device_class: "humidity"
+        entity_id:
+          - fan.airpurifier_office
       airpurifier_office_air_quality_pm25:
+        unique_id: "manual_template_sensor_airpurifier_office_air_quality_pm25"
         friendly_name: "Air quality"
         value_template: "{{ state_attr('fan.airpurifier_office', 'aqi') | int }}"
         unit_of_measurement: "μg/m³"
         icon_template: "mdi:smog"
+        entity_id:
+          - fan.airpurifier_office
       airpurifier_office_air_quality_pm25_mean:
+        unique_id: "manual_template_sensor_airpurifier_office_air_quality_pm25_mean"
         friendly_name: "Air quality (average)"
         value_template: "{{ state_attr('fan.airpurifier_office', 'average_aqi') | int }}"
         unit_of_measurement: "μg/m³"
         icon_template: "mdi:weather-fog"
+        entity_id:
+          - fan.airpurifier_office
       airpurifier_office_speed:
+        unique_id: "manual_template_sensor_airpurifier_office_speed"
         friendly_name: "Fan speed"
         value_template: "{{ state_attr('fan.airpurifier_office', 'motor_speed') | int }}"
         unit_of_measurement: "rpm"
         icon_template: "mdi:speedometer"
+        entity_id:
+          - fan.airpurifier_office
       airpurifier_office_illuminance:
+        unique_id: "manual_template_sensor_airpurifier_office_illuminance"
         friendly_name: "Illuminance"
         value_template: "{{ state_attr('fan.airpurifier_office', 'illuminance') | int }}"
         unit_of_measurement: "lx"
         icon_template: "mdi:lightbulb-on"
+        entity_id:
+          - fan.airpurifier_office
 
 input_number:
   # Xiaomi Air Purifier 2S

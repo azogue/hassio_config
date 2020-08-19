@@ -1,13 +1,15 @@
 good_night:
   alias: Buenas noches
   sequence:
-  - service: switch.turn_off
-    entity_id: switch.ambilight_plus_hue
+  - service: light.turn_off
+    entity_id: light.salon,light.estudio,light.cocina,light.dormitorio,light.terraza,light.hall_light,light.lamparita,light.yeelight_strip_7811dca21ecf
   - service: fan.turn_off
     entity_id: fan.airpurifier_office
   - service: python_script.wyzecam_ptz
     data:
       command: cam vigilia
+  - service: switch.turn_off
+    entity_id: switch.ambilight_plus_hue
   - service: telegram_bot.send_message
     data_template:
       title: '*¡Buenas noches!*'
@@ -15,8 +17,8 @@ good_night:
       message: Script de buenas noches *auto-activado*. Apagado de luces, interruptores
         y bajada de persianas.
       disable_notification: true
-  - service: light.turn_off
-    entity_id: light.salon,light.estudio,light.cocina,light.dormitorio,light.terraza,light.hall_light,light.lamparita,light.yeelight_strip_7811dca21ecf
+  - service: fan.xiaomi_miio_set_buzzer_off
+    entity_id: fan.fan_office
 good_morning:
   alias: Buenos días
   sequence:
