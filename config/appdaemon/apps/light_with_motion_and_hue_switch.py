@@ -74,6 +74,7 @@ DECONZ_SCENES = {
     # between("17:00:00", "sunset - 00:30:01")
     SCENE_READING: ("cocina_reading", WAIT_TO_TURN_OFF_AFTERNOON),
 }
+DECONZ_SCENE_PREFIX = "cocina_"
 
 
 # noinspection PyClassHasNoInit
@@ -185,7 +186,9 @@ class HueSwitchAndMotionControl(hass.Hass):
             level = "WARNING"
             scene_key = self._select_scene()
         scene_name, _ = DECONZ_SCENES[scene_key]
-        self.call_service("scene/turn_on", entity_id=f"scene.{scene_name}")
+        self.call_service(
+            "scene/turn_on", entity_id=f"scene.{DECONZ_SCENE_PREFIX}{scene_name}"
+        )
         self._light_on = True
         self._last_light_on = monotonic()
         self.log(
