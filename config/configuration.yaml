@@ -12,7 +12,6 @@ homeassistant:
     - type: trusted_networks
       trusted_networks:
       - 192.168.1.0/24
-  #      - 127.0.0.1
   packages:  !include_dir_named packages
   customize: !include customize.yaml
   #customize_glob: !include frontend/customize_glob.yaml
@@ -55,6 +54,15 @@ logger:
     homeassistant.bootstrap: info
     # homeassistant.core: error
     frontend: critical
+    homeassistant.helpers.entity: critical
+    pyShelly: error
+#    tuyaha.tuyaapi: critical
+    miio: critical
+    DenonAVR: critical
+    urllib3.connectionpool: error
+    telegram.vendor.ptb_urllib3.urllib3.connectionpool: error
+    homeassistant.components.statistics: info
+    homeassistant.components.discovery: info
     homeassistant.components.floorplan: debug
     homeassistant.components.device_tracker: error
     homeassistant.components.history: info
@@ -62,16 +70,13 @@ logger:
 #    homeassistant.components.tplink.switch: critical
     homeassistant.components.yeelight: critical
     homeassistant.components.recorder: info
-    homeassistant.components.script: info
-    homeassistant.components.sensor.influxdb: error
+    #homeassistant.components.script: info
+#    homeassistant.components.sensor.influxdb: error
     homeassistant.components.tts: debug
     homeassistant.components.xiaomi_miio.vacuum: error
-    pyShelly: error
-    tuyaha.tuyaapi: error
-    miio: critical
-    DenonAVR: critical
-    homeassistant.helpers.entity: error
-    custom_components.ambilights.switch: critical
+    custom_components.philips_ambilight: warning
+#    custom_components.xiaomi_miio_fan: critical
+    custom_components.statistics: info
     # custom_components.switch.tuyawifiplug: error
 
 mqtt:
@@ -201,7 +206,8 @@ logbook:
       - python_script
       - input_boolean
     entities:
-      - binary_sensor.mirror_eve_main_door
+      - binary_sensor.mirror_eve_bath_door
+      - binary_sensor.main_door
       - binary_sensor.services_notok
 
 influxdb:
@@ -250,7 +256,6 @@ influxdb:
       - input_text
       - group
 recorder:
-  purge_interval: 1
   purge_keep_days: !secret recorder_purge_days
   db_url: !secret recorder_db_url
   exclude:
