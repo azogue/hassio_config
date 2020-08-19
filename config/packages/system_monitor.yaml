@@ -61,8 +61,17 @@ sensor:
     - type: disk_use_percent
       arg: /
     - type: memory_free
+    - type: memory_use_percent
+    - type: swap_use
     - type: processor_use
+    - type: load_1m
+    - type: load_5m
+    - type: load_15m
     - type: last_boot
+    - type: throughput_network_in
+      arg: eth0
+    - type: throughput_network_out
+      arg: eth0
   scan_interval: 30
 
 - platform: template
