@@ -6,12 +6,13 @@ This little app is a not too simple alarm clock,
 which simulates a fast dawn with Hue lights,
 while waking up the Sonos system in bedroom with a selected source.
 """
-import appdaemon.plugins.hass.hassapi as hass
 import datetime as dt
-from dateutil.parser import parse
+from concurrent.futures import TimeoutError
+
+import appdaemon.plugins.hass.hassapi as hass
 import pytz
 import requests
-
+from dateutil.parser import parse
 
 LOG_LEVEL = "INFO"
 LOGGER = "event_log"
@@ -655,16 +656,33 @@ class AlarmClock(hass.Hass):
             )
             self.log("TRIGGER_START with special source", log=LOGGER)
         else:
-            self.call_service(
-                "media_player/select_source",
-                entity_id=self._media_player_sonos,
-                source=self._selected_player,
+            # check if source is the expected one
+            current_source = self.get_state(
+                self._media_player_sonos, attribute="source"
             )
+            if current_source != self._selected_player:
+                # TODO fix concurrent.futures._base.TimeoutError
+                try:
+                    self.call_service(
+                        "media_player/select_source",
+                        entity_id=self._media_player_sonos,
+                        source=self._selected_player,
+                    )
+                except TimeoutError as exc:
+                    self.log(
+                        f"TimeoutError:{exc} trying to select source"
+                        f" '{self._selected_player}', "
+                        f"(current is {current_source})",
+                        log=LOGGER,
+                    )
 
         self.call_service(
             "media_player/volume_set",
             entity_id=self._media_player_sonos,
             volume_level=0.01,
+        )
+        self.call_service(
+            "media_player/media_play", entity_id=self._media_player_sonos
         )
 
         self._in_alarm_mode = True
@@ -689,8 +707,8 @@ class AlarmClock(hass.Hass):
                 }
             if alarm_ready:
                 # self.turn_on_morning_services(dict(delta_to_repeat=30))
-                self.run_in_sonos()
                 self.turn_on_lights_as_sunrise()
+                self.run_in_sonos()
                 # Notification:
                 self.set_state(self._manual_trigger, state="on")
                 if alarm_info["duration"] is not None:
