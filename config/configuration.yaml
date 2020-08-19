@@ -94,6 +94,61 @@ updater:
   include_used_components: true
 
 cloud:
+  alexa:
+    filter:
+      include_domains:
+        - alarm_control_panel
+        - cover
+        - climate
+        - fan
+        - vacuum
+      include_entities:
+        - switch.calentador
+        - switch.ambilight_plus_hue
+        - switch.smart_plug
+
+        - media_player.tele
+        - media_player.kodi
+
+        - light.hall_light
+        - light.shelly_pasillo
+        - light.office_cold
+        - light.office_warm
+        - light.office
+        - light.lamparita
+        - light.yeelight_strip_7811dca21ecf
+        - light.estudio
+        - light.cocina
+
+        - script.play_kodi_pvr
+        - script.start_tvshows_mode
+        - script.quick_cool_session
+        - script.quick_heat_session
+        - script.start_vacuum_office
+        - script.start_vacuum
+#      exclude_entities:
+#      exclude_domains:
+    entity_config:
+      media_player.tele:
+        display_categories: TV
+#        description: The light in the kitchen
+      script.start_vacuum:
+        name: Limpia la casa
+        display_categories: SCENE_TRIGGER
+      script.start_vacuum_office:
+        name: Limpia el despacho
+        display_categories: SCENE_TRIGGER
+      switch.smart_plug:
+        name: Enchufe salón
+        display_categories: SMARTPLUG
+      fan.airpurifier_office:
+        display_categories: AIR_FRESHENER
+      fan.ventilador:
+        display_categories: FAN
+      cover.shelly_puerta:
+        display_categories: EXTERIOR_BLIND
+      cover.shelly_ventanal:
+        display_categories: EXTERIOR_BLIND
 hassio:
 #stream:
 
