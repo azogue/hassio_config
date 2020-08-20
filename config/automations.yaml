@@ -43,8 +43,7 @@
     for:
       minutes: 5
   - condition: template
-    value_template: '{{ (states.person.eugenio.state == "home") or (states.person.carmen.state
-      == "home") }}'
+    value_template: '{{ states.sensor.people_at_home.state | int > 0 }}'
   - condition: template
     value_template: '{{ (states.sensor.sensor_office_illumination.state|int < 50)
       }}'
@@ -403,37 +402,14 @@
   id: mqtt_sensor_go_offline_notify
   trigger:
   - platform: state
-    entity_id: sensor.sensor_bedroom_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_livingroom_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_office_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_kitchen_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_terraza_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_galeria_snum
-    to: unknown
-    for:
-      minutes: 2
-  - platform: state
-    entity_id: sensor.sensor_bathroom_ac_snum
+    entity_id:
+      - sensor.sensor_bedroom_snum
+      - sensor.sensor_livingroom_snum
+      - sensor.sensor_office_snum
+      - sensor.sensor_kitchen_snum
+      - sensor.sensor_terraza_snum
+      - sensor.sensor_galeria_snum
+      - sensor.sensor_bathroom_ac_snum
     to: unknown
     for:
       minutes: 2
@@ -447,31 +423,15 @@
 - id: mqtt_sensor_go_online_notify
   alias: Aviso de sensor MQTT online
   trigger:
-  - entity_id: sensor.sensor_bedroom_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_livingroom_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_office_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_kitchen_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_terraza_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_galeria_snum
-    from: unknown
-    platform: state
-    to: '1'
-  - entity_id: sensor.sensor_bathroom_ac_snum
+  - platform: state
+    entity_id:
+      - sensor.sensor_bedroom_snum
+      - sensor.sensor_livingroom_snum
+      - sensor.sensor_office_snum
+      - sensor.sensor_kitchen_snum
+      - sensor.sensor_terraza_snum
+      - sensor.sensor_galeria_snum
+      - sensor.sensor_bathroom_ac_snum
     from: unknown
     platform: state
     to: '1'
@@ -695,10 +655,10 @@
 - id: ios_location_trigger
   alias: iOS Location triggered
   trigger:
-  - entity_id: sensor.last_update_trigger
-    platform: state
-  - entity_id: sensor.last_update_trigger_carmen
-    platform: state
+  - platform: state
+    entity_id:
+      - sensor.last_update_trigger
+      - sensor.last_update_trigger_carmen
   action:
   - event: ios_location_trigger
     event_data_template:
