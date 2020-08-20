@@ -72,20 +72,26 @@ sensor:
 - platform: template
   sensors:
     speedtest_ping:
+      unique_id: "manual_template_sensor_variable_speedtest_ping"
       friendly_name: "Speedtest Ping"
       unit_of_measurement: 'ms'
-      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.ping.state}}{% else %}unknown{% endif %}'
-      entity_id: variable.speedtest_data
+      value_template: '{% if states("variable.speedtest_data") and "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.ping.state}}{% else %}unknown{% endif %}'
+      entity_id:
+        - variable.speedtest_data
     speedtest_upload:
+      unique_id: "manual_template_sensor_variable_speedtest_upload"
       friendly_name: "Speedtest Upload"
       unit_of_measurement: 'Mbit/s'
-      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.upload.state}}{% else %}unknown{% endif %}'
-      entity_id: variable.speedtest_data
+      value_template: '{% if states("variable.speedtest_data") and "upload" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.upload.state}}{% else %}unknown{% endif %}'
+      entity_id:
+        - variable.speedtest_data
     speedtest_download:
+      unique_id: "manual_template_sensor_variable_speedtest_download"
       unit_of_measurement: 'Mbit/s'
       friendly_name: "Speedtest Download"
-      value_template: '{% if "ping" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.download.state}}{% else %}unknown{% endif %}'
-      entity_id: variable.speedtest_data
+      value_template: '{% if states("variable.speedtest_data") and "download" in states.variable.speedtest_data.attributes %}{{states.variable.speedtest_data.attributes.download.state}}{% else %}unknown{% endif %}'
+      entity_id:
+        - variable.speedtest_data
 
 #- platform: speedtest
 #  minute:

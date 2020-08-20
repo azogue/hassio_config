@@ -31,6 +31,13 @@ homeassistant:
       icon: mdi:human-female
       device_class: presence
 
+    sensor.iphone_wifi_ap:
+      friendly_name: iPhone Wifi AP
+      icon: mdi:router-wireless
+    sensor.iphone_carmen_wifi_ap:
+      friendly_name: iPhone Carmen Wifi AP
+      icon: mdi:router-wireless
+
 # Activate map component
 map:
 
@@ -144,12 +151,9 @@ device_tracker:
     - '127.0.0.1'
   scan_options: " --privileged -sP "
   home_interval: 30
-# # If new discovered devices are tracked by default (default: yes)
-#   track_new_devices: no
-#   # Seconds between each scan for new devices (default: 12)
+  # Seconds between each scan for new devices (default: 12)
   interval_seconds: 60
-#   # Seconds to wait till marking someone as not home after not being seen
-#   # (default: 180)
+  # Seconds to wait till marking someone as not home after not being seen
   consider_home: 180
   track_new_devices: yes
 

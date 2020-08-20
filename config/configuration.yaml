@@ -55,15 +55,13 @@ logger:
     # homeassistant.core: error
     frontend: critical
     homeassistant.helpers.entity: critical
-    pyShelly: error
+#    pyShelly: error
 #    tuyaha.tuyaapi: critical
-    miio: critical
-    DenonAVR: critical
-    urllib3.connectionpool: error
-    telegram.vendor.ptb_urllib3.urllib3.connectionpool: error
+#    miio: critical
+#    DenonAVR: critical
+#    urllib3.connectionpool: error
+#    telegram.vendor.ptb_urllib3.urllib3.connectionpool: error
     homeassistant.components.statistics: info
-    homeassistant.components.discovery: info
-    homeassistant.components.floorplan: debug
     homeassistant.components.device_tracker: error
     homeassistant.components.history: info
     homeassistant.components.http.auth: error
@@ -119,7 +117,6 @@ cloud:
         - light.shelly_pasillo
         - light.office_cold
         - light.office_warm
-        - light.office
         - light.lamparita
         - light.yeelight_strip_7811dca21ecf
         - light.estudio
