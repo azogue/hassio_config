@@ -54,9 +54,9 @@ KitchenLight:
   module: light_with_motion_and_hue_switch
   class: HueSwitchAndMotionControl
 
-HueTapControl:
-  module: hue_tap_controller
-  class: HueTapControl
+#HueTapControl: --> now as automations with 'choose' stages
+#  module: hue_tap_controller
+#  class: HueTapControl
 
 LastMotionHistory:
   class: MultiBinSensor

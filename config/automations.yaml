@@ -809,3 +809,282 @@
     domain: light
     entity_id: light.shelly_pasillo
     type: turn_on
+- id: '1589229940855'
+  alias: Reconecta acceso remoto
+  description: Si se detecta desconexión de NabuCasa, intenta reconectar cada cierto
+    tiempo
+  trigger:
+  - minutes: /2
+    platform: time_pattern
+  condition:
+  - condition: state
+    entity_id: binary_sensor.remote_ui
+    state: 'off'
+  action:
+  - data: {}
+    service: cloud.remote_connect
+- id: '1595347532903'
+  alias: Toggle Hue Ambilight con botón
+  description: ''
+  trigger:
+  - device_id: 65054086479a4a2a970e9f56361a7767
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_quintuple_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: switch.ambilight_plus_hue
+    service: switch.toggle
+- id: '1596970773114'
+  alias: Enciende alarma con triple click
+  description: Enciende alarma con triple click en el botón del mueble del Hall, set
+    AWAY
+  trigger:
+  - device_id: 65054086479a4a2a970e9f56361a7767
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_triple_press
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.alarma
+    state: disarmed
+  action:
+  - data: {}
+    entity_id: alarm_control_panel.alarma
+    service: alarm_control_panel.alarm_arm_away
+  mode: single
+
+
+- id: 'manual-automation-office-off-short'
+  alias: Apaga office lights simple
+  description: Pulsación corta de mando off para apagado de luces
+  trigger:
+  - device_id: 58221036cad4463582a4a0c9e5413de3
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.office_cold,light.office_warm,light.lamparita,light.yeelight_strip_7811dca21ecf
+    service: light.turn_off
+  mode: single
+- id: '1597602284429'
+  alias: Apaga office lights con remote
+  description: Pulsación larga de mando off para apagado
+  trigger:
+  - device_id: 58221036cad4463582a4a0c9e5413de3
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.office_cold,light.office_warm,light.lamparita,light.yeelight_strip_7811dca21ecf
+    service: light.turn_off
+  - data: {}
+    entity_id: fan.ventilador
+    service: fan.turn_off
+  - choose:
+    - conditions:
+      - above: '50'
+        condition: numeric_state
+        entity_id: sensor.airpurifier_office_air_quality_pm25
+      sequence:
+      - data:
+          level: 14
+        entity_id: fan.airpurifier_office
+        service: xiaomi_miio.fan_set_favorite_level
+      - data:
+          speed: Favorite
+        entity_id: fan.airpurifier_office
+        service: fan.set_speed
+    - conditions:
+      - below: '50'
+        condition: numeric_state
+        entity_id: sensor.airpurifier_office_air_quality_pm25
+      sequence:
+      - data:
+          speed: Auto
+        entity_id: fan.airpurifier_office
+        service: fan.set_speed
+    default: []
+  mode: single
+
+- id: 'manual-automation-office-on-short'
+  alias: Encendido simple de luces office
+  description: Según hora se enciende una u otra
+  trigger:
+  - device_id: 58221036cad4463582a4a0c9e5413de3
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - after: 07:00
+        before: '17:00'
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: light.office_cold
+        service: light.turn_on
+    - conditions:
+      - after: '16:59'
+        before: 01:00
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: light.office_warm
+        service: light.turn_on
+    - conditions:
+      - after: 0:59
+        before: '7:00'
+        condition: time
+      sequence:
+      - data:
+          brightness: 179
+          xy_color:
+          - 0.581
+          - 0.388
+        entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
+        service: light.turn_on
+    default: []
+  mode: single
+
+- id: '1597603372023'
+  alias: Encendido de luces office
+  description: Según hora se enciende una u otra
+  trigger:
+  - device_id: 58221036cad4463582a4a0c9e5413de3
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - after: 07:00
+        before: '17:00'
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: light.office_cold
+        service: light.turn_on
+    - conditions:
+      - after: '16:59'
+        before: 01:00
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: light.office_warm
+        service: light.turn_on
+    - conditions:
+      - after: 0:59
+        before: '7:00'
+        condition: time
+      sequence:
+      - data:
+          brightness: 179
+          xy_color:
+          - 0.581
+          - 0.388
+        entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
+        service: light.turn_on
+    default: []
+  - condition: state
+    entity_id: sensor.season
+    state: summer
+  - after: '9:00'
+    before: '22:00'
+    condition: time
+  - data: {}
+    entity_id: fan.ventilador
+    service: fan.turn_on
+  mode: single
+
+- id: '1597737771246'
+  alias: Hue Tap control b4 - puerta terraza
+  description: Botones de control de persianas y ambilight (main button toggles terraza
+    en deconz)
+  trigger:
+  - device_id: 7554a05d66e841298e491f7d313dcd47
+    domain: deconz
+    platform: device
+    subtype: button_4
+    type: remote_button_short_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ state_attr("cover.shelly_puerta", "current_position")
+          > 90 }}'
+      sequence:
+      - data:
+          position: 60
+        entity_id: cover.shelly_puerta
+        service: cover.set_cover_position
+    default:
+    - data: {}
+      entity_id: cover.shelly_puerta
+      service: cover.open_cover
+  mode: single
+- id: '1597738063520'
+  alias: Hue Tap control b3 - ambilight
+  description: Botones de control de persianas y ambilight toggle
+  trigger:
+  - device_id: 7554a05d66e841298e491f7d313dcd47
+    domain: deconz
+    platform: device
+    subtype: button_3
+    type: remote_button_short_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state("switch.ambilight_plus_hue", "off") }}'
+      sequence:
+      - data: {}
+        entity_id: switch.ambilight_plus_hue
+        service: switch.turn_on
+    default:
+    - data: {}
+      entity_id: switch.ambilight_plus_hue
+      service: switch.turn_off
+  mode: single
+- id: 'manual-automation-huetapcontrol-b2'
+  alias: Hue Tap control b2 - persiana ventanal
+  description: Botones de control de persianas y ambilight toggle
+  trigger:
+  - device_id: 7554a05d66e841298e491f7d313dcd47
+    domain: deconz
+    platform: device
+    subtype: button_2
+    type: remote_button_short_press
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ state_attr("cover.shelly_ventanal", "current_position")
+          > 90 }}'
+      sequence:
+      - data:
+          position: 30
+        entity_id: cover.shelly_ventanal
+        service: cover.set_cover_position
+    default:
+    - data: {}
+      entity_id: cover.shelly_ventanal
+      service: cover.open_cover
+  mode: single
