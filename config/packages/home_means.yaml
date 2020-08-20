@@ -64,13 +64,13 @@ sensor:
       -  sensor.sensor_office_temperature
       -  sensor.dormitorio_temperature_rpi2mpd
 
-  - platform: statistics
-    entity_id: sensor.temperatura_ac
-    name: temperatura_ac_mean
-    sampling_size: 100
-    precision: 1
-    max_age:
-      minutes: 10
+#  - platform: statistics
+#    entity_id: sensor.temperatura_ac
+#    name: temperatura_ac_mean
+#    sampling_size: 100
+#    precision: 1
+#    max_age:
+#      minutes: 10
 
   - platform: min_max
     type: mean
@@ -115,35 +115,37 @@ sensor:
       -  sensor.sensor_galeria_humidity
       -  sensor.multi_1_humidity
 
-  - platform: statistics
-    entity_id: sensor.temperatura_interior
-    name: temperatura_stats_mean
-    precision: 1
-    sampling_size: 50
-    max_age:
-      minutes: 15
+#  - platform: statistics
+#    entity_id: sensor.temperatura_interior
+#    name: temperatura_stats_mean
+#    precision: 1
+#    sampling_size: 50
+#    max_age:
+#      minutes: 15
 
-  - platform: statistics
-    entity_id: sensor.temperatura_exterior
-    name: temperatura_ext_stats_mean
-    precision: 1
-    sampling_size: 50
-    max_age:
-      minutes: 15
+#  - platform: statistics
+#    entity_id: sensor.temperatura_exterior
+#    name: temperatura_ext_stats_mean
+#    precision: 1
+#    sampling_size: 50
+#    max_age:
+#      minutes: 15
 
-  - platform: statistics
-    name: humedad_stats_mean
-    precision: 1
-    sampling_size: 50
-    entity_id: sensor.humedad_interior
-    max_age:
-      minutes: 15
+#  - platform: statistics
+#    name: humedad_stats_mean
+#    precision: 1
+#    sampling_size: 50
+#    entity_id: sensor.humedad_interior
+#    max_age:
+#      minutes: 15
 
-  - platform: statistics
-    name: UPS mean Power
-    precision: 0
-    sampling_size: 6  # := 3 min
-    entity_id: sensor.nut_ups_power
+#  - platform: statistics
+#    name: UPS mean Power
+#    precision: 0
+#    sampling_size: 6  # := 3 min
+#    entity_id: sensor.nut_ups_power
+#    max_age:
+#      minutes: 3
 
 binary_sensor:
   - platform: template

@@ -194,11 +194,11 @@ sensor:
           - sensor.hourly_energy_consumption_unique
           - sensor.pvpc
 
-  - platform: statistics
-    entity_id: sensor.main_power_total
-    name: sustained_power
-    sampling_size: 400
-    max_age:
-      minutes: 15
-    scan_interval: 10
-    precision: 1
+#  - platform: statistics
+#    entity_id: sensor.main_power_total
+#    name: sustained_power
+#    sampling_size: 400
+#    max_age:
+#      minutes: 15
+#    scan_interval: 10
+#    precision: 1

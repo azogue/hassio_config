@@ -8,6 +8,48 @@ AutoFeedback:
   bot_nicknames: !secret bot_nicknames
   base_url: !secret base_url
 
+StatsSensors:
+  module: time_weighted_moving_average
+  class: TimeWeightedMovingAverage
+  update_interval: 30
+  sensors:
+    - sensor_source: sensor.main_power_total
+      sensor_publish: sensor.sustained_power_weighted
+      name: Power (contador)
+      window_minutes: 15
+      expected_interval: 5
+      precision: 0
+    - sensor_source: sensor.nut_ups_power
+      sensor_publish: sensor.ups_mean_power
+      name: UPS mean Power
+      window_minutes: 3
+      expected_interval: 30
+      precision: 0
+    - sensor_source: sensor.humedad_interior
+      sensor_publish: sensor.humedad_stats_mean
+      name: Humedad interior
+      window_minutes: 15
+      expected_interval: 15
+      precision: 1
+    - sensor_source: sensor.temperatura_interior
+      sensor_publish: sensor.temperatura_stats_mean
+      name: Temperatura interior
+      window_minutes: 15
+      expected_interval: 15
+      precision: 1
+    - sensor_source: sensor.temperatura_exterior
+      sensor_publish: sensor.temperatura_ext_stats_mean
+      name: Temperatura exterior
+      window_minutes: 15
+      expected_interval: 15
+      precision: 1
+    - sensor_source: sensor.temperatura_ac
+      sensor_publish: sensor.temperatura_ac_mean
+      name: Temperatura AC
+      window_minutes: 10
+      expected_interval: 15
+      precision: 1
+
 KitchenLight:
   module: light_with_motion_and_hue_switch
   class: HueSwitchAndMotionControl
