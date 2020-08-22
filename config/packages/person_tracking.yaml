@@ -98,11 +98,11 @@ sensor:
     sensors:
       iphone_wifi_ap:
         unique_id: "manual_template_sensor_eu_wifi"
-        friendly_name_template: '{% if states.sensor.ssid.state == "Domus" %}Eu Wifi AP{% else %}Eu (no home Wifi){%endif%}'
-        icon_template: '{% if states.sensor.ssid.state == "Domus" %}mdi:router-wireless{% else %}mdi:wifi-off{%endif%}'
+        friendly_name_template: '{% if states.sensor.iphone_ssid.state == "Domus" %}Eu Wifi AP{% else %}Eu (no home Wifi){%endif%}'
+        icon_template: '{% if states.sensor.iphone_ssid.state == "Domus" %}mdi:router-wireless{% else %}mdi:wifi-off{%endif%}'
         value_template: >
-          {% if states.sensor.ssid.state == "Domus" %}
-          {% set bssid = states.sensor.bssid.state %}
+          {% if states.sensor.iphone_ssid.state == "Domus" %}
+          {% set bssid = states.sensor.iphone_bssid.state %}
           {% if "68:41:65" in bssid %}
           Wifi Salón
           {% elif "68:41:67" in bssid %}
@@ -113,12 +113,12 @@ sensor:
           {{ bssid }}??
           {%endif%}
           {% else %}
-          {{ states.sensor.connection_type.state }}
+          {{ states.sensor.iphone_connection_type.state }}
           {%endif%}
         entity_id:
-          - sensor.connection_type
-          - sensor.ssid
-          - sensor.bssid
+          - sensor.iphone_connection_type
+          - sensor.iphone_ssid
+          - sensor.iphone_bssid
       iphone_carmen_wifi_ap:
         unique_id: "manual_template_sensor_carmen_wifi"
         friendly_name_template: '{% if states.sensor.ssid_carmen.state == "Domus" %}Carmen Wifi AP{% else %}Carmen (no home Wifi){%endif%}'

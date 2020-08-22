@@ -138,8 +138,9 @@ class KodiAssistant(hass.Hass):
                 new_video = (
                     self._item_playing is None or self._item_playing != title
                 )
-                delta = self.datetime() - self._last_play
-                self._last_play = self.datetime()
+                now = self.datetime()
+                delta = now - self._last_play
+                self._last_play = now
                 if self._is_playing_video and (
                     new_video or delta > dt.timedelta(minutes=30)
                 ):

@@ -20,6 +20,7 @@ LOGGER = "event_log"
 # Defaults para La Cafetera Alarm Clock:
 MEDIA_PLAYER = "media_player.dormitorio"
 SPECIAL_SOURCE = "La Cafetera de Radiocable"
+BOOLEAN_DAY_NIGHT = "input_boolean.periodo_diurno"
 MIN_VOLUME = 1
 DEFAULT_MAX_VOLUME = 60
 DEFAULT_DURATION_VOLUME_RAMP = 120
@@ -749,6 +750,10 @@ class AlarmClock(hass.Hass):
             # self.set_state(self._manual_trigger, state='off')
             if self._alarm_on and self.is_working_day():
                 self.trigger_service_in_alarm()
+
+                # check bool daily period
+                if self.get_state(BOOLEAN_DAY_NIGHT) == "off":
+                    self.call_service("input_boolean/turn_on", entity_id=BOOLEAN_DAY_NIGHT)
             else:
                 self.log(
                     "ALARM CLOCK NOT TRIGGERED TODAY "

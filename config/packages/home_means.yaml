@@ -94,6 +94,14 @@ sensor:
       -  sensor.sensor_galeria_temperature
 
   - platform: min_max
+    type: min
+    name: Temperatura exterior zigbee
+    round_digits: 1
+    entity_ids:
+      - sensor.multi_1_temperature
+      - sensor.multi_3_temperature
+
+  - platform: min_max
     type: mean
     round_digits: 1
     name: Humedad interior
@@ -114,6 +122,7 @@ sensor:
       -  sensor.sensor_terraza_humidity
       -  sensor.sensor_galeria_humidity
       -  sensor.multi_1_humidity
+      -  sensor.multi_3_humidity
 
 #  - platform: statistics
 #    entity_id: sensor.temperatura_interior
