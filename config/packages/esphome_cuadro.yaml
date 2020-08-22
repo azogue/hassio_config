@@ -1,0 +1,70 @@
+################################################################################
+# ESPHOME ESP32 device via MQTT
+################################################################################
+homeassistant:
+  customize:
+    sensor.cuadro_temperatura:
+      friendly_name: Temperatura
+      icon: mdi:thermometer
+    sensor.cuadro_humedad:
+      friendly_name: Humedad
+      icon: mdi:water-percent
+      device_class: humidity
+    sensor.cuadro_presion:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+    binary_sensor.cuadro_movimiento:
+      friendly_name: 'Movimiento (cuadro)'
+    binary_sensor.cuadro_boton:
+      friendly_name: 'Botón cuadro'
+
+binary_sensor:
+  - platform: mqtt
+    device_class: motion
+    state_topic: 'cuadro/binary_sensor/cuadro_-_movimiento/state'
+    name: cuadro_movimiento
+    qos: !secret mqtt_default_qos
+    payload_on: "ON"
+    payload_off: "OFF"
+    availability_topic: 'cuadro/status'
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - platform: mqtt
+    device_class: motion
+    state_topic: 'cuadro/binary_sensor/cuadro_-_botn/state'
+    name: cuadro_boton
+    qos: !secret mqtt_default_qos
+    payload_on: "ON"
+    payload_off: "OFF"
+    availability_topic: 'cuadro/status'
+    payload_available: "online"
+    payload_not_available: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: 'cuadro/sensor/cuadro_-_temperatura/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: cuadro_temperatura
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: 'cuadro/sensor/cuadro_-_humedad/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: cuadro_humedad
+    unit_of_measurement: "%"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: 'cuadro/sensor/cuadro_-_presin/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: cuadro_presion
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration

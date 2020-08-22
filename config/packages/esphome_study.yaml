@@ -1,0 +1,57 @@
+################################################################################
+# ESPHOME ESP32 device via MQTT
+################################################################################
+homeassistant:
+  customize:
+    sensor.sensor_study_temperature:
+      friendly_name: Temperatura
+      icon: mdi:thermometer
+    sensor.sensor_study_humidity:
+      friendly_name: Humedad
+      icon: mdi:water-percent
+      device_class: humidity
+    sensor.sensor_study_pressure:
+      friendly_name: Presión
+      icon: mdi:weather-cloudy
+    binary_sensor.sensor_study_mov1:
+      friendly_name: 'Movimiento (salón)'
+
+binary_sensor:
+  - platform: mqtt
+    device_class: motion
+    state_topic: 'estudio/binary_sensor/sensor_study_mov1/state'
+    name: sensor_study_mov1
+    qos: !secret mqtt_default_qos
+    payload_on: "ON"
+    payload_off: "OFF"
+    availability_topic: 'estudio/status'
+    payload_available: "online"
+    payload_not_available: "offline"
+
+sensor:
+  - platform: mqtt
+    state_topic: 'estudio/sensor/sensor_study_temperature/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: sensor_study_temperature
+    unit_of_measurement: "°C"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: 'estudio/sensor/sensor_study_humidity/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: sensor_study_humidity
+    unit_of_measurement: "%"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
+
+  - platform: mqtt
+    state_topic: 'estudio/sensor/sensor_study_pressure/state'
+    value_template: "{{ value | float | round(1) }}"
+    name: sensor_study_pressure
+    unit_of_measurement: "mb"
+    qos: !secret mqtt_default_qos
+    force_update: true
+    expire_after: !secret mqtt_default_expiration
