@@ -433,7 +433,6 @@
       - sensor.sensor_galeria_snum
       - sensor.sensor_bathroom_ac_snum
     from: unknown
-    platform: state
     to: '1'
   condition: []
   action:

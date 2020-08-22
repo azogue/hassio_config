@@ -28,9 +28,9 @@ alarm_control_panel:
 
     # default is armed_away
     # ∆ before changing to triggered
-    delay_time: 0
+    delay_time: 5
     # ∆ before changing to anything else (not triggered)
-    arming_time: 20
+    arming_time: 45
     # Trigger duration
     trigger_time: 60
 

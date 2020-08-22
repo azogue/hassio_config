@@ -2,7 +2,7 @@ good_night:
   alias: Buenas noches
   sequence:
   - service: light.turn_off
-    entity_id: light.salon,light.estudio,light.cocina,light.dormitorio,light.terraza,light.hall_light,light.lamparita,light.yeelight_strip_7811dca21ecf
+    entity_id: light.salon,light.estudio,light.cocina,light.dormitorio,light.terraza,light.hall_light,light.shelly_pasillo,light.office_cold,light.office_warm,light.lamparita,light.yeelight_strip_7811dca21ecf
   - service: fan.turn_off
     entity_id: fan.airpurifier_office
   - service: python_script.wyzecam_ptz
