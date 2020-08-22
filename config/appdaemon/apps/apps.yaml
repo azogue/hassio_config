@@ -117,6 +117,66 @@ KitchenLight:
 #  module: hue_tap_controller
 #  class: HueTapControl
 
+StudyLight:
+  module: light_with_motion_and_hue_switch
+  class: HueSwitchAndMotionControl
+  remote_event: hue_event
+  remote_event_filter:
+    id: interruptor_estudio
+  motion_sensors:
+    - binary_sensor.mini_motion_estudio
+  light_group: light.estudio
+  toggle_automation: input_boolean.study_lights_automation
+  scene_schedule:
+    study_bright:
+      from: 'sunrise - 0:30:00'
+      to: '16:00:00'
+      wait_to_turn_off: 60
+      turn_on_service_call:
+        service: 'light/turn_on'
+        service_data:
+          entity_id: 'light.estudio'
+          brightness: 255
+          color_temp: 156
+    study_concentrate:
+      from: '16:00:00'
+      to: '21:00:00'
+      wait_to_turn_off: 60
+      turn_on_service_call:
+        service: 'light/turn_on'
+        service_data:
+          entity_id: 'light.estudio'
+          brightness: 255
+          color_temp: 233
+    study_night:
+      from: '21:00:00'
+      to: '23:00:00'
+      wait_to_turn_off: 60
+      turn_on_service_call:
+        service: 'light/turn_on'
+        service_data:
+          entity_id: 'light.estudio'
+          brightness: 145
+          color_temp: 447
+    study_deep_night:
+      from: '23:00:00'
+      to: 'sunrise - 0:30:00'
+      wait_to_turn_off: 30
+      turn_on_service_call:
+        service: 'light/turn_on'
+        service_data:
+          entity_id: 'light.go,light.bolita'
+          brightness: 81
+          xy_color:
+            - 0.367
+            - 0.244
+  default_scene: study_bright
+  rotate_scene_order:
+    - study_bright
+    - study_concentrate
+    - study_night
+    - study_deep_night
+
 LastMotionHistory:
   class: MultiBinSensor
   module: multi_bin_sensor_history
