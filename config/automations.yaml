@@ -403,13 +403,13 @@
   trigger:
   - platform: state
     entity_id:
-      - sensor.sensor_bedroom_snum
-      - sensor.sensor_livingroom_snum
-      - sensor.sensor_office_snum
-      - sensor.sensor_kitchen_snum
-      - sensor.sensor_terraza_snum
-      - sensor.sensor_galeria_snum
-      - sensor.sensor_bathroom_ac_snum
+    - sensor.sensor_bedroom_snum
+    - sensor.sensor_livingroom_snum
+    - sensor.sensor_office_snum
+    - sensor.sensor_kitchen_snum
+    - sensor.sensor_terraza_snum
+    - sensor.sensor_galeria_snum
+    - sensor.sensor_bathroom_ac_snum
     to: unknown
     for:
       minutes: 2
@@ -425,13 +425,13 @@
   trigger:
   - platform: state
     entity_id:
-      - sensor.sensor_bedroom_snum
-      - sensor.sensor_livingroom_snum
-      - sensor.sensor_office_snum
-      - sensor.sensor_kitchen_snum
-      - sensor.sensor_terraza_snum
-      - sensor.sensor_galeria_snum
-      - sensor.sensor_bathroom_ac_snum
+    - sensor.sensor_bedroom_snum
+    - sensor.sensor_livingroom_snum
+    - sensor.sensor_office_snum
+    - sensor.sensor_kitchen_snum
+    - sensor.sensor_terraza_snum
+    - sensor.sensor_galeria_snum
+    - sensor.sensor_bathroom_ac_snum
     from: unknown
     to: '1'
   condition: []
@@ -447,38 +447,36 @@
       target: !secret telegram_bot_chat_id_admin
       title: '*Sensor online*'
     service: telegram_bot.send_message
-- alias: Apagado automático de termo ACS
-  id: termo_auto_off
+- id: termo_auto_off
+  alias: Apagado automático de termo ACS
   trigger:
-    platform: numeric_state
+  - below: 300
     entity_id: sensor.main_power_ch2
-    below: 300
-    for:
-      minutes: 2
-      seconds: 30
+    for: 0:02:30
+    platform: numeric_state
   condition:
   - condition: state
     entity_id: switch.calentador
-    state: 'on'
     for:
       minutes: 35
+    state: 'on'
   action:
-  - service: telegram_bot.send_message
-    data_template:
-      title: '*Calentador apagado*'
-      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
-      message: '{% set delta_cal_on = (now() - states.switch.calentador.last_changed).total_seconds()
-        %}*Tiempo encendido: {{(delta_cal_on // 3600) | int }}h:{{ ((delta_cal_on
-        % 3600) / 60) | int }}m*. El calentador de agua ha llegado a su temperatura
-        de consigna, así que lo he apagado, junto a la bomba de circulación.'
+  - data_template:
       disable_notification: true
       inline_keyboard:
       - Encender Calentador:/service_call switch.turn_on switch.calentador, Apagar
         Calentador:/service_call switch.turn_off switch.calentador
       - Encender bomba ACS:/service_call switch.turn_on switch.03200296dc4f22293a7f,
         Apagar bomba ACS:/service_call switch.turn_off switch.03200296dc4f22293a7f
-  - service: switch.turn_off
-    entity_id: switch.calentador,switch.03200296dc4f22293a7f
+      message: '{% set delta_cal_on = (now() - states.switch.calentador.last_changed).total_seconds()
+        %}*Tiempo encendido: {{(delta_cal_on // 3600) | int }}h:{{ ((delta_cal_on
+        % 3600) / 60) | int }}m*. El calentador de agua ha llegado a su temperatura
+        de consigna, así que lo he apagado, junto a la bomba de circulación.'
+      target: '{{ states.sensor.telegram_default_chatid.state | int }}'
+      title: '*Calentador apagado*'
+    service: telegram_bot.send_message
+  - entity_id: switch.calentador,switch.03200296dc4f22293a7f
+    service: switch.turn_off
 - alias: Notificación de cambio de IP
   id: notif_cambio_ip
   trigger:
@@ -496,17 +494,6 @@
       message: 'La IP pública se acaba de renovar: *{{ trigger.to_state.state }}*,
         la anterior era: _{{ trigger.from_state.state }}_'
       disable_notification: true
-- alias: IFTTT incoming event
-  id: ifttt_incoming_event
-  trigger:
-    platform: event
-    event_type: ifttt_webhook_received
-    event_data:
-      motion: true
-  action:
-    service: python_script.incoming_ifttt_data
-    data_template:
-      message: '{{ trigger.event.data.message }}'
 - alias: Apagado de AC
   id: auto_turnoff_ac
   trigger:
@@ -654,10 +641,10 @@
 - id: ios_location_trigger
   alias: iOS Location triggered
   trigger:
-  - platform: state
-    entity_id:
-      - sensor.last_update_trigger
-      - sensor.last_update_trigger_carmen
+  - entity_id: sensor.last_update_trigger
+    platform: state
+  - entity_id: sensor.last_update_trigger_carmen
+    platform: state
   action:
   - event: ios_location_trigger
     event_data_template:
@@ -822,42 +809,7 @@
   action:
   - data: {}
     service: cloud.remote_connect
-- id: '1595347532903'
-  alias: Toggle Hue Ambilight con botón
-  description: ''
-  trigger:
-  - device_id: 65054086479a4a2a970e9f56361a7767
-    domain: deconz
-    platform: device
-    subtype: turn_on
-    type: remote_button_quintuple_press
-  condition: []
-  action:
-  - data: {}
-    entity_id: switch.ambilight_plus_hue
-    service: switch.toggle
-- id: '1596970773114'
-  alias: Enciende alarma con triple click
-  description: Enciende alarma con triple click en el botón del mueble del Hall, set
-    AWAY
-  trigger:
-  - device_id: 65054086479a4a2a970e9f56361a7767
-    domain: deconz
-    platform: device
-    subtype: turn_on
-    type: remote_button_triple_press
-  condition:
-  - condition: state
-    entity_id: alarm_control_panel.alarma
-    state: disarmed
-  action:
-  - data: {}
-    entity_id: alarm_control_panel.alarma
-    service: alarm_control_panel.alarm_arm_away
-  mode: single
-
-
-- id: 'manual-automation-office-off-short'
+- id: manual-automation-office-off-short
   alias: Apaga office lights simple
   description: Pulsación corta de mando off para apagado de luces
   trigger:
@@ -865,7 +817,7 @@
     domain: deconz
     platform: device
     subtype: turn_off
-    type: remote_button_short_press
+    type: remote_button_short_release
   condition: []
   action:
   - data: {}
@@ -873,14 +825,14 @@
     service: light.turn_off
   mode: single
 - id: '1597602284429'
-  alias: Apaga office lights con remote
-  description: Pulsación larga de mando off para apagado
+  alias: Apaga office con remote
+  description: Pulsación larga de mando off para apagado total
   trigger:
   - device_id: 58221036cad4463582a4a0c9e5413de3
     domain: deconz
     platform: device
     subtype: turn_off
-    type: remote_button_short_press
+    type: remote_button_long_release
   condition: []
   action:
   - data: {}
@@ -914,16 +866,15 @@
         service: fan.set_speed
     default: []
   mode: single
-
-- id: 'manual-automation-office-on-short'
-  alias: Encendido simple de luces office
+- id: manual-automation-office-on-short
+  alias: Encendido de luces office simple
   description: Según hora se enciende una u otra
   trigger:
   - device_id: 58221036cad4463582a4a0c9e5413de3
     domain: deconz
     platform: device
     subtype: turn_on
-    type: remote_button_short_press
+    type: remote_button_short_release
   condition: []
   action:
   - choose:
@@ -943,30 +894,24 @@
       - data: {}
         entity_id: light.office_warm
         service: light.turn_on
-    - conditions:
-      - after: 0:59
-        before: '7:00'
-        condition: time
-      sequence:
-      - data:
-          brightness: 179
-          xy_color:
-          - 0.581
-          - 0.388
-        entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
-        service: light.turn_on
-    default: []
+    default:
+    - data:
+        brightness: 179
+        xy_color:
+        - 0.581
+        - 0.388
+      entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
+      service: light.turn_on
   mode: single
-
 - id: '1597603372023'
-  alias: Encendido de luces office
-  description: Según hora se enciende una u otra
+  alias: Encendido de luces office complejo
+  description: Según hora se enciende una u otra, más el ventilador en verano
   trigger:
   - device_id: 58221036cad4463582a4a0c9e5413de3
     domain: deconz
     platform: device
     subtype: turn_on
-    type: remote_button_short_press
+    type: remote_button_long_release
   condition: []
   action:
   - choose:
@@ -986,19 +931,14 @@
       - data: {}
         entity_id: light.office_warm
         service: light.turn_on
-    - conditions:
-      - after: 0:59
-        before: '7:00'
-        condition: time
-      sequence:
-      - data:
-          brightness: 179
-          xy_color:
-          - 0.581
-          - 0.388
-        entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
-        service: light.turn_on
-    default: []
+    default:
+    - data:
+        brightness: 179
+        xy_color:
+        - 0.581
+        - 0.388
+      entity_id: light.yeelight_strip_7811dca21ecf,light.lamparita
+      service: light.turn_on
   - condition: state
     entity_id: sensor.season
     state: summer
@@ -1009,7 +949,6 @@
     entity_id: fan.ventilador
     service: fan.turn_on
   mode: single
-
 - id: '1597737771246'
   alias: Hue Tap control b4 - puerta terraza
   description: Botones de control de persianas y ambilight (main button toggles terraza
@@ -1061,7 +1000,7 @@
       entity_id: switch.ambilight_plus_hue
       service: switch.turn_off
   mode: single
-- id: 'manual-automation-huetapcontrol-b2'
+- id: manual-automation-huetapcontrol-b2
   alias: Hue Tap control b2 - persiana ventanal
   description: Botones de control de persianas y ambilight toggle
   trigger:
@@ -1086,4 +1025,62 @@
     - data: {}
       entity_id: cover.shelly_ventanal
       service: cover.open_cover
+  mode: single
+- id: '1597998483979'
+  alias: Notifica detección de lluvia
+  description: ''
+  trigger:
+  - device_id: 23db84599c8f4b84b391a354500eb5a5
+    domain: binary_sensor
+    entity_id: binary_sensor.water_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    platform: device
+    type: moist
+  condition: []
+  action:
+  - data:
+      message: El sensor de lluvia se ha activado el {{ states.binary_sensor.water_sensor.last_changed.date()
+        }} **a las {{ states.binary_sensor.water_sensor.last_changed.replace(microsecond=0).time()
+        }}**
+      notification_id: notify_lluvia
+      title: Empieza a llover!
+    service: persistent_notification.create
+  mode: single
+- id: '1598010280972'
+  alias: Toggle periodo diurno/nocturno
+  description: ''
+  trigger:
+  - event: sunrise
+    offset: -0:30:00
+    platform: sun
+  - at: '3:00:00'
+    platform: time
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.periodo_diurno
+        state: 'off'
+      - after: '5:00:00'
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: input_boolean.periodo_diurno
+        service: input_boolean.turn_on
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.periodo_diurno
+        state: 'on'
+      - after: 0:00:00
+        before: '5:00:00'
+        condition: time
+      sequence:
+      - data: {}
+        entity_id: input_boolean.periodo_diurno
+        service: input_boolean.turn_off
+    default: []
   mode: single
