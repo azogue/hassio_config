@@ -53,6 +53,65 @@ StatsSensors:
 KitchenLight:
   module: light_with_motion_and_hue_switch
   class: HueSwitchAndMotionControl
+  remote_event: deconz_event
+  remote_event_filter:
+    id: interruptor_cocina
+  motion_sensors:
+    - binary_sensor.motion_sensor_cocina
+    - binary_sensor.mini_motion_cocina
+    - binary_sensor.sensor_kitchen_mov1
+  light_group: light.cocina
+  toggle_automation: input_boolean.app_lights_automation
+  scene_schedule:
+    kitchen_deep_night:
+      from: '01:00:00'
+      to: '06:00:00'
+      wait_to_turn_off: 30
+      turn_on_service_call:
+        service: 'scene/turn_on'
+        service_data:
+          entity_id: 'scene.cocina_cocina_deep_night'
+    kitchen_night:
+      from: 'sunset - 00:30:00'
+      to: 'sunrise + 00:15:00'
+      wait_to_turn_off: 60
+      turn_on_service_call:
+        service: 'scene/turn_on'
+        service_data:
+          entity_id: 'scene.cocina_cocina_night'
+    kitchen_energy:
+      from: 'sunrise + 00:14:00'
+      to: '13:00:01'
+      wait_to_turn_off: 120
+      turn_on_service_call:
+        service: 'scene/turn_on'
+        service_data:
+          entity_id: 'scene.cocina_cocina_energy'
+    kitchen_concentrate:
+      from: '13:00:00'
+      to: '17:00:01'
+      wait_to_turn_off: 300
+      turn_on_service_call:
+        service: 'scene/turn_on'
+        service_data:
+          entity_id: 'scene.cocina_cocina_concentration'
+    kitchen_reading:
+      from: '17:00:00'
+      to: 'sunset - 00:30:01'
+      wait_to_turn_off: 150
+      turn_on_service_call:
+        service: 'scene/turn_on'
+        service_data:
+          entity_id: 'scene.cocina_cocina_reading'
+  default_scene: kitchen_energy
+  delay_re_enable_motion_control: 120
+  max_delay_motion_off: 900
+  rotate_scene_order:
+    - kitchen_night
+    - kitchen_deep_night
+    - kitchen_energy
+    - kitchen_concentrate
+    - kitchen_reading
 
 #HueTapControl: --> now as automations with 'choose' stages
 #  module: hue_tap_controller
